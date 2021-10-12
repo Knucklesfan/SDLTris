@@ -11,8 +11,8 @@
 #define SCREEN_HEIGHT 480
 std::vector<SDL_Texture*> generateTextures(std::vector<SDL_Surface*> surfaces, SDL_Renderer* renderer);
 std::vector<SDL_Surface*> generateSurfaces(std::string path);
-void drawCubes(int position[], double angle[], int x, int y,int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
-void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle);
+void drawCubes(int position[], double angle[], double scale[], int x, int y,int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
+void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale);
 void shiftarray(int (array)[],int size, int shift);
 
 int main() {
@@ -22,7 +22,7 @@ int main() {
         return 1;
     }
 
-    SDL_Window* window = SDL_CreateWindow("SDLTetris", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("SDLTetris", 100, 100, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (window == nullptr) {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
 
@@ -40,6 +40,7 @@ int main() {
 
         return 1;
     }
+    SDL_RenderSetLogicalSize(renderer, 640, 480);
     int testblocks[] = 
     {
     4,4,4,4,4,4,4,4,4,4,
@@ -95,6 +96,12 @@ int main() {
                 if(event.key.keysym.sym == SDLK_RIGHT) {
                     shiftarray(testblocks, 200,-1);
                 }
+                if(event.key.keysym.sym == SDLK_z) {
+                    std::fill_n(testscale, 200, testscale[0]-0.1);
+                }
+                if(event.key.keysym.sym == SDLK_x) {
+                    std::fill_n(testscale, 200, testscale[0]+0.1);
+                }
 
             }
         }
@@ -102,10 +109,10 @@ int main() {
         NOW = SDL_GetPerformanceCounter();
 
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
-        std::fill_n(testangles, 200, testangles[0]+deltaTime*0.1);
+        //std::fill_n(testangles, 200, testangles[0]+deltaTime*0.1);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
-        drawCubes(testblocks,testangles, 240,80,200,10,textures,renderer);
+        drawCubes(testblocks,testangles, testscale, 240,80,200,10,textures,renderer);
         SDL_RenderPresent(renderer);
     }
 
@@ -160,20 +167,23 @@ std::vector<SDL_Texture*> generateTextures(std::vector<SDL_Surface*> surfaces, S
 
 }
 
-void drawCubes(int position[], double angles[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer) {
+void drawCubes(int position[], double angles[], double scale[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer) {
     for(int i = 0; i < size; i++ ){
         if(position[i] > 0) {
-        drawTexture(renderer,textures.at(position[i]), x+(i%width)*16, y+(i/width)*16,angles[i]);
+        drawTexture(renderer,textures.at(position[i]), x+(i%width)*16, y+(i/width)*16,angles[i], scale[i]);
         }
     }
 }
 
-void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle) {
+void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale) {
     SDL_Rect sprite;
-
-    sprite.x = x;
-    sprite.y = y;
     SDL_QueryTexture(texture, NULL,NULL, &sprite.w, &sprite.h);
+    int oldwidth = sprite.w;
+    int oldheight = sprite.h;
+    sprite.w = sprite.w*scale;
+    sprite.h = sprite.h*scale;
 
+    sprite.x = x + oldwidth/2 - sprite.w/2;
+    sprite.y = y + oldheight/2 - sprite.h/2;
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
 }

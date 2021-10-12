@@ -1,2 +1,4 @@
 ﻿  SDLTetris.cpp
+C:\Users\bobca\source\repos\SDLTetris\SDLTetris\SDLTetris.cpp(39,17): warning C4101: 'game': unreferenced local variable
+C:\Users\bobca\source\repos\SDLTetris\SDLTetris\SDLTetris.cpp(65,24): warning C4477: 'printf' : format string '%s' requires an argument of type 'char *', but variadic argument 1 has type 'std::string'
   SDLTetris.vcxproj -> C:\Users\bobca\source\repos\SDLTetris\Debug\SDLTetris.exe

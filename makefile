@@ -1,9 +1,9 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = source/SDLTetris.cpp
+OBJS = source/SDLTetris.cpp source/tetrimino.cpp
 #CC specifies which compiler we're using
 CC = g++
 #Compiler flags supresses the annoying warnings
-COMPILER_FLAGS = -w
+COMPILER_FLAGS = -w -g
 #Linker Flags give the libraries
 LINKER_FLAGS = -lSDL2
 #Specify c++17 as well.

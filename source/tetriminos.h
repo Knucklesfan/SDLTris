@@ -1,6 +1,4 @@
 class tetrimino {
-
-    public:
         int SPiece[4][16] = {
             {0,1,1,0,
              0,0,1,1,
@@ -185,8 +183,20 @@ class tetrimino {
             },
 
         };
-	    int x,y;
-	    tetrimino::tetrimino(int x, int y);
-	    void movedown();
 
+    public:
+        bool alive;
+	    int x,y,lastx,lasty,rot,lastrot,width,height;
+        int* array;
+	    tetrimino(int, int, int (barray)[], int bwidth, int bheight);
+        void rebirth(int, int);
+	    void movedown();
+        void moveleft();
+	    void moveright();
+        void rotate();
+        void draw();
+        bool collides(int x, int y, int rot);
+    private:
+        void removeolddraw();
+        void redraw();
 };

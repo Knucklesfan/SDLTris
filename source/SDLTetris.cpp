@@ -1,11 +1,11 @@
-#include <SDL2/SDL.h>>
+#include <SDL2/SDL.h>
 #include <string>
 #include <iostream>
 #include <filesystem>
 #include <vector>
 #include <array>
 #include <cstring>
-
+#include "tetriminos.h"
 #undef main
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -14,6 +14,9 @@ std::vector<SDL_Surface*> generateSurfaces(std::string path);
 void drawCubes(int position[], double angle[], double scale[], int x, int y,int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
 void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale);
 void shiftarray(int (array)[],int size, int shift);
+void checkLines(int (blocks)[200]);
+bool checkRow(int (blocks)[10]);
+void clearRow(int (blocks)[200], int y);
 
 int main() {
         if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -41,29 +44,8 @@ int main() {
         return 1;
     }
     SDL_RenderSetLogicalSize(renderer, 640, 480);
-    int testblocks[] = 
-    {
-    4,4,4,4,4,4,4,4,4,4,
-    4,4,4,4,1,1,4,4,4,4,
-    4,4,4,4,1,1,4,4,4,4,
-    4,4,4,2,2,2,2,4,4,4,
-    4,4,4,2,2,2,2,4,4,4,
-    4,4,3,3,3,3,3,3,4,4,
-    4,4,3,3,3,3,3,3,4,4,
-    4,4,4,4,4,4,4,4,4,4,
-    4,4,4,4,4,4,4,4,4,4,
-    4,4,4,4,4,4,4,4,4,4,
-    4,4,4,4,4,4,4,4,4,4,
-    4,4,4,4,1,1,4,4,4,4,
-    4,4,4,4,1,1,4,4,4,4,
-    4,4,4,2,2,2,2,4,4,4,
-    4,4,4,2,2,2,2,4,4,4,
-    4,4,3,3,3,3,3,3,4,4,
-    4,4,3,3,3,3,3,3,4,4,
-    4,4,4,4,4,4,4,4,4,4,
-    4,4,4,4,4,4,4,4,4,4,
-    4,4,4,4,4,4,4,4,4,4
-    };
+    int testblocks[200];
+    std::fill_n(testblocks, 200, 0);
     double testangles[200];
     std::fill_n(testangles, 200, 0);
     double testscale[200];
@@ -78,6 +60,9 @@ int main() {
     Uint64 LAST = 0;
     double deltaTime = 0;
     double angle = 0;
+    tetrimino t(0,0, testblocks,10,20);
+    double ticks = 0;
+    int realtick = 0;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -85,19 +70,22 @@ int main() {
             }
             if (event.type == SDL_KEYDOWN) {
                 if(event.key.keysym.sym == SDLK_UP) {
-                    shiftarray(testblocks, 200,10);
+                    //shiftarray(testblocks, 200,10);
                 }
                 if(event.key.keysym.sym == SDLK_DOWN) {
-                    shiftarray(testblocks, 200,-10);
+                    t.movedown();
+
+                    //shiftarray(testblocks, 200,-10);
                 }
                 if(event.key.keysym.sym == SDLK_LEFT) {
-                    shiftarray(testblocks, 200,1);
+                    t.moveleft();
                 }
                 if(event.key.keysym.sym == SDLK_RIGHT) {
-                    shiftarray(testblocks, 200,-1);
+                    t.moveright();
+
                 }
                 if(event.key.keysym.sym == SDLK_z) {
-                    std::fill_n(testscale, 200, testscale[0]-0.1);
+                    t.rotate();
                 }
                 if(event.key.keysym.sym == SDLK_x) {
                     std::fill_n(testscale, 200, testscale[0]+0.1);
@@ -109,11 +97,26 @@ int main() {
         NOW = SDL_GetPerformanceCounter();
 
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
+        if(realtick%100 == 0) {
+            t.movedown();
+        }
+        ticks+= deltaTime;
+        if(ticks >= 1) {
+            ticks = 0;
+            realtick++;
+        }
         //std::fill_n(testangles, 200, testangles[0]+deltaTime*0.1);
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        t.draw();
+        std::memcpy(testblocks, testblocks, sizeof t.array);
         drawCubes(testblocks,testangles, testscale, 240,80,200,10,textures,renderer);
         SDL_RenderPresent(renderer);
+        if(!t.alive) {
+            checkLines(testblocks);
+            t.rebirth(0,0);
+        }
+
     }
 
     return 0;
@@ -186,4 +189,38 @@ void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, dou
     sprite.x = x + oldwidth/2 - sprite.w/2;
     sprite.y = y + oldheight/2 - sprite.h/2;
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+}
+
+void checkLines(int (blocks)[200]) {
+    for(int i = 0; i < 20; i++) {
+        int temp[10];
+        for(int j = 0; j < 10; j++) {
+            temp[j] = blocks[i*10+j];
+        }
+        if(checkRow(temp)) {
+            printf("FULL ROW DETECTED. %i",i);
+            clearRow(blocks, i);
+        }
+    }
+}
+bool checkRow(int (blocks)[10]) {
+    for(int i = 0; i < 10; i++) {
+        if(blocks[i] == 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void clearRow(int (blocks)[200], int y) {
+            for(int j = 0; j < 10; j++) {
+                blocks[(y*10)+j]=0;
+            }
+            for(int j = 0; j < 10; j++) {
+                for(int i = 0; i < (y*10); i++) {
+                    blocks[i] = blocks[i-1];
+                }
+            }
+            //shiftarray(blocks, 200, -10);
+
 }

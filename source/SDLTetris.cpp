@@ -213,14 +213,18 @@ bool checkRow(int (blocks)[10]) {
 }
 
 void clearRow(int (blocks)[200], int y) {
+            int newarray[200];
+            std::fill_n(newarray, 200, 0);
             for(int j = 0; j < 10; j++) {
                 blocks[(y*10)+j]=0;
             }
-            for(int j = 0; j < 10; j++) {
-                for(int i = 0; i < (y*10); i++) {
-                    blocks[i] = blocks[i-1];
-                }
+            for(int j = 0; j < (y*10); j++) {
+                newarray[j+10] = blocks[j];
             }
+            for(int j = (y*10)+10; j < 200; j++) {
+                newarray[j] = blocks[j];
+            }
+            memcpy(blocks,newarray, sizeof newarray);
             //shiftarray(blocks, 200, -10);
 
 }

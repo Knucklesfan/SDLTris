@@ -60,9 +60,13 @@ int main() {
     Uint64 LAST = 0;
     double deltaTime = 0;
     double angle = 0;
-    tetrimino t(0,0, testblocks,10,20);
+    tetrimino t(0,0, testblocks,10,20, 0);
     double ticks = 0;
     int realtick = 0;
+    int nextblocks[16];
+    for(int i = 0; i < 16; i++) {
+        nextblocks[i] = rand()%7;
+    }
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -70,6 +74,7 @@ int main() {
             }
             if (event.type == SDL_KEYDOWN) {
                 if(event.key.keysym.sym == SDLK_UP) {
+                    t.forcedrop();
                     //shiftarray(testblocks, 200,10);
                 }
                 if(event.key.keysym.sym == SDLK_DOWN) {
@@ -114,7 +119,10 @@ int main() {
         SDL_RenderPresent(renderer);
         if(!t.alive) {
             checkLines(testblocks);
-            t.rebirth(0,0);
+            if(!t.rebirth(0,0,nextblocks[0])) {
+            }
+            shiftarray(nextblocks,16,1);
+            nextblocks[15] = rand()%7;
         }
 
     }

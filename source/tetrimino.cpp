@@ -199,7 +199,7 @@
         };
         int* array;
         bool alive;
-tetrimino::tetrimino(int xspawn, int yspawn, int (barray)[200], int bwidth, int bheight) {
+tetrimino::tetrimino(int xspawn, int yspawn, int (barray)[200], int bwidth, int bheight, int block) {
     x = xspawn;
     y = yspawn;
     lastx = xspawn;
@@ -210,9 +210,9 @@ tetrimino::tetrimino(int xspawn, int yspawn, int (barray)[200], int bwidth, int 
     width = bwidth;
     height = bheight;
     alive = true;
-    piece = 0;
+    piece = block;
 }
-void tetrimino::rebirth(int xspawn, int yspawn) {
+bool tetrimino::rebirth(int xspawn, int yspawn, int block) {
     x = xspawn;
     y = yspawn;
     lastx = xspawn;
@@ -220,7 +220,8 @@ void tetrimino::rebirth(int xspawn, int yspawn) {
     rot = 0;
     lastrot = 0;
     alive = true;
-    piece = rand() % 7;
+    piece = block;
+    return collides(x+1, y, rot);
 }
 
 void tetrimino::movedown() {
@@ -239,6 +240,20 @@ void tetrimino::movedown() {
         redraw();
     }
 }
+void tetrimino::forcedrop() {
+    if(alive) {
+        while(collides(x, y+1, rot) && y <= 20) {
+        removeolddraw();
+        lastx = x;
+        lasty = y;
+        lastrot=rot;
+        y+=1;
+        redraw();
+        }
+        alive = false;
+    }
+}
+
 void tetrimino::moveleft() {
     if(alive) {
         removeolddraw();

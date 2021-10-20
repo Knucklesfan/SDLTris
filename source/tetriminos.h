@@ -188,8 +188,9 @@ class tetrimino {
         bool alive;
 	    int x,y,lastx,lasty,rot,lastrot,width,height;
         int* array;
-	    tetrimino(int, int, int (barray)[], int bwidth, int bheight);
-        void rebirth(int, int);
+	    tetrimino(int, int, int (barray)[], int bwidth, int bheight, int block);
+        bool rebirth(int, int, int block);
+        void forcedrop();
 	    void movedown();
         void moveleft();
 	    void moveright();

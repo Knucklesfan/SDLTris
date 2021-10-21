@@ -9,13 +9,9 @@
 #include <cstring>
 #include <SDL2/SDL.h>
 
-
-game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture) {
+game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
     std::fill_n(testblocks, 200, 0);
-    std::fill_n(testangles, 200, 0);
-    std::fill_n(testscale, 200, 1);
     std::fill_n(ghostblocks, 200, 0);
-    std::fill_n(ghostscale, 200, 0.5);
     std::fill_n(previousblocks, 200, 0);
     renderer = renderman;
     textures = texture;
@@ -29,7 +25,9 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     for (int i = 0; i < 16; i++) {
         nextblocks[i] = rand() % 7;
     }
-    gameactive = true;
+    music = musicVec;
+    sound = soundVec;
+    gameactive = false;
 
 
 }
@@ -43,12 +41,29 @@ void game::logic(double deltatime) {
             ticks = 0;
             realtick++;
         }
+        layerpos[0] -= (deltatime)/2.5;
+        layerpos[1] -= (deltatime) / 5;
+        layerpos[2] -= (deltatime) / 10;
+        layerpos[3] -= (deltatime) / 15;
+
+
     }
 
 }
 void game::render() {
     if (gameactive) {
         SDL_RenderClear(renderer);
+        drawTexture(renderer,textures[10], fmod(layerpos[4], 640) + 0, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[10], fmod(layerpos[4], 640) + 640, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[9], fmod(layerpos[3], 640) + 0, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[9], fmod(layerpos[3], 640) + 640, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[8], fmod(layerpos[2], 640) + 0, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[8], fmod(layerpos[2], 640) + 640, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[7], fmod(layerpos[1], 640) + 0, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[7], fmod(layerpos[1], 640) + 640, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[6], fmod(layerpos[0],640)+0, 0, 0.0, 1.0);
+        drawTexture(renderer,textures[6], fmod(layerpos[0], 640)+640, 0, 0.0, 1.0);
+
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         g.changePos(t.x, t.y, t.rot);
         t.draw();
@@ -64,6 +79,7 @@ void game::render() {
 }
 int game::endlogic() {
     if (!t.alive && gameactive) {
+        Mix_PlayChannel( -1, sound[5], 0 );
         ticks = 0;
         realtick = 0;
         checkLines(testblocks);
@@ -84,26 +100,32 @@ void game::keyPressed(SDL_Keycode key)
     if (gameactive) {
         switch (key) {
         case SDLK_UP: {
+            Mix_PlayChannel( -1, sound[3], 0 );
             t.forcedrop();
             break;
         }
         case SDLK_DOWN: {
+            Mix_PlayChannel( -1, sound[2], 0 );
             t.movedown();
             break;
         }
         case SDLK_LEFT: {
+            Mix_PlayChannel( -1, sound[2], 0 );
             t.moveleft();
             break;
         }
         case SDLK_RIGHT: {
+            Mix_PlayChannel( -1, sound[2], 0 );
             t.moveright();
             break;
         }
         case SDLK_z: {
+            Mix_PlayChannel( -1, sound[1], 0 );
             t.rotate();
             break;
         }
         case SDLK_x: {
+            Mix_PlayChannel( -1, sound[4], 0 );
             checkLines(testblocks);
             t.removeolddraw();
             memcpy(previousblocks, testblocks, sizeof previousblocks);
@@ -148,6 +170,7 @@ void game::shiftarray(int(array)[], int size, int shift) {
 }
 
 void game::checkLines(int(blocks)[200]) {
+    int times = 0;
     for (int i = 0; i < 20; i++) {
         int temp[10];
         for (int j = 0; j < 10; j++) {
@@ -156,7 +179,15 @@ void game::checkLines(int(blocks)[200]) {
         if (checkRow(temp)) {
             printf("FULL ROW DETECTED. %i", i);
             clearRow(blocks, i);
+            times++;
         }
+    }
+    if(times == 1) {
+        Mix_PlayChannel( -1, sound[6], 0 );
+    } else if(times > 1 && times < 4) {
+        Mix_PlayChannel( -1, sound[7], 0 );
+    } else if(times >= 4) {
+        Mix_PlayChannel( -1, sound[8], 0 );
     }
 }
 bool game::checkRow(int(blocks)[10]) {
@@ -185,7 +216,7 @@ void game::clearRow(int(blocks)[200], int y) {
 
 }
 void game::reset() {
-
+    Mix_HaltMusic();
     std::fill_n(testblocks, 200, 0);
     std::fill_n(testangles, 200, 0);
     std::fill_n(testscale, 200, 1);
@@ -203,6 +234,27 @@ void game::reset() {
         nextblocks[i] = rand() % 7;
     }
     gameactive = true;
+    if( Mix_PlayingMusic() == 0 )
+    {
+        //Play the music
+        Mix_PlayMusic( music[1], -1 );
+    }
+    //If music is being played
+    else
+    {
+        //If the music is paused
+        if( Mix_PausedMusic() == 1 )
+        {
+            //Resume the music
+        Mix_ResumeMusic();
+        }
+        //If the music is playing
+        else
+        {
+        //Pause the music
+            Mix_PauseMusic();
+        }
+    }
 
 
 }

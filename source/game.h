@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
 #include <filesystem>
@@ -15,6 +16,8 @@ class game
 		int testblocks[200], ghostblocks[200],  previousblocks[200];
 		double testangles[200], testscale[200], ghostscale[200];
 		SDL_Renderer* renderer;
+		Mix_Music** music;
+		Mix_Chunk** sound;
 		tetrimino t;
 		ghostblock g;
 		double ticks;
@@ -23,8 +26,9 @@ class game
 		int holdblock;
 		bool gameactive;
 		std::vector<SDL_Texture*> textures;
-		game(SDL_Renderer* renderer, SDL_Window* window, std::vector<SDL_Texture*>);
 
+		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[]);
+		double layerpos[10];
 		void keyPressed(SDL_Keycode key);
 		void render();
 		void logic(double deltatime);

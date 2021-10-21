@@ -7,7 +7,7 @@ tetrimino::tetrimino() {
     x = 0;
     y = 0;
     rot = 0;
-    array = new int[200];
+    //array = new int[200];
     width = 10;
     height = 20;
     alive = false;

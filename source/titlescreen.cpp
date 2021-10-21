@@ -2,8 +2,10 @@
 #include <iostream>
 #include <filesystem>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <vector>
 
-titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<SDL_Texture*> texture)
+titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[])
 {
     TTF_Init();
     //std::filesystem::current_path().u8string()
@@ -19,8 +21,59 @@ titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<
     else {
         printf("successfully loaded font at %s", path.c_str());
     }
+    background = bg("cavestory", renderer);
 	renderer = render;
 	textures = texture;
+    music = musicVec;
+    sound = soundVec;
+    if( Mix_PlayingMusic() == 0 )
+    {
+        //Play the music
+        Mix_PlayMusic( music[0], -1 );
+    }
+    //If music is being played
+    else
+    {
+        //If the music is paused
+        if( Mix_PausedMusic() == 1 )
+        {
+            //Resume the music
+        Mix_ResumeMusic();
+        }
+        //If the music is playing
+        else
+        {
+        //Pause the music
+            Mix_PauseMusic();
+        }
+    }
+
+}
+void titlescreen::reset()
+{
+    Mix_HaltMusic();
+    if( Mix_PlayingMusic() == 0 )
+    {
+        //Play the music
+        Mix_PlayMusic( music[0], -1 );
+    }
+    //If music is being played
+    else
+    {
+        //If the music is paused
+        if( Mix_PausedMusic() == 1 )
+        {
+            //Resume the music
+        Mix_ResumeMusic();
+        }
+        //If the music is playing
+        else
+        {
+        //Pause the music
+            Mix_PauseMusic();
+        }
+    }
+
 }
 
 void titlescreen::keyPressed(SDL_Keycode key)
@@ -33,16 +86,19 @@ void titlescreen::keyPressed(SDL_Keycode key)
         case(SDLK_UP): {
             if (currentselection > 0) {
                 currentselection = (currentselection - 1);
+                Mix_PlayChannel( -1, sound[1], 0 );
             }
             break;
         }
         case(SDLK_DOWN): {
             if (currentselection < selections - 1) {
                 currentselection = (currentselection + 1);
+                Mix_PlayChannel( -1, sound[1], 0 );
             }
             break;
         }
         case(SDLK_z): {
+            Mix_PlayChannel( -1, sound[0], 0 );
             switch (currentselection) {
             case 0:
                 loadgame = true;
@@ -71,6 +127,7 @@ void titlescreen::keyPressed(SDL_Keycode key)
     case 1: {
         switch (key) {
         case(SDLK_z): {
+            Mix_PlayChannel( -1, sound[0], 0 );
             currentscreen = 0;
         }
                     break;
@@ -83,17 +140,21 @@ void titlescreen::keyPressed(SDL_Keycode key)
             if (currentselection > 0) {
                 currentselection = (currentselection - 1);
             }
+            Mix_PlayChannel( -1, sound[1], 0 );
             break;
         }
         case(SDLK_DOWN): {
             if (currentselection < settingssize - 1) {
                 currentselection = (currentselection + 1);
             }
+            Mix_PlayChannel( -1, sound[1], 0 );
             break;
         }
         case(SDLK_z): {
+            Mix_PlayChannel( -1, sound[0], 0 );
             if (showerror) {
                 showerror = false;
+                
             }
             else {
                 switch (currentselection) {
@@ -126,6 +187,7 @@ void titlescreen::keyPressed(SDL_Keycode key)
     case 3: {
         switch (key) {
         case(SDLK_z): {
+            Mix_PlayChannel( -1, sound[0], 0 );
             currentscreen = 0;
                 }
             break;

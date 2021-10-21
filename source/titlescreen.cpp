@@ -1,0 +1,256 @@
+#include "titlescreen.h"
+#include <iostream>
+#include <filesystem>
+#include <SDL2/SDL_ttf.h>
+
+titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<SDL_Texture*> texture)
+{
+    TTF_Init();
+    //std::filesystem::current_path().u8string()
+    std::string path = "./sprites/00.ttf";
+    buttonfont = TTF_OpenFont(path.c_str(), 24);
+    bodyfont = TTF_OpenFont(path.c_str(), 16);
+    headerfont = TTF_OpenFont(path.c_str(), 30);
+    window = windows;
+    if (buttonfont == NULL) {
+        printf("error: font not found in: %s\n", path.c_str());
+        exit(EXIT_FAILURE);
+    }
+    else {
+        printf("successfully loaded font at %s", path.c_str());
+    }
+	renderer = render;
+	textures = texture;
+}
+
+void titlescreen::keyPressed(SDL_Keycode key)
+{
+    switch (currentscreen) {
+
+    case 0: {
+
+        switch (key) {
+        case(SDLK_UP): {
+            if (currentselection > 0) {
+                currentselection = (currentselection - 1);
+            }
+            break;
+        }
+        case(SDLK_DOWN): {
+            if (currentselection < selections - 1) {
+                currentselection = (currentselection + 1);
+            }
+            break;
+        }
+        case(SDLK_z): {
+            switch (currentselection) {
+            case 0:
+                loadgame = true;
+                break;
+            case 1:
+                currentscreen = 1;
+                break;
+            case 2:
+                currentselection = 0;
+                currentscreen = 2;
+                break;
+            case 3:
+                currentscreen = 3;
+                break;
+            case 4:
+                exit(0);
+                break;
+            }
+            break;
+        }
+
+        }
+        break;
+    }
+
+    case 1: {
+        switch (key) {
+        case(SDLK_z): {
+            currentscreen = 0;
+        }
+                    break;
+        }
+        break;
+    }
+    case 2: {
+        switch (key) {
+        case(SDLK_UP): {
+            if (currentselection > 0) {
+                currentselection = (currentselection - 1);
+            }
+            break;
+        }
+        case(SDLK_DOWN): {
+            if (currentselection < settingssize - 1) {
+                currentselection = (currentselection + 1);
+            }
+            break;
+        }
+        case(SDLK_z): {
+            if (showerror) {
+                showerror = false;
+            }
+            else {
+                switch (currentselection) {
+                case 0: {
+                    Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+                    bool IsFullscreen = SDL_GetWindowFlags(window) & FullscreenFlag;
+                    SDL_SetWindowFullscreen(window, IsFullscreen ? 0 : FullscreenFlag);
+                    SDL_ShowCursor(IsFullscreen);
+                    break;
+                }
+                case 1:
+                    showerror = true;
+                    break;
+                case 2:
+                    showerror = true;
+                    break;
+                case 3:
+                    currentscreen = 0;
+                    currentselection = 2;
+                    break;
+                }
+                break;
+            }
+        }
+
+        }
+        break;
+    }
+
+    case 3: {
+        switch (key) {
+        case(SDLK_z): {
+            currentscreen = 0;
+                }
+            break;
+            }
+        break;
+        }
+    }
+}
+
+void titlescreen::render()
+{
+    SDL_RenderClear(renderer);
+    drawTexture(textures[10], fmod(layerpos[4], 640) + 0, 0, 0.0, 1.0, false);
+    drawTexture(textures[10], fmod(layerpos[4], 640) + 640, 0, 0.0, 1.0, false);
+    drawTexture(textures[9], fmod(layerpos[3], 640) + 0, 0, 0.0, 1.0, false);
+    drawTexture(textures[9], fmod(layerpos[3], 640) + 640, 0, 0.0, 1.0, false);
+    drawTexture(textures[8], fmod(layerpos[2], 640) + 0, 0, 0.0, 1.0, false);
+    drawTexture(textures[8], fmod(layerpos[2], 640) + 640, 0, 0.0, 1.0, false);
+    drawTexture(textures[7], fmod(layerpos[1], 640) + 0, 0, 0.0, 1.0, false);
+    drawTexture(textures[7], fmod(layerpos[1], 640) + 640, 0, 0.0, 1.0, false);
+    drawTexture(textures[6], fmod(layerpos[0],640)+0, 0, 0.0, 1.0, false);
+    drawTexture(textures[6], fmod(layerpos[0], 640)+640, 0, 0.0, 1.0, false);
+    for (int i = 0; i < selections; i++) {
+        renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);
+    }
+    drawTexture(textures[05], 0, 0, 0.0, 1.0, false);
+    switch (currentscreen) {
+        case(1): {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 240 - 120, 480, 240 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            renderfont(320, 140, messagetitle, false, headerfont);
+            renderfont(320, 180, messagebody, false, bodyfont);
+            renderfont(320, 300, messagebutton, true, buttonfont);
+            break;
+        }
+        case(2): {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 80, 480, 320 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            renderfont(320, 100, settingstitle, false, headerfont);
+            for (int i = 0; i < settingssize; i++) {
+                renderfont(320, 130 + (i * 32), settings[i], (i == currentselection), buttonfont);
+            }
+            if (showerror) {
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+                SDL_Rect splashbox = { 0, 0, 640, 480 };
+                SDL_RenderFillRect(renderer, &splashbox);
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+                splashbox = { 320 - 240, 240 - 120, 480, 240 };
+                SDL_RenderFillRect(renderer, &splashbox);
+                renderfont(320, 140, messagetitle, false, headerfont);
+                renderfont(320, 180, messagebody, false, bodyfont);
+                renderfont(320, 300, messagebutton, true, buttonfont);
+            }
+            break;
+        }
+        case(3): {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 80, 480, 320 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            renderfont(320, 100, creditstitle, false, headerfont);
+            for (int i = 0; i < creditssize; i++) {
+                renderfont(320, 130 + (i * 32), credits[i], (i == currentselection), bodyfont);
+            }
+            renderfont(320, 300, messagebutton, true, buttonfont);
+        }
+
+    }
+    SDL_RenderPresent(renderer);
+
+}
+
+void titlescreen::logic(double deltatime)
+{
+    layerpos[0] -= (deltatime)/2.5;
+    layerpos[1] -= (deltatime) / 5;
+    layerpos[2] -= (deltatime) / 10;
+    layerpos[3] -= (deltatime) / 15;
+
+}
+
+int titlescreen::endlogic()
+{
+    if (loadgame) {
+        return 1;
+    }
+	return 0;
+}
+
+void titlescreen::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
+    SDL_Rect sprite;
+    SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
+    int oldwidth = sprite.w;
+    int oldheight = sprite.h;
+    sprite.w = sprite.w * scale;
+    sprite.h = sprite.h * scale;
+    if (center) {
+        sprite.x = x - oldwidth / 2;
+        sprite.y = y - oldheight / 2;
+    }
+    else {
+        sprite.x = x + oldwidth / 2 - sprite.w / 2;
+        sprite.y = y + oldheight / 2 - sprite.h / 2;
+    }
+    SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+}
+void titlescreen::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size) {
+    SDL_Surface* text;
+    SDL_Color color = { 255, 255, 0 };
+    if (!selected) {
+        color = { 255, 255, 255 };
+    }
+    text = TTF_RenderText_Solid(size, strg.c_str(), color);
+    SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
+    SDL_FreeSurface(text);
+    drawTexture(words, x, y, 0, 1.0, true);
+
+}

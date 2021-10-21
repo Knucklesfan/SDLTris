@@ -1,9 +1,7 @@
-#include "tetriminos.h"
+#include "ghostblock.h"
 #include <stdio.h>
-#include <iostream>
-#include <cstring>
 
-tetrimino::tetrimino() {
+ghostblock::ghostblock() {
     x = 0;
     y = 0;
     rot = 0;
@@ -16,7 +14,8 @@ tetrimino::tetrimino() {
     lasty = 0;
     lastrot = 0;
 }
-tetrimino::tetrimino(int xspawn, int yspawn, int(barray)[200], int bwidth, int bheight, int block) {
+
+ghostblock::ghostblock(int xspawn, int yspawn, int(barray)[200], int bwidth, int bheight, int block, int(coutsidearray)[200]) {
     x = xspawn;
     y = yspawn;
     lastx = xspawn;
@@ -28,8 +27,18 @@ tetrimino::tetrimino(int xspawn, int yspawn, int(barray)[200], int bwidth, int b
     height = bheight;
     alive = true;
     piece = block;
+    outsidearray = coutsidearray;
+    while (collides(x, y + 1, rot) && y <= 20) {
+         removeolddraw();
+         lastx = x;
+         lasty = y;
+         lastrot = rot;
+         y += 1;
+         redraw();
+    }
+
 }
-bool tetrimino::rebirth(int xspawn, int yspawn, int block) {
+void ghostblock::rebirth(int xspawn, int yspawn, int block, int(barray)[200]) {
     x = xspawn;
     y = yspawn;
     lastx = xspawn;
@@ -38,66 +47,36 @@ bool tetrimino::rebirth(int xspawn, int yspawn, int block) {
     lastrot = 0;
     alive = true;
     piece = block;
-    return collides(x + 1, y, rot);
-}
-
-void tetrimino::movedown() {
-    if (alive) {
+    array = barray;
+    while (collides(x, y + 1, rot) && y <= 20) {
         removeolddraw();
         lastx = x;
         lasty = y;
         lastrot = rot;
-        bool movable = collides(x, y + 1, rot);
-        if (y <= 20 && movable) {
-            y += 1;
-        }
-        else {
-            alive = false;
-        }
+        y += 1;
         redraw();
     }
-}
-void tetrimino::forcedrop() {
-    if (alive) {
-        while (collides(x, y + 1, rot) && y <= 20) {
-            removeolddraw();
-            lastx = x;
-            lasty = y;
-            lastrot = rot;
-            y += 1;
-            redraw();
-        }
-        alive = false;
-    }
-}
 
-void tetrimino::moveleft() {
-    if (alive) {
-        removeolddraw();
-        lastx = x; //always preserve value before moving
-        lasty = y; //to ensure that undrawing works.
-        lastrot = rot;
-
-        if (collides(x - 1, y, rot)) {
-            x -= 1;
-        }
-        redraw();
-    }
 }
-void tetrimino::moveright() {
-    if (alive) {
+void ghostblock::changePos(int ax, int ay, int arot) {
+    removeolddraw();
+    lastx = x; //always preserve value before moving
+    lasty = y; //to ensure that undrawing works.
+    lastrot = rot;
+    x = ax;
+    y = 0;
+    rot = arot;
+    while (collides(x, y + 1, rot) && y <= 20) {
         removeolddraw();
         lastx = x;
         lasty = y;
         lastrot = rot;
-
-        if (collides(x + 1, y, rot)) {
-            x += 1;
-        }
+        y += 1;
         redraw();
     }
+    redraw();
 }
-bool tetrimino::collides(int colx, int coly, int colrot) {
+bool ghostblock::collides(int colx, int coly, int colrot) {
     lastx = x; //always preserve value before moving
     lasty = y; //to ensure that undrawing works.
     lastrot = rot;
@@ -122,20 +101,7 @@ bool tetrimino::collides(int colx, int coly, int colrot) {
     redraw();
     return true;
 }
-void tetrimino::rotate() {
-    if (alive) {
-        removeolddraw();
-        lastx = x; //always preserve value before moving
-        lasty = y; //to ensure that undrawing works.
-        lastrot = rot;
-        if (collides(x, y, rot + 1)) {
-            rot = (rot + 1) % 4;
-        }
-        printf("current rot: %i last rot: %i\n", rot, lastrot);
-        redraw();
-    }
-}
-void tetrimino::draw() {
+void ghostblock::draw() {
     //Pieces[piece][rot][actual data here]
     removeolddraw();
     redraw();
@@ -145,21 +111,22 @@ void tetrimino::draw() {
 
 }
 
-void tetrimino::removeolddraw() {
+void ghostblock::removeolddraw() {
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
         if (Pieces[piece][lastrot][i] > 0) {
-            array[lastx + (lasty * width) + i % 4 + ycalc] = 0;
+            outsidearray[lastx + (lasty * width) + i % 4 + ycalc] = 0;
         }
     }
 
 }
 
-void tetrimino::redraw() {
+void ghostblock::redraw() {
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
         if (Pieces[piece][rot][i] > 0) {
-            array[x + (y * width) + i % 4 + ycalc] = Pieces[piece][rot][i];
+            printf("x: %i y: %i i: %i ycalc: %i\n", x, y, i%4, ycalc);
+            outsidearray[x + (y * width) + i % 4 + ycalc] = Pieces[piece][rot][i];
         }
 
     }

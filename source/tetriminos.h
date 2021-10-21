@@ -1,5 +1,11 @@
+#pragma once
+
 class tetrimino {
-        int SPiece[4][16] = {
+
+    public:
+        int Pieces[7][4][16] = {
+            //S PIECE 
+            {
             {0,1,1,0,
              0,0,1,1,
              0,0,0,0,
@@ -20,8 +26,9 @@ class tetrimino {
              0,0,1,1,
              0,0,0,0
             }
-        };
-        int TPiece[4][16] = {
+        },
+            //T PIECE
+            {
             {
              0,0,2,0,
              0,2,2,0,
@@ -47,8 +54,9 @@ class tetrimino {
              0,0,0,0
             },
 
-        };
-        int BPiece[4][16] = {
+        },
+            //B PIECE
+            {
             {
              0,0,3,0,
              0,0,3,3,
@@ -74,8 +82,9 @@ class tetrimino {
              0,0,0,0
             },
 
-        };
-        int CPiece[4][16] = {
+        },
+            //C PIECE
+            {
             {
              0,0,1,1,
              0,0,1,1,
@@ -101,8 +110,9 @@ class tetrimino {
              0,0,0,0
             },
 
-        };
-        int LPiece[4][16] = {
+        },
+            //L PIECE
+            {
             {
              0,0,0,0,
              0,2,2,2,
@@ -128,8 +138,9 @@ class tetrimino {
              0,0,0,0
             },
 
-        };
-        int PPiece[4][16] = {
+        },
+            //P PIECE
+            {
             {
              0,3,0,0,
              0,3,3,3,
@@ -155,8 +166,9 @@ class tetrimino {
              0,0,0,0
             },
 
-        };
-        int RPiece[4][16] = {
+        },
+            //R PIECE
+            {
             {
              0,0,0,0,
              1,1,1,1,
@@ -182,13 +194,17 @@ class tetrimino {
              0,1,0,0
             },
 
+        }
         };
-
-    public:
-        bool alive;
-	    int x,y,lastx,lasty,rot,lastrot,width,height;
+        int x, y, lastx, lasty, rot, lastrot, width, height, piece;
         int* array;
-	    tetrimino(int, int, int (barray)[], int bwidth, int bheight, int block);
+        bool alive;
+
+        //bool alive;
+	    //int x,y,lastx,lasty,rot,lastrot,width,height;
+        //int* array;
+        tetrimino();
+        tetrimino(int, int, int (barray)[], int bwidth, int bheight, int block);
         bool rebirth(int, int, int block);
         void forcedrop();
 	    void movedown();
@@ -197,7 +213,8 @@ class tetrimino {
         void rotate();
         void draw();
         bool collides(int x, int y, int rot);
-    private:
+        int* getPieces();
         void removeolddraw();
+    private:
         void redraw();
 };

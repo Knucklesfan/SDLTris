@@ -98,7 +98,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>x86/SDL2.lib;x86/SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>x86/SDL2.lib;x86/SDL2main.lib;x86/SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -146,11 +146,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="SDLTetris.cpp" />
-    <ClCompile Include="texture.cpp" />
+    <ClCompile Include="source/game.cpp" />
+    <ClCompile Include="source/SDLTetris.cpp" />
+    <ClCompile Include="source\tetrimino.cpp" />
+    <ClCompile Include="source\ghostblock.cpp" />
+    <ClCompile Include="source\titlescreen.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="texture.h" />
+    <ClInclude Include="source\game.h" />
+    <ClInclude Include="source\tetriminos.h" />
+    <ClInclude Include="source\ghostblock.h" />
+    <ClInclude Include="source\titlescreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

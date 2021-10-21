@@ -5,7 +5,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <vector>
 
-titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[])
+titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[])
 {
     TTF_Init();
     //std::filesystem::current_path().u8string()
@@ -21,7 +21,8 @@ titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<
     else {
         printf("successfully loaded font at %s", path.c_str());
     }
-    background = bg("cavestory", renderer);
+    background = backg;
+
 	renderer = render;
 	textures = texture;
     music = musicVec;
@@ -200,20 +201,13 @@ void titlescreen::keyPressed(SDL_Keycode key)
 void titlescreen::render()
 {
     SDL_RenderClear(renderer);
-    drawTexture(textures[10], fmod(layerpos[4], 640) + 0, 0, 0.0, 1.0, false);
-    drawTexture(textures[10], fmod(layerpos[4], 640) + 640, 0, 0.0, 1.0, false);
-    drawTexture(textures[9], fmod(layerpos[3], 640) + 0, 0, 0.0, 1.0, false);
-    drawTexture(textures[9], fmod(layerpos[3], 640) + 640, 0, 0.0, 1.0, false);
-    drawTexture(textures[8], fmod(layerpos[2], 640) + 0, 0, 0.0, 1.0, false);
-    drawTexture(textures[8], fmod(layerpos[2], 640) + 640, 0, 0.0, 1.0, false);
-    drawTexture(textures[7], fmod(layerpos[1], 640) + 0, 0, 0.0, 1.0, false);
-    drawTexture(textures[7], fmod(layerpos[1], 640) + 640, 0, 0.0, 1.0, false);
-    drawTexture(textures[6], fmod(layerpos[0],640)+0, 0, 0.0, 1.0, false);
-    drawTexture(textures[6], fmod(layerpos[0], 640)+640, 0, 0.0, 1.0, false);
+
+    background.render(renderer);
+
     for (int i = 0; i < selections; i++) {
         renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);
     }
-    drawTexture(textures[05], 0, 0, 0.0, 1.0, false);
+    drawTexture(textures[5], 0, 0, 0.0, 1.0, false);
     switch (currentscreen) {
         case(1): {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
@@ -272,11 +266,7 @@ void titlescreen::render()
 
 void titlescreen::logic(double deltatime)
 {
-    layerpos[0] -= (deltatime)/2.5;
-    layerpos[1] -= (deltatime) / 5;
-    layerpos[2] -= (deltatime) / 10;
-    layerpos[3] -= (deltatime) / 15;
-
+    background.logic(deltatime);
 }
 
 int titlescreen::endlogic()

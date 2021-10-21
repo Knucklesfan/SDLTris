@@ -13,8 +13,7 @@
 
 bg::bg() {}
 bg::bg(std::string path, SDL_Renderer* renderer) {
-    std::vector<SDL_Surface*> surfaces = generateSurfaces("./backgrounds/" + path); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
-    textures = generateTextures(surfaces, renderer);
+    std::vector<SDL_Surface*> surfaces = generateSurfaces("./backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     std::string filepath = "./backgrounds/" + path + "/theme.xml";
     rapidxml::file<> xmlFile(filepath.c_str());
     rapidxml::xml_document<> doc;
@@ -31,11 +30,12 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
         std::cout << "Value: " << incrementsx[i] << "\n";
     }
     std::cout << "Background name: " << name << "\n";
+
 }
 
-std::vector<SDL_Surface*> bg::generateSurfaces(std::string path) {
+std::vector<SDL_Surface*> bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
     int i = 0;
-    std::vector<SDL_Surface*>textures;
+    std::vector<SDL_Surface*>surfaces;
     SDL_Surface* temp;
     std::vector<std::string> strings;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
@@ -53,23 +53,67 @@ std::vector<SDL_Surface*> bg::generateSurfaces(std::string path) {
         temp = SDL_LoadBMP(string.c_str());
         if (!temp) {
             printf("Failed to load image at %s: %s\n", string, SDL_GetError());
-            return textures;
+            return surfaces;
         }
-        textures.push_back(temp);
+        surfaces.push_back(temp);
         printf("Successfully loaded image at %s\n", string.c_str());
     }
-    return textures;
-
-}
-
-std::vector<SDL_Texture*> bg::generateTextures(std::vector<SDL_Surface*> surfaces, SDL_Renderer* renderer) {
-    std::vector<SDL_Texture*>textures;
     for (SDL_Surface* surf : surfaces) {
-        textures.push_back(SDL_CreateTextureFromSurface(renderer, surf));
+        SDL_Texture* temp = SDL_CreateTextureFromSurface(renderer, surf);
+        if(temp != NULL) {
+            textures.push_back(temp);
+            printf("pushed texture!!");
+            layers++;
+        }
+        else {
+            fprintf(stderr, "CreateTextureFromSurface failed: %s\n", SDL_GetError());
+        }
     }
-    return textures;
 
 }
+void bg::render(SDL_Renderer* renderer) {
+    for(int i = 0; i < layers; i++) {
+    drawTexture(renderer,textures[i], fmod(layerposx[0],640), fmod(layerposx[0],480), 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], fmod(layerposx[0], 640)+640, fmod(layerposx[0],480)+480, 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], fmod(layerposx[0],640)+0, fmod(layerposx[0],480)+480, 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], fmod(layerposx[0], 640)+640, fmod(layerposx[0],480), 0.0, 1.0, false);
+    }
+}
+void bg::logic(double deltatime)
+{
+    for(int i = 0; i < layers; i++) {
+        std::cout << incrementsx[i] << "\n";
+        std::cout << incrementsy[i] << "\n";
+        if(incrementsx > 0) {
+            layerposx[i] -= (deltatime)/(incrementsx[i]);
+        }
+        if(incrementsy > 0) {
+            layerposy[i] -= (deltatime)/(incrementsy[i]);
+        }
+
+    }
+}
+
+void bg::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
+    SDL_Rect sprite;
+    if(SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h) < 0) {
+        printf("TEXTURE ISSUES!!! \n");
+    };
+    int oldwidth = sprite.w;
+    int oldheight = sprite.h;
+    sprite.w = sprite.w * scale;
+    sprite.h = sprite.h * scale;
+    if (center) {
+        sprite.x = x - oldwidth / 2;
+        sprite.y = y - oldheight / 2;
+    }
+    else {
+        sprite.x = x + oldwidth / 2 - sprite.w / 2;
+        sprite.y = y + oldheight / 2 - sprite.h / 2;
+    }
+    SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+}
+
 bool bg::hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me out https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
     if (fullString.length() >= ending.length()) {
         return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));

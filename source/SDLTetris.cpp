@@ -73,7 +73,8 @@ int main() {
     double ticks = 0;
     int realtick = 0;
     int gamemode = 0;
-    titlescreen title(renderer, window, textures, music.data(), sound.data());
+    bg backg("cavestory",renderer);
+    titlescreen title(renderer, window, backg, textures, music.data(), sound.data());
     game gamer(renderer, window, textures, music.data(), sound.data());
 
     while (!quit) {

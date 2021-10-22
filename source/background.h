@@ -8,6 +8,7 @@
 #include <array>
 #include <algorithm>    // std::sort
 #include <cstring>
+#include <SDL2/SDL_mixer.h>
 
 class bg
 {
@@ -23,6 +24,7 @@ class bg
         std::string path;
         std::string creator;
         std::string vers;
+        Mix_Music* music;
         void render(SDL_Renderer* renderer);
         std::vector<SDL_Texture*> textures;
         bg(std::string path, SDL_Renderer* renderer);
@@ -33,4 +35,5 @@ class bg
         bool hasEnding(std::string const& fullString, std::string const& ending);
         std::vector<SDL_Surface*> generateSurfaces(std::string path, SDL_Renderer* renderer);
         static bool compareFunction (std::string a, std::string b) {return a<b;} 
+        
 };

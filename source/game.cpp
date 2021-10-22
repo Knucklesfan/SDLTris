@@ -8,9 +8,11 @@
 #include <array>
 #include <cstring>
 #include <SDL2/SDL.h>
+#include <cmath>
+#include "background.h"
 
 
-game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
+game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
     std::fill_n(testblocks, 200, 0);
     std::fill_n(ghostblocks, 200, 0);
     std::fill_n(previousblocks, 200, 0);
@@ -29,7 +31,9 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     music = musicVec;
     sound = soundVec;
     gameactive = false;
-
+    backgrounds = backg;
+    lines = 0;
+    
 
 }
 void game::logic(double deltatime) {
@@ -42,11 +46,7 @@ void game::logic(double deltatime) {
             ticks = 0;
             realtick++;
         }
-        layerpos[0] -= (deltatime)/2.5;
-        layerpos[1] -= (deltatime) / 5;
-        layerpos[2] -= (deltatime) / 10;
-        layerpos[3] -= (deltatime) / 15;
-
+        backgrounds[(lines/10)%backgrounds.size()].logic(deltatime);
 
     }
 
@@ -54,17 +54,7 @@ void game::logic(double deltatime) {
 void game::render() {
     if (gameactive) {
         SDL_RenderClear(renderer);
-        drawTexture(renderer,textures[10], fmod(layerpos[4], 640) + 0, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[10], fmod(layerpos[4], 640) + 640, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[9], fmod(layerpos[3], 640) + 0, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[9], fmod(layerpos[3], 640) + 640, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[8], fmod(layerpos[2], 640) + 0, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[8], fmod(layerpos[2], 640) + 640, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[7], fmod(layerpos[1], 640) + 0, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[7], fmod(layerpos[1], 640) + 640, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[6], fmod(layerpos[0],640)+0, 0, 0.0, 1.0);
-        drawTexture(renderer,textures[6], fmod(layerpos[0], 640)+640, 0, 0.0, 1.0);
-
+        backgrounds[(lines/10)%backgrounds.size()].render(renderer);
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         g.changePos(t.x, t.y, t.rot);
         t.draw();
@@ -190,6 +180,9 @@ void game::checkLines(int(blocks)[200]) {
     } else if(times >= 4) {
         Mix_PlayChannel( -1, sound[8], 0 );
     }
+    lines += times;
+    changemusic();
+    std::cout << lines << "\n";
 }
 bool game::checkRow(int(blocks)[10]) {
     for (int i = 0; i < 10; i++) {
@@ -216,8 +209,37 @@ void game::clearRow(int(blocks)[200], int y) {
     //shiftarray(blocks, 200, -10);
 
 }
+void game::changemusic() {
+    if((lines/10)%backgrounds.size() != currentsong) {
+        Mix_HaltMusic();
+        if( Mix_PlayingMusic() == 0 )
+        {
+            //Play the music
+            Mix_PlayMusic(backgrounds[(lines/10)%backgrounds.size()].music, -1 );
+        }
+        //If music is being played
+        else
+        {
+            //If the music is paused
+            if( Mix_PausedMusic() == 1 )
+            {
+                //Resume the music
+            Mix_ResumeMusic();
+            }
+            //If the music is playing
+            else
+            {
+            //Pause the music
+                Mix_PauseMusic();
+            }
+        }
+        currentsong = (lines/10)%backgrounds.size();
+    }
+
+}
 void game::reset() {
-    Mix_HaltMusic();
+    currentsong = -1;
+    changemusic();
     std::fill_n(testblocks, 200, 0);
     std::fill_n(testangles, 200, 0);
     std::fill_n(testscale, 200, 1);
@@ -235,27 +257,6 @@ void game::reset() {
         nextblocks[i] = rand() % 7;
     }
     gameactive = true;
-    if( Mix_PlayingMusic() == 0 )
-    {
-        //Play the music
-        Mix_PlayMusic( music[1], -1 );
-    }
-    //If music is being played
-    else
-    {
-        //If the music is paused
-        if( Mix_PausedMusic() == 1 )
-        {
-            //Resume the music
-        Mix_ResumeMusic();
-        }
-        //If the music is playing
-        else
-        {
-        //Pause the music
-            Mix_PauseMusic();
-        }
-    }
 
 
 }

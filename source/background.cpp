@@ -9,8 +9,8 @@
 #include <array>
 #include <algorithm>    // std::sort
 #include <cstring>
-
-
+#include <cmath>
+#include <SDL2/SDL_mixer.h>
 bg::bg() {}
 bg::bg(std::string path, SDL_Renderer* renderer) {
     std::vector<SDL_Surface*> surfaces = generateSurfaces("./backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
@@ -22,18 +22,22 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
     creator = doc.first_node("creator")->value();
     vers = doc.first_node("vers")->value();
     int array[10];
-    for(int i = 0; i < 10; i++) {
+    for(int i = 0; i < surfaces.size(); i++) {
         std::string sr = "layer";
         sr += std::to_string(i);
-        std::cout << sr.c_str() << "\n";
         incrementsx[i] = atoi(doc.first_node(sr.c_str())->value());
         std::string sy = "layer";
         sy += std::to_string(i);
         sy += "y";
-        std::cout << sy.c_str() << "\n";
         incrementsy[i] = atoi(doc.first_node(sy.c_str())->value());
-        std::cout << "Value: " << incrementsx[i] << "\n";
     }
+    std::string muspath = "./backgrounds/" + path + "/";
+    muspath += doc.first_node("music")->value();
+    music = Mix_LoadMUS(muspath.c_str());
+    if (!music) {
+        printf("Failed to load music at %s: %s\n", muspath, SDL_GetError());
+    }
+
     std::cout << "Background name: " << name << "\n";
 
 }
@@ -78,16 +82,18 @@ std::vector<SDL_Surface*> bg::generateSurfaces(std::string path, SDL_Renderer* r
 }
 void bg::render(SDL_Renderer* renderer) {
     for(int i = 0; i < layers; i++) {
+    int width,height;
+    SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
     double tempx = 0;
     double tempy = 0; //yuck
     int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
     int multiplery = 1;
-
+    std::cout << "width: " << width << " height: " << height;
     if (incrementsx[i] != 0) {
-        tempx = fmod(layerposx[i], 640); //ew
+        tempx = fmod(layerposx[i], width); //ew
     }
     if (incrementsy[i] != 0) {
-        tempy = fmod(layerposy[i], 480); //GROSS CODE
+        tempy = fmod(layerposy[i], height); //GROSS CODE
     }
     if (layerposx[i] > 0) {
         multiplerx = -1;
@@ -97,16 +103,14 @@ void bg::render(SDL_Renderer* renderer) {
     }
 
     drawTexture(renderer,textures[i], tempx, tempy, 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], tempx+ (640 * multiplerx), tempy+(480*multiplery), 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], tempx+0, tempy + (480 * multiplery), 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], tempx+ (640 * multiplerx), tempy, 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], tempx+ (width * multiplerx), tempy+(height*multiplery), 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], tempx+0, tempy + (height * multiplery), 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], tempx+ (width * multiplerx), tempy, 0.0, 1.0, false);
     }
 }
 void bg::logic(double deltatime)
 {
     for(int i = 0; i < layers; i++) {
-        std::cout << incrementsx[i] << "\n";
-        std::cout << incrementsy[i] << "\n";
         if(incrementsx[i] != 0) {
             layerposx[i] -= (deltatime)/(incrementsx[i]);
         }

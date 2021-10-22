@@ -65,6 +65,7 @@ int main() {
     std::vector<SDL_Texture*> textures = generateTextures(surfaces, renderer);
     std::vector<Mix_Music*> music = generateMusic("./music/");
     std::vector<Mix_Chunk*> sound = generateSounds("./sound/");
+    std::vector<bg> backgrounds;
     SDL_Event event;
     bool quit = false;
     Uint64 NOW = SDL_GetPerformanceCounter();
@@ -73,10 +74,16 @@ int main() {
     double ticks = 0;
     int realtick = 0;
     int gamemode = 0;
-    bg backg("cavestory",renderer);
-    titlescreen title(renderer, window, backg, textures, music.data(), sound.data());
-    game gamer(renderer, window, textures, music.data(), sound.data());
-
+    
+    for(auto& p : std::filesystem::recursive_directory_iterator("./backgrounds/")) {
+        if (p.is_directory()) {
+            //std::cout << "HELP ME:" << p.path().filename() << "\n";
+            bg backg(p.path().filename(),renderer);
+            backgrounds.push_back(backg);
+        }
+    }
+    titlescreen title(renderer, window, backgrounds, textures, music.data(), sound.data());
+    game gamer(renderer, window, textures, backgrounds, music.data(), sound.data());
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {

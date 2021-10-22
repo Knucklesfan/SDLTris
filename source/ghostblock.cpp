@@ -125,7 +125,6 @@ void ghostblock::redraw() {
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
         if (Pieces[piece][rot][i] > 0) {
-            printf("x: %i y: %i i: %i ycalc: %i\n", x, y, i%4, ycalc);
             outsidearray[x + (y * width) + i % 4 + ycalc] = Pieces[piece][rot][i];
         }
 

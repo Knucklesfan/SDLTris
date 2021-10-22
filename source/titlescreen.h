@@ -56,9 +56,9 @@ public:
 	std::string messagetitle = "UNFINISHED!";
 	std::string messagebody = "I swear it'll be here when I'm finished..";
 	std::string messagebutton = "EXIT";
-    bg background;
+    std::vector<bg> background;
 
-	titlescreen(SDL_Renderer* render, SDL_Window* window, bg backg, std::vector<SDL_Texture*>,  Mix_Music* musicVec[], Mix_Chunk* soundVec[]);
+	titlescreen(SDL_Renderer* render, SDL_Window* window, std::vector<bg>  backg, std::vector<SDL_Texture*>,  Mix_Music* musicVec[], Mix_Chunk* soundVec[]);
 	double layerpos[10];
 	void keyPressed(SDL_Keycode key);
 	void render();

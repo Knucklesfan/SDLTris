@@ -5,7 +5,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <vector>
 
-titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[])
+titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[])
 {
     TTF_Init();
     //std::filesystem::current_path().u8string()
@@ -202,7 +202,7 @@ void titlescreen::render()
 {
     SDL_RenderClear(renderer);
 
-    background.render(renderer);
+    background[0].render(renderer);
 
     for (int i = 0; i < selections; i++) {
         renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);
@@ -266,7 +266,7 @@ void titlescreen::render()
 
 void titlescreen::logic(double deltatime)
 {
-    background.logic(deltatime);
+    background[0].logic(deltatime);
 }
 
 int titlescreen::endlogic()

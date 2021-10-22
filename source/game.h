@@ -9,7 +9,7 @@
 #include <cstring>
 #include "tetriminos.h"
 #include "ghostblock.h"
-
+#include "background.h"
 class game
 {
 	public:
@@ -24,10 +24,12 @@ class game
 		int realtick;
 		int nextblocks[16];
 		int holdblock;
+		int lines;
+		int currentsong = 0;
 		bool gameactive;
 		std::vector<SDL_Texture*> textures;
-
-		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[]);
+		std::vector<bg>  backgrounds;
+		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[]);
 		double layerpos[10];
 		void keyPressed(SDL_Keycode key);
 		void render();
@@ -36,6 +38,7 @@ class game
 		void reset();
 
 	private:
+		void changemusic();
 		void shiftarray(int(array)[], int size, int shift);
 		void checkLines(int(blocks)[200]);
 		bool checkRow(int(blocks)[10]);

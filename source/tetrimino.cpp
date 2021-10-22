@@ -131,7 +131,7 @@ void tetrimino::rotate() {
         if (collides(x, y, rot + 1)) {
             rot = (rot + 1) % 4;
         }
-        printf("current rot: %i last rot: %i\n", rot, lastrot);
+        //printf("current rot: %i last rot: %i\n", rot, lastrot);
         redraw();
     }
 }

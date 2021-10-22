@@ -27,6 +27,11 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
         sr += std::to_string(i);
         std::cout << sr.c_str() << "\n";
         incrementsx[i] = atoi(doc.first_node(sr.c_str())->value());
+        std::string sy = "layer";
+        sy += std::to_string(i);
+        sy += "y";
+        std::cout << sy.c_str() << "\n";
+        incrementsy[i] = atoi(doc.first_node(sy.c_str())->value());
         std::cout << "Value: " << incrementsx[i] << "\n";
     }
     std::cout << "Background name: " << name << "\n";
@@ -73,10 +78,28 @@ std::vector<SDL_Surface*> bg::generateSurfaces(std::string path, SDL_Renderer* r
 }
 void bg::render(SDL_Renderer* renderer) {
     for(int i = 0; i < layers; i++) {
-    drawTexture(renderer,textures[i], fmod(layerposx[0],640), fmod(layerposx[0],480), 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], fmod(layerposx[0], 640)+640, fmod(layerposx[0],480)+480, 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], fmod(layerposx[0],640)+0, fmod(layerposx[0],480)+480, 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], fmod(layerposx[0], 640)+640, fmod(layerposx[0],480), 0.0, 1.0, false);
+    double tempx = 0;
+    double tempy = 0; //yuck
+    int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
+    int multiplery = 1;
+
+    if (incrementsx[i] != 0) {
+        tempx = fmod(layerposx[i], 640); //ew
+    }
+    if (incrementsy[i] != 0) {
+        tempy = fmod(layerposy[i], 480); //GROSS CODE
+    }
+    if (layerposx[i] > 0) {
+        multiplerx = -1;
+    }
+    if (layerposy[i] > 0) {
+        multiplery = -1;
+    }
+
+    drawTexture(renderer,textures[i], tempx, tempy, 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], tempx+ (640 * multiplerx), tempy+(480*multiplery), 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], tempx+0, tempy + (480 * multiplery), 0.0, 1.0, false);
+    drawTexture(renderer,textures[i], tempx+ (640 * multiplerx), tempy, 0.0, 1.0, false);
     }
 }
 void bg::logic(double deltatime)
@@ -84,10 +107,10 @@ void bg::logic(double deltatime)
     for(int i = 0; i < layers; i++) {
         std::cout << incrementsx[i] << "\n";
         std::cout << incrementsy[i] << "\n";
-        if(incrementsx > 0) {
+        if(incrementsx[i] != 0) {
             layerposx[i] -= (deltatime)/(incrementsx[i]);
         }
-        if(incrementsy > 0) {
+        if(incrementsy != 0) {
             layerposy[i] -= (deltatime)/(incrementsy[i]);
         }
 

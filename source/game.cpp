@@ -9,6 +9,7 @@
 #include <cstring>
 #include <SDL2/SDL.h>
 
+
 game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
     std::fill_n(testblocks, 200, 0);
     std::fill_n(ghostblocks, 200, 0);

@@ -22,7 +22,7 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
     creator = doc.first_node("creator")->value();
     vers = doc.first_node("vers")->value();
     int array[10];
-    for(int i = 0; i < surfaces.size(); i++) {
+    for(int i = 0; i < layers; i++) {
         std::string sr = "layer";
         sr += std::to_string(i);
         incrementsx[i] = atoi(doc.first_node(sr.c_str())->value());
@@ -30,6 +30,7 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
         sy += std::to_string(i);
         sy += "y";
         incrementsy[i] = atoi(doc.first_node(sy.c_str())->value());
+        //std::cout << "INFORMATION!!!: " << atoi(doc.first_node(sy.c_str())->value()) << "\n";
     }
     std::string muspath = "./backgrounds/" + path + "/";
     muspath += doc.first_node("music")->value();
@@ -88,7 +89,7 @@ void bg::render(SDL_Renderer* renderer) {
     double tempy = 0; //yuck
     int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
     int multiplery = 1;
-    std::cout << "width: " << width << " height: " << height;
+    //std::cout << incrementsx[i] << i << "\n";
     if (incrementsx[i] != 0) {
         tempx = fmod(layerposx[i], width); //ew
     }

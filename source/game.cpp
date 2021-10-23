@@ -10,7 +10,7 @@
 #include <SDL2/SDL.h>
 #include <cmath>
 #include "background.h"
-
+#include <SDL2/SDL_ttf.h>
 
 game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
     std::fill_n(testblocks, 200, 0);
@@ -33,6 +33,8 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     gameactive = false;
     backgrounds = backg;
     lines = 0;
+    std::string path = "./sprites/00.ttf";
+    font = TTF_OpenFont(path.c_str(), 13.333);
     
 
 }
@@ -65,6 +67,8 @@ void game::render() {
         if (holdblock > -1) {
             drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
         }
+        renderfont(320, 32, "Lines: " + std::to_string(lines), false, font);
+
         SDL_RenderPresent(renderer);
     }
 }
@@ -253,6 +257,7 @@ void game::reset() {
     int realtick = 0;
     int nextblocks[16];
     int holdblock = -1;
+    lines = 0;
     for (int i = 0; i < 16; i++) {
         nextblocks[i] = rand() % 7;
     }
@@ -281,4 +286,33 @@ void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int 
     sprite.y = y + oldheight / 2 - sprite.h / 2;
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
 }
+void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
+    SDL_Rect sprite;
+    SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
+    int oldwidth = sprite.w;
+    int oldheight = sprite.h;
+    sprite.w = sprite.w * scale;
+    sprite.h = sprite.h * scale;
+    if (center) {
+        sprite.x = x - oldwidth / 2;
+        sprite.y = y - oldheight / 2;
+    }
+    else {
+        sprite.x = x + oldwidth / 2 - sprite.w / 2;
+        sprite.y = y + oldheight / 2 - sprite.h / 2;
+    }
+    SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+}
 
+void game::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size) {
+    SDL_Surface* text;
+    SDL_Color color = { 255, 255, 0 };
+    if (!selected) {
+        color = { 255, 255, 255 };
+    }
+    text = TTF_RenderText_Solid(size, strg.c_str(), color);
+    SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
+    SDL_FreeSurface(text);
+    drawTexture(renderer, words, x, y, 0, 1.0,true);
+
+}

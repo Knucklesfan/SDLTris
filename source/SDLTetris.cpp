@@ -60,6 +60,7 @@ int main() {
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderSetLogicalSize(renderer, 640, 480);
+    TTF_Init();
 
     std::vector<SDL_Surface*> surfaces = generateSurfaces("./sprites/"); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     std::vector<SDL_Texture*> textures = generateTextures(surfaces, renderer);
@@ -78,7 +79,7 @@ int main() {
     for(auto& p : std::filesystem::recursive_directory_iterator("./backgrounds/")) {
         if (p.is_directory()) {
             //std::cout << "HELP ME:" << p.path().filename() << "\n";
-            bg backg(p.path().filename(),renderer);
+            bg backg(p.path().filename().u8string() , renderer);
             backgrounds.push_back(backg);
         }
     }

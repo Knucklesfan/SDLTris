@@ -7,7 +7,6 @@
 
 titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[])
 {
-    TTF_Init();
     //std::filesystem::current_path().u8string()
     std::string path = "./sprites/00.ttf";
     buttonfont = TTF_OpenFont(path.c_str(), 24);

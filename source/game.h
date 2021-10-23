@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #include <string>
 #include <iostream>
 #include <filesystem>
@@ -13,6 +14,7 @@
 class game
 {
 	public:
+		TTF_Font* font;
 		int testblocks[200], ghostblocks[200],  previousblocks[200];
 		double testangles[200], testscale[200], ghostscale[200];
 		SDL_Renderer* renderer;
@@ -45,5 +47,7 @@ class game
 		void clearRow(int(blocks)[200], int y);
 		void drawCubes(int position[], double angles[], double scale[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
 		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale);
+		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
+		void renderfont(int x, int y, std::string text, bool selected, TTF_Font* size);
 };
 

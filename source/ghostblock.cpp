@@ -64,7 +64,7 @@ void ghostblock::changePos(int ax, int ay, int arot) {
     lasty = y; //to ensure that undrawing works.
     lastrot = rot;
     x = ax;
-    y = 0;
+    y = ay-1;
     rot = arot;
     while (collides(x, y + 1, rot) && y <= 20) {
         removeolddraw();

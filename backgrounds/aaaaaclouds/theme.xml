@@ -1,0 +1,13 @@
+<name>SMW Cave</name>
+<creator>Knuxfan</creator>
+<vers>1.0</vers>
+
+<layer0>0</layer0>
+<layer0y>0</layer0y>
+
+<layer1>25</layer1>
+<layer1y>0</layer1y>
+
+<music>song.mod</music>
+<musicname>Jump Around</musicname>
+<musicartist>Mikael Eriksson</musicartist>

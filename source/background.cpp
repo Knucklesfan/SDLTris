@@ -13,7 +13,7 @@
 #include <SDL2/SDL_mixer.h>
 bg::bg() {}
 bg::bg(std::string path, SDL_Renderer* renderer) {
-    std::vector<SDL_Surface*> surfaces = generateSurfaces("./backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
+    generateSurfaces("./backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     std::string filepath = "./backgrounds/" + path + "/theme.xml";
     rapidxml::file<> xmlFile(filepath.c_str());
     rapidxml::xml_document<> doc;
@@ -21,6 +21,8 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
     name = doc.first_node("name")->value();
     creator = doc.first_node("creator")->value();
     vers = doc.first_node("vers")->value();
+    songname = doc.first_node("musicname")->value();
+    artist = doc.first_node("musicartist")->value();
     int array[10];
     for(int i = 0; i < layers; i++) {
         std::string sr = "layer";
@@ -43,7 +45,7 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
 
 }
 
-std::vector<SDL_Surface*> bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
+void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
     int i = 0;
     std::vector<SDL_Surface*>surfaces;
     SDL_Surface* temp;
@@ -63,7 +65,6 @@ std::vector<SDL_Surface*> bg::generateSurfaces(std::string path, SDL_Renderer* r
         temp = SDL_LoadBMP(string.c_str());
         if (!temp) {
             printf("Failed to load image at %s: %s\n", string, SDL_GetError());
-            return surfaces;
         }
         surfaces.push_back(temp);
         printf("Successfully loaded image at %s\n", string.c_str());

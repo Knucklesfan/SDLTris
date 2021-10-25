@@ -11,6 +11,7 @@
 #include "tetriminos.h"
 #include "ghostblock.h"
 #include "background.h"
+#include "../ingamemessagebox.h"
 class game
 {
 	public:
@@ -26,7 +27,9 @@ class game
 		int realtick;
 		int nextblocks[16];
 		int holdblock;
+		Uint32 score;
 		int lines;
+		int level;
 		int currentsong = 0;
 		bool gameactive;
 		std::vector<SDL_Texture*> textures;
@@ -38,6 +41,7 @@ class game
 		void logic(double deltatime);
 		int endlogic();
 		void reset();
+		ingamemessagebox msg;
 
 	private:
 		void changemusic();

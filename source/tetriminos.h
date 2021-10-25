@@ -206,7 +206,7 @@ class tetrimino {
         tetrimino();
         tetrimino(int, int, int (barray)[], int bwidth, int bheight, int block);
         bool rebirth(int, int, int block);
-        void forcedrop();
+        int forcedrop();
 	    void movedown();
         void moveleft();
 	    void moveright();

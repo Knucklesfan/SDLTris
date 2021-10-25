@@ -57,7 +57,8 @@ void tetrimino::movedown() {
         redraw();
     }
 }
-void tetrimino::forcedrop() {
+int tetrimino::forcedrop() {
+    int iterations = 0;
     if (alive) {
         while (collides(x, y + 1, rot) && y <= 20) {
             removeolddraw();
@@ -65,9 +66,11 @@ void tetrimino::forcedrop() {
             lasty = y;
             lastrot = rot;
             y += 1;
+            iterations++;
             redraw();
         }
         alive = false;
+        return iterations*2;
     }
 }
 

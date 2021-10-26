@@ -150,6 +150,7 @@ void tetrimino::draw() {
 
 void tetrimino::removeolddraw() {
     for (int i = 0; i < 16; i++) {
+        std::cout << "Pieces[" << piece << "][" <<lastrot << "][" << i << "] > 0\n";
         int ycalc = (i / 4) * width;
         if (Pieces[piece][lastrot][i] > 0) {
             array[lastx + (lasty * width) + i % 4 + ycalc] = 0;

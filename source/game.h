@@ -11,7 +11,9 @@
 #include "tetriminos.h"
 #include "ghostblock.h"
 #include "background.h"
-#include "../ingamemessagebox.h"
+#include "ingamemessagebox.h"
+#include <random>
+
 class game
 {
 	public:
@@ -41,6 +43,7 @@ class game
 		void logic(double deltatime);
 		int endlogic();
 		void reset();
+
 		ingamemessagebox msg;
 
 	private:

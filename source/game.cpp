@@ -11,11 +11,18 @@
 #include <cmath>
 #include "background.h"
 #include <SDL2/SDL_ttf.h>
-#include "../ingamemessagebox.h"
+#include "ingamemessagebox.h"
+#include <random>
+
+#define LINES 0
+#define LEVEL 1
+
 //TODO: fix the stupid bug here lol
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
 game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
+    srand((unsigned)time(0)); 
+
     std::fill_n(testblocks, 200, 0);
     std::fill_n(ghostblocks, 200, 0);
     std::fill_n(previousblocks, 200, 0);
@@ -26,23 +33,30 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     g.changePos(0, 0, 0);
     double ticks = 0;
     int realtick = 0;
-    int nextblocks[16];
+    //int nextblocks[16];
+    std::fill_n(nextblocks, 16, 0);
     int holdblock = -1;
     for (int i = 0; i < 16; i++) {
-        nextblocks[i] = rand() % 7;
+        while(nextblocks[i] > 7 ){ 
+            nextblocks[i] = 0 + std::rand() % 7;
+        }
     }
     music = musicVec;
     sound = soundVec;
     gameactive = false;
     backgrounds = backg;
-    lines = 0;
-    level = 1;
+    lines = LINES;
+    level = LEVEL;
     std::string path = "./sprites/00.ttf";
     font = TTF_OpenFont(path.c_str(), 13.333);
     msg.font = font;
 
 }
 void game::logic(double deltatime) {
+            for(int i = 0; i < 16; i++) {
+            std::cout << nextblocks[i] << ",";
+        }
+        std::cout << "\n";
     if (gameactive) {
         if (realtick % 100 == 0) {
             score++;
@@ -53,7 +67,7 @@ void game::logic(double deltatime) {
             ticks = 0;
             realtick++;
         }
-        backgrounds[level-1%backgrounds.size()].logic(deltatime);
+        backgrounds[(level)%(backgrounds.size())].logic(deltatime);
         msg.logic(deltatime);
     }
 
@@ -61,14 +75,16 @@ void game::logic(double deltatime) {
 void game::render() {
     if (gameactive) {
         SDL_RenderClear(renderer);
-        backgrounds[level-1%backgrounds.size()].render(renderer);
+        backgrounds[(level)%(backgrounds.size())].render(renderer);
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         g.changePos(t.x, t.y, t.rot);
         t.draw();
         g.draw();
         drawCubes(ghostblocks, testangles, ghostscale, 240, 80, 200, 10, textures, renderer);
         drawCubes(testblocks, testangles, testscale, 240, 80, 200, 10, textures, renderer);
-        drawCubes(t.Pieces[nextblocks[0]][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
+        if(nextblocks[0] > -1 && nextblocks[0] < 7) {
+            drawCubes(t.Pieces[nextblocks[0]][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
+        }
         if (holdblock > -1) {
             drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
         }
@@ -80,6 +96,7 @@ void game::render() {
     }
 }
 int game::endlogic() {
+    
     if (!t.alive && gameactive) {
         Mix_PlayChannel( -1, sound[5], 0 );
         ticks = 0;
@@ -234,12 +251,14 @@ void game::clearRow(int(blocks)[200], int y) {
 
 }
 void game::changemusic() {
-    if(level-1%backgrounds.size() != currentsong) {
+    if((level)%(backgrounds.size()) != currentsong) {
         Mix_HaltMusic();
         if( Mix_PlayingMusic() == 0 )
         {
             //Play the music
-            Mix_PlayMusic(backgrounds[level-1%backgrounds.size()].music, -1 );
+            std::cout << "background thing: ";
+            std::cout << (level)%(backgrounds.size()) << "\n background.size() = " << backgrounds.size() << "\n";
+            Mix_PlayMusic(backgrounds[(level)%(backgrounds.size())].music, -1 );
         }
         //If music is being played
         else
@@ -257,8 +276,8 @@ void game::changemusic() {
                 Mix_PauseMusic();
             }
         }
-        currentsong = level-1%backgrounds.size();
-        msg.activate("YOU ARE CURRENTLY LISTENING TO:", backgrounds[level-1 % backgrounds.size()].songname + " by: " + backgrounds[level-1 % backgrounds.size()].artist);
+        currentsong = (level)%(backgrounds.size());
+        msg.activate("YOU ARE CURRENTLY LISTENING TO:", backgrounds[(level)%(backgrounds.size())].songname + " by: " + backgrounds[(level)%(backgrounds.size())].artist);
 
     }
 
@@ -279,17 +298,21 @@ void game::reset() {
     int realtick = 0;
     int nextblocks[16];
     int holdblock = -1;
-    lines = 0;
-    level = 1;
+    lines = LINES;
+    level = LEVEL;
     for (int i = 0; i < 16; i++) {
-        nextblocks[i] = rand() % 7;
+        while(nextblocks[i] > 7 ){ 
+            nextblocks[i] = 0 + std::rand() % 7;
+        }
     }
+    srand((unsigned)time(0)); 
     gameactive = true;
 
 
 }
 
 void game::drawCubes(int position[], double angles[], double scale[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer) {
+    
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
             drawTexture(renderer, textures.at(position[i]), x + (i % width) * 16, y + (i / width) * 16, angles[i], scale[i]);

@@ -74,6 +74,7 @@ void ingamemessagebox::renderfont(int x, int y, std::string strg, bool selected,
 	SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
 	SDL_FreeSurface(text);
 	drawTexture(renderer, words, x, y, 0, 1.0, false);
+    SDL_DestroyTexture(words);
 
 }
 

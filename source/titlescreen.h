@@ -20,6 +20,7 @@ public:
 	Mix_Music** music;
 	Mix_Chunk** sound;
 
+	int currentsetting = 0;
 	SDL_Renderer* renderer;
 	SDL_Window* window;
 	std::vector<SDL_Texture*> textures;
@@ -39,8 +40,8 @@ public:
 	std::string settingstitle = "OPTIONS";
 	std::string settings[4] = {
 	"FULL SCREEN",
-	"SOUND",
 	"MUSIC",
+	"SOUND",
 	"EXIT"
 	};
 	const int creditssize = 5;

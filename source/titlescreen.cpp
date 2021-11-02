@@ -150,9 +150,55 @@ void titlescreen::keyPressed(SDL_Keycode key)
             Mix_PlayChannel( -1, sound[1], 0 );
             break;
         }
+        case(SDLK_LEFT): {
+            switch(currentsetting) {
+                case 0:
+                break;
+                case 1: {
+                    int currentvol = Mix_VolumeMusic(-1);
+                    if(currentvol > 0) {
+                        Mix_VolumeMusic(currentvol-1);
+                    }
+                    break;
+                }
+                case 2: {
+                    int currentvol = Mix_Volume(-1,-1);
+                    if(currentvol > 0) {
+                        Mix_Volume(-1, currentvol-1);
+                    }
+                    break;
+
+                }
+            }
+            break;
+        }
+        case(SDLK_RIGHT): {
+            switch(currentsetting) {
+                case 0:
+                break;
+                case 1: {
+                    int currentvol = Mix_VolumeMusic(-1);
+                    if(currentvol < MIX_MAX_VOLUME) {
+                        Mix_VolumeMusic(currentvol+1);
+                    }
+                    break;
+                }
+                case 2: {
+                    int currentvol = Mix_Volume(-1,-1);
+                    if(currentvol < MIX_MAX_VOLUME) {
+                        Mix_Volume(-1, currentvol+1);
+                    }
+                    break;
+
+                }
+            }
+            break;
+        }
+
         case(SDLK_z): {
             Mix_PlayChannel( -1, sound[0], 0 );
-            if (showerror) {
+            if (showerror || currentsetting > 0) {
+                currentsetting = 0;                    
                 showerror = false;
                 
             }
@@ -166,10 +212,10 @@ void titlescreen::keyPressed(SDL_Keycode key)
                     break;
                 }
                 case 1:
-                    showerror = true;
+                    currentsetting = 1;                    
                     break;
                 case 2:
-                    showerror = true;
+                    currentsetting = 2;                    
                     break;
                 case 3:
                     currentscreen = 0;
@@ -201,7 +247,7 @@ void titlescreen::render()
 {
     SDL_RenderClear(renderer);
 
-    background[0].render(renderer);
+    background[1].render(renderer);
 
     for (int i = 0; i < selections; i++) {
         renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);
@@ -242,6 +288,35 @@ void titlescreen::render()
                 renderfont(320, 180, messagebody, false, bodyfont);
                 renderfont(320, 300, messagebutton, true, buttonfont);
             }
+            else switch(currentsetting) {
+                case 0:
+                break;
+                case 1: {
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+                    SDL_Rect splashbox = { 0, 0, 640, 480 };
+                    SDL_RenderFillRect(renderer, &splashbox);
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+                    splashbox = { 320 - 240, 240 - 120, 480, 240 };
+                    SDL_RenderFillRect(renderer, &splashbox);
+                    renderfont(320, 140, "MUSIC VOLUME", false, headerfont);
+                    renderfont(320, 180, std::to_string(Mix_VolumeMusic(-1)), true, bodyfont);
+                    renderfont(320, 300, messagebutton, true, buttonfont);
+                    break;
+                }
+                case 2: {
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+                    SDL_Rect splashbox = { 0, 0, 640, 480 };
+                    SDL_RenderFillRect(renderer, &splashbox);
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+                    splashbox = { 320 - 240, 240 - 120, 480, 240 };
+                    SDL_RenderFillRect(renderer, &splashbox);
+                    renderfont(320, 140, "SOUND VOLUME", false, headerfont);
+                    renderfont(320, 180, std::to_string(Mix_Volume(-1,-1)), true, bodyfont);
+                    renderfont(320, 300, messagebutton, true, buttonfont);
+                    break;
+                }
+
+            }
             break;
         }
         case(3): {
@@ -265,7 +340,7 @@ void titlescreen::render()
 
 void titlescreen::logic(double deltatime)
 {
-    background[0].logic(deltatime);
+    background[1].logic(deltatime);
 }
 
 int titlescreen::endlogic()
@@ -303,5 +378,6 @@ void titlescreen::renderfont(int x, int y, std::string strg, bool selected, TTF_
     SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
     SDL_FreeSurface(text);
     drawTexture(words, x, y, 0, 1.0, true);
+    SDL_DestroyTexture(words);
 
 }

@@ -34,13 +34,8 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     double ticks = 0;
     int realtick = 0;
     //int nextblocks[16];
-    std::fill_n(nextblocks, 16, 0);
+    nextblocks = std::rand() % 7;
     int holdblock = -1;
-    for (int i = 0; i < 16; i++) {
-        while(nextblocks[i] > 7 ){ 
-            nextblocks[i] = 0 + std::rand() % 7;
-        }
-    }
     music = musicVec;
     sound = soundVec;
     gameactive = false;
@@ -53,9 +48,6 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
 
 }
 void game::logic(double deltatime) {
-            for(int i = 0; i < 16; i++) {
-            std::cout << nextblocks[i] << ",";
-        }
         std::cout << "\n";
     if (gameactive) {
         if (realtick % 100 == 0) {
@@ -82,8 +74,8 @@ void game::render() {
         g.draw();
         drawCubes(ghostblocks, testangles, ghostscale, 240, 80, 200, 10, textures, renderer);
         drawCubes(testblocks, testangles, testscale, 240, 80, 200, 10, textures, renderer);
-        if(nextblocks[0] > -1 && nextblocks[0] < 7) {
-            drawCubes(t.Pieces[nextblocks[0]][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
+        if(nextblocks > -1 && nextblocks < 7) {
+            drawCubes(t.Pieces[nextblocks][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
         }
         if (holdblock > -1) {
             drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
@@ -103,14 +95,13 @@ int game::endlogic() {
         realtick = 0;
         checkLines(testblocks);
         memcpy(previousblocks, testblocks, sizeof previousblocks);
-        if (!t.rebirth(2, 0, nextblocks[0])) {
+        if (!t.rebirth(2, 0, nextblocks)) {
             gameactive = false;
             return 1;
         }
         g.rebirth(2, 0, t.piece, previousblocks);
         std::fill_n(ghostblocks, 200, 0);
-        shiftarray(nextblocks, 16, -1);
-        nextblocks[15] = rand() % 7;
+        nextblocks = rand() % 7;
     }
     return 0;
 }
@@ -157,9 +148,8 @@ void game::keyPressed(SDL_Keycode key)
                 t.rebirth(0, 0, temp);
             }
             else {
-                t.rebirth(5, 0, nextblocks[0]);
-                shiftarray(nextblocks, 16, -1);
-                nextblocks[15] = rand() % 7;
+                t.rebirth(5, 0, nextblocks);
+                nextblocks = rand() % 7;
             }
             g.rebirth(5, 0, t.piece, previousblocks);
             std::fill_n(ghostblocks, 200, 0);
@@ -360,5 +350,6 @@ void game::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* s
     SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
     SDL_FreeSurface(text);
     drawTexture(renderer, words, x, y, 0, 1.0,true);
+    SDL_DestroyTexture(words);
 
 }

@@ -5,7 +5,7 @@ INC=-I include/
 #CC specifies which compiler we're using
 CC = g++
 #Compiler flags supresses the annoying warnings
-COMPILER_FLAGS = -w -g -fsanitize=address
+COMPILER_FLAGS = -g -fsanitize=address
 #Linker Flags give the libraries
 LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_mixer -fsanitize=address
 #Specify c++17 as well.

@@ -12,6 +12,7 @@
 #include "game.h"
 #include "titlescreen.h"
 #include "background.h"
+#include "knuxfanscreen.h"
 
 #undef main
 #define SCREEN_WIDTH 640

@@ -51,7 +51,7 @@ void knuxfanscreen::logic(double deltatime) {
 }
 
 int knuxfanscreen::endlogic() {
-
+    return 0;
 }
 void knuxfanscreen::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
     SDL_Rect sprite;

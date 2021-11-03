@@ -17,15 +17,33 @@
 #undef main
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+#ifdef __SWITCH__
+    #define filepath  "/"
+#else
+    #define filepath  "./"
+#endif
+
+#define JOY_A     0
+#define JOY_B     1
+#define JOY_X     2
+#define JOY_Y     3
+#define JOY_PLUS  6
+#define JOY_LEFT  12
+#define JOY_UP    13
+#define JOY_RIGHT 14
+#define JOY_DOWN  15
+
+
 std::vector<Mix_Music*> generateMusic(std::string path);
 std::vector<Mix_Chunk*> generateSounds(std::string path);
 std::vector<SDL_Texture*> generateTextures(std::vector<SDL_Surface*> surfaces, SDL_Renderer* renderer);
 std::vector<SDL_Surface*> generateSurfaces(std::string path);
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
+int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode);
 
 int main() {
-        if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_AUDIO) != 0) {
+        if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) != 0) {
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
 
         return 1;
@@ -58,15 +76,18 @@ int main() {
 
         return 1;
     }
+    SDL_Joystick* joystick;
+
+    SDL_Joystick* gGameController = SDL_JoystickOpen(0);
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderSetLogicalSize(renderer, 640, 480);
     TTF_Init();
-
-    std::vector<SDL_Surface*> surfaces = generateSurfaces("./sprites/"); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
+    std::string prefix = filepath;
+    std::vector<SDL_Surface*> surfaces = generateSurfaces(prefix + "sprites/"); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     std::vector<SDL_Texture*> textures = generateTextures(surfaces, renderer);
-    std::vector<Mix_Music*> music = generateMusic("./music/");
-    std::vector<Mix_Chunk*> sound = generateSounds("./sound/");
+    std::vector<Mix_Music*> music = generateMusic(prefix + "music/");
+    std::vector<Mix_Chunk*> sound = generateSounds(prefix + "sound/");
     std::vector<bg> backgrounds;
     SDL_Event event;
     bool quit = false;
@@ -77,27 +98,52 @@ int main() {
     int realtick = 0;
     int gamemode = 0;
     
-    for(auto& p : std::filesystem::recursive_directory_iterator("./backgrounds/")) {
+    for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
         if (p.is_directory()) {
             //std::cout << "HELP ME:" << p.path().filename() << "\n";
             bg backg(p.path().filename().u8string() , renderer);
             backgrounds.push_back(backg);
         }
     }
-    titlescreen title(renderer, window, backgrounds, textures, music.data(), sound.data());
-    game gamer(renderer, window, textures, backgrounds, music.data(), sound.data());
+    titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data());
+    game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
+            if (event.type == SDL_JOYBUTTONDOWN) {
+                switch (event.jbutton.button) {
+                case JOY_B:
+                case JOY_A: {
+                    input(gamemode, title, gamer, SDLK_z);
+                    break;
+                    }
+                case JOY_DOWN: {
+                    input(gamemode, title, gamer, SDLK_DOWN);
+                    break;
+                }
+                case JOY_UP: {
+                    input(gamemode, title, gamer, SDLK_UP);
+                    break;
+                }
+                case JOY_LEFT: {
+                    input(gamemode, title, gamer, SDLK_LEFT);
+                    break;
+                }
+                case JOY_RIGHT: {
+                    input(gamemode, title, gamer, SDLK_RIGHT);
+                    break;
+                }
+                case JOY_PLUS: {
+                    input(gamemode, title, gamer, SDLK_x);
+                    break;
+                }
+
+                }
+            }
             if (event.type == SDL_KEYDOWN) {
-                if (gamemode == 0) {
-                    title.keyPressed(event.key.keysym.sym);
-                }
-                else {
-                    gamer.keyPressed(event.key.keysym.sym);
-                }
+                input(gamemode, title, gamer, event.key.keysym.sym);
             }
         }
         LAST = NOW;
@@ -106,21 +152,21 @@ int main() {
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
         if (gamemode == 0) {
             //printf("titlescreen");
-            title.logic(deltaTime);
-            title.render();
-            if (title.endlogic() == 1) {
+            title->logic(deltaTime);
+            title->render();
+            if (title->endlogic() == 1) {
                 //gamer = game(renderer, window, textures);
-                gamer.reset();
+                gamer->reset();
                 gamemode = 1;
-                title.loadgame = false;
+                title->loadgame = false;
             }
         }
         else {
             //printf("gaming");
-            gamer.logic(deltaTime);
-            gamer.render();
-            if (gamer.endlogic() == 1 || !gamer.gameactive) {
-                title.reset();
+            gamer->logic(deltaTime);
+            gamer->render();
+            if (gamer->endlogic() == 1 || !gamer->gameactive) {
+                title->reset();
                 gamemode = 0;
             }
 
@@ -226,4 +272,12 @@ bool hasEnding(std::string const& fullString, std::string const& ending) { //tha
     }
 }
 
-//compare any way you like, here  am using the default string comparison
+int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode) {
+    if (gamemode == 0) {
+        title->keyPressed(keycode);
+    }
+    else {
+        gamer->keyPressed(keycode);
+    }
+    return 0;
+}

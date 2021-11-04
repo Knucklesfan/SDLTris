@@ -72,6 +72,7 @@ int tetrimino::forcedrop() {
         alive = false;
         return iterations*2;
     }
+    return 0;
 }
 
 void tetrimino::moveleft() {

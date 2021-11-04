@@ -151,21 +151,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ingamemessagebox.cpp" />
+    <ClCompile Include="source/ingamemessagebox.cpp" />
     <ClCompile Include="source/game.cpp" />
     <ClCompile Include="source/SDLTetris.cpp" />
     <ClCompile Include="source\tetrimino.cpp" />
     <ClCompile Include="source\ghostblock.cpp" />
     <ClCompile Include="source\titlescreen.cpp" />
     <ClCompile Include="source\background.cpp" />
+	<ClCompile Include="source\knuxfanscreen.cpp" />
+
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ingamemessagebox.h" />
+    <ClInclude Include="source/ingamemessagebox.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\tetriminos.h" />
     <ClInclude Include="source\ghostblock.h" />
     <ClInclude Include="source\titlescreen.h" />
     <ClInclude Include="source\background.h" />
+	<ClInclude Include="source\knuxfanscreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

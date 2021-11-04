@@ -1,2 +1,2 @@
 make -f makefile.linux
-./SDLTris
+./SDLTetris

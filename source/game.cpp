@@ -42,14 +42,16 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     backgrounds = backg;
     lines = LINES;
     level = LEVEL;
+    paused = false;
     std::string path = "./sprites/00.ttf";
     font = TTF_OpenFont(path.c_str(), 13.333);
+    header = TTF_OpenFont(path.c_str(), 23.333);
     msg.font = font;
 
 }
 void game::logic(double deltatime) {
         std::cout << "\n";
-    if (gameactive) {
+    if (gameactive && !paused) {
         if (realtick % 100 == 0) {
             score++;
             t.movedown();
@@ -59,13 +61,13 @@ void game::logic(double deltatime) {
             ticks = 0;
             realtick++;
         }
-        backgrounds[(level)%(backgrounds.size())].logic(deltatime);
         msg.logic(deltatime);
     }
+    backgrounds[(level)%(backgrounds.size())].logic(deltatime);
 
 }
 void game::render() {
-    if (gameactive) {
+    //if (gameactive) {
         SDL_RenderClear(renderer);
         backgrounds[(level)%(backgrounds.size())].render(renderer);
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
@@ -82,14 +84,23 @@ void game::render() {
         }
         renderfont(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), false, font);
         renderfont(320, 48, "SCORE: " + std::to_string(score),false, font);
+        if(paused) {
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+                SDL_Rect splashbox = { 0, 0, 640, 480 };
+                SDL_RenderFillRect(renderer, &splashbox);
+                for (int i = 0; i < optionsize; i++) {
+                    renderfont(320, 300 + (i * 12), options[i], (i == pauseselection), font);
+                }
 
+            renderfont(320, 240, "GAME PAUSED.", true, header);
+        }
         msg.render(renderer);
         SDL_RenderPresent(renderer);
-    }
+    //}
 }
 int game::endlogic() {
     
-    if (!t.alive && gameactive) {
+    if (!t.alive && gameactive && !paused) {
         Mix_PlayChannel( -1, sound[5], 0 );
         ticks = 0;
         realtick = 0;
@@ -107,7 +118,7 @@ int game::endlogic() {
 }
 void game::keyPressed(SDL_Keycode key)
 {
-    if (gameactive) {
+    if (gameactive && !paused) {
         switch (key) {
         case SDLK_UP: {
             Mix_PlayChannel( -1, sound[3], 0 );
@@ -155,8 +166,40 @@ void game::keyPressed(SDL_Keycode key)
             std::fill_n(ghostblocks, 200, 0);
             break;
         }
-
         }
+    }
+    else {
+        switch (key) {
+            case(SDLK_UP): {
+                if (pauseselection > 0) {
+                    pauseselection = (pauseselection - 1);
+                }
+                Mix_PlayChannel( -1, sound[1], 0 );
+                break;
+            }
+            case(SDLK_DOWN): {
+                if (pauseselection < optionsize - 1) {
+                    pauseselection = (pauseselection + 1);
+                }
+                Mix_PlayChannel( -1, sound[1], 0 );
+                break;
+            }
+            case(SDLK_z): {
+                switch(pauseselection) {
+                    case 0: {
+                        paused = false;
+                        break;
+                    }
+                    case 1: {
+                        gameactive = false;
+                    }
+                }
+            }
+        }
+
+    }
+    if(key == SDLK_ESCAPE) {
+        paused = !paused;
     }
 }
 void game::shiftarray(int(array)[], int size, int shift) {
@@ -290,6 +333,7 @@ void game::reset() {
     int holdblock = -1;
     lines = LINES;
     level = LEVEL;
+    paused = false;
     for (int i = 0; i < 16; i++) {
         while(nextblocks[i] > 7 ){ 
             nextblocks[i] = 0 + std::rand() % 7;

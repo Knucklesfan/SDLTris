@@ -44,14 +44,17 @@ void knuxfanscreen::logic(double deltatime) {
 			active = false;
 		}
 
-		if ((!godown && !goup) && lifetime > 500) {
-			godown = true;
+		if ((!godown && !goup) && lifetime > 1000) {
+			goup = true;
 		}
+        std::cout << lifetime << "\n";
 	}
 }
 
 int knuxfanscreen::endlogic() {
-    return 0;
+    if(!active) {
+        return 1;
+    }
 }
 void knuxfanscreen::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
     SDL_Rect sprite;

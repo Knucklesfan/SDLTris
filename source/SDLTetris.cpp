@@ -40,6 +40,7 @@ std::vector<SDL_Texture*> generateTextures(std::vector<SDL_Surface*> surfaces, S
 std::vector<SDL_Surface*> generateSurfaces(std::string path);
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
+bool bgCompare (bg a, bg b) {return a.name>b.name;} 
 int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode);
 
 int main() {
@@ -103,10 +104,16 @@ int main() {
             //std::cout << "HELP ME:" << p.path().filename() << "\n";
             bg backg(p.path().filename().u8string() , renderer);
             backgrounds.push_back(backg);
+
         }
+    }
+    std::sort(backgrounds.begin(),backgrounds.end(),bgCompare);//sort the vector
+    for(auto& p : backgrounds) {
+        std::cout << p.name << "\n";
     }
     titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data());
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
+    knuxfanscreen* screen = new knuxfanscreen(renderer, textures, sound.data());
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -151,13 +158,22 @@ int main() {
 
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
         if (gamemode == 0) {
+            screen->logic(deltaTime);
+            screen->render();
+            if (screen->endlogic() == 1) {
+                gamemode = 1;
+                title->reset();
+            }
+
+        }
+        else if(gamemode == 1) {
             //printf("titlescreen");
             title->logic(deltaTime);
             title->render();
             if (title->endlogic() == 1) {
-                //gamer = game(renderer, window, textures);
+                gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
                 gamer->reset();
-                gamemode = 1;
+                gamemode = 2;
                 title->loadgame = false;
             }
         }
@@ -167,7 +183,7 @@ int main() {
             gamer->render();
             if (gamer->endlogic() == 1 || !gamer->gameactive) {
                 title->reset();
-                gamemode = 0;
+                gamemode = 1;
             }
 
         }
@@ -241,7 +257,7 @@ std::vector<Mix_Chunk*> generateSounds(std::string path) {
         
         else { break; }
     }
-    std::sort(strings.begin(),strings.end(),compareFunction);//sort the vector
+    std::sort(strings.begin(),strings.end());//sort the vector
     for(auto &string : strings) {
         temp = Mix_LoadWAV(string.c_str());
         if (!temp) {
@@ -273,11 +289,15 @@ bool hasEnding(std::string const& fullString, std::string const& ending) { //tha
 }
 
 int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode) {
-    if (gamemode == 0) {
-        title->keyPressed(keycode);
-    }
-    else {
-        gamer->keyPressed(keycode);
+    switch(gamemode) {
+        case 1: {
+            title->keyPressed(keycode);
+            break;
+        }
+        case 2: {
+            gamer->keyPressed(keycode);
+            break;
+        }
     }
     return 0;
 }

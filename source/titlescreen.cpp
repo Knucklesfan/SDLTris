@@ -26,27 +26,6 @@ titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<
 	textures = texture;
     music = musicVec;
     sound = soundVec;
-    if( Mix_PlayingMusic() == 0 )
-    {
-        //Play the music
-        Mix_PlayMusic( music[0], -1 );
-    }
-    //If music is being played
-    else
-    {
-        //If the music is paused
-        if( Mix_PausedMusic() == 1 )
-        {
-            //Resume the music
-        Mix_ResumeMusic();
-        }
-        //If the music is playing
-        else
-        {
-        //Pause the music
-            Mix_PauseMusic();
-        }
-    }
 
 }
 void titlescreen::reset()

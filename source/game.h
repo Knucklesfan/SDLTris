@@ -18,6 +18,7 @@ class game
 {
 	public:
 		TTF_Font* font;
+		TTF_Font* header;
 		int testblocks[200], ghostblocks[200],  previousblocks[200];
 		double testangles[200], testscale[200], ghostscale[200];
 		SDL_Renderer* renderer;
@@ -33,7 +34,14 @@ class game
 		int lines = 0;
 		int level = 1;
 		int currentsong = 0;
+		int pauseselection = 0;
+		std::string options[2] = {
+			"RESUME",
+			"EXIT"
+		};
+		int optionsize = 2;
 		bool gameactive;
+		bool paused;
 		std::vector<SDL_Texture*> textures;
 		std::vector<bg>  backgrounds;
 		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[]);

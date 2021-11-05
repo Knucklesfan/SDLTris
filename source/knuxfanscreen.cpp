@@ -52,7 +52,7 @@ void knuxfanscreen::logic(double deltatime) {
 		if ((!godown && !goup) && lifetime > 1000) {
 			goup = true;
 		}
-        std::cout << lifetime << "\n";
+        //std::cout << lifetime << "\n";
         backgrounds[backnum].logic(deltatime);
 	}
 }

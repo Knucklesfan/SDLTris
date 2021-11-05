@@ -1,7 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
-
+#include <enet/enet.h>
 #include <string>
 #include <iostream>
 #include <filesystem>
@@ -13,6 +13,7 @@
 #include "titlescreen.h"
 #include "background.h"
 #include "knuxfanscreen.h"
+#include "server.h"
 
 #undef main
 #define SCREEN_WIDTH 640
@@ -124,6 +125,8 @@ int main() {
     titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg);
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);
+    server* srver = new server();
+    srver->start();
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -165,7 +168,7 @@ int main() {
         }
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
-
+        srver->logic();
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
         if (gamemode == 0) {
             screen->logic(deltaTime);
@@ -191,7 +194,11 @@ int main() {
             //printf("gaming");
             gamer->logic(deltaTime);
             gamer->render();
-            if (gamer->endlogic() == 1 || !gamer->gameactive) {
+            int logic = gamer->endlogic();
+            if(logic == 2) {
+                srver->sendBlockArray(gamer->testblocks);
+            }
+            if (logic == 1 || !gamer->gameactive) {
                 title->reset();
                 gamemode = 1;
             }

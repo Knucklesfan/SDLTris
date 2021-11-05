@@ -112,7 +112,6 @@ void bg::render(SDL_Renderer* renderer) {
 
 
     if (rotation != 0) {
-        std::cout << "using slow rotating renderer\n";
         SDL_Texture* texTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, maxwidth * 3, maxheight * 3);
         SDL_SetRenderTarget(renderer, texTarget);
         SDL_RenderClear(renderer);
@@ -151,7 +150,6 @@ void bg::render(SDL_Renderer* renderer) {
         SDL_DestroyTexture(texTarget);
     }
     else {
-        std::cout << "using speedy old renderer\n";
         for (int i = 0; i < layers; i++) {
             int width, height;
             SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);

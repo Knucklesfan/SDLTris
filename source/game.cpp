@@ -50,7 +50,6 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
 
 }
 void game::logic(double deltatime) {
-        std::cout << "\n";
     if (gameactive && !paused) {
         if (realtick % 100 == 0) {
             score++;
@@ -113,6 +112,7 @@ int game::endlogic() {
         g.rebirth(2, 0, t.piece, previousblocks);
         std::fill_n(ghostblocks, 200, 0);
         nextblocks = rand() % 7;
+        return 2;
     }
     return 0;
 }
@@ -230,7 +230,6 @@ void game::checkLines(int(blocks)[200]) {
             temp[j] = blocks[i * 10 + j];
         }
         if (checkRow(temp)) {
-            printf("FULL ROW DETECTED. %i", i);
             clearRow(blocks, i);
             times++;
         }
@@ -256,7 +255,6 @@ void game::checkLines(int(blocks)[200]) {
         level = (lines / 10) + 1;
     }
     changemusic();
-    std::cout << lines << "\n";
 }
 bool game::checkRow(int(blocks)[10]) {
     for (int i = 0; i < 10; i++) {
@@ -289,8 +287,6 @@ void game::changemusic() {
         if( Mix_PlayingMusic() == 0 )
         {
             //Play the music
-            std::cout << "background thing: ";
-            std::cout << (level)%(backgrounds.size()) << "\n background.size() = " << backgrounds.size() << "\n";
             Mix_PlayMusic(backgrounds[(level)%(backgrounds.size())].music, -1 );
         }
         //If music is being played

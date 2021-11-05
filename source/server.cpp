@@ -27,7 +27,7 @@ void server::start() {
 
 }
 void server::logic() {
-        eventStatus = enet_host_service(srver, &event, 50000);
+        eventStatus = enet_host_service(srver, &event, 10);
 
         // If we had some event that interested us
         if (eventStatus > 0) {
@@ -56,5 +56,7 @@ void server::logic() {
 
 }
 void server::sendBlockArray(int(blocks)[200]) {
+    packet = enet_packet_create(blocks, 200, ENET_PACKET_FLAG_RELIABLE);
+    enet_host_broadcast(srver,1, packet);
 
 }

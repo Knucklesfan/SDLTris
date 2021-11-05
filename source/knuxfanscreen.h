@@ -13,7 +13,9 @@
 
 class knuxfanscreen {
 public:
-    knuxfanscreen(SDL_Renderer* render, std::vector<SDL_Texture*>, Mix_Chunk* soundVec[]);
+	std::vector<bg> backgrounds;
+	int backnum;
+    knuxfanscreen(SDL_Renderer* render, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Chunk* soundVec[], int background);
 	void render();
 	void logic(double deltatime);
 	int endlogic();
@@ -26,6 +28,7 @@ public:
     Mix_Chunk** sound;
 	SDL_Renderer* renderer;
 	std::vector<SDL_Texture*> textures;
+
 
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);

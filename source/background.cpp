@@ -14,7 +14,19 @@
 bg::bg() {}
 bg::bg(std::string path, SDL_Renderer* renderer) {
     generateSurfaces("./backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
+    for (int i = 0; i < layers; i++) {
+        SDL_Rect sprite;
+        SDL_QueryTexture(textures.at(i), NULL, NULL, &sprite.w, &sprite.h);
+        if (sprite.w > maxwidth) {
+            maxwidth = sprite.w;
+        }
+        if (sprite.h > maxheight) {
+            maxheight = sprite.h;
+        }
+
+    }
     std::string filepath = "./backgrounds/" + path + "/theme.xml";
+
     rapidxml::file<> xmlFile(filepath.c_str());
     rapidxml::xml_document<> doc;
     doc.parse<0>(xmlFile.data());
@@ -23,8 +35,13 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
     vers = doc.first_node("vers")->value();
     songname = doc.first_node("musicname")->value();
     artist = doc.first_node("musicartist")->value();
+    rotation = 0;
+    if (doc.first_node("rotation") != NULL) {
+        rotation = atoi(doc.first_node("rotation")->value());
+    }
     int array[10];
     for(int i = 0; i < layers; i++) {
+
         std::string sr = "layer";
         sr += std::to_string(i);
         incrementsx[i] = atoi(doc.first_node(sr.c_str())->value());
@@ -34,6 +51,7 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
         incrementsy[i] = atoi(doc.first_node(sy.c_str())->value());
         //std::cout << "INFORMATION!!!: " << atoi(doc.first_node(sy.c_str())->value()) << "\n";
     }
+
     std::string muspath = "./backgrounds/" + path + "/";
     muspath += doc.first_node("music")->value();
     music = Mix_LoadMUS(muspath.c_str());
@@ -47,7 +65,7 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
 
 void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
     int i = 0;
-    std::vector<SDL_Surface*>surfaces;
+    std::vector<SDL_Surface*> surfaces;
     SDL_Surface* temp;
     std::vector<std::string> strings;
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
@@ -83,35 +101,95 @@ void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
 
 }
 void bg::render(SDL_Renderer* renderer) {
-    for(int i = 0; i < layers; i++) {
-    int width,height;
-    SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
-    double tempx = 0;
-    double tempy = 0; //yuck
-    int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
-    int multiplery = 1;
-    //std::cout << incrementsx[i] << i << "\n";
-    if (incrementsx[i] != 0) {
-        tempx = fmod(layerposx[i], width); //ew
-    }
-    if (incrementsy[i] != 0) {
-        tempy = fmod(layerposy[i], height); //GROSS CODE
-    }
-    if (layerposx[i] > 0) {
-        multiplerx = -1;
-    }
-    if (layerposy[i] > 0) {
-        multiplery = -1;
-    }
+    //OKAY EXPLAINATION FOR MY ACTIONS:
+    //dear whoever is reading this:
+    //this code is a bad practice.
+    //THAT BEING SAID:
+    //I don't want to waste processing power if the current background ISNT rotating, thus, for sake of efficiency..
+    //this also means that disabling rotation in a setting can allow the code to use a more optimized version of the renderer which is more favorable to older PCs
+    //i swear im not a bad coderalkjdsfalksdjfkalsdf
 
-    drawTexture(renderer,textures[i], tempx, tempy, 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], tempx+ (width * multiplerx), tempy+(height*multiplery), 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], tempx+0, tempy + (height * multiplery), 0.0, 1.0, false);
-    drawTexture(renderer,textures[i], tempx+ (width * multiplerx), tempy, 0.0, 1.0, false);
+
+
+    if (rotation != 0) {
+        std::cout << "using slow rotating renderer\n";
+        SDL_Texture* texTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, maxwidth * 3, maxheight * 3);
+        SDL_SetRenderTarget(renderer, texTarget);
+        SDL_RenderClear(renderer);
+        for (int i = 0; i < layers; i++) {
+            int width, height;
+            SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
+            double tempx = 0;
+            double tempy = 0; //yuck
+            int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
+            int multiplery = 1;
+            //std::cout << incrementsx[i] << i << "\n";
+
+            if (incrementsx[i] != 0) {
+                tempx = fmod(layerposx[i], width); //ew
+            }
+            if (incrementsy[i] != 0) {
+                tempy = fmod(layerposy[i], height); //GROSS CODE
+            }
+
+            drawTexture(renderer, textures[i], tempx, tempy, 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx, tempy + (height), 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx, tempy + (height) * 2, 0.0, 1.0, false);
+
+            drawTexture(renderer, textures[i], tempx + (width) * 2, tempy, 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx + (width) * 2, tempy + (height), 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx + (width) * 2, tempy + (height) * 2, 0.0, 1.0, false);
+
+            drawTexture(renderer, textures[i], tempx + (width), tempy, 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx + (width), tempy + (height), 0.0, 1.0, false); //center?
+            drawTexture(renderer, textures[i], tempx + (width), tempy + (height) * 2, 0.0, 1.0, false);
+
+
+        }
+        SDL_SetRenderTarget(renderer, NULL);
+        drawTexture(renderer, texTarget, -640, -480, fmod(angle, 360), 1.0, false);
+        SDL_DestroyTexture(texTarget);
+    }
+    else {
+        std::cout << "using speedy old renderer\n";
+        for (int i = 0; i < layers; i++) {
+            int width, height;
+            SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
+            double tempx = 0;
+            double tempy = 0; //yuck
+            int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
+            int multiplery = 1;
+            //std::cout << incrementsx[i] << i << "\n";
+            if (incrementsx[i] != 0) {
+                tempx = fmod(layerposx[i], width); //ew
+            }
+            if (incrementsy[i] != 0) {
+                tempy = fmod(layerposy[i], height); //GROSS CODE
+            }
+            if (layerposx[i] > 0) {
+                multiplerx = -1;
+            }
+            if (layerposy[i] > 0) {
+                multiplery = -1;
+            }
+
+            drawTexture(renderer, textures[i], tempx, tempy, 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy + (height * multiplery), 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx + 0, tempy + (height * multiplery), 0.0, 1.0, false);
+            drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy, 0.0, 1.0, false);
+        }
     }
 }
 void bg::logic(double deltatime)
 {
+    if (angle > 360.0) {
+        angle = 0.0;
+    }
+    if (rotation != 0) {
+        angle += deltatime / rotation;
+    }
+    //std::cout << angle << "\n";
+
     for(int i = 0; i < layers; i++) {
         if(incrementsx[i] != 0) {
             layerposx[i] -= (deltatime)/(incrementsx[i]);

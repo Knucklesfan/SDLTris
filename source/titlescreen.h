@@ -26,6 +26,7 @@ public:
 	std::vector<SDL_Texture*> textures;
 	int currentscreen = 0;
 	int currentselection = 0;
+	int bgnum = 0;
 	const int selections = 5;
 	std::string options[5] = {
 		"START GAME",
@@ -59,7 +60,7 @@ public:
 	std::string messagebutton = "EXIT";
     std::vector<bg> background;
 
-	titlescreen(SDL_Renderer* render, SDL_Window* window, std::vector<bg>  backg, std::vector<SDL_Texture*>,  Mix_Music* musicVec[], Mix_Chunk* soundVec[]);
+	titlescreen(SDL_Renderer* render, SDL_Window* window, std::vector<bg>  backg, std::vector<SDL_Texture*>,  Mix_Music* musicVec[], Mix_Chunk* soundVec[], int background);
 	double layerpos[10];
 	void keyPressed(SDL_Keycode key);
 	void render();

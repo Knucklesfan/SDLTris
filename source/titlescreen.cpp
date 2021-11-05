@@ -5,7 +5,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <vector>
 
-titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[])
+titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[], int backgr)
 {
     //std::filesystem::current_path().u8string()
     std::string path = "./sprites/00.ttf";
@@ -21,7 +21,7 @@ titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<
         printf("successfully loaded font at %s", path.c_str());
     }
     background = backg;
-
+    bgnum = backgr;
 	renderer = render;
 	textures = texture;
     music = musicVec;
@@ -226,7 +226,7 @@ void titlescreen::render()
 {
     SDL_RenderClear(renderer);
 
-    background[1].render(renderer);
+    background[bgnum].render(renderer);
 
     for (int i = 0; i < selections; i++) {
         renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);
@@ -319,7 +319,7 @@ void titlescreen::render()
 
 void titlescreen::logic(double deltatime)
 {
-    background[1].logic(deltatime);
+    background[bgnum].logic(deltatime);
 }
 
 int titlescreen::endlogic()

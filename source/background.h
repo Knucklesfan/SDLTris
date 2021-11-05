@@ -19,6 +19,8 @@ class bg
         double layerposx[10];
         double layerposy[10];
         int layers = 0;
+        double angle = 0.0;
+        double rotation;
 	    void logic(double deltatime);
         std::string name;
         std::string path;
@@ -33,6 +35,7 @@ class bg
         bg();
 
     private:
+        int maxwidth, maxheight;
     	void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
         bool hasEnding(std::string const& fullString, std::string const& ending);
         void generateSurfaces(std::string path, SDL_Renderer* renderer);

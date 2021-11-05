@@ -10,15 +10,19 @@
 #include "background.h"
 #include "knuxfanscreen.h"
 
-knuxfanscreen::knuxfanscreen(SDL_Renderer* render, std::vector<SDL_Texture*> texture, Mix_Chunk* soundVec[]) {
+knuxfanscreen::knuxfanscreen(SDL_Renderer* render, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Chunk* soundVec[], int background) {
     renderer = render; 
     textures = texture;
     sound = soundVec;
+    backgrounds = backg;
+    backnum = background;
     active = true;
     godown = true;
+    
 }
 void knuxfanscreen::render() {
     SDL_RenderClear(renderer);
+    backgrounds[backnum].render(renderer);
     drawTexture(textures[8],0,0,0,1.0,false);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255*alpha);
     SDL_Rect splashbox = { 0, 0, 640, 480 };
@@ -35,6 +39,7 @@ void knuxfanscreen::logic(double deltatime) {
 		}
 		else if (alpha <= 0.0 && godown) {
 			godown = false;
+            alpha = 0;
 		}
 		if (alpha < 1.0 && goup) {
 			alpha+=deltatime / 1500;
@@ -48,6 +53,7 @@ void knuxfanscreen::logic(double deltatime) {
 			goup = true;
 		}
         std::cout << lifetime << "\n";
+        backgrounds[backnum].logic(deltatime);
 	}
 }
 

@@ -40,10 +40,12 @@ std::vector<SDL_Texture*> generateTextures(std::vector<SDL_Surface*> surfaces, S
 std::vector<SDL_Surface*> generateSurfaces(std::string path);
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
-bool bgCompare (bg a, bg b) {return a.name>b.name;} 
+bool bgCompare (bg a, bg b) {return a.name<b.name;} 
 int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode);
 
 int main() {
+        srand((unsigned)time(0));
+
         if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) != 0) {
         std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
 
@@ -77,6 +79,8 @@ int main() {
 
         return 1;
     }
+    Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+
     SDL_Joystick* joystick;
 
     SDL_Joystick* gGameController = SDL_JoystickOpen(0);
@@ -111,9 +115,15 @@ int main() {
     for(auto& p : backgrounds) {
         std::cout << p.name << "\n";
     }
-    titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data());
+    int titlebg = std::rand() % backgrounds.size();
+    int knxfnbg = std::rand() % backgrounds.size();
+    if (titlebg == knxfnbg) {
+        knxfnbg = std::rand() % backgrounds.size(); //WHY TF AM I DOING THIS
+    }
+
+    titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg);
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
-    knuxfanscreen* screen = new knuxfanscreen(renderer, textures, sound.data());
+    knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {

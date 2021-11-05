@@ -12,6 +12,7 @@
 #include "background.h"
 #include <SDL2/SDL_ttf.h>
 #include "ingamemessagebox.h"
+#include "server.h"
 #include <random>
 
 #define LINES 0
@@ -105,6 +106,7 @@ int game::endlogic() {
         realtick = 0;
         checkLines(testblocks);
         memcpy(previousblocks, testblocks, sizeof previousblocks);
+    
         if (!t.rebirth(2, 0, nextblocks)) {
             gameactive = false;
             return 1;

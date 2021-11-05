@@ -55,8 +55,8 @@ void server::logic() {
         }
 
 }
-void server::sendBlockArray(int(blocks)[200]) {
-    packet = enet_packet_create(blocks, 200, ENET_PACKET_FLAG_RELIABLE);
+void server::sendBlockArray(int*(blocks)) {
+    packet = enet_packet_create(blocks, sizeof(blocks), ENET_PACKET_FLAG_RELIABLE);
     enet_host_broadcast(srver,1, packet);
 
 }

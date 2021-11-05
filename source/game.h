@@ -11,6 +11,7 @@
 #include "tetriminos.h"
 #include "ghostblock.h"
 #include "background.h"
+#include "server.h"
 #include "ingamemessagebox.h"
 #include <random>
 

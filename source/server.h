@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#pragma once
 
 class server {
     public:
@@ -13,7 +14,7 @@ class server {
     
         void start();
         void logic();
-        void sendBlockArray(int(blocks)[200]);
+        void sendBlockArray(int*(blocks));
          server();
     
 };

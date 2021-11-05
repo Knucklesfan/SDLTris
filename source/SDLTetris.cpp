@@ -114,7 +114,7 @@ int main() {
     }
     std::sort(backgrounds.begin(),backgrounds.end(),bgCompare);//sort the vector
     for(auto& p : backgrounds) {
-        std::cout << p.name << "\n";
+        //std::cout << p.name << "\n";
     }
     int titlebg = std::rand() % backgrounds.size();
     int knxfnbg = std::rand() % backgrounds.size();
@@ -192,12 +192,10 @@ int main() {
         }
         else {
             //printf("gaming");
+            srver->sendBlockArray(gamer->testblocks);
             gamer->logic(deltaTime);
             gamer->render();
             int logic = gamer->endlogic();
-            if(logic == 2) {
-                srver->sendBlockArray(gamer->testblocks);
-            }
             if (logic == 1 || !gamer->gameactive) {
                 title->reset();
                 gamemode = 1;

@@ -4,6 +4,7 @@
 
 class rpcimplement {
 public:
+    discord::Result result;
     discord::Core* core{};
     rpcimplement();
     void update(std::string state, std::string score, std::string icon, discord::Timestamp time);

@@ -11,9 +11,19 @@
 #include <cstring>
 #include <cmath>
 #include <SDL2/SDL_mixer.h>
+
+#ifdef __SWITCH__
+#define prefix  "/"
+#include <switch.h>
+
+#else
+#define prefix  "./"
+#endif
+
 bg::bg() {}
 bg::bg(std::string path, SDL_Renderer* renderer) {
-    generateSurfaces("./backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
+    std::string prfx = prefix;
+    generateSurfaces(prfx + "backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     for (int i = 0; i < layers; i++) {
         SDL_Rect sprite;
         SDL_QueryTexture(textures.at(i), NULL, NULL, &sprite.w, &sprite.h);
@@ -25,7 +35,7 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
         }
 
     }
-    std::string filepath = "./backgrounds/" + path + "/theme.xml";
+    std::string filepath = prfx + "backgrounds/" + path + "/theme.xml";
 
     rapidxml::file<> xmlFile(filepath.c_str());
     rapidxml::xml_document<> doc;
@@ -52,7 +62,7 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
         //std::cout << "INFORMATION!!!: " << atoi(doc.first_node(sy.c_str())->value()) << "\n";
     }
 
-    std::string muspath = "./backgrounds/" + path + "/";
+    std::string muspath = prfx + "backgrounds/" + path + "/";
     muspath += doc.first_node("music")->value();
     music = Mix_LoadMUS(muspath.c_str());
     if (!music) {

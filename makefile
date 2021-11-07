@@ -48,6 +48,7 @@ APP_TITLE   := Knuxfan's Tetriminos
 APP_AUTHOR  := Knuxfan
 APP_VERSION := 1.0
 PC_LIBS     := SDL2_mixer SDL2_ttf sdl2
+ICON		:=icons/icon4.png
 
 #---------------------------------------------------------------------------------
 # options for code generation

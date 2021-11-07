@@ -18,6 +18,14 @@
 #define LINES 0
 #define LEVEL 1
 
+#ifdef __SWITCH__
+#define filepath  "/"
+#include <switch.h>
+
+#else
+#define filepath  "./"
+#endif
+
 //TODO: fix the stupid bug here lol
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
@@ -44,7 +52,7 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     lines = LINES;
     level = LEVEL;
     paused = false;
-    std::string path = "./sprites/00.ttf";
+    std::string path = filepath "sprites/00.ttf";
     font = TTF_OpenFont(path.c_str(), 13.333);
     header = TTF_OpenFont(path.c_str(), 23.333);
     msg.font = font;
@@ -189,6 +197,17 @@ void game::keyPressed(SDL_Keycode key)
             case(SDLK_z): {
                 switch(pauseselection) {
                     case 0: {
+                        if (Mix_PausedMusic() == 1)
+                        {
+                            //Resume the music
+                            Mix_ResumeMusic();
+                        }
+                        //If the music is playing
+                        else
+                        {
+                            //Pause the music
+                            Mix_PauseMusic();
+                        }
                         paused = false;
                         break;
                     }
@@ -201,6 +220,17 @@ void game::keyPressed(SDL_Keycode key)
 
     }
     if(key == SDLK_ESCAPE) {
+        if (Mix_PausedMusic() == 1)
+        {
+            //Resume the music
+            Mix_ResumeMusic();
+        }
+        //If the music is playing
+        else
+        {
+            //Pause the music
+            Mix_PauseMusic();
+        }
         paused = !paused;
     }
 }

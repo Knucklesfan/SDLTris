@@ -1,2 +1,2 @@
-nxlink -a 192.168.68.140 ../SDLTris.nro
+nxlink -s -a 192.168.68.130 ../SDLTris.nro
 pause

@@ -13,13 +13,30 @@
 #include "titlescreen.h"
 #include "background.h"
 #include "knuxfanscreen.h"
+#ifdef _NETCODE
 #include "server.h"
+#endif
+
+#ifdef _WIN32
+    #include "rpcimplement.h"
+#endif
+#include "highscore.h"
+//TODO: ALL NETCODE HAS BEEN DISABLED
+
+//i did this for a number of reasons:
+// 1. I don't have the server code working just yet
+// 2. I want to make a release and as such including an unfinished, unsafe server in the code is a bad idea to send to people
+// 3. Windows Firewall freaking hates this thing rn
+// 4. I'm lazy.
+// If for some reason you want to compile with the netcode, then add _NETCODE to your definitions. Other than that, sorry!
 
 #undef main
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #ifdef __SWITCH__
     #define filepath  "/"
+    #include <switch.h>
+
 #else
     #define filepath  "./"
 #endif
@@ -28,7 +45,9 @@
 #define JOY_B     1
 #define JOY_X     2
 #define JOY_Y     3
-#define JOY_PLUS  6
+#define JOY_PLUS  10
+#define JOY_L  6
+
 #define JOY_LEFT  12
 #define JOY_UP    13
 #define JOY_RIGHT 14
@@ -45,6 +64,10 @@ bool bgCompare (bg a, bg b) {return a.name<b.name;}
 int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode);
 
 int main() {
+#ifdef __SWITCH__
+    consoleInit(NULL);
+#endif // __SWITCH__
+
         srand((unsigned)time(0));
 
         if (SDL_Init(SDL_INIT_EVERYTHING | SDL_INIT_AUDIO | SDL_INIT_JOYSTICK) != 0) {
@@ -121,12 +144,25 @@ int main() {
     if (titlebg == knxfnbg) {
         knxfnbg = std::rand() % backgrounds.size(); //WHY TF AM I DOING THIS
     }
-
     titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg);
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);
+#ifdef _NETCODE
     server* srver = new server();
     srver->start();
+#endif
+    highscore* score = new highscore();
+
+
+
+    //rpcimplement rpc();
+#ifdef _WIN32
+    rpcimplement* rpc = new rpcimplement();
+    discord::Timestamp time = 0;
+    time = std::time(nullptr);
+    rpc->update("At the Knuxfan Screen.", "Top high score: " + std::to_string(score->maxscore), "icon1", time);
+
+#endif
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -155,8 +191,12 @@ int main() {
                     input(gamemode, title, gamer, SDLK_RIGHT);
                     break;
                 }
-                case JOY_PLUS: {
+                case JOY_L: {
                     input(gamemode, title, gamer, SDLK_x);
+                    break;
+                }
+                case JOY_PLUS: {
+                    input(gamemode, title, gamer, SDLK_ESCAPE);
                     break;
                 }
 
@@ -168,7 +208,9 @@ int main() {
         }
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
+#ifdef _NETCODE
         srver->logic();
+#endif
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
         if (gamemode == 0) {
             screen->logic(deltaTime);
@@ -176,32 +218,64 @@ int main() {
             if (screen->endlogic() == 1) {
                 gamemode = 1;
                 title->reset();
+#ifdef _WIN32
+                time = std::time(nullptr);
+                rpc->update("On the Title Screen.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
+#endif
+
             }
 
         }
         else if(gamemode == 1) {
             //printf("titlescreen");
             title->logic(deltaTime);
-            title->render();
+            title->render(score);
             if (title->endlogic() == 1) {
                 gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
                 gamer->reset();
                 gamemode = 2;
                 title->loadgame = false;
+#ifdef _WIN32
+                time = std::time(nullptr);
+                rpc->update("Droppin' some blocks", "LN: 0 LV: 0", "mainicon",time);
+#endif
+
             }
+
         }
         else {
             //printf("gaming");
+#ifdef _NETCODE
             srver->sendBlockArray(gamer->testblocks);
+#endif
             gamer->logic(deltaTime);
+#ifdef _WIN32
+            if (!gamer->paused) {
+                std::string scoretxt = "LN: " + std::to_string(gamer->lines) + " LV: " + std::to_string(gamer->level);
+                rpc->update("Droppin' some blocks", scoretxt, "mainicon", time);
+            }
+            else {
+                std::string scoretxt = "LN: " + std::to_string(gamer->lines) + " LV: " + std::to_string(gamer->level);
+                rpc->update("Paused..", scoretxt, "mainicon", time);
+
+            }
+#endif
             gamer->render();
             int logic = gamer->endlogic();
             if (logic == 1 || !gamer->gameactive) {
                 title->reset();
                 gamemode = 1;
+#ifdef _WIN32
+                score->update(gamer->score);
+                time = std::time(nullptr);
+                rpc->update("In the menu.", "Top high score: " + std::to_string(score->maxscore) , "icon2", time);
+#endif
             }
 
         }
+#ifdef _WIN32
+        rpc->logic();
+#endif
     }
 
     return 0;

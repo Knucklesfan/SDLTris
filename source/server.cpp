@@ -1,3 +1,4 @@
+#ifdef _NETCODE
 #include "server.h"
 #include <enet/enet.h>
 #include <stdio.h>
@@ -60,3 +61,4 @@ void server::sendBlockArray(int*(blocks)) {
     enet_host_broadcast(srver,1, packet);
 
 }
+#endif

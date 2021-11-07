@@ -52,7 +52,9 @@ titlescreen.o: \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h
+ C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h
 C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h:
@@ -106,3 +108,5 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h:

@@ -5,12 +5,23 @@
 #include <SDL2/SDL_mixer.h>
 #include <vector>
 
+#ifdef __SWITCH__
+#define prefix  "/"
+#include <switch.h>
+
+#else
+#define prefix  "./"
+#endif
+
 titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[], int backgr)
 {
     //std::filesystem::current_path().u8string()
-    std::string path = "./sprites/00.ttf";
+    std::string prfx = prefix;
+
+    std::string path = prfx + "sprites/00.ttf";
     buttonfont = TTF_OpenFont(path.c_str(), 24);
     bodyfont = TTF_OpenFont(path.c_str(), 16);
+    versfont = TTF_OpenFont(path.c_str(), 12);
     headerfont = TTF_OpenFont(path.c_str(), 30);
     window = windows;
     if (buttonfont == NULL) {
@@ -222,16 +233,23 @@ void titlescreen::keyPressed(SDL_Keycode key)
     }
 }
 
-void titlescreen::render()
+void titlescreen::render(highscore* score)
 {
     SDL_RenderClear(renderer);
 
     background[bgnum].render(renderer);
 
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+    SDL_Rect bx = { 160, 250, 320, 195 };
+    SDL_RenderFillRect(renderer, &bx);
+    drawTexture(textures[5], 0, 0, 0.0, 1.0, false);
+
     for (int i = 0; i < selections; i++) {
         renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);
     }
-    drawTexture(textures[5], 0, 0, 0.0, 1.0, false);
+    renderfont(490, 165, "VERSION 0.2 DEMO", false, versfont);
+    renderfont(320, 280, "High Score: " + std::to_string(score->maxscore), false, bodyfont);
+    renderfont(320, 265, "Previous Score: " + std::to_string(score->previousscore), false, bodyfont);
     switch (currentscreen) {
         case(1): {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);

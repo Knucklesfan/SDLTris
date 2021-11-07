@@ -50,12 +50,21 @@ SDLTetris.o: C:/Users/bobca/Documents/GitHub/SDLTris/source/SDLTetris.cpp \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/enet.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/unix.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/types.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/protocol.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/list.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/callbacks.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/game.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/tetriminos.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/ghostblock.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/source/server.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/ingamemessagebox.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/knuxfanscreen.h
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h:
@@ -108,10 +117,19 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_misc.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/enet.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/unix.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/types.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/protocol.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/list.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/callbacks.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/game.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/tetriminos.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/ghostblock.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/source/server.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/ingamemessagebox.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/knuxfanscreen.h:

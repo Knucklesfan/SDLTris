@@ -100,7 +100,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>x86/SDL2.lib;x86/SDL2main.lib;x86/SDL2_ttf.lib;x86/SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>x86/SDL2.lib;x86/SDL2main.lib;x86/SDL2_ttf.lib;x86/SDL2_mixer.lib;x86/enet.lib;x86/discord_game_sdk.dll.lib;ws2_32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -151,24 +151,60 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\rpcimplement.cpp" />
     <ClCompile Include="source/ingamemessagebox.cpp" />
     <ClCompile Include="source/game.cpp" />
     <ClCompile Include="source/SDLTetris.cpp" />
+    <ClCompile Include="source\discord\achievement_manager.cpp" />
+    <ClCompile Include="source\discord\activity_manager.cpp" />
+    <ClCompile Include="source\discord\application_manager.cpp" />
+    <ClCompile Include="source\discord\core.cpp" />
+    <ClCompile Include="source\discord\image_manager.cpp" />
+    <ClCompile Include="source\discord\lobby_manager.cpp" />
+    <ClCompile Include="source\discord\network_manager.cpp" />
+    <ClCompile Include="source\discord\overlay_manager.cpp" />
+    <ClCompile Include="source\discord\relationship_manager.cpp" />
+    <ClCompile Include="source\discord\storage_manager.cpp" />
+    <ClCompile Include="source\discord\store_manager.cpp" />
+    <ClCompile Include="source\discord\types.cpp" />
+    <ClCompile Include="source\discord\user_manager.cpp" />
+    <ClCompile Include="source\discord\voice_manager.cpp" />
+    <ClCompile Include="source\server.cpp" />
     <ClCompile Include="source\tetrimino.cpp" />
     <ClCompile Include="source\ghostblock.cpp" />
     <ClCompile Include="source\titlescreen.cpp" />
     <ClCompile Include="source\background.cpp" />
-	<ClCompile Include="source\knuxfanscreen.cpp" />
-
+	<ClCompile Include="source\highscore.cpp" />
+    <ClCompile Include="source\knuxfanscreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\rpcimplement.h" />
     <ClInclude Include="source/ingamemessagebox.h" />
+    <ClInclude Include="source\discord\achievement_manager.h" />
+    <ClInclude Include="source\discord\activity_manager.h" />
+    <ClInclude Include="source\discord\application_manager.h" />
+    <ClInclude Include="source\discord\core.h" />
+    <ClInclude Include="source\discord\discord.h" />
+    <ClInclude Include="source\discord\event.h" />
+    <ClInclude Include="source\discord\ffi.h" />
+    <ClInclude Include="source\discord\image_manager.h" />
+    <ClInclude Include="source\discord\lobby_manager.h" />
+    <ClInclude Include="source\discord\network_manager.h" />
+    <ClInclude Include="source\discord\overlay_manager.h" />
+    <ClInclude Include="source\discord\relationship_manager.h" />
+    <ClInclude Include="source\discord\storage_manager.h" />
+    <ClInclude Include="source\discord\store_manager.h" />
+    <ClInclude Include="source\discord\types.h" />
+    <ClInclude Include="source\discord\user_manager.h" />
+    <ClInclude Include="source\discord\voice_manager.h" />
     <ClInclude Include="source\game.h" />
+    <ClInclude Include="source\server.h" />
     <ClInclude Include="source\tetriminos.h" />
+	<ClInclude Include="source\highscore.h" />
     <ClInclude Include="source\ghostblock.h" />
     <ClInclude Include="source\titlescreen.h" />
     <ClInclude Include="source\background.h" />
-	<ClInclude Include="source\knuxfanscreen.h" />
+    <ClInclude Include="source\knuxfanscreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

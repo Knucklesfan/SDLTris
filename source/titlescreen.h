@@ -9,13 +9,14 @@
 #include <array>
 #include <cstring>
 #include "background.h"
-
+#include "highscore.h"
 class titlescreen
 {
 public:
 	TTF_Font* buttonfont;
 	TTF_Font* headerfont;
 	TTF_Font* bodyfont;
+	TTF_Font* versfont;
 
 	Mix_Music** music;
 	Mix_Chunk** sound;
@@ -63,7 +64,7 @@ public:
 	titlescreen(SDL_Renderer* render, SDL_Window* window, std::vector<bg>  backg, std::vector<SDL_Texture*>,  Mix_Music* musicVec[], Mix_Chunk* soundVec[], int background);
 	double layerpos[10];
 	void keyPressed(SDL_Keycode key);
-	void render();
+	void render(highscore* score);
 	void logic(double deltatime);
 	int endlogic();
 	void reset();

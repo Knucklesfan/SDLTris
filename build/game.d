@@ -54,6 +54,7 @@ game.o: C:/Users/bobca/Documents/GitHub/SDLTris/source/game.cpp \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/tetriminos.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/ghostblock.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h \
+ C:/Users/bobca/Documents/GitHub/SDLTris/source/server.h \
  C:/Users/bobca/Documents/GitHub/SDLTris/source/ingamemessagebox.h
 C:/Users/bobca/Documents/GitHub/SDLTris/source/game.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
@@ -110,4 +111,5 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/tetriminos.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/ghostblock.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h:
+C:/Users/bobca/Documents/GitHub/SDLTris/source/server.h:
 C:/Users/bobca/Documents/GitHub/SDLTris/source/ingamemessagebox.h:

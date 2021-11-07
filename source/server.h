@@ -1,3 +1,4 @@
+#ifdef _NETCODE
 #include <enet/enet.h>
 #include <stdio.h>
 #include <string.h>
@@ -18,3 +19,4 @@ class server {
          server();
     
 };
+#endif

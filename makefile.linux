@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp
+OBJS = source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp
 #INC specifies what headers to include
 INC=-I include/
 #CC specifies which compiler we're using

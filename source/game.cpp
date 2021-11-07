@@ -166,13 +166,13 @@ void game::keyPressed(SDL_Keycode key)
             realtick = 0;
             holdblock = t.piece;
             if (temp > -1) {
-                t.rebirth(0, 0, temp);
+                t.rebirth(2, 0, temp);
             }
             else {
-                t.rebirth(5, 0, nextblocks);
+                t.rebirth(2, 0, nextblocks);
                 nextblocks = rand() % 7;
             }
-            g.rebirth(5, 0, t.piece, previousblocks);
+            g.rebirth(2, 0, t.piece, previousblocks);
             std::fill_n(ghostblocks, 200, 0);
             break;
         }

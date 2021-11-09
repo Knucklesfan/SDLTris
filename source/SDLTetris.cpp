@@ -13,6 +13,8 @@
 #include "titlescreen.h"
 #include "background.h"
 #include "knuxfanscreen.h"
+#include "replay.h"
+
 #ifdef _NETCODE
 #include "server.h"
 #endif
@@ -103,7 +105,7 @@ int main() {
 
         return 1;
     }
-    Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+    Mix_VolumeMusic(0);
 
     SDL_Joystick* joystick;
 
@@ -126,7 +128,7 @@ int main() {
     double ticks = 0;
     int realtick = 0;
     int gamemode = 0;
-    
+    long long recordticks = 0;
     for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
         if (p.is_directory()) {
             //std::cout << "HELP ME:" << p.path().filename() << "\n";
@@ -152,8 +154,7 @@ int main() {
     srver->start();
 #endif
     highscore* score = new highscore();
-
-
+    replay* reply = new replay();
 
     //rpcimplement rpc();
 #ifdef _WIN32
@@ -164,48 +165,66 @@ int main() {
 
 #endif
     while (!quit) {
+        if(reply->record || reply->playback) {
+            recordticks++;
+        }
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
             if (event.type == SDL_JOYBUTTONDOWN) {
-                switch (event.jbutton.button) {
-                case JOY_B:
-                case JOY_A: {
-                    input(gamemode, title, gamer, SDLK_z);
-                    break;
+                if(!reply->playback) {
+                    switch (event.jbutton.button) {
+                    case JOY_B:
+                    case JOY_A: {
+                        input(gamemode, title, gamer, SDLK_z);
+                        break;
+                        }
+                    case JOY_DOWN: {
+                        input(gamemode, title, gamer, SDLK_DOWN);
+                        break;
                     }
-                case JOY_DOWN: {
-                    input(gamemode, title, gamer, SDLK_DOWN);
-                    break;
-                }
-                case JOY_UP: {
-                    input(gamemode, title, gamer, SDLK_UP);
-                    break;
-                }
-                case JOY_LEFT: {
-                    input(gamemode, title, gamer, SDLK_LEFT);
-                    break;
-                }
-                case JOY_RIGHT: {
-                    input(gamemode, title, gamer, SDLK_RIGHT);
-                    break;
-                }
-                case JOY_L: {
-                    input(gamemode, title, gamer, SDLK_x);
-                    break;
-                }
-                case JOY_PLUS: {
-                    input(gamemode, title, gamer, SDLK_ESCAPE);
-                    break;
-                }
+                    case JOY_UP: {
+                        input(gamemode, title, gamer, SDLK_UP);
+                        break;
+                    }
+                    case JOY_LEFT: {
+                        input(gamemode, title, gamer, SDLK_LEFT);
+                        break;
+                    }
+                    case JOY_RIGHT: {
+                        input(gamemode, title, gamer, SDLK_RIGHT);
+                        break;
+                    }
+                    case JOY_L: {
+                        input(gamemode, title, gamer, SDLK_x);
+                        break;
+                    }
+                    case JOY_PLUS: {
+                        input(gamemode, title, gamer, SDLK_ESCAPE);
+                        break;
+                    }
 
+                    }
                 }
             }
             if (event.type == SDL_KEYDOWN) {
-                input(gamemode, title, gamer, event.key.keysym.sym);
+                if(!reply->playback || (reply->playback && gamer->paused)) {
+                    if(reply->record) {
+                        reply->logic(event.key.keysym.sym,recordticks);
+                    }
+                    input(gamemode, title, gamer, event.key.keysym.sym);
+                }
+                else if(event.key.keysym.sym == SDLK_ESCAPE) {
+                    input(gamemode, title, gamer, event.key.keysym.sym);
+                }
             }
         }
+
+        if(reply->playback) {
+            input(gamemode,title,gamer, reply->logic(recordticks));
+        }
+
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
 #ifdef _NETCODE
@@ -235,6 +254,8 @@ int main() {
                 gamer->reset();
                 gamemode = 2;
                 title->loadgame = false;
+                //reply->loadreplay("replay.xml");
+                recordticks = 0;
 #ifdef _WIN32
                 time = std::time(nullptr);
                 rpc->update("Droppin' some blocks", "LN: 0 LV: 0", "mainicon",time);
@@ -249,6 +270,7 @@ int main() {
             srver->sendBlockArray(gamer->testblocks);
 #endif
             gamer->logic(deltaTime);
+
 #ifdef _WIN32
             if (!gamer->paused) {
                 std::string scoretxt = "LN: " + std::to_string(gamer->lines) + " LV: " + std::to_string(gamer->level);
@@ -265,6 +287,7 @@ int main() {
             if (logic == 1 || !gamer->gameactive) {
                 title->reset();
                 gamemode = 1;
+                reply->endlogic(gamer->gameactive);
 #ifdef _WIN32
                 score->update(gamer->score);
                 time = std::time(nullptr);

@@ -30,7 +30,7 @@
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
 game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
-    srand((unsigned)time(0)); 
+    //srand((unsigned)time(0)); 
 
     std::fill_n(testblocks, 200, 0);
     std::fill_n(ghostblocks, 200, 0);
@@ -357,17 +357,12 @@ void game::reset() {
     g.changePos(0, 0, 0);
     double ticks = 0;
     int realtick = 0;
-    int nextblocks[16];
     int holdblock = -1;
     lines = LINES;
     level = LEVEL;
     paused = false;
-    for (int i = 0; i < 16; i++) {
-        while(nextblocks[i] > 7 ){ 
-            nextblocks[i] = 0 + std::rand() % 7;
-        }
-    }
-    srand((unsigned)time(0)); 
+    nextblocks = std::rand() % 7;
+    //srand((unsigned)time(0)); 
     gameactive = true;
 
 

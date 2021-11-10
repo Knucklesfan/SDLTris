@@ -9,13 +9,8 @@
 <layer1>15</layer1>
 <layer1y>15</layer1y>
 
-<layer2>25</layer2>
-<layer2y>25</layer2y>
-
-
-<layer3>50</layer3>
-<layer3y>50</layer3y>
-
 <music>song.xm</music>
 <musicname>A Sad Touch..</musicname>
 <musicartist>arachno \ coolphat</musicartist>
+
+<fglayer>1</fglayer>

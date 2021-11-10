@@ -154,7 +154,6 @@ int main() {
     srver->start();
 #endif
     highscore* score = new highscore();
-    replay* reply = new replay();
 
     //rpcimplement rpc();
 #ifdef _WIN32
@@ -165,15 +164,11 @@ int main() {
 
 #endif
     while (!quit) {
-        if(reply->record || reply->playback) {
-            recordticks++;
-        }
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
             if (event.type == SDL_JOYBUTTONDOWN) {
-                if(!reply->playback) {
                     switch (event.jbutton.button) {
                     case JOY_B:
                     case JOY_A: {
@@ -205,24 +200,11 @@ int main() {
                         break;
                     }
 
-                    }
                 }
             }
             if (event.type == SDL_KEYDOWN) {
-                if(!reply->playback || (reply->playback && gamer->paused)) {
-                    if(reply->record) {
-                        reply->logic(event.key.keysym.sym,recordticks);
-                    }
                     input(gamemode, title, gamer, event.key.keysym.sym);
-                }
-                else if(event.key.keysym.sym == SDLK_ESCAPE) {
-                    input(gamemode, title, gamer, event.key.keysym.sym);
-                }
             }
-        }
-
-        if(reply->playback) {
-            input(gamemode,title,gamer, reply->logic(recordticks));
         }
 
         LAST = NOW;
@@ -231,6 +213,7 @@ int main() {
         srver->logic();
 #endif
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
+
         if (gamemode == 0) {
             screen->logic(deltaTime);
             screen->render();
@@ -254,7 +237,6 @@ int main() {
                 gamer->reset();
                 gamemode = 2;
                 title->loadgame = false;
-                //reply->loadreplay("replay.xml");
                 recordticks = 0;
 #ifdef _WIN32
                 time = std::time(nullptr);
@@ -287,7 +269,6 @@ int main() {
             if (logic == 1 || !gamer->gameactive) {
                 title->reset();
                 gamemode = 1;
-                reply->endlogic(gamer->gameactive);
 #ifdef _WIN32
                 score->update(gamer->score);
                 time = std::time(nullptr);

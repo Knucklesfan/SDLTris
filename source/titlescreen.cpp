@@ -237,12 +237,14 @@ void titlescreen::render(highscore* score)
 {
     SDL_RenderClear(renderer);
 
-    background[bgnum].render(renderer);
+    background[bgnum].render(renderer, false);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
     SDL_Rect bx = { 160, 250, 320, 195 };
     SDL_RenderFillRect(renderer, &bx);
     drawTexture(textures[5], 0, 0, 0.0, 1.0, false);
+
+    background[bgnum].render(renderer, true);
 
     for (int i = 0; i < selections; i++) {
         renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);

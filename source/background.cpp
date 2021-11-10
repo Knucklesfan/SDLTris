@@ -36,9 +36,16 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
     songname = doc.first_node("musicname")->value();
     artist = doc.first_node("musicartist")->value();
     rotation = 0;
+
     if (doc.first_node("rotation") != NULL) {
         rotation = atoi(doc.first_node("rotation")->value());
     }
+
+    if (doc.first_node("fglayer") != NULL) {
+        std::cout << "fglayer detected\n";
+        fglayer = atoi(doc.first_node("fglayer")->value());
+    }
+
     int array[10];
     for(int i = 0; i < layers; i++) {
 
@@ -100,7 +107,7 @@ void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
     }
 
 }
-void bg::render(SDL_Renderer* renderer) {
+void bg::render(SDL_Renderer* renderer, bool layer) {
     //OKAY EXPLAINATION FOR MY ACTIONS:
     //dear whoever is reading this:
     //this code is a bad practice.
@@ -109,13 +116,25 @@ void bg::render(SDL_Renderer* renderer) {
     //this also means that disabling rotation in a setting can allow the code to use a more optimized version of the renderer which is more favorable to older PCs
     //i swear im not a bad coderalkjdsfalksdjfkalsdf
 
-
+    int addition = 0;
+    int max = 0;
+    if (fglayer > 0) {
+        max = fglayer;
+        if (layer) {
+            max = 0;
+            addition = fglayer;
+        }
+    }
+    else if (layer && fglayer == 0) {
+        return;
+    }
+    std::cout << "max " << max << "\naddition" << addition <<"\nlines " << layers << "\n";
 
     if (rotation != 0) {
         SDL_Texture* texTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, maxwidth * 3, maxheight * 3);
         SDL_SetRenderTarget(renderer, texTarget);
         SDL_RenderClear(renderer);
-        for (int i = 0; i < layers; i++) {
+        for (int i = addition; i < layers-max; i++) {
             int width, height;
             SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
             double tempx = 0;
@@ -150,7 +169,7 @@ void bg::render(SDL_Renderer* renderer) {
         SDL_DestroyTexture(texTarget);
     }
     else {
-        for (int i = 0; i < layers; i++) {
+        for (int i = addition; i < layers - max; i++) {
             int width, height;
             SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
             double tempx = 0;

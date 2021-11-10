@@ -35,17 +35,19 @@ SDL_Keycode replay::logic(SDL_Keycode key, long long tick) {
     if(outfile && record) {
             outfile << "<k" << tick << ">" << key << "</k" << tick << ">\n";
     }
+    return 0;
+
 }
 
 int replay::recordreplay(std::string path) {
 	outfile = std::ofstream(path);
     unsigned int seed = (unsigned)time(0);
-    srand(1);
+    //srand(1);
     srand(seed);
     outfile << "<seed>" << seed <<"</seed>\n";
     record = true;
     playback = false;
-
+    return 0;
 }
 
 int replay::loadreplay(std::string path) {
@@ -56,7 +58,7 @@ int replay::loadreplay(std::string path) {
     if (doc.first_node("seed") != NULL) {
         seed = atoi(doc.first_node("seed")->value());
     }
-    srand(1);
+    //srand(1);
     srand(seed);
     playback = true;
     replay::path = path;

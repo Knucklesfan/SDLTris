@@ -77,7 +77,7 @@ void game::logic(double deltatime) {
 void game::render() {
     //if (gameactive) {
         SDL_RenderClear(renderer);
-        backgrounds[(level)%(backgrounds.size())].render(renderer);
+        backgrounds[(level)%(backgrounds.size())].render(renderer,false);
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         g.changePos(t.x, t.y, t.rot);
         t.draw();
@@ -90,6 +90,8 @@ void game::render() {
         if (holdblock > -1) {
             drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
         }
+        backgrounds[(level) % (backgrounds.size())].render(renderer, true);
+
         renderfont(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), false, font);
         renderfont(320, 48, "SCORE: " + std::to_string(score),false, font);
         if(paused) {

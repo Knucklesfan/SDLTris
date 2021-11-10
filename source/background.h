@@ -19,6 +19,7 @@ class bg
         double layerposx[10];
         double layerposy[10];
         int layers = 0;
+        int fglayer = 0;
         double angle = 0.0;
         double rotation;
 	    void logic(double deltatime);
@@ -29,7 +30,7 @@ class bg
         Mix_Music* music;
         std::string songname;
         std::string artist;
-        void render(SDL_Renderer* renderer);
+        void render(SDL_Renderer* renderer, bool layer);
         std::vector<SDL_Texture*> textures;
         bg(std::string path, SDL_Renderer* renderer);
         bg();

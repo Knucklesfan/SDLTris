@@ -14,6 +14,7 @@
 #include "background.h"
 #include "knuxfanscreen.h"
 #include "replay.h"
+#include "results.h"
 
 #ifdef _NETCODE
 #include "server.h"
@@ -127,16 +128,18 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 0;
+    int gamemode = 3;
     long long recordticks = 0;
     for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
         if (p.is_directory()) {
             //std::cout << "HELP ME:" << p.path().filename() << "\n";
-            bg backg(p.path().filename().u8string() , renderer);
+            bg backg(p.path().filename().u8string(), false, renderer);
             backgrounds.push_back(backg);
 
         }
     }
+    bg optionsbg(prefix + "sprites/resultsbg", true, renderer);
+
     std::sort(backgrounds.begin(),backgrounds.end(),bgCompare);//sort the vector
     for(auto& p : backgrounds) {
         //std::cout << p.name << "\n";
@@ -149,11 +152,13 @@ int main() {
     titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg);
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);
+    results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data());
 #ifdef _NETCODE
     server* srver = new server();
     srver->start();
 #endif
     highscore* score = new highscore();
+
 
     //rpcimplement rpc();
 #ifdef _WIN32
@@ -213,69 +218,76 @@ int main() {
         srver->logic();
 #endif
         deltaTime = (double)((NOW - LAST)*1000 / (double)SDL_GetPerformanceFrequency() );
+        switch(gamemode ) {
+            default:
+            case 0: {
+                screen->logic(deltaTime);
+                screen->render();
+                if (screen->endlogic() == 1) {
+                    gamemode = 1;
+                    title->reset();
+    #ifdef _WIN32
+                    time = std::time(nullptr);
+                    rpc->update("On the Title Screen.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
+    #endif
 
-        if (gamemode == 0) {
-            screen->logic(deltaTime);
-            screen->render();
-            if (screen->endlogic() == 1) {
-                gamemode = 1;
-                title->reset();
+                }
+            break;
+            }
+            case 1: {
+                //printf("titlescreen");
+                title->logic(deltaTime);
+                title->render(score);
+                if (title->endlogic() == 1) {
+                    gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
+                    gamer->reset();
+                    gamemode = 2;
+                    title->loadgame = false;
+                    recordticks = 0;
 #ifdef _WIN32
-                time = std::time(nullptr);
-                rpc->update("On the Title Screen.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
+                    time = std::time(nullptr);
+                    rpc->update("Droppin' some blocks", "LN: 0 LV: 0", "mainicon",time);
 #endif
+                }
+                break;
+            }
+            case 2: {
+                        //printf("gaming");
+    #ifdef _NETCODE
+                srver->sendBlockArray(gamer->testblocks);
+    #endif
+                gamer->logic(deltaTime);
+
+    #ifdef _WIN32
+                if (!gamer->paused) {
+                    std::string scoretxt = "LN: " + std::to_string(gamer->lines) + " LV: " + std::to_string(gamer->level);
+                    rpc->update("Droppin' some blocks", scoretxt, "mainicon", time);
+                }
+                else {
+                    std::string scoretxt = "LN: " + std::to_string(gamer->lines) + " LV: " + std::to_string(gamer->level);
+                    rpc->update("Paused..", scoretxt, "mainicon", time);
+
+                }
+    #endif
+                gamer->render();
+                int logic = gamer->endlogic();
+                if (logic == 1 || !gamer->gameactive) {
+                    title->reset();
+                    gamemode = 1;
+    #ifdef _WIN32
+                    score->update(gamer->score);
+                    time = std::time(nullptr);
+                    rpc->update("In the menu.", "Top high score: " + std::to_string(score->maxscore) , "icon2", time);
+    #endif
 
             }
-
+            break;
         }
-        else if(gamemode == 1) {
-            //printf("titlescreen");
-            title->logic(deltaTime);
-            title->render(score);
-            if (title->endlogic() == 1) {
-                gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
-                gamer->reset();
-                gamemode = 2;
-                title->loadgame = false;
-                recordticks = 0;
-#ifdef _WIN32
-                time = std::time(nullptr);
-                rpc->update("Droppin' some blocks", "LN: 0 LV: 0", "mainicon",time);
-#endif
-
+            case 3: {
+                res->logic(deltaTime);
+                res->render(gamer);
+                res->endlogic();
             }
-
-        }
-        else {
-            //printf("gaming");
-#ifdef _NETCODE
-            srver->sendBlockArray(gamer->testblocks);
-#endif
-            gamer->logic(deltaTime);
-
-#ifdef _WIN32
-            if (!gamer->paused) {
-                std::string scoretxt = "LN: " + std::to_string(gamer->lines) + " LV: " + std::to_string(gamer->level);
-                rpc->update("Droppin' some blocks", scoretxt, "mainicon", time);
-            }
-            else {
-                std::string scoretxt = "LN: " + std::to_string(gamer->lines) + " LV: " + std::to_string(gamer->level);
-                rpc->update("Paused..", scoretxt, "mainicon", time);
-
-            }
-#endif
-            gamer->render();
-            int logic = gamer->endlogic();
-            if (logic == 1 || !gamer->gameactive) {
-                title->reset();
-                gamemode = 1;
-#ifdef _WIN32
-                score->update(gamer->score);
-                time = std::time(nullptr);
-                rpc->update("In the menu.", "Top high score: " + std::to_string(score->maxscore) , "icon2", time);
-#endif
-            }
-
         }
 #ifdef _WIN32
         rpc->logic();

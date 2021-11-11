@@ -23,7 +23,7 @@ knuxfanscreen::knuxfanscreen(SDL_Renderer* render, std::vector<SDL_Texture*> tex
 void knuxfanscreen::render() {
     SDL_RenderClear(renderer);
     backgrounds[backnum].render(renderer, false);
-    drawTexture(textures[8],0,0,0,1.0,false);
+    drawTexture(textures[6],0,0,0,1.0,false);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255*alpha);
     SDL_Rect splashbox = { 0, 0, 640, 480 };
     SDL_RenderFillRect(renderer, &splashbox);

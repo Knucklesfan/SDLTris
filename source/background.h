@@ -32,7 +32,7 @@ class bg
         std::string artist;
         void render(SDL_Renderer* renderer, bool layer);
         std::vector<SDL_Texture*> textures;
-        bg(std::string path, SDL_Renderer* renderer);
+        bg(std::string path, bool folder, SDL_Renderer* renderer);
         bg();
 
     private:

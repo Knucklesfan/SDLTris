@@ -12,8 +12,12 @@
 #include <cmath>
 #include <SDL2/SDL_mixer.h>
 bg::bg() {}
-bg::bg(std::string path, SDL_Renderer* renderer) {
-    generateSurfaces("./backgrounds/" + path, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
+bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
+    std::string p = "./backgrounds/" + path;
+    if(folder) {
+        p = path;
+    }
+    generateSurfaces(p, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     for (int i = 0; i < layers; i++) {
         SDL_Rect sprite;
         SDL_QueryTexture(textures.at(i), NULL, NULL, &sprite.w, &sprite.h);
@@ -26,6 +30,9 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
 
     }
     std::string filepath = "./backgrounds/" + path + "/theme.xml";
+    if(folder) {
+        filepath = path + "/theme.xml";
+    }
 
     rapidxml::file<> xmlFile(filepath.c_str());
     rapidxml::xml_document<> doc;
@@ -60,6 +67,10 @@ bg::bg(std::string path, SDL_Renderer* renderer) {
     }
 
     std::string muspath = "./backgrounds/" + path + "/";
+    if(folder) {
+        muspath = path + "/";
+    }
+
     muspath += doc.first_node("music")->value();
     music = Mix_LoadMUS(muspath.c_str());
     if (!music) {
@@ -128,7 +139,6 @@ void bg::render(SDL_Renderer* renderer, bool layer) {
     else if (layer && fglayer == 0) {
         return;
     }
-    std::cout << "max " << max << "\naddition" << addition <<"\nlines " << layers << "\n";
 
     if (rotation != 0) {
         SDL_Texture* texTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, maxwidth * 3, maxheight * 3);

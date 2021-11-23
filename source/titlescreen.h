@@ -10,13 +10,15 @@
 #include <cstring>
 #include "background.h"
 #include "highscore.h"
+#include "font.h"
+
 class titlescreen
 {
 public:
-	TTF_Font* buttonfont;
-	TTF_Font* headerfont;
-	TTF_Font* bodyfont;
-	TTF_Font* versfont;
+	font* buttonfont;
+	font* headerfont;
+	font* bodyfont;
+	font* versfont;
 
 	Mix_Music** music;
 	Mix_Chunk** sound;
@@ -61,7 +63,7 @@ public:
 	std::string messagebutton = "EXIT";
     std::vector<bg> background;
 
-	titlescreen(SDL_Renderer* render, SDL_Window* window, std::vector<bg>  backg, std::vector<SDL_Texture*>,  Mix_Music* musicVec[], Mix_Chunk* soundVec[], int background);
+	titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[], int backgr, std::vector<font*> fonts);
 	double layerpos[10];
 	void keyPressed(SDL_Keycode key);
 	void render(highscore* score);
@@ -71,5 +73,6 @@ public:
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
 	void renderfont(int x, int y, std::string text, bool selected, TTF_Font* size);
+	void debuginput(SDL_Keycode key);
 };
 

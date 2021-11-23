@@ -1,18 +1,38 @@
 #include "results.h"
 
+#ifdef __SWITCH__
+#define filepath  "/"
+#include <switch.h>
 
-results::results(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures,  Mix_Music* musicVec, Mix_Chunk** soundVec) {
+#else
+#define filepath  "./"
+#endif
+
+results::results(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures,  Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts) {
     renderer = render;
     window = windows;
     background = backg;
     texture = textures;
     music = musicVec;
     sound = soundVec;
-
+    newft = fonts.at(0);
+    newhead = fonts.at(1);
 }
 
+void results::keyPressed(SDL_Keycode key) {
+    switch(key) {
+        case SDLK_ESCAPE:
+        case SDLK_z: {
+            Mix_PlayChannel( -1, sound[1], 0 );
+            loadgame = true;
+            break;
+        }
+    }
+}
 void results::reset()
 {
+    loadgame = false;
+    time = std::time(nullptr);
     Mix_HaltMusic();
     if( Mix_PlayingMusic() == 0 )
     {
@@ -37,9 +57,31 @@ void results::reset()
     }
 
 }
-void results::render(game* game) {
+void results::render(game* gamer) {
     SDL_RenderClear(renderer);
     background.render(renderer, false);
+
+    newhead->render(renderer, "LAST GAME SCORE", 320,160, true);
+    newft->render(renderer,std::to_string(gamer->score), 320, 196,true);
+    //renderfont(320,188,std::to_string(gamer->score), false, ttf);
+    newft->render(renderer, "Level: " + std::to_string(gamer->level), 320, 224,true, 255,0,0);
+    newft->render(renderer, "Lines: " + std::to_string(gamer->lines), 320, 252,true);
+    newhead->render(renderer, "RUN LENGTH", 320,284,true);
+    int real = time - gamer->time;
+    int seconds = real%60;
+    int minutes = real/60;
+    int hours = minutes/60;
+    std::string time = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
+    newft->render(renderer, time, 320, 320,true);
+    
+    //renderfont(320,244,"POINTS BY BLOCKS:",true, header);
+
+
+
+
+    background.render(renderer, true);
+
+
     SDL_RenderPresent(renderer);
 }
 
@@ -72,17 +114,4 @@ void results::drawTexture(SDL_Texture* texture, int x, int y, double angle, doub
         sprite.y = y + oldheight / 2 - sprite.h / 2;
     }
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
-}
-void results::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size) {
-    SDL_Surface* text;
-    SDL_Color color = { 255, 255, 0 };
-    if (!selected) {
-        color = { 255, 255, 255 };
-    }
-    text = TTF_RenderText_Solid(size, strg.c_str(), color);
-    SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
-    SDL_FreeSurface(text);
-    drawTexture(words, x, y, 0, 1.0, true);
-    SDL_DestroyTexture(words);
-
 }

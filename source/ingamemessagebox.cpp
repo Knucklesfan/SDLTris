@@ -19,7 +19,7 @@ void ingamemessagebox::logic(double deltatime)
 		}
 
 		if ((!godown && !goup) && uptime > 500) {
-			godown = true;
+			godown = false;
 		}
 	}
 
@@ -30,17 +30,17 @@ void ingamemessagebox::render(SDL_Renderer* renderer)
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
 	SDL_Rect splashbox = { x-2, y, 252, 80 };
 	SDL_RenderFillRect(renderer, &splashbox);
-	renderfont(x, y + 4, name, true, font, renderer);
-	renderfont(x, y + 20, content, false, font, renderer);
+	letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
+	letterfont->render(renderer, content, x, y + 20, false, 255, 255, 255,250);
 }	
 
 
-ingamemessagebox::ingamemessagebox(std::string title, std::string desc, SDL_Renderer* render, TTF_Font* letters, int loc)
+ingamemessagebox::ingamemessagebox(std::string title, std::string desc, SDL_Renderer* render, font* letters, int loc)
 {
 	name = title;
 	content = desc;
 	renderer = render;
-	font = letters;
+	letterfont = letters;
 	x = loc;
 	y = 480;
 	active = false;
@@ -62,20 +62,6 @@ ingamemessagebox::ingamemessagebox()
 	x = 16;
 	y = 480;
 	active = false;
-}
-
-void ingamemessagebox::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size, SDL_Renderer* renderer) {
-	SDL_Surface* text;
-	SDL_Color color = { 255, 255, 0 };
-	if (!selected) {
-		color = { 255, 255, 255 };
-	}
-	text = TTF_RenderText_Blended_Wrapped(size, strg.c_str(), color,250);
-	SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
-	SDL_FreeSurface(text);
-	drawTexture(renderer, words, x, y, 0, 1.0, false);
-    SDL_DestroyTexture(words);
-
 }
 
 void ingamemessagebox::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {

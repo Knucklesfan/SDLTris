@@ -64,7 +64,7 @@ std::vector<SDL_Surface*> generateSurfaces(std::string path);
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
 bool bgCompare (bg a, bg b) {return a.name<b.name;} 
-int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode);
+int input(int gamemode, titlescreen* title, game* gamer, results* res, SDL_Keycode keycode);
 
 int main() {
 #ifdef __SWITCH__
@@ -149,10 +149,23 @@ int main() {
     if (titlebg == knxfnbg) {
         knxfnbg = std::rand() % backgrounds.size(); //WHY TF AM I DOING THIS
     }
-    titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg);
-    game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
+
+    //time to load fonts
+    //HERES HOW I WANTED THIS TO WORK:
+    //each object generates its own fonts, but since that wastes a ton of memory, i guess we're doing this now!
+    //The code is a bit more messy, mostly because I feel like i'm passing so much crap as pointers to these objects
+    //but who cares as long as it works
+
+    std::vector<font*> fonts;
+    fonts.push_back(new font("8x8font",renderer));
+    fonts.push_back(new font("8x16font",renderer));
+    fonts.push_back(new font("small8x8font",renderer));
+
+    titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg, fonts);
+    game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts);
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);
-    results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data());
+    results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
+
 #ifdef _NETCODE
     server* srver = new server();
     srver->start();
@@ -177,38 +190,38 @@ int main() {
                     switch (event.jbutton.button) {
                     case JOY_B:
                     case JOY_A: {
-                        input(gamemode, title, gamer, SDLK_z);
+                        input(gamemode, title, gamer, res, SDLK_z);
                         break;
                         }
                     case JOY_DOWN: {
-                        input(gamemode, title, gamer, SDLK_DOWN);
+                        input(gamemode, title, gamer, res, SDLK_DOWN);
                         break;
                     }
                     case JOY_UP: {
-                        input(gamemode, title, gamer, SDLK_UP);
+                        input(gamemode, title, gamer, res, SDLK_UP);
                         break;
                     }
                     case JOY_LEFT: {
-                        input(gamemode, title, gamer, SDLK_LEFT);
+                        input(gamemode, title, gamer, res, SDLK_LEFT);
                         break;
                     }
                     case JOY_RIGHT: {
-                        input(gamemode, title, gamer, SDLK_RIGHT);
+                        input(gamemode, title, gamer, res, SDLK_RIGHT);
                         break;
                     }
                     case JOY_L: {
-                        input(gamemode, title, gamer, SDLK_x);
+                        input(gamemode, title, gamer, res, SDLK_x);
                         break;
                     }
                     case JOY_PLUS: {
-                        input(gamemode, title, gamer, SDLK_ESCAPE);
+                        input(gamemode, title, gamer, res, SDLK_ESCAPE);
                         break;
                     }
 
                 }
             }
             if (event.type == SDL_KEYDOWN) {
-                    input(gamemode, title, gamer, event.key.keysym.sym);
+                    input(gamemode, title, gamer, res, event.key.keysym.sym);
             }
         }
 
@@ -239,7 +252,7 @@ int main() {
                 title->logic(deltaTime);
                 title->render(score);
                 if (title->endlogic() == 1) {
-                    gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data());
+                    gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts);
                     gamer->reset();
                     gamemode = 2;
                     title->loadgame = false;
@@ -272,12 +285,12 @@ int main() {
                 gamer->render();
                 int logic = gamer->endlogic();
                 if (logic == 1 || !gamer->gameactive) {
-                    title->reset();
-                    gamemode = 1;
+                    res->reset();
+                    gamemode = 3;
     #ifdef _WIN32
                     score->update(gamer->score);
                     time = std::time(nullptr);
-                    rpc->update("In the menu.", "Top high score: " + std::to_string(score->maxscore) , "icon2", time);
+                    rpc->update("Game over!", "Top high score: " + std::to_string(score->maxscore) , "icon2", time);
     #endif
 
             }
@@ -286,7 +299,16 @@ int main() {
             case 3: {
                 res->logic(deltaTime);
                 res->render(gamer);
-                res->endlogic();
+                if(res->endlogic() > 0 ) {
+                    title->reset();
+                    gamemode = 1;
+    #ifdef _WIN32
+                    score->update(gamer->score);
+                    time = std::time(nullptr);
+                    rpc->update("In the menu.", "Top high score: " + std::to_string(score->maxscore) , "icon2", time);
+    #endif
+
+                }
             }
         }
 #ifdef _WIN32
@@ -393,7 +415,7 @@ bool hasEnding(std::string const& fullString, std::string const& ending) { //tha
     }
 }
 
-int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode) {
+int input(int gamemode, titlescreen* title, game* gamer, results* res, SDL_Keycode keycode) {
     switch(gamemode) {
         case 1: {
             title->keyPressed(keycode);
@@ -403,6 +425,11 @@ int input(int gamemode, titlescreen* title, game* gamer, SDL_Keycode keycode) {
             gamer->keyPressed(keycode);
             break;
         }
+        case 3: {
+            res->keyPressed(keycode);
+            break;
+        }
+
     }
     return 0;
 }

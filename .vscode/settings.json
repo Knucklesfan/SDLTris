@@ -58,4 +58,14 @@
         "numbers": "cpp",
         "fstream": "cpp"
     }
+    "emeraldwalk.runonsave": {
+	"commands": [
+		{
+			"match": ".*",
+			"isAsync": true,
+			"cmd": "echo 'I run for all files.'"
+		}
+	]
+   }
+
 }

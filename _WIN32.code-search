@@ -1,0 +1,188 @@
+# Query: _WIN32
+# Including: source/**
+# ContextLines: 1
+
+41 results - 34 files
+
+source/rpcimplement.cpp:
+  1: #ifdef _WIN32 || _LINUX
+  2  #include "rpcimplement.h"
+
+source/rpcimplement.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  #include "discord/discord.h"
+
+source/SDLTetris.cpp:
+   22  
+   23: #ifdef _WIN32
+   24      #include "rpcimplement.h"
+
+  163      //rpcimplement rpc();
+  164: #ifdef _WIN32
+  165      rpcimplement* rpc = new rpcimplement();
+
+  228                      title->reset();
+  229:     #ifdef _WIN32
+  230                      time = std::time(nullptr);
+
+  246                      recordticks = 0;
+  247: #ifdef _WIN32
+  248                      time = std::time(nullptr);
+
+  260  
+  261:     #ifdef _WIN32
+  262                  if (!gamer->paused) {
+
+  276                      gamemode = 3;
+  277:     #ifdef _WIN32
+  278                      score->update(gamer->score);
+
+  291                      gamemode = 1;
+  292:     #ifdef _WIN32
+  293                      score->update(gamer->score);
+
+  300          }
+  301: #ifdef _WIN32
+  302          rpc->logic();
+
+source/discord/achievement_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/achievement_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/activity_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/activity_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/application_manager.cpp:
+  1: #ifdef _WIN32
+  2  
+
+source/discord/application_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/core.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/core.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/discord.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/event.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/ffi.h:
+  2  #define _DISCORD_GAME_SDK_H_
+  3: #ifdef _WIN32
+  4  
+
+source/discord/image_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/image_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/lobby_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/lobby_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/network_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/network_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/overlay_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/overlay_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/relationship_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/relationship_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/storage_manager.cpp:
+  1: #ifdef _WIN32
+  2  
+
+source/discord/storage_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/store_manager.cpp:
+  1: #ifdef _WIN32
+  2  
+
+source/discord/store_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/types.cpp:
+  1: #ifdef _WIN32
+  2  
+
+source/discord/types.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/user_manager.cpp:
+  1: #ifdef _WIN32
+  2  
+
+source/discord/user_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  
+
+source/discord/voice_manager.cpp:
+  1: #ifdef _WIN32
+  2  #if !defined(_CRT_SECURE_NO_WARNINGS)
+
+source/discord/voice_manager.h:
+  1  #pragma once
+  2: #ifdef _WIN32
+  3  

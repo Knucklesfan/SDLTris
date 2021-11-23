@@ -9,6 +9,7 @@
 #include <array>
 #include <cstring>
 #include "game.h"
+#include "font.h"
 
 class results {
     public:
@@ -18,10 +19,16 @@ class results {
 	bg background;
 	Mix_Music* music;
 	Mix_Chunk** sound;
+	TTF_Font* ttf;
 
+	font* newft;
+	font* newhead;
+
+	TTF_Font* header;
+	unsigned int time = 0;
 	std::vector<SDL_Texture*> texture;
 
-	results(SDL_Renderer* render, SDL_Window* window, bg backg, std::vector<SDL_Texture*>,  Mix_Music* musicVec, Mix_Chunk** soundVec);
+	results(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures,  Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts);
 	void keyPressed(SDL_Keycode key);
 	void render(game* game);
 	void logic(double deltatime);

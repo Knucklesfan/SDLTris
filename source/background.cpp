@@ -20,7 +20,7 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
     generateSurfaces(p, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     for (int i = 0; i < layers; i++) {
         SDL_Rect sprite;
-        SDL_QueryTexture(textures.at(i), NULL, NULL, &sprite.w, &sprite.h);
+        SDL_QueryTexture(textures[i], NULL, NULL, &sprite.w, &sprite.h);
         if (sprite.w > maxwidth) {
             maxwidth = sprite.w;
         }
@@ -29,6 +29,7 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
         }
 
     }
+    std::cout << "max=" << maxwidth <<"x"<< maxheight << "\n"; 
     std::string filepath = "./backgrounds/" + path + "/theme.xml";
     if(folder) {
         filepath = path + "/theme.xml";
@@ -122,17 +123,13 @@ void bg::render(SDL_Renderer* renderer, bool layer) {
     //OKAY EXPLAINATION FOR MY ACTIONS:
     //dear whoever is reading this:
     //this code is a bad practice.
-    //THAT BEING SAID:
-    //I don't want to waste processing power if the current background ISNT rotating, thus, for sake of efficiency..
-    //this also means that disabling rotation in a setting can allow the code to use a more optimized version of the renderer which is more favorable to older PCs
-    //i swear im not a bad coderalkjdsfalksdjfkalsdf
 
     int addition = 0;
-    int max = 0;
+    int max = layers;
     if (fglayer > 0) {
         max = fglayer;
         if (layer) {
-            max = 0;
+            max = layers;
             addition = fglayer;
         }
     }
@@ -140,72 +137,32 @@ void bg::render(SDL_Renderer* renderer, bool layer) {
         return;
     }
 
-    if (rotation != 0) {
-        SDL_Texture* texTarget = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, maxwidth * 3, maxheight * 3);
-        SDL_SetRenderTarget(renderer, texTarget);
-        SDL_RenderClear(renderer);
-        for (int i = addition; i < layers-max; i++) {
-            int width, height;
-            SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
-            double tempx = 0;
-            double tempy = 0; //yuck
-            int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
-            int multiplery = 1;
-            //std::cout << incrementsx[i] << i << "\n";
-
-            if (incrementsx[i] != 0) {
-                tempx = fmod(layerposx[i], width); //ew
-            }
-            if (incrementsy[i] != 0) {
-                tempy = fmod(layerposy[i], height); //GROSS CODE
-            }
-
-            drawTexture(renderer, textures[i], tempx, tempy, 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx, tempy + (height), 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx, tempy + (height) * 2, 0.0, 1.0, false);
-
-            drawTexture(renderer, textures[i], tempx + (width) * 2, tempy, 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx + (width) * 2, tempy + (height), 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx + (width) * 2, tempy + (height) * 2, 0.0, 1.0, false);
-
-            drawTexture(renderer, textures[i], tempx + (width), tempy, 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx + (width), tempy + (height), 0.0, 1.0, false); //center?
-            drawTexture(renderer, textures[i], tempx + (width), tempy + (height) * 2, 0.0, 1.0, false);
-
-
+    for (int i = addition; i < max; i++) {
+        int width, height;
+        SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
+        double tempx = 0;
+        double tempy = 0; //yuck
+        int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
+        int multiplery = 1;
+        //std::cout << incrementsx[i] << i << "\n";
+        if (incrementsx[i] != 0) {
+            tempx = fmod(layerposx[i], width); //ew
         }
-        SDL_SetRenderTarget(renderer, NULL);
-        drawTexture(renderer, texTarget, -640, -480, fmod(angle, 360), 1.0, false);
-        SDL_DestroyTexture(texTarget);
-    }
-    else {
-        for (int i = addition; i < layers - max; i++) {
-            int width, height;
-            SDL_QueryTexture(textures[i], NULL, NULL, &width, &height);
-            double tempx = 0;
-            double tempy = 0; //yuck
-            int multiplerx = 1; //this is really bad practice but it's currently 11pm and i wanna feel accomplished
-            int multiplery = 1;
-            //std::cout << incrementsx[i] << i << "\n";
-            if (incrementsx[i] != 0) {
-                tempx = fmod(layerposx[i], width); //ew
-            }
-            if (incrementsy[i] != 0) {
-                tempy = fmod(layerposy[i], height); //GROSS CODE
-            }
-            if (layerposx[i] > 0) {
-                multiplerx = -1;
-            }
-            if (layerposy[i] > 0) {
-                multiplery = -1;
-            }
-
-            drawTexture(renderer, textures[i], tempx, tempy, 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy + (height * multiplery), 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx + 0, tempy + (height * multiplery), 0.0, 1.0, false);
-            drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy, 0.0, 1.0, false);
+        if (incrementsy[i] != 0) {
+            tempy = fmod(layerposy[i], height); //GROSS CODE
         }
-    }
+        if (layerposx[i] > 0) {
+            multiplerx = -1;
+        }
+        if (layerposy[i] > 0) {
+            multiplery = -1;
+        }
+
+        drawTexture(renderer, textures[i], tempx, tempy, fmod(angle, 360), 1.0, false);
+        drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy + (height * multiplery), fmod(angle, 360), 1.0, false);
+        drawTexture(renderer, textures[i], tempx + 0, tempy + (height * multiplery), fmod(angle, 360), 1.0, false);
+        drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy, fmod(angle, 360), 1.0, false);
+        }
 }
 void bg::logic(double deltatime)
 {
@@ -232,6 +189,7 @@ void bg::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y,
     SDL_Rect sprite;
     if(SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h) < 0) {
         printf("TEXTURE ISSUES!!! \n");
+        std::cout << SDL_GetError() << "\n";
     };
     int oldwidth = sprite.w;
     int oldheight = sprite.h;
@@ -245,7 +203,7 @@ void bg::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y,
         sprite.x = x + oldwidth / 2 - sprite.w / 2;
         sprite.y = y + oldheight / 2 - sprite.h / 2;
     }
-    SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyEx(renderer, texture, NULL, &sprite, 0, NULL, SDL_FLIP_NONE);
 }
 
 bool bg::hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me out https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c

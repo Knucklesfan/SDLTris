@@ -14,6 +14,7 @@
 #include "ingamemessagebox.h"
 #include "server.h"
 #include <random>
+#include "font.h"
 
 #define LINES 0
 #define LEVEL 1
@@ -29,9 +30,9 @@
 //TODO: fix the stupid bug here lol
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
-game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[]) {
+game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts) {
     //srand((unsigned)time(0)); 
-
+    time = std::time(nullptr);
     std::fill_n(testblocks, 200, 0);
     std::fill_n(ghostblocks, 200, 0);
     std::fill_n(previousblocks, 200, 0);
@@ -53,9 +54,9 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     level = LEVEL;
     paused = false;
     std::string path = filepath "sprites/00.ttf";
-    font = TTF_OpenFont(path.c_str(), 13.333);
-    header = TTF_OpenFont(path.c_str(), 23.333);
-    msg.font = font;
+    bodyfont = fonts.at(2);
+    header = fonts.at(1);
+    msg.letterfont = bodyfont;
 
 }
 void game::logic(double deltatime) {
@@ -92,17 +93,17 @@ void game::render() {
         }
         backgrounds[(level) % (backgrounds.size())].render(renderer, true);
 
-        renderfont(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), false, font);
-        renderfont(320, 48, "SCORE: " + std::to_string(score),false, font);
+        bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true, renderer);
+        bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true, renderer);
         if(paused) {
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
                 SDL_Rect splashbox = { 0, 0, 640, 480 };
                 SDL_RenderFillRect(renderer, &splashbox);
                 for (int i = 0; i < optionsize; i++) {
-                    renderfont(320, 300 + (i * 12), options[i], (i == pauseselection), font);
+                    bodyfont->render(renderer, options[i], 320, 300 + (i * 12), true, 255, (i == pauseselection?0:255), 255);
                 }
 
-            renderfont(320, 240, "GAME PAUSED.", true, header);
+            header->render(320, 240, "GAME PAUSED", true, renderer);
         }
         msg.render(renderer);
         SDL_RenderPresent(renderer);
@@ -346,6 +347,7 @@ void game::changemusic() {
 
 }
 void game::reset() {
+    time = std::time(nullptr);
     currentsong = -1;
     changemusic();
     std::fill_n(testblocks, 200, 0);

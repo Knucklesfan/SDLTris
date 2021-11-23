@@ -1,2 +1,2 @@
-make -f makefile.linux
+make -f makefile.linux -j4
 ./SDLTetris

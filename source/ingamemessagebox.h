@@ -8,6 +8,7 @@
 #include <algorithm>    // std::sort
 #include <cstring>
 #include <SDL2/SDL_ttf.h>
+#include "font.h"
 
 class ingamemessagebox
 {
@@ -25,11 +26,10 @@ class ingamemessagebox
         void render(SDL_Renderer* renderer);
         std::vector<SDL_Texture*> textures;
         SDL_Renderer* renderer;
-        TTF_Font* font;
-        ingamemessagebox(std::string name, std::string desc, SDL_Renderer* renderer, TTF_Font* font, int loc);
+        font* letterfont;
+        ingamemessagebox(std::string name, std::string desc, SDL_Renderer* renderer, font* font, int loc);
         ingamemessagebox();
 
-        void renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size, SDL_Renderer* renderer);
 
         void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
 

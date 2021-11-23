@@ -1,15 +1,16 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp
+OBJS = source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp
 #INC specifies what headers to include
 INC=-I include/
 #CC specifies which compiler we're using
 CC = g++
 #Compiler flags supresses the annoying warnings
-COMPILER_FLAGS = -g -fsanitize=address
+COMPILER_FLAGS = -g -fsanitize=address -O0 -D _LINUX
 #Linker Flags give the libraries
-LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_mixer -lenet -fsanitize=address
+LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_mixer -ldiscord -lenet -fsanitize=address 
 #Specify c++17 as well.
 CPP_VER = -std=c++17
+
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = SDLTetris
 

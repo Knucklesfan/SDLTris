@@ -1,13 +1,21 @@
 <name>Results Background</name>
 <creator>Knuxfan</creator>
 <vers>1.0</vers>
+<fglayer>4</fglayer>
+<layer0>10</layer0>
+<layer0y>0</layer0y>
 
-<layer0>50</layer0>
-<layer0y>50</layer0y>
+<layer1>20</layer1>
+<layer1y>0</layer1y>
 
-<layer1>0</layer1>
-<layer1y>-25</layer1y>
+<layer2>25</layer2>
+<layer2y>0</layer2y>
 
+<layer3>15</layer3>
+<layer3y>0</layer3y>
+
+<layer4>0</layer4>
+<layer4y>0</layer4y>
 <music>song.xm</music>
 <musicname>Jump To My Beat</musicname>
 <musicartist>BabyDee / eFFect</musicartist>

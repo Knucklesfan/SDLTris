@@ -13,24 +13,17 @@
 #define prefix  "./"
 #endif
 
-titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[], int backgr)
+titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[], int backgr, std::vector<font*> fonts)
 {
     //std::filesystem::current_path().u8string()
-    std::string prfx = prefix;
+    buttonfont = fonts.at(0);
+    bodyfont = fonts.at(0);
+    versfont = fonts.at(2);
+    headerfont = fonts.at(1);
 
-    std::string path = prfx + "sprites/00.ttf";
-    buttonfont = TTF_OpenFont(path.c_str(), 24);
-    bodyfont = TTF_OpenFont(path.c_str(), 16);
-    versfont = TTF_OpenFont(path.c_str(), 12);
-    headerfont = TTF_OpenFont(path.c_str(), 30);
+
+
     window = windows;
-    if (buttonfont == NULL) {
-        printf("error: font not found in: %s\n", path.c_str());
-        exit(EXIT_FAILURE);
-    }
-    else {
-        printf("successfully loaded font at %s", path.c_str());
-    }
     background = backg;
     bgnum = backgr;
 	renderer = render;
@@ -231,6 +224,7 @@ void titlescreen::keyPressed(SDL_Keycode key)
         break;
         }
     }
+    debuginput(key);
 }
 
 void titlescreen::render(highscore* score)
@@ -247,11 +241,11 @@ void titlescreen::render(highscore* score)
     background[bgnum].render(renderer, true);
 
     for (int i = 0; i < selections; i++) {
-        renderfont(320, 300 + (i * 32), options[i], (i == currentselection && currentscreen == 0), buttonfont);
+        buttonfont->render(renderer, options[i], 320, 300 + (i * 16),  true, 255, ((i == currentselection && currentscreen == 0)?0:255), 255);
     }
-    renderfont(490, 165, "VERSION 0.2 DEMO", false, versfont);
-    renderfont(320, 280, "High Score: " + std::to_string(score->maxscore), false, bodyfont);
-    renderfont(320, 265, "Previous Score: " + std::to_string(score->previousscore), false, bodyfont);
+    versfont->render(490, 165, "VERSION 0.2 DEMO", true, renderer);
+    versfont->render(320, 280, "High Score: " + std::to_string(score->maxscore), true,renderer);
+    versfont->render(320, 265, "Previous Score: " + std::to_string(score->previousscore), true, renderer);
     switch (currentscreen) {
         case(1): {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
@@ -260,9 +254,9 @@ void titlescreen::render(highscore* score)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
             splashbox = { 320 - 240, 240 - 120, 480, 240 };
             SDL_RenderFillRect(renderer, &splashbox);
-            renderfont(320, 140, messagetitle, false, headerfont);
-            renderfont(320, 180, messagebody, false, bodyfont);
-            renderfont(320, 300, messagebutton, true, buttonfont);
+            headerfont->render(320, 140, messagetitle, true, renderer);
+            bodyfont->render(320, 180, messagebody, true, renderer);
+            buttonfont->render(320, 300, messagebutton, true, renderer);
             break;
         }
         case(2): {
@@ -272,9 +266,9 @@ void titlescreen::render(highscore* score)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
             splashbox = { 320 - 240, 80, 480, 320 };
             SDL_RenderFillRect(renderer, &splashbox);
-            renderfont(320, 100, settingstitle, false, headerfont);
+            headerfont->render(320, 100, settingstitle, true, renderer);
             for (int i = 0; i < settingssize; i++) {
-                renderfont(320, 130 + (i * 32), settings[i], (i == currentselection), buttonfont);
+                buttonfont->render(renderer, settings[i], 320, 130 + (i * 16),  true, 255, ((i == currentselection)?0:255), 255);
             }
             if (showerror) {
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
@@ -283,9 +277,9 @@ void titlescreen::render(highscore* score)
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
                 splashbox = { 320 - 240, 240 - 120, 480, 240 };
                 SDL_RenderFillRect(renderer, &splashbox);
-                renderfont(320, 140, messagetitle, false, headerfont);
-                renderfont(320, 180, messagebody, false, bodyfont);
-                renderfont(320, 300, messagebutton, true, buttonfont);
+                headerfont->render(320, 140, messagetitle, true, renderer);
+                bodyfont->render(320, 180, messagebody, true, renderer);
+                buttonfont->render(320, 300, messagebutton, true, renderer);
             }
             else switch(currentsetting) {
                 case 0:
@@ -297,9 +291,9 @@ void titlescreen::render(highscore* score)
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
                     splashbox = { 320 - 240, 240 - 120, 480, 240 };
                     SDL_RenderFillRect(renderer, &splashbox);
-                    renderfont(320, 140, "MUSIC VOLUME", false, headerfont);
-                    renderfont(320, 180, std::to_string(Mix_VolumeMusic(-1)), true, bodyfont);
-                    renderfont(320, 300, messagebutton, true, buttonfont);
+                    headerfont->render(320, 140, "MUSIC VOLUME", true, renderer);
+                    bodyfont->render(renderer, std::to_string(Mix_VolumeMusic(-1)), 320, 180, true, 255, 0, 255);
+                    buttonfont->render(320, 300, messagebutton, true, renderer);
                     break;
                 }
                 case 2: {
@@ -309,9 +303,11 @@ void titlescreen::render(highscore* score)
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
                     splashbox = { 320 - 240, 240 - 120, 480, 240 };
                     SDL_RenderFillRect(renderer, &splashbox);
-                    renderfont(320, 140, "SOUND VOLUME", false, headerfont);
-                    renderfont(320, 180, std::to_string(Mix_Volume(-1,-1)), true, bodyfont);
-                    renderfont(320, 300, messagebutton, true, buttonfont);
+                    headerfont->render(320, 140, "SOUND VOLUME", true, renderer);
+                    bodyfont->render(renderer, std::to_string(Mix_Volume(-1, -1)), 320, 180, true, 255, 0, 255);
+                    buttonfont->render(320, 300, messagebutton, true, renderer);
+
+
                     break;
                 }
 
@@ -325,11 +321,11 @@ void titlescreen::render(highscore* score)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
             splashbox = { 320 - 240, 80, 480, 320 };
             SDL_RenderFillRect(renderer, &splashbox);
-            renderfont(320, 100, creditstitle, false, headerfont);
+            headerfont->render(320, 100, creditstitle, true, renderer);
             for (int i = 0; i < creditssize; i++) {
-                renderfont(320, 130 + (i * 32), credits[i], (i == currentselection), bodyfont);
+                versfont->render(renderer, credits[i], 320, 130 + (i * 32),  true, 255, ((i == currentselection)?0:255), 255);
             }
-            renderfont(320, 300, messagebutton, true, buttonfont);
+            buttonfont->render(320, 300, messagebutton, true, renderer);
         }
 
     }
@@ -379,4 +375,22 @@ void titlescreen::renderfont(int x, int y, std::string strg, bool selected, TTF_
     drawTexture(words, x, y, 0, 1.0, true);
     SDL_DestroyTexture(words);
 
+}
+void titlescreen::debuginput(SDL_Keycode key) {
+    switch(key) {
+        case SDLK_F1: {
+            if(bgnum < background.size()-1) {
+                bgnum++;
+            }
+            break;
+        }
+
+        case SDLK_F2: {
+            if(bgnum > 0) {
+            bgnum--;
+            }
+            break;
+        }
+
+    }
 }

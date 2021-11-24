@@ -19,7 +19,7 @@ void ingamemessagebox::logic(double deltatime)
 		}
 
 		if ((!godown && !goup) && uptime > 500) {
-			godown = false;
+			godown = true;
 		}
 	}
 
@@ -28,14 +28,17 @@ void ingamemessagebox::logic(double deltatime)
 void ingamemessagebox::render(SDL_Renderer* renderer)
 {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
-	SDL_Rect splashbox = { x-2, y, 252, 80 };
+	SDL_Rect splashbox = { x-2, y, 252, 100 };
 	SDL_RenderFillRect(renderer, &splashbox);
-	letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
+	int tmpx = (int) (uptime / 2.5) % 378;
+	drawTexture(renderer, textures.at(7), x - 2, y+44, 0, 1.0, false, tmpx, 0, 252, 38);
+	letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255, 250, true, uptime / 20, 1, 5);
+	//letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
 	letterfont->render(renderer, content, x, y + 20, false, 255, 255, 255,250);
 }	
 
 
-ingamemessagebox::ingamemessagebox(std::string title, std::string desc, SDL_Renderer* render, font* letters, int loc)
+ingamemessagebox::ingamemessagebox(std::string title, std::string desc, SDL_Renderer* render, std::vector<SDL_Texture*> texture, font* letters, int loc)
 {
 	name = title;
 	content = desc;
@@ -44,6 +47,7 @@ ingamemessagebox::ingamemessagebox(std::string title, std::string desc, SDL_Rend
 	x = loc;
 	y = 480;
 	active = false;
+	textures = texture;
 }
 void ingamemessagebox::activate(std::string title, std::string desc) {
 	name = title;
@@ -63,21 +67,26 @@ ingamemessagebox::ingamemessagebox()
 	y = 480;
 	active = false;
 }
+//this is from font.h's more superior drawTexture.
+//Whenever I get around to making utils.h (which will contain generic functions like these),
+//i should remove this. For now, this is the latest version of the drawTexture function.
 
-void ingamemessagebox::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
+void ingamemessagebox::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch) {
 	SDL_Rect sprite;
-	SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
-	int oldwidth = sprite.w;
-	int oldheight = sprite.h;
-	sprite.w = sprite.w * scale;
-	sprite.h = sprite.h * scale;
+	SDL_Rect srcrect = { srcx, srcy, srcw, srch };
+	if (SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h) < 0) {
+		printf("TEXTURE ISSUES!!! \n");
+		std::cout << SDL_GetError() << "\n";
+	};
+	sprite.w = srcw * scale;
+	sprite.h = srch * scale;
 	if (center) {
-		sprite.x = x - oldwidth / 2;
-		sprite.y = y - oldheight / 2;
+		sprite.x = x - srcw / 2;
+		sprite.y = y - srch / 2;
 	}
 	else {
-		sprite.x = x + oldwidth / 2 - sprite.w / 2;
-		sprite.y = y + oldheight / 2 - sprite.h / 2;
+		sprite.x = x + srcw / 2 - sprite.w / 2;
+		sprite.y = y + srch / 2 - sprite.h / 2;
 	}
-	SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+	SDL_RenderCopyEx(renderer, texture, &srcrect, &sprite, 0, NULL, SDL_FLIP_NONE);
 }

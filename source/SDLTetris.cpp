@@ -106,7 +106,7 @@ int main() {
 
         return 1;
     }
-    Mix_VolumeMusic(0);
+    //Mix_VolumeMusic(0);
 
     SDL_Joystick* joystick;
 

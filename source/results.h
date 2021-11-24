@@ -24,18 +24,28 @@ class results {
 	font* newft;
 	font* newhead;
 
+	SDL_Texture* rendertext;
 	TTF_Font* header;
 	unsigned int time = 0;
 	std::vector<SDL_Texture*> texture;
-
+	double leftangle = 0.0;
 	results(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures,  Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts);
 	void keyPressed(SDL_Keycode key);
 	void render(game* game);
 	void logic(double deltatime);
 	int endlogic();
 	void reset();
-private:
+	const int tpiece[6] = {
+		 0,2,0,
+		 2,2,2
+	};
+	const int lpiece[6] = {
+			 2,2,2,
+			 2,0,0
+			};
+	private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
-	void renderfont(int x, int y, std::string text, bool selected, TTF_Font* size);
+	void drawCubes(const int position[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, double angle, double scale, int texture);
+
     
 };

@@ -49,7 +49,9 @@ class font
         std::string path;
         std::map<char, int> mapping;
         void render(SDL_Renderer* renderer, std::string words, int x, int y, bool center);
+        void render(SDL_Renderer* renderer, std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout);
         void render(int x, int y, std::string strg, bool center, SDL_Renderer* renderer);
+        void render(int x, int y, std::string strg, bool center, SDL_Renderer* renderer, bool sine, double pos, double multiplyin, double multiplyout);
         void render(int x, int y, std::string strg, bool center, SDL_Renderer* renderer, int wordwrap);
         void render(SDL_Renderer* renderer, std::string words, int x, int y, bool center, int red, int blue, int green);
         void render(SDL_Renderer* renderer, std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap);

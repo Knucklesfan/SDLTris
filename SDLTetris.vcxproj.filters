@@ -84,7 +84,22 @@
     <ClCompile Include="source\discord\voice_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="rpcimplement.cpp">
+    <ClCompile Include="source\rpcimplement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\highscore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\replay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\replay.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\results.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -164,7 +179,16 @@
     <ClInclude Include="source\discord\voice_manager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="rpcimplement.h">
+    <ClInclude Include="source\rpcimplement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\highscore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\results.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\font.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

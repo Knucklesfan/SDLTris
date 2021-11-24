@@ -22,7 +22,7 @@ public:
 
 	Mix_Music** music;
 	Mix_Chunk** sound;
-
+	double time = 0;
 	int currentsetting = 0;
 	SDL_Renderer* renderer;
 	SDL_Window* window;
@@ -57,7 +57,7 @@ public:
 	"Special Thanks to:",
 	"nobody lol",
 	};
-
+	bool big[5] = {0,0,1,0,1};
 	std::string messagetitle = "UNFINISHED!";
 	std::string messagebody = "I swear it'll be here when I'm finished..";
 	std::string messagebutton = "EXIT";
@@ -72,6 +72,7 @@ public:
 	void reset();
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
+	void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch);
 	void renderfont(int x, int y, std::string text, bool selected, TTF_Font* size);
 	void debuginput(SDL_Keycode key);
 };

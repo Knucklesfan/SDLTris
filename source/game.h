@@ -54,7 +54,7 @@ class game
 		int endlogic();
 		void reset();
 		unsigned int time = 0;
-		ingamemessagebox msg;
+		ingamemessagebox* msg;
 
 	private:
 		void changemusic();

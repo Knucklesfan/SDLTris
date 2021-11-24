@@ -1,7 +1,6 @@
 #include "titlescreen.h"
 #include <iostream>
 #include <filesystem>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 #include <vector>
 
@@ -234,16 +233,20 @@ void titlescreen::render(highscore* score)
     background[bgnum].render(renderer, false);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
-    SDL_Rect bx = { 160, 250, 320, 195 };
+    SDL_Rect bx = { 160, 250, 320, 210 };
     SDL_RenderFillRect(renderer, &bx);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderDrawRect(renderer, &bx);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+
     drawTexture(textures[5], 0, 0, 0.0, 1.0, false);
 
     background[bgnum].render(renderer, true);
 
     for (int i = 0; i < selections; i++) {
-        buttonfont->render(renderer, options[i], 320, 300 + (i * 16),  true, 255, ((i == currentselection && currentscreen == 0)?0:255), 255);
+        headerfont->render(renderer, options[i], 320, 300 + (i * 32),  true, 255, ((i == currentselection && currentscreen == 0)?0:255), 255);
     }
-    versfont->render(490, 165, "VERSION 0.2 DEMO", true, renderer);
+    versfont->render(renderer, "VERSION 0.2 DEMO", 490, 165, true, 0, 0, 0, 0, true, time/100, 1, 5);
     versfont->render(320, 280, "High Score: " + std::to_string(score->maxscore), true,renderer);
     versfont->render(320, 265, "Previous Score: " + std::to_string(score->previousscore), true, renderer);
     switch (currentscreen) {
@@ -254,8 +257,12 @@ void titlescreen::render(highscore* score)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
             splashbox = { 320 - 240, 240 - 120, 480, 240 };
             SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+
             headerfont->render(320, 140, messagetitle, true, renderer);
-            bodyfont->render(320, 180, messagebody, true, renderer);
+            bodyfont->render(320, 180, messagebody, true, renderer,448);
             buttonfont->render(320, 300, messagebutton, true, renderer);
             break;
         }
@@ -266,6 +273,10 @@ void titlescreen::render(highscore* score)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
             splashbox = { 320 - 240, 80, 480, 320 };
             SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+
             headerfont->render(320, 100, settingstitle, true, renderer);
             for (int i = 0; i < settingssize; i++) {
                 buttonfont->render(renderer, settings[i], 320, 130 + (i * 16),  true, 255, ((i == currentselection)?0:255), 255);
@@ -277,6 +288,10 @@ void titlescreen::render(highscore* score)
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
                 splashbox = { 320 - 240, 240 - 120, 480, 240 };
                 SDL_RenderFillRect(renderer, &splashbox);
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                SDL_RenderDrawRect(renderer, &splashbox);
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+
                 headerfont->render(320, 140, messagetitle, true, renderer);
                 bodyfont->render(320, 180, messagebody, true, renderer);
                 buttonfont->render(320, 300, messagebutton, true, renderer);
@@ -291,6 +306,13 @@ void titlescreen::render(highscore* score)
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
                     splashbox = { 320 - 240, 240 - 120, 480, 240 };
                     SDL_RenderFillRect(renderer, &splashbox);
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                    SDL_RenderDrawRect(renderer, &splashbox);
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+                    double var = ((double) Mix_VolumeMusic(-1) / 128) * 58.0 + sin(time / 50) * 10;
+                    drawTexture(renderer, textures.at(7), 80,  360 - (int)var, 0.0, 1.0, false, 0, 0, 240, var);
+                    double coz = ((double)Mix_VolumeMusic(-1) / 128) * 58.0 + cos(time / 50) * 10;
+                    drawTexture(renderer, textures.at(7), 320, 360 - (int)coz, 0.0, 1.0, false, 0, 0, 240, coz);
                     headerfont->render(320, 140, "MUSIC VOLUME", true, renderer);
                     bodyfont->render(renderer, std::to_string(Mix_VolumeMusic(-1)), 320, 180, true, 255, 0, 255);
                     buttonfont->render(320, 300, messagebutton, true, renderer);
@@ -303,6 +325,14 @@ void titlescreen::render(highscore* score)
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
                     splashbox = { 320 - 240, 240 - 120, 480, 240 };
                     SDL_RenderFillRect(renderer, &splashbox);
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+                    SDL_RenderDrawRect(renderer, &splashbox);
+                    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+                    double var = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + sin(time / 50) * 10;
+                    drawTexture(renderer, textures.at(7), 80, 360 - (int)var, 0.0, 1.0, false, 0, 0, 240, var);
+                    double coz = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + cos(time / 50) * 10;
+                    drawTexture(renderer, textures.at(7), 320, 360 - (int)coz, 0.0, 1.0, false, 0, 0, 240, coz);
+
                     headerfont->render(320, 140, "SOUND VOLUME", true, renderer);
                     bodyfont->render(renderer, std::to_string(Mix_Volume(-1, -1)), 320, 180, true, 255, 0, 255);
                     buttonfont->render(320, 300, messagebutton, true, renderer);
@@ -321,9 +351,17 @@ void titlescreen::render(highscore* score)
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
             splashbox = { 320 - 240, 80, 480, 320 };
             SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
             headerfont->render(320, 100, creditstitle, true, renderer);
             for (int i = 0; i < creditssize; i++) {
-                versfont->render(renderer, credits[i], 320, 130 + (i * 32),  true, 255, ((i == currentselection)?0:255), 255);
+                if (big[i] > 0) {
+                    headerfont->render(renderer, credits[i], 320, 130 + (i * 32), true, 255, ((i == currentselection) ? 0 : 255), 255);
+                }
+                else {
+                    bodyfont->render(renderer, credits[i], 320, 130 + (i * 32), true, 255, ((i == currentselection) ? 0 : 255), 255,448);
+                }
             }
             buttonfont->render(320, 300, messagebutton, true, renderer);
         }
@@ -336,6 +374,7 @@ void titlescreen::render(highscore* score)
 void titlescreen::logic(double deltatime)
 {
     background[bgnum].logic(deltatime);
+    time += deltatime;
 }
 
 int titlescreen::endlogic()
@@ -346,6 +385,7 @@ int titlescreen::endlogic()
 	return 0;
 }
 
+//this is the legacy drawtexture, for drawing sprites of whom's width and height are unknown
 void titlescreen::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
     SDL_Rect sprite;
     SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
@@ -363,6 +403,28 @@ void titlescreen::drawTexture(SDL_Texture* texture, int x, int y, double angle, 
     }
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
 }
+//this is the new drawtexture, for drawing sprite sheets and whatnot
+void titlescreen::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch) {
+    SDL_Rect sprite;
+    SDL_Rect srcrect = { srcx, srcy, srcw, srch };
+    if (SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h) < 0) {
+        printf("TEXTURE ISSUES!!! \n");
+        std::cout << SDL_GetError() << "\n";
+    };
+    sprite.w = srcw * scale;
+    sprite.h = srch * scale;
+    if (center) {
+        sprite.x = x - srcw / 2;
+        sprite.y = y - srch / 2;
+    }
+    else {
+        sprite.x = x + srcw / 2 - sprite.w / 2;
+        sprite.y = y + srch / 2 - sprite.h / 2;
+    }
+    SDL_RenderCopyEx(renderer, texture, &srcrect, &sprite, 0, NULL, SDL_FLIP_NONE);
+}
+
+
 void titlescreen::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size) {
     SDL_Surface* text;
     SDL_Color color = { 255, 255, 0 };

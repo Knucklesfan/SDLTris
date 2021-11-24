@@ -17,6 +17,8 @@ results::results(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vecto
     sound = soundVec;
     newft = fonts.at(0);
     newhead = fonts.at(1);
+    rendertext = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 128);
+    SDL_SetTextureBlendMode(rendertext, SDL_BLENDMODE_ADD);
 }
 
 void results::keyPressed(SDL_Keycode key) {
@@ -60,6 +62,16 @@ void results::reset()
 void results::render(game* gamer) {
     SDL_RenderClear(renderer);
     background.render(renderer, false);
+    SDL_SetRenderTarget(renderer, rendertext);
+    SDL_RenderClear(renderer);
+    drawCubes(tpiece, 16, 32, 6, 3, texture, 0, abs(sin(leftangle / 25)) + 0.85, 1);
+    SDL_SetRenderTarget(renderer, NULL);
+    drawTexture(rendertext, 50, 200, leftangle / 2.5, 1.0, false);
+    SDL_SetRenderTarget(renderer, rendertext);
+    SDL_RenderClear(renderer);
+    drawCubes(lpiece, 16, 32, 6, 3, texture, 0, abs(sin(leftangle / 25)) + 0.85, 2);
+    SDL_SetRenderTarget(renderer, NULL);
+    drawTexture(rendertext, 462, 200, leftangle / -2.5, 1.0, false);
 
     newhead->render(renderer, "LAST GAME SCORE", 320,160, true);
     newft->render(renderer,std::to_string(gamer->score), 320, 196,true);
@@ -69,9 +81,11 @@ void results::render(game* gamer) {
     newhead->render(renderer, "RUN LENGTH", 320,284,true);
     int real = time - gamer->time;
     int seconds = real%60;
-    int minutes = real/60;
+    int minutes = (real/60)%60;
     int hours = minutes/60;
-    std::string time = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
+    char buff[12];
+    snprintf(buff, sizeof(buff), "%02d:%02d:%02d", hours, minutes, seconds);
+    std::string time = buff;
     newft->render(renderer, time, 320, 320,true);
     
     //renderfont(320,244,"POINTS BY BLOCKS:",true, header);
@@ -88,6 +102,7 @@ void results::render(game* gamer) {
 void results::logic(double deltatime)
 {
     background.logic(deltatime);
+    leftangle += deltatime/25;
 }
 
 int results::endlogic()
@@ -96,6 +111,16 @@ int results::endlogic()
         return 1;
     }
 	return 0;
+}
+
+
+void results::drawCubes(const int position[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, double angle, double scale, int texture) {
+
+    for (int i = 0; i < size; i++) {
+        if (position[i] > 0) {
+            drawTexture(textures.at(texture), x + (i % width) * 32, y + (i / width) * 32, angle, scale, false);
+        }
+    }
 }
 
 void results::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {

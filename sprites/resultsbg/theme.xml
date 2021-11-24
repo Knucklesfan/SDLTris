@@ -16,6 +16,10 @@
 
 <layer4>0</layer4>
 <layer4y>0</layer4y>
-<music>song.xm</music>
+
+<layer5>5</layer5>
+<layer5y>0</layer5y>
+
+<music>song.mod</music>
 <musicname>Jump To My Beat</musicname>
 <musicartist>BabyDee / eFFect</musicartist>

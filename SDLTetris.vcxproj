@@ -151,6 +151,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\font.cpp" />
+    <ClCompile Include="source\results.cpp" />
     <ClCompile Include="source\rpcimplement.cpp" />
     <ClCompile Include="source/ingamemessagebox.cpp" />
     <ClCompile Include="source/game.cpp" />
@@ -174,11 +176,13 @@
     <ClCompile Include="source\ghostblock.cpp" />
     <ClCompile Include="source\titlescreen.cpp" />
     <ClCompile Include="source\background.cpp" />
-	<ClCompile Include="source\highscore.cpp" />
-	<ClCompile Include="source\replay.cpp" />
+    <ClCompile Include="source\highscore.cpp" />
+    <ClCompile Include="source\replay.cpp" />
     <ClCompile Include="source\knuxfanscreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\font.h" />
+    <ClInclude Include="source\results.h" />
     <ClInclude Include="source\rpcimplement.h" />
     <ClInclude Include="source/ingamemessagebox.h" />
     <ClInclude Include="source\discord\achievement_manager.h" />
@@ -201,11 +205,11 @@
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\server.h" />
     <ClInclude Include="source\tetriminos.h" />
-	<ClInclude Include="source\highscore.h" />
+    <ClInclude Include="source\highscore.h" />
     <ClInclude Include="source\ghostblock.h" />
     <ClInclude Include="source\titlescreen.h" />
     <ClInclude Include="source\background.h" />
-	<ClCompile Include="source\replay.h" />
+    <ClCompile Include="source\replay.h" />
     <ClInclude Include="source\knuxfanscreen.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

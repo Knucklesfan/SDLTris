@@ -56,7 +56,7 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     std::string path = filepath "sprites/00.ttf";
     bodyfont = fonts.at(2);
     header = fonts.at(1);
-    msg.letterfont = bodyfont;
+    msg = new ingamemessagebox("null","null",renderer, textures, bodyfont, 0);
 
 }
 void game::logic(double deltatime) {
@@ -70,7 +70,7 @@ void game::logic(double deltatime) {
             ticks = 0;
             realtick++;
         }
-        msg.logic(deltatime);
+        msg->logic(deltatime);
     }
     backgrounds[(level)%(backgrounds.size())].logic(deltatime);
 
@@ -105,7 +105,7 @@ void game::render() {
 
             header->render(320, 240, "GAME PAUSED", true, renderer);
         }
-        msg.render(renderer);
+        msg->render(renderer);
         SDL_RenderPresent(renderer);
     //}
 }
@@ -341,7 +341,7 @@ void game::changemusic() {
             }
         }
         currentsong = (level)%(backgrounds.size());
-        msg.activate("YOU ARE CURRENTLY LISTENING TO:", backgrounds[(level)%(backgrounds.size())].songname + " by: " + backgrounds[(level)%(backgrounds.size())].artist);
+        msg->activate("YOU ARE CURRENTLY LISTENING TO:", backgrounds[(level)%(backgrounds.size())].songname + " by: " + backgrounds[(level)%(backgrounds.size())].artist);
 
     }
 

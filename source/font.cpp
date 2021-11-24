@@ -126,6 +126,10 @@ font::font(std::string path, SDL_Renderer* renderer) {
 void font::render(int x, int y, std::string strg, bool center, SDL_Renderer* renderer) {
     render(renderer, strg, x, y, center, 0, 0, 0);
 }
+void font::render(int x, int y, std::string strg, bool center, SDL_Renderer* renderer, bool sine, double pos, double multiplyin, double multiplyout) {
+    render(renderer, strg, x, y, center, 0, 0, 0, 0, sine, pos, multiplyin, multiplyout);
+}
+
 void font::render(int x, int y, std::string strg, bool center, SDL_Renderer* renderer, int wordwrap) {
     render(renderer, strg, x, y, center, 0, 0, 0, wordwrap);
 }
@@ -135,11 +139,18 @@ void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool 
 void font::render(SDL_Renderer* renderer, std::string strg, int x, int y, bool center) {
     render(renderer, strg, x, y, center, 0, 0, 0);
 }
-
 void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap) {
+    render(renderer, words, x, y, center, red, blue, green, wordwrap, false, 0, 0, 0);
+}
+void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout) {
     int finalwidth = 0;
     if(center) {
-        finalwidth = words.length()*width;
+        if (wordwrap > 0 && words.length()*width > wordwrap) {
+            finalwidth = wordwrap;
+        }
+        else {
+            finalwidth = words.length() * width;
+        }
     }
     if(red > 0 || blue > 0 || green > 0) {
         SDL_SetTextureColorMod( texture, red, blue, green );
@@ -149,10 +160,16 @@ void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool 
     if(wordwrap > 0) {
         words = wrap(words, wordwrap/width);
     }
-    int tmpy = y;
+
+    double tmpy = y;
     int tmpx = x-finalwidth/2;
+
+    int i = 0;
     for(char& c : words) {
         try {
+        if (sine) {
+            tmpy = y + (sin((pos + i)*multiplyin)*multiplyout);
+        }
         drawTexture(renderer, texture, tmpx,  tmpy, 0, 1.0, false, mapping.at(c), 0, width, height);
         tmpx += width;
         } catch(const std::out_of_range& e) {
@@ -160,11 +177,15 @@ void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool 
             if(c == '\n') {
                 tmpy += height;
                 tmpx = x-finalwidth/2;
+                if (center) {
+                    tmpx = x - (words.substr(i).length() * width) / 2;
+                }
             }
             else {
                 tmpx += width;
             }
         }
+        i++;
     }
     SDL_SetTextureColorMod(texture, 255,255,255);
 

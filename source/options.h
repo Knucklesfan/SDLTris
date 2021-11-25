@@ -23,7 +23,16 @@ public:
 	cube* bigcub;
 	font* newft;
 	font* newhead;
-
+	font* tickertext;
+	double txtpos = 0;
+	double bottompos = 0;
+	int settingsx = 320;
+	bool mvleft = false;
+	bool mvright = false;
+	int currenttitle = 0;
+	int currentselection = 0;
+	std::string bottomtck = "GREEZ TO THE FOLLOWING PEOPLE: KK, DURANGO, JOHNNY, BOOMBOOM, FRISBEE, BLAKE, CASPER, DARK PRINCE, KRIS, CONNOR, ELENA, QUOTES, ERIKA, BRE, PETERS, EMRETECH, GENERIC, BOTTMINT, M4XW, BEHEMOTH, NATINSULA, TOTALJUSTICE, MIRZAGHALIB, AND EVERYONE ON SMWCENTRAL AND EVERYWHERE ELSE WHO'S HELPED ME THIS FAR.     ";
+	std::string tcktxt = "LEGENDARY DEVELOPER KNUXFAN PRESENTS HIS LATEST GAME- KNUXFANS TETRIMINOS. THEY MUST CREATE NEW DREAMS AND FILMS BY BREAKING TRADITIONAL STYLES. THE WORK, WHICH BECOMES A NEW GENRE ITSELF WILL BE CALLED... KNUXFAN'S TETRIMINOS. A TETRIS CLONE UNLIKE ANY OTHER WITH ASPIRATIONS FOR A HIGHER GAMEPLAY. USING CPP, SDL2 AND A WHOLE LOT OF POWER FROM MODERN PROCESSORS COMES AN AMIGA GAME FROM ANOTHER TIMELINE";
 	SDL_Texture* rendertext;
 	unsigned int time = 0;
 	std::vector<SDL_Texture*> texture;
@@ -42,8 +51,123 @@ public:
 			 2,2,2,
 			 2,0,0
 	};
+	std::string titles[4] = {
+		"GAMEPLAY SETTINGS",
+		"VISUAL SETTINGS",
+		"SYSTEM SETTINGS",
+		"EXTRA SETTINGS",
+	};
+	std::string opts[4][6] = {
+		{
+		"Ghost Piece",
+		"Hold Piece",
+		"Block Speedup",
+		"Fast Drop",
+		"Scoring System",
+		"Exit Menu",
+		},
+		{
+		"Background mode",
+		"First Background",
+		"Line Clear animation",
+		"Moving Backgrounds",
+		"Near Top Flash",
+		"Exit Menu",
+		},
+		{
+		"Full Screen",
+		"Music Volume",
+		"Sound Volume",
+		"Reset Settings",
+		"DELETE SAVE FILE (WARNING)",
+		"Exit Menu",
+		},
+		{
+		"Rotating Board",
+		"More Block Shapes",
+		"Bigger Board??",
+		"Blind Mode",
+		"Borderline Unplayable",
+		"Exit Menu",
+		},
+	};
+	std::string details[4][6] = {
+		{
+			"Shows a ghost piece near where your block will land.",
+			"Allows you to hold a block in a container on the side of the screen.",
+			"Enables faster blocks as levels increase. Disable for a more casual experience.",
+			"Allows dropping blocks faster with the UP key. Recommended to use alongside Ghost Piece.",
+			"Select which scoring system to use.",
+			"Closes this menu."
+
+		},
+		{
+			"Decides wether to cycle through backgrounds as levels increase, or stay on the first background selected.",
+			"Selects the first background to start each game with.",
+			"Show an animation when clearing a line.",
+			"Enables background motion.",
+			"Flashes the side of the screen when blocks are near the top.",
+			"Closes this menu."
+
+		},
+		{
+			"Puts game in full screen.",
+			"Adjust game music volume.",
+			"Adjust game sound volume.",
+			"Resets ALL SETTINGS back to factory.",
+			"Deletes your save file, removing all high scores and achievements.",
+			"Closes this menu."
+
+		},
+		{
+			"Basically, motion sickness simulator. Gotta see it to believe it.",
+			"Adds more blocks",
+			"Expands the board to an agonizing 40x20. Why would anyone play this????",
+			"The board fades in and out, making it very hard to play.",
+			"All of this.. PLUS more.",
+			"Closes this menu."
+		}
+	};
+	bool activations[4][6] = {
+		{
+		false,
+		false,
+		false,
+		false,
+		false,
+		false
+		},
+
+		{
+		false,
+		false,
+		false,
+		false,
+		false,
+		false
+		},
+
+		{
+		false,
+		false,
+		false,
+		false,
+		false,
+		false
+		},
+
+		{
+		false,
+		false,
+		false,
+		false,
+		false,
+		false
+		}
+	};
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
+	void moveright();
 	//void drawCubes(const int position[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, double angle, double scale, int texture); not sure if i'll need this yet
 
 };

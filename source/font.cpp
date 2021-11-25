@@ -171,7 +171,6 @@ void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool 
 
     double tmpy = y;
     int tmpx = x-finalwidth/2;
-
     int i = 0;
     for(char& c : words) {
         try {
@@ -185,9 +184,7 @@ void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool 
             if(c == '\n') {
                 tmpy += height;
                 tmpx = x-finalwidth/2;
-                if (center) {
-                    tmpx = x - (words.substr(i).length() * width) / 2;
-                }
+                std::string everythingelse = words.substr(i);
             }
             else {
                 tmpx += width;
@@ -219,7 +216,7 @@ void font::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int 
         sprite.x = x + srcw / 2 - sprite.w / 2;
         sprite.y = y + srch / 2 - sprite.h / 2;
     }
-    SDL_RenderCopyEx(renderer, texture, &srcrect, &sprite, 0, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopy(renderer, texture, &srcrect, &sprite);
 }
 
 bool font::hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me out https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c

@@ -8,14 +8,46 @@ options::options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vecto
     texture = textures;
     cub = new cube(render,320/2,240/2,320,240);
     bigcub = new cube(render, 320, 240, 640, 480);
-
+    tickertext = fonts.at(0);
+    newhead = fonts.at(1);
+    newft = fonts.at(2);
 }
 
 void options::keyPressed(SDL_Keycode key) {
+        switch (key) {
+            case SDLK_RIGHT: {
+                if (currenttitle < 3) {
+                    mvright = true;
+                }
+                break;
+            }
+            case SDLK_LEFT: {
+                if (currenttitle > 0) {
+                    mvleft = true;
+                }
+                break;
 
+            }
+            case SDLK_UP: {
+                if (currentselection > 0) {
+                    Mix_PlayChannel(-1, sound[1], 0);
+                    currentselection--;
+                }
+                break;
+            }
+            case SDLK_DOWN: {
+                if (currentselection < 6) {
+                    Mix_PlayChannel(-1, sound[1], 0);
+                    currentselection++;
+                }
+                break;
+
+            }
+
+        }
 }
-void options::render() {
 
+void options::render() {
 	SDL_RenderClear(renderer);
 	background.render(renderer, false);
     drawTexture(texture.at(8), 0, 0, rot/25, 1.0, true);
@@ -28,14 +60,79 @@ void options::render() {
     bigcub->render(renderer, 0, 255, 0);
     drawTexture(bigcub->texture, 0, 0, 0, 1.0, false);
 
+
+    std::string toprint = tcktxt.substr(txtpos, txtpos + 41);
+    if (txtpos >= tcktxt.length()) {
+        txtpos = 0;
+    }
+
+    if (txtpos + 41 > tcktxt.length()) {
+        toprint = tcktxt.substr(txtpos, tcktxt.length()) + " " + tcktxt.substr(0, txtpos + 41 - tcktxt.length());
+    }
+    tickertext->render(fmod(-txtpos*16,16), 0, toprint, false, renderer);
+
+    toprint = bottomtck.substr(bottompos, bottompos + 41);
+    if (bottompos >= bottomtck.length()) {
+        bottompos = 0;
+    }
+
+    if (bottompos + 41 > bottomtck.length()) {
+        toprint = bottomtck.substr(bottompos, bottomtck.length()) + " " + bottomtck.substr(0, bottompos + 41 - bottomtck.length());
+    }
+    tickertext->render(fmod(-bottompos * 16, 16), 464, toprint, false, renderer);
+
+    newhead->render(renderer, titles[currenttitle], 320, 80, true, 0, 0, 0, 0, true, rot / 100, 1, 5);
+
+    for (int i = 0; i < 6; i++) {
+        int selection = (currentselection == i) ? 0 : 255;
+        tickertext->render(renderer, opts[currenttitle][i], settingsx, 128 + i * 24, true, 255, 255, selection);
+
+    }
+    if ((currenttitle - 1) >= 0) {
+        for (int i = 0; i < 6; i++) {
+            tickertext->render(renderer, opts[currenttitle - 1][i], settingsx - 640, 128 + i * 24, true, 255, 255, 255);
+
+        }
+    }
+    if ((currenttitle + 1) < 4) {
+        for (int i = 0; i < 6; i++) {
+            tickertext->render(settingsx + 640, 128 + i * 24, opts[currenttitle + 1][i], true, renderer);
+
+        }
+    }
+    if (currenttitle != 3 && currentselection != 5) {
+        tickertext->render(renderer, "Enabled: " activations[currenttitle][currentselection]?"No":"Yes", 320, 360, true, 255, 0, 0);
+    }
+    tickertext->render(320, 400, details[currenttitle][currentselection], true, renderer,500);
 	SDL_RenderPresent(renderer);
 
 }
 void options::logic(double deltatime) {
-    background.logic(deltatime);
+    //background.logic(deltatime);
     cub->logic(deltatime);
     bigcub->logic(-deltatime);
     rot += deltatime;
+    txtpos += deltatime/100;
+    bottompos += deltatime / 100;
+
+    if (mvright && settingsx > -320) {
+        settingsx -= deltatime;
+    }
+    else if (mvright) {
+        mvright = false;
+        currenttitle++;
+        settingsx = 320;
+    }
+
+    if (mvleft && settingsx < 960) {
+        settingsx += deltatime;
+    }
+    else if (mvleft) {
+        mvleft = false;
+        currenttitle--;
+        settingsx = 320;
+    }
+
 
 }
 int options::endlogic() {
@@ -83,4 +180,9 @@ void options::drawTexture(SDL_Texture* texture, int x, int y, double angle, doub
         sprite.y = y + oldheight / 2 - sprite.h / 2;
     }
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+}
+
+
+void options::moveright() {
+    mvright = true;
 }

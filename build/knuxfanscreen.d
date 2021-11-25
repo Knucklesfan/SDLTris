@@ -1,5 +1,5 @@
 knuxfanscreen.o: \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/knuxfanscreen.cpp \
+ C:/Users/bobca/Documents/Github/SDLTris/source/knuxfanscreen.cpp \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h \
@@ -51,8 +51,8 @@ knuxfanscreen.o: \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/knuxfanscreen.h
+ C:/Users/bobca/Documents/Github/SDLTris/source/background.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/knuxfanscreen.h
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h:
@@ -104,5 +104,5 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_misc.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/knuxfanscreen.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/background.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/knuxfanscreen.h:

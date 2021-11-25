@@ -68,6 +68,14 @@ char symbols[] = {
     ' '
 };
 
+#ifdef __SWITCH__
+#define filepath  "/"
+#include <switch.h>
+
+#else
+#define filepath  "./"
+#endif
+
 
 font::font() {
 
@@ -77,12 +85,12 @@ font::font() {
 //I sWeAr I'm A gOoD cOdEr gUyS
 
 font::font(std::string path, SDL_Renderer* renderer) {
-    std::string p = "./fonts/" + path;
+    std::string p = "fonts/" + path;
     generateSurfaces(p, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
 
-    std::string filepath = "./fonts/" + path + "/fontdef.xml";
+    std::string pth = filepath "fonts/" + path + "/fontdef.xml";
 
-    rapidxml::file<> xmlFile(filepath.c_str());
+    rapidxml::file<> xmlFile(pth.c_str());
     rapidxml::xml_document<> doc;
     doc.parse<0>(xmlFile.data());
     name = doc.first_node("name")->value();

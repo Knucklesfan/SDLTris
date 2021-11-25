@@ -1,6 +1,6 @@
 titlescreen.o: \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.cpp \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/titlescreen.cpp \
+ C:/Users/bobca/Documents/Github/SDLTris/source/titlescreen.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h \
@@ -49,13 +49,15 @@ titlescreen.o: \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_locale.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_misc.h \
- C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
- C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h
-C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.h:
+ C:/Users/bobca/Documents/Github/SDLTris/source/background.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/highscore.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/discord/discord.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/font.h \
+ C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp \
+ C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml_utils.hpp \
+ C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp
+C:/Users/bobca/Documents/Github/SDLTris/source/titlescreen.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h:
@@ -104,9 +106,11 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_timer.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_locale.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_misc.h:
-C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
-C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/background.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/highscore.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/discord/discord.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/font.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp:
+C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml_utils.hpp:
+C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp:

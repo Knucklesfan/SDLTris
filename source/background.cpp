@@ -11,9 +11,17 @@
 #include <cstring>
 #include <cmath>
 #include <SDL2/SDL_mixer.h>
+#ifdef __SWITCH__
+#define pth  "/"
+#include <switch.h>
+
+#else
+#define pth  "./"
+#endif
+
 bg::bg() {}
 bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
-    std::string p = "./backgrounds/" + path;
+    std::string p = pth "backgrounds/" + path;
     if(folder) {
         p = path;
     }
@@ -30,7 +38,7 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
 
     }
     std::cout << "max=" << maxwidth <<"x"<< maxheight << "\n"; 
-    std::string filepath = "./backgrounds/" + path + "/theme.xml";
+    std::string filepath = pth "backgrounds/" + path + "/theme.xml";
     if(folder) {
         filepath = path + "/theme.xml";
     }
@@ -67,7 +75,7 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
         //std::cout << "INFORMATION!!!: " << atoi(doc.first_node(sy.c_str())->value()) << "\n";
     }
 
-    std::string muspath = "./backgrounds/" + path + "/";
+    std::string muspath = pth "backgrounds/" + path + "/";
     if(folder) {
         muspath = path + "/";
     }

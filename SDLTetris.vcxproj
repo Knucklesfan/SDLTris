@@ -151,7 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\cube.cpp" />
     <ClCompile Include="source\font.cpp" />
+    <ClCompile Include="source\options.cpp" />
     <ClCompile Include="source\results.cpp" />
     <ClCompile Include="source\rpcimplement.cpp" />
     <ClCompile Include="source/ingamemessagebox.cpp" />
@@ -181,7 +183,9 @@
     <ClCompile Include="source\knuxfanscreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\cube.h" />
     <ClInclude Include="source\font.h" />
+    <ClInclude Include="source\options.h" />
     <ClInclude Include="source\results.h" />
     <ClInclude Include="source\rpcimplement.h" />
     <ClInclude Include="source/ingamemessagebox.h" />

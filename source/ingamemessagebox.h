@@ -7,7 +7,6 @@
 #include <array>
 #include <algorithm>    // std::sort
 #include <cstring>
-#include <SDL2/SDL_ttf.h>
 #include "font.h"
 
 class ingamemessagebox

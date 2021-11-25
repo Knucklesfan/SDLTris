@@ -1,4 +1,4 @@
-SDLTetris.o: C:/Users/bobca/Documents/GitHub/SDLTris/source/SDLTetris.cpp \
+SDLTetris.o: C:/Users/bobca/Documents/Github/SDLTris/source/SDLTetris.cpp \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h \
@@ -47,25 +47,29 @@ SDLTetris.o: C:/Users/bobca/Documents/GitHub/SDLTris/source/SDLTetris.cpp \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_locale.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_misc.h \
- C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
- C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/enet.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/unix.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/types.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/protocol.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/list.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/callbacks.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/game.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/tetriminos.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/ghostblock.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/server.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/ingamemessagebox.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h \
- C:/Users/bobca/Documents/GitHub/SDLTris/source/knuxfanscreen.h
+ C:/Users/bobca/Documents/Github/SDLTris/include/enet/enet.h \
+ C:/Users/bobca/Documents/Github/SDLTris/include/enet/unix.h \
+ C:/Users/bobca/Documents/Github/SDLTris/include/enet/types.h \
+ C:/Users/bobca/Documents/Github/SDLTris/include/enet/protocol.h \
+ C:/Users/bobca/Documents/Github/SDLTris/include/enet/list.h \
+ C:/Users/bobca/Documents/Github/SDLTris/include/enet/callbacks.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/game.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/tetriminos.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/ghostblock.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/background.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/server.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/ingamemessagebox.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/font.h \
+ C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp \
+ C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml_utils.hpp \
+ C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp \
+ C:/Users/bobca/Documents/Github/SDLTris/source/titlescreen.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/highscore.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/discord/discord.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/knuxfanscreen.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/replay.h \
+ C:/Users/bobca/Documents/Github/SDLTris/source/results.h
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h:
@@ -114,22 +118,26 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_timer.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_locale.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_misc.h:
-C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
-C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_mixer.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/enet.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/unix.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/types.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/protocol.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/list.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/include/enet/callbacks.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/game.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/tetriminos.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/ghostblock.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/background.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/server.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/ingamemessagebox.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/titlescreen.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/highscore.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/discord/discord.h:
-C:/Users/bobca/Documents/GitHub/SDLTris/source/knuxfanscreen.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/enet/enet.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/enet/unix.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/enet/types.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/enet/protocol.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/enet/list.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/enet/callbacks.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/game.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/tetriminos.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/ghostblock.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/background.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/server.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/ingamemessagebox.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/font.h:
+C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp:
+C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml_utils.hpp:
+C:/Users/bobca/Documents/Github/SDLTris/include/rapidxml.hpp:
+C:/Users/bobca/Documents/Github/SDLTris/source/titlescreen.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/highscore.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/discord/discord.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/knuxfanscreen.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/replay.h:
+C:/Users/bobca/Documents/Github/SDLTris/source/results.h:

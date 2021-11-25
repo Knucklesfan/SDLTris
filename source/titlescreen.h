@@ -1,6 +1,5 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
@@ -73,7 +72,6 @@ public:
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
 	void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch);
-	void renderfont(int x, int y, std::string text, bool selected, TTF_Font* size);
 	void debuginput(SDL_Keycode key);
 };
 

@@ -10,7 +10,6 @@
 #include <SDL2/SDL.h>
 #include <cmath>
 #include "background.h"
-#include <SDL2/SDL_ttf.h>
 #include "ingamemessagebox.h"
 #include "server.h"
 #include <random>
@@ -53,7 +52,6 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     lines = LINES;
     level = LEVEL;
     paused = false;
-    std::string path = filepath "sprites/00.ttf";
     bodyfont = fonts.at(2);
     header = fonts.at(1);
     msg = new ingamemessagebox("null","null",renderer, textures, bodyfont, 0);
@@ -162,11 +160,11 @@ void game::keyPressed(SDL_Keycode key)
         case SDLK_x: {
             Mix_PlayChannel( -1, sound[4], 0 );
             checkLines(testblocks);
+            t.draw();
             t.removeolddraw();
+
             memcpy(previousblocks, testblocks, sizeof previousblocks);
             int temp = holdblock;
-            ticks = 0;
-            realtick = 0;
             holdblock = t.piece;
             if (temp > -1) {
                 t.rebirth(2, 0, temp);
@@ -177,6 +175,8 @@ void game::keyPressed(SDL_Keycode key)
             }
             g.rebirth(2, 0, t.piece, previousblocks);
             std::fill_n(ghostblocks, 200, 0);
+            ticks = 0;
+            realtick = 0;
             break;
         }
         }
@@ -409,18 +409,4 @@ void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int 
         sprite.y = y + oldheight / 2 - sprite.h / 2;
     }
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
-}
-
-void game::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size) {
-    SDL_Surface* text;
-    SDL_Color color = { 255, 255, 0 };
-    if (!selected) {
-        color = { 255, 255, 255 };
-    }
-    text = TTF_RenderText_Solid(size, strg.c_str(), color);
-    SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
-    SDL_FreeSurface(text);
-    drawTexture(renderer, words, x, y, 0, 1.0,true);
-    SDL_DestroyTexture(words);
-
 }

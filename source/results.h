@@ -1,6 +1,5 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
@@ -19,13 +18,11 @@ class results {
 	bg background;
 	Mix_Music* music;
 	Mix_Chunk** sound;
-	TTF_Font* ttf;
 
 	font* newft;
 	font* newhead;
 
 	SDL_Texture* rendertext;
-	TTF_Font* header;
 	unsigned int time = 0;
 	std::vector<SDL_Texture*> texture;
 	double leftangle = 0.0;

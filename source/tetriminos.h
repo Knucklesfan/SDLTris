@@ -210,6 +210,7 @@ class tetrimino {
 	    void movedown();
         void moveleft();
 	    void moveright();
+        void hold();
         void rotate();
         void draw();
         bool collides(int x, int y, int rot);

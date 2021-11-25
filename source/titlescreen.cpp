@@ -425,19 +425,6 @@ void titlescreen::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int 
 }
 
 
-void titlescreen::renderfont(int x, int y, std::string strg, bool selected, TTF_Font* size) {
-    SDL_Surface* text;
-    SDL_Color color = { 255, 255, 0 };
-    if (!selected) {
-        color = { 255, 255, 255 };
-    }
-    text = TTF_RenderText_Solid(size, strg.c_str(), color);
-    SDL_Texture* words = SDL_CreateTextureFromSurface(renderer, text);
-    SDL_FreeSurface(text);
-    drawTexture(words, x, y, 0, 1.0, true);
-    SDL_DestroyTexture(words);
-
-}
 void titlescreen::debuginput(SDL_Keycode key) {
     switch(key) {
         case SDLK_F1: {

@@ -74,6 +74,10 @@ int tetrimino::forcedrop() {
     }
     return 0;
 }
+void tetrimino::hold() {
+    removeolddraw();
+    alive = false;
+}
 
 void tetrimino::moveleft() {
     if (alive) {

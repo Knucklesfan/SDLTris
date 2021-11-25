@@ -1,10 +1,9 @@
-#include "highscore.h";
+#include "highscore.h"
 #include <rapidxml_utils.hpp>
 #include <rapidxml.hpp>
 
 
 highscore::highscore()  {
-
 	std::ifstream f("./save.xml");
 
 	if (!f.good()) {

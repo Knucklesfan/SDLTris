@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include <cstring>
+#include "options.h"
 #include "tetriminos.h"
 #include "ghostblock.h"
 #include "background.h"
@@ -14,6 +15,7 @@
 #include "ingamemessagebox.h"
 #include <random>
 #include "font.h"
+
 
 class game
 {
@@ -24,6 +26,7 @@ class game
 		double testangles[200], testscale[200], ghostscale[200];
 		SDL_Renderer* renderer;
 		Mix_Music** music;
+		bool (activations)[4][6];
 		Mix_Chunk** sound;
 		tetrimino t;
 		ghostblock g;
@@ -36,7 +39,7 @@ class game
 		int level = 1;
 		int currentsong = 0;
 		int pauseselection = 0;
-		std::string options[2] = {
+		std::string choices[2] = {
 			"RESUME",
 			"EXIT"
 		};
@@ -45,7 +48,7 @@ class game
 		bool paused;
 		std::vector<SDL_Texture*> textures;
 		std::vector<bg>  backgrounds;
-		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts);
+		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, bool(active)[4][6]);
 		double layerpos[10];
 		void keyPressed(SDL_Keycode key);
 		void render();

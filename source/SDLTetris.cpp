@@ -159,12 +159,11 @@ int main() {
     fonts.push_back(new font("8x8font",renderer));
     fonts.push_back(new font("8x16font",renderer));
     fonts.push_back(new font("small8x8font",renderer));
-
+    options* opt = new options(renderer, window, configbg, textures, configbg.music, sound.data(), fonts);
     titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg, fonts);
-    game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts);
+    game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);
     results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
-    options* opt = new options(renderer, window, configbg, textures, configbg.music, sound.data(), fonts);
 #ifdef _NETCODE
     server* srver = new server();
     srver->start();
@@ -251,7 +250,7 @@ int main() {
             title->logic(deltaTime);
             title->render(score);
             if (title->endlogic() == 1) {
-                gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts);
+                gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
                 gamer->reset();
                 gamemode = 2;
                 title->loadgame = false;
@@ -308,6 +307,7 @@ int main() {
 #endif
 
             }
+            break;
         }
         case 4: {
             opt->logic(deltaTime);
@@ -319,6 +319,7 @@ int main() {
                 rpc->update("Configuring the game.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
 #endif
             }
+            break;
         }
 #ifdef _WIN32
               rpc->logic();

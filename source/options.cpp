@@ -11,40 +11,168 @@ options::options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vecto
     tickertext = fonts.at(0);
     newhead = fonts.at(1);
     newft = fonts.at(2);
+    window = windows;
 }
 
 void options::keyPressed(SDL_Keycode key) {
-        switch (key) {
-            case SDLK_RIGHT: {
-                if (currenttitle < 3) {
-                    mvright = true;
-                }
-                break;
+    switch (key) {
+    case SDLK_RIGHT: {
+        switch (currentscreen) {
+        case 0: {
+            if (currenttitle < 3) {
+                mvright = true;
             }
-            case SDLK_LEFT: {
-                if (currenttitle > 0) {
-                    mvleft = true;
-                }
-                break;
-
+            break;
+        }
+        case 1: {
+            int currentvol = Mix_VolumeMusic(-1);
+            if (currentvol < MIX_MAX_VOLUME) {
+                Mix_VolumeMusic(currentvol + 1);
             }
-            case SDLK_UP: {
-                if (currentselection > 0) {
-                    Mix_PlayChannel(-1, sound[1], 0);
-                    currentselection--;
-                }
-                break;
-            }
-            case SDLK_DOWN: {
-                if (currentselection < 6) {
-                    Mix_PlayChannel(-1, sound[1], 0);
-                    currentselection++;
-                }
-                break;
-
-            }
+            break;
 
         }
+        case 2: {
+            int currentvol = Mix_Volume(-1, -1);
+            if (currentvol < MIX_MAX_VOLUME) {
+                Mix_Volume(-1, currentvol + 1);
+            }
+            break;
+        }
+        }
+        break;
+    }
+    case SDLK_LEFT: {
+        switch (currentscreen) {
+        case 0: {
+            if (currenttitle > 0) {
+                mvleft = true;
+            }
+            break;
+        }
+        case 1: {
+            int currentvol = Mix_VolumeMusic(-1);
+            if (currentvol > 0) {
+                Mix_VolumeMusic(currentvol - 1);
+            }
+            break;
+
+        }
+        case 2: {
+            int currentvol = Mix_Volume(-1, -1);
+            if (currentvol > 0) {
+                Mix_Volume(-1, currentvol - 1);
+            }
+            break;
+        }
+        }
+        break;
+
+    }
+    case SDLK_UP: {
+        if (currentselection > 0 && currentscreen == 0) {
+            Mix_PlayChannel(-1, sound[1], 0);
+            currentselection--;
+        }
+        break;
+    }
+    case SDLK_DOWN: {
+        if (currentselection < 6 && currentscreen == 0) {
+            Mix_PlayChannel(-1, sound[1], 0);
+            currentselection++;
+        }
+        break;
+
+    }
+    case SDLK_z: {
+        switch (currentscreen) {
+            case 0: {
+                switch (currenttitle) {
+                case 0: {
+                    switch (currentselection) {
+                    case 5: {
+                        break;
+                    }
+
+                    default: {
+                        activations[currenttitle][currentselection] = !activations[currenttitle][currentselection];
+                        break;
+                    }
+
+                    }
+                    break;
+                }
+                case 1: {
+                    switch (currentselection) {
+                    case 5: {
+                        break;
+                    }
+
+                    default: {
+                        activations[currenttitle][currentselection] = !activations[currenttitle][currentselection];
+                        break;
+                    }
+                    }
+                    break;
+                }
+                case 2: {
+                    switch (currentselection) {
+                    case 5: {
+                        break;
+                    }
+
+                    case 0: {
+                        Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
+                        bool IsFullscreen = SDL_GetWindowFlags(window) & FullscreenFlag;
+                        SDL_SetWindowFullscreen(window, IsFullscreen ? 0 : FullscreenFlag);
+                        SDL_ShowCursor(IsFullscreen);
+                        break;
+                    }
+                    case 1: {
+                        currentscreen = 1;
+                        break;
+                    }
+                    case 2: {
+                        currentscreen = 2;
+                        break;
+                    }
+                    case 3: {
+                        currentscreen = 9;
+                        break;
+                    }
+                    case 4: {
+                        currentscreen = 9;
+                        break;
+                    }
+
+                    }
+                    break;
+                }
+                case 3: {
+                    switch (currentselection) {
+                        default: {
+                            currentscreen = 9;
+                            break;
+                        }
+                    }
+                    break;
+                }
+                }
+                if (currentselection == 5) {
+                    loadgame = true;
+                }
+                break;
+            }
+            default: {
+                currentscreen = 0;
+                break;
+            }
+        }
+        Mix_PlayChannel(-1, sound[0], 0);
+        break;
+    }
+
+    }
 }
 
 void options::render() {
@@ -104,19 +232,89 @@ void options::render() {
         std::string txt = "Enabled: ";
         txt += activations[currenttitle][currentselection] ? "Yes" : "No";
         tickertext->render(renderer, txt, 320, 360, true, 255, 0, 0);
+        
     }
     tickertext->render(320, 400, details[currenttitle][currentselection], true, renderer,500);
+
+
+    switch (currentscreen) {
+        case 0:
+            break;
+        case 1: {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 240 - 120, 480, 240 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+            double var = ((double)Mix_VolumeMusic(-1) / 128) * 58.0 + sin(time / 50) * 10;
+            drawTexture(renderer, texture.at(7), 80, 360 - (int)var, 0.0, 1.0, false, 0, 0, 240, var);
+            double coz = ((double)Mix_VolumeMusic(-1) / 128) * 58.0 + cos(time / 50) * 10;
+            drawTexture(renderer, texture.at(7), 320, 360 - (int)coz, 0.0, 1.0, false, 0, 0, 240, coz);
+            newhead->render(320, 140, "MUSIC VOLUME", true, renderer);
+            tickertext->render(renderer, std::to_string(Mix_VolumeMusic(-1)), 320, 180, true, 255, 0, 255);
+            tickertext->render(320, 300, "EXIT", true, renderer);
+            break;
+        }
+        case 2: {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 240 - 120, 480, 240 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+            double var = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + sin(time / 50) * 10;
+            drawTexture(renderer, texture.at(7), 80, 360 - (int)var, 0.0, 1.0, false, 0, 0, 240, var);
+            double coz = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + cos(time / 50) * 10;
+            drawTexture(renderer, texture.at(7), 320, 360 - (int)coz, 0.0, 1.0, false, 0, 0, 240, coz);
+
+            newhead->render(320, 140, "SOUND VOLUME", true, renderer);
+            tickertext->render(renderer, std::to_string(Mix_Volume(-1, -1)), 320, 180, true, 255, 0, 255);
+            tickertext->render(320, 300, "EXIT", true, renderer);
+
+
+            break;
+        }
+        case 9: {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 240 - 120, 480, 240 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+
+            newhead->render(320, 140, "UNFINISHED", true, renderer);
+            tickertext->render(320, 180, "I swear it'll be here when I'm done...", true, renderer, 448);
+            tickertext->render(320, 300, "EXIT", true, renderer);
+
+        }
+    }
+
+
+
+
+
 	SDL_RenderPresent(renderer);
 
 }
 void options::logic(double deltatime) {
-    //background.logic(deltatime);
-    cub->logic(deltatime);
-    bigcub->logic(-deltatime);
-    rot += deltatime;
-    txtpos += deltatime/100;
-    bottompos += deltatime / 100;
-
+    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG]) {
+        background.logic(deltatime);
+        cub->logic(deltatime);
+        bigcub->logic(-deltatime);
+        rot += deltatime;
+        txtpos += deltatime / 100;
+        bottompos += deltatime / 100;
+    }
     if (mvright && settingsx > -320) {
         settingsx -= deltatime;
     }
@@ -138,7 +336,10 @@ void options::logic(double deltatime) {
 
 }
 int options::endlogic() {
-	return 0;
+    if (loadgame) {
+        return 1;
+    }
+    return 0;
 }
 
 void options::reset() {
@@ -187,4 +388,25 @@ void options::drawTexture(SDL_Texture* texture, int x, int y, double angle, doub
 
 void options::moveright() {
     mvright = true;
+}
+
+//this is the new drawtexture, for drawing sprite sheets and whatnot
+void options::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch) {
+    SDL_Rect sprite;
+    SDL_Rect srcrect = { srcx, srcy, srcw, srch };
+    if (SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h) < 0) {
+        printf("TEXTURE ISSUES!!! \n");
+        std::cout << SDL_GetError() << "\n";
+    };
+    sprite.w = srcw * scale;
+    sprite.h = srch * scale;
+    if (center) {
+        sprite.x = x - srcw / 2;
+        sprite.y = y - srch / 2;
+    }
+    else {
+        sprite.x = x + srcw / 2 - sprite.w / 2;
+        sprite.y = y + srch / 2 - sprite.h / 2;
+    }
+    SDL_RenderCopyEx(renderer, texture, &srcrect, &sprite, 0, NULL, SDL_FLIP_NONE);
 }

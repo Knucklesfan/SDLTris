@@ -30,7 +30,7 @@ public:
 	int currentselection = 0;
 	int bgnum = 0;
 	const int selections = 5;
-	std::string options[5] = {
+	std::string settings[5] = {
 		"START GAME",
 		"THEMES MANAGER",
 		"Options",
@@ -41,7 +41,7 @@ public:
 	bool loadgame = false;
 	const int settingssize = 4;
 	std::string settingstitle = "OPTIONS";
-	std::string settings[4] = {
+	std::string sets[4] = {
 	"FULL SCREEN",
 	"MUSIC",
 	"SOUND",

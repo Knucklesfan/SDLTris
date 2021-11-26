@@ -10,6 +10,42 @@
 #include "game.h"
 #include "font.h"
 #include "cube.h"
+#include "background.h"
+
+enum OPTIONTYPE
+{
+	GAMEPLAY = 0,
+	DISPLAY = 1,
+	SYSTEM = 2,
+	EXTRA = 3
+};
+
+enum GAMEPLAYOPTIONS
+{
+	GHOSTPIECE = 0,
+	HOLDPIECE = 1,
+	BLOCKSPEED = 2,
+	FASTDROP = 3,
+	SCORING = 4
+};
+
+enum DISPLAYOPTIONS
+{
+	BGMODE = 0,
+	FIRSTBG = 1,
+	LINECLEAR = 2,
+	MOVINGBG = 3,
+	NEARTOPFLASH = 4
+};
+
+enum EXTRAOPTIONS
+{
+	ROTATEBOARD = 0,
+	MOREBLOCKS = 1,
+	BIGGERBOARD = 2,
+	BLINDMODE = 3,
+	BORDERLINE = 4
+};
 
 class options {
 public:
@@ -31,6 +67,7 @@ public:
 	bool mvright = false;
 	int currenttitle = 0;
 	int currentselection = 0;
+	int currentscreen = 0;
 	std::string bottomtck = "GREEZ TO THE FOLLOWING PEOPLE: KK, DURANGO, JOHNNY, BOOMBOOM, FRISBEE, BLAKE, CASPER, DARK PRINCE, KRIS, CONNOR, ELENA, QUOTES, ERIKA, BRE, PETERS, EMRETECH, GENERIC, BOTTMINT, M4XW, BEHEMOTH, NATINSULA, TOTALJUSTICE, MIRZAGHALIB, AND EVERYONE ON SMWCENTRAL AND EVERYWHERE ELSE WHO'S HELPED ME THIS FAR.     ";
 	std::string tcktxt = "LEGENDARY DEVELOPER KNUXFAN PRESENTS HIS LATEST GAME- KNUXFANS TETRIMINOS. THEY MUST CREATE NEW DREAMS AND FILMS BY BREAKING TRADITIONAL STYLES. THE WORK, WHICH BECOMES A NEW GENRE ITSELF WILL BE CALLED... KNUXFAN'S TETRIMINOS. A TETRIS CLONE UNLIKE ANY OTHER WITH ASPIRATIONS FOR A HIGHER GAMEPLAY. USING CPP, SDL2 AND A WHOLE LOT OF POWER FROM MODERN PROCESSORS COMES AN AMIGA GAME FROM ANOTHER TIMELINE";
 	SDL_Texture* rendertext;
@@ -43,14 +80,6 @@ public:
 	void logic(double deltatime);
 	int endlogic();
 	void reset();
-	const int tpiece[6] = {
-		 0,2,0,
-		 2,2,2
-	};
-	const int lpiece[6] = {
-			 2,2,2,
-			 2,0,0
-	};
 	std::string titles[4] = {
 		"GAMEPLAY SETTINGS",
 		"VISUAL SETTINGS",
@@ -128,22 +157,23 @@ public:
 			"Closes this menu."
 		}
 	};
+	
 	bool activations[4][6] = {
 		{
+		true,
+		true,
 		false,
-		false,
-		false,
-		false,
-		false,
+		true,
+		true,
 		false
 		},
 
 		{
+		true,
 		false,
-		false,
-		false,
-		false,
-		false,
+		true,
+		true,
+		true,
 		false
 		},
 
@@ -167,6 +197,7 @@ public:
 	};
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
+	void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch);
 	void moveright();
 	//void drawCubes(const int position[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, double angle, double scale, int texture); not sure if i'll need this yet
 

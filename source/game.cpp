@@ -29,8 +29,10 @@
 //TODO: fix the stupid bug here lol
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
-game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts) {
+game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, bool(active)[4][6]) {
     //srand((unsigned)time(0)); 
+    memcpy(activations, active, sizeof activations);
+
     time = std::time(nullptr);
     std::fill_n(testblocks, 200, 0);
     std::fill_n(ghostblocks, 200, 0);
@@ -81,7 +83,9 @@ void game::render() {
         g.changePos(t.x, t.y, t.rot);
         t.draw();
         g.draw();
-        drawCubes(ghostblocks, testangles, ghostscale, 240, 80, 200, 10, textures, renderer);
+        if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE]) {
+            drawCubes(ghostblocks, testangles, ghostscale, 240, 80, 200, 10, textures, renderer);
+        }
         drawCubes(testblocks, testangles, testscale, 240, 80, 200, 10, textures, renderer);
         if(nextblocks > -1 && nextblocks < 7) {
             drawCubes(t.Pieces[nextblocks][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
@@ -98,7 +102,7 @@ void game::render() {
                 SDL_Rect splashbox = { 0, 0, 640, 480 };
                 SDL_RenderFillRect(renderer, &splashbox);
                 for (int i = 0; i < optionsize; i++) {
-                    bodyfont->render(renderer, options[i], 320, 300 + (i * 12), true, 255, (i == pauseselection?0:255), 255);
+                    bodyfont->render(renderer, choices[i], 320, 300 + (i * 12), true, 255, (i == pauseselection?0:255), 255);
                 }
 
             header->render(320, 240, "GAME PAUSED", true, renderer);
@@ -133,7 +137,9 @@ void game::keyPressed(SDL_Keycode key)
         switch (key) {
         case SDLK_UP: {
             Mix_PlayChannel( -1, sound[3], 0 );
-            score+= t.forcedrop();
+            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP]) {
+                score += t.forcedrop();
+            }
             break;
         }
         case SDLK_DOWN: {
@@ -158,25 +164,27 @@ void game::keyPressed(SDL_Keycode key)
             break;
         }
         case SDLK_x: {
-            Mix_PlayChannel( -1, sound[4], 0 );
-            checkLines(testblocks);
-            t.draw();
-            t.removeolddraw();
+            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDPIECE]) {
+                Mix_PlayChannel(-1, sound[4], 0);
+                checkLines(testblocks);
+                t.draw();
+                t.removeolddraw();
 
-            memcpy(previousblocks, testblocks, sizeof previousblocks);
-            int temp = holdblock;
-            holdblock = t.piece;
-            if (temp > -1) {
-                t.rebirth(2, 0, temp);
+                memcpy(previousblocks, testblocks, sizeof previousblocks);
+                int temp = holdblock;
+                holdblock = t.piece;
+                if (temp > -1) {
+                    t.rebirth(2, 0, temp);
+                }
+                else {
+                    t.rebirth(2, 0, nextblocks);
+                    nextblocks = rand() % 7;
+                }
+                g.rebirth(2, 0, t.piece, previousblocks);
+                std::fill_n(ghostblocks, 200, 0);
+                ticks = 0;
+                realtick = 0;
             }
-            else {
-                t.rebirth(2, 0, nextblocks);
-                nextblocks = rand() % 7;
-            }
-            g.rebirth(2, 0, t.piece, previousblocks);
-            std::fill_n(ghostblocks, 200, 0);
-            ticks = 0;
-            realtick = 0;
             break;
         }
         }

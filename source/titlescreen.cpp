@@ -244,7 +244,7 @@ void titlescreen::render(highscore* score)
     background[bgnum].render(renderer, true);
 
     for (int i = 0; i < selections; i++) {
-        headerfont->render(renderer, options[i], 320, 300 + (i * 32),  true, 255, ((i == currentselection && currentscreen == 0)?0:255), 255);
+        headerfont->render(renderer, settings[i], 320, 300 + (i * 32),  true, 255, ((i == currentselection && currentscreen == 0)?0:255), 255);
     }
     versfont->render(renderer, "VERSION 0.2 DEMO", 490, 165, true, 0, 0, 0, 0, true, time/100, 1, 5);
     versfont->render(320, 280, "High Score: " + std::to_string(score->maxscore), true,renderer);
@@ -279,7 +279,7 @@ void titlescreen::render(highscore* score)
 
             headerfont->render(320, 100, settingstitle, true, renderer);
             for (int i = 0; i < settingssize; i++) {
-                buttonfont->render(renderer, settings[i], 320, 130 + (i * 16),  true, 255, ((i == currentselection)?0:255), 255);
+                buttonfont->render(renderer, sets[i], 320, 130 + (i * 16),  true, 255, ((i == currentselection)?0:255), 255);
             }
             if (showerror) {
                 SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);

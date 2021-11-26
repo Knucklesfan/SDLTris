@@ -29,16 +29,16 @@ public:
 	int currentscreen = 0;
 	int currentselection = 0;
 	int bgnum = 0;
-	const int selections = 5;
-	std::string settings[5] = {
+	const int selections = 4;
+	std::string settings[4] = {
 		"START GAME",
-		"THEMES MANAGER",
 		"Options",
 		"CREDITS",
 		"EXIT"
 	};
 	bool showerror = false;
 	bool loadgame = false;
+	bool loadmenu = false;
 	const int settingssize = 4;
 	std::string settingstitle = "OPTIONS";
 	std::string sets[4] = {

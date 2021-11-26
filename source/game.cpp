@@ -72,7 +72,9 @@ void game::logic(double deltatime) {
         }
         msg->logic(deltatime);
     }
-    backgrounds[(level)%(backgrounds.size())].logic(deltatime);
+    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG]) {
+        backgrounds[(level) % (backgrounds.size())].logic(deltatime);
+    }
 
 }
 void game::render() {

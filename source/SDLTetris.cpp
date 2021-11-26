@@ -127,7 +127,7 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 4;
+    int gamemode = 0;
     long long recordticks = 0;
     for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
         if (p.is_directory()) {
@@ -249,7 +249,8 @@ int main() {
             //printf("titlescreen");
             title->logic(deltaTime);
             title->render(score);
-            if (title->endlogic() == 1) {
+            int logicret = title->endlogic();
+            if (logicret == 1) {
                 gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
                 gamer->reset();
                 gamemode = 2;
@@ -259,6 +260,14 @@ int main() {
                 time = std::time(nullptr);
                 rpc->update("Droppin' some blocks", "LN: 0 LV: 0", "mainicon", time);
 #endif
+            }
+            if (logicret == 2) {
+                opt->reset();
+                gamemode = 4;
+#ifdef _WIN32
+                rpc->update("Configuring the game.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
+#endif
+                title->loadmenu = false;
             }
             break;
         }
@@ -316,8 +325,9 @@ int main() {
                 title->reset();
                 gamemode = 1;
 #ifdef _WIN32
-                rpc->update("Configuring the game.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
+                rpc->update("In the menu.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
 #endif
+                opt->loadgame = false;
             }
             break;
         }

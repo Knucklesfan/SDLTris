@@ -100,8 +100,10 @@ void options::render() {
 
         }
     }
-    if (currenttitle != 3 && currentselection != 5) {
-        tickertext->render(renderer, "Enabled: " activations[currenttitle][currentselection]?"No":"Yes", 320, 360, true, 255, 0, 0);
+    if (currenttitle != 2 && currentselection != 5) {
+        std::string txt = "Enabled: ";
+        txt += activations[currenttitle][currentselection] ? "Yes" : "No";
+        tickertext->render(renderer, txt, 320, 360, true, 255, 0, 0);
     }
     tickertext->render(320, 400, details[currenttitle][currentselection], true, renderer,500);
 	SDL_RenderPresent(renderer);

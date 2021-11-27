@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <SDL2/SDL_mixer.h>
 #include <vector>
+#include <math.h>
 
 #ifdef __SWITCH__
 #define prefix  "/"

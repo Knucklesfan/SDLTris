@@ -65,7 +65,7 @@ char symbols[] = {
     '%',
     '=',
     ':',
-    ' '
+    '\''
 };
 
 #ifdef __SWITCH__

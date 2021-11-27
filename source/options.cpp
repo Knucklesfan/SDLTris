@@ -98,7 +98,7 @@ void options::keyPressed(SDL_Keycode key) {
         break;
     }
     case SDLK_DOWN: {
-        if (currentselection < 6 && currentscreen == 0) {
+        if (currentselection < 5 && currentscreen == 0) {
             Mix_PlayChannel(-1, sound[1], 0);
             currentselection++;
             if (currentselection == 4 && currenttitle == 0) {

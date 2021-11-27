@@ -127,7 +127,7 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 4;
+    int gamemode = 0;
     long long recordticks = 0;
     for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
         if (p.is_directory()) {
@@ -162,7 +162,7 @@ int main() {
     options* opt = new options(renderer, window, configbg, textures, configbg.music, sound.data(), fonts, backgrounds);
     titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg, fonts);
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
-    knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);
+    knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg, fonts[2]);
     results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
 #ifdef _NETCODE
     server* srver = new server();
@@ -331,10 +331,11 @@ int main() {
             }
             break;
         }
-#ifdef _WIN32
-              rpc->logic();
-#endif
         }
+    #ifdef _WIN32
+            rpc->logic();
+    #endif
+
     }
     return 0;
 }

@@ -8,8 +8,10 @@
 
 rpcimplement::rpcimplement()
 {
+    std::cout << "attempting to start discord...\n";
     result = discord::Core::Create(906928395521253396, 1, &core);
     if (result == discord::Result::Ok) {
+        std::cout << "discord success!\n";
         discord::Activity activity{};
         activity.SetState("In the menu.");
         activity.SetDetails("");
@@ -20,6 +22,10 @@ rpcimplement::rpcimplement()
 
         core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
         });
+    }
+    else {
+        std::cout << "DISCORD ERROR!!!!! ERROR CODE: ";
+        std::cout << (int)result << "\n";
     }
 }
 void rpcimplement::logic() {

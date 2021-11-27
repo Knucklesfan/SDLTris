@@ -242,7 +242,7 @@ void titlescreen::render(highscore* score)
     for (int i = 0; i < selections; i++) {
         headerfont->render(renderer, settings[i], 320, 300 + (i * 32),  true, 255, ((i == currentselection && currentscreen == 0)?0:255), 255);
     }
-    versfont->render(renderer, "VERSION 0.2 DEMO", 490, 165, true, 0, 0, 0, 0, true, time/100, 1, 5);
+    versfont->render(renderer, "VERSION 0.3 BETA", 490, 165, true, 0, 0, 0, 0, true, time/100, 1, 5);
     versfont->render(320, 280, "High Score: " + std::to_string(score->maxscore), true,renderer);
     versfont->render(320, 265, "Previous Score: " + std::to_string(score->previousscore), true, renderer);
     switch (currentscreen) {

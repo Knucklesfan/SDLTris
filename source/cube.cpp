@@ -1,5 +1,5 @@
 #include "cube.h"
-
+#include "math.h"
 
 cube::cube(SDL_Renderer* render, int x0, int y0, int w, int h) {
     texture = SDL_CreateTexture(render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,w,h);

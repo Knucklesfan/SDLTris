@@ -102,14 +102,18 @@ void game::logic(double deltatime) {
         if ((!godown && !goup) && alphalifetime > 250) {
             goup = true;
         }
-        for (int i = 0; i < 20; i++) {
-            if (lineclears[i] > 0.0) {
-                lineclears[i] -= 0.05;
-
-            }
-        }
 
     }
+    else {
+        warningalpha = 0;
+    }
+    for (int i = 0; i < 20; i++) {
+        if (lineclears[i] > 0.0) {
+            lineclears[i] -= 0.05;
+
+        }
+    }
+
 
 }
 void game::render() {
@@ -221,7 +225,7 @@ void game::keyPressed(SDL_Keycode key)
         case SDLK_x: {
             if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDPIECE]) {
                 Mix_PlayChannel(-1, sound[4], 0);
-                checkLines(testblocks);
+                //checkLines(testblocks);
                 t.draw();
                 t.removeolddraw();
 

@@ -127,7 +127,7 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 0;
+    int gamemode = 1;
     long long recordticks = 0;
     for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
         if (p.is_directory()) {
@@ -225,10 +225,10 @@ int main() {
 
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
+        deltaTime = (double)((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
 #ifdef _NETCODE
         srver->logic();
 #endif
-        deltaTime = (double)((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
         switch (gamemode) {
         default:
         case 0: {

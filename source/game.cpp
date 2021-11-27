@@ -61,7 +61,7 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
 }
 void game::logic(double deltatime) {
     if (gameactive && !paused) {
-        if (realtick % 100 == 0) {
+        if (fmod(realtick, getspeed()) == 0) {
             score++;
             t.movedown();
         }
@@ -73,14 +73,53 @@ void game::logic(double deltatime) {
         msg->logic(deltatime);
     }
     if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG]) {
-        backgrounds[(level) % (backgrounds.size())].logic(deltatime);
+        backgrounds[(bglevel) % (backgrounds.size())].logic(deltatime);
+    }
+
+    //std::cout << bglevel << "\n";
+    if (warningflag) {
+        alphalifetime += deltatime / 5;
+        if (warningalpha < 1.0 && godown) {
+            warningalpha += deltatime / 750;
+        }
+        else if (warningalpha >= 1.0 && godown) {
+            godown = false;
+            warningalpha = 1.0;
+            alphalifetime = 0;
+
+        }
+        if (warningalpha > 0 && goup) {
+            warningalpha -= deltatime / 750;
+        }
+        else if (warningalpha <= 0 && goup) {
+            warningalpha = 0;
+            alphalifetime = 0;
+            godown = true;
+            goup = false;
+
+        }
+
+        if ((!godown && !goup) && alphalifetime > 250) {
+            goup = true;
+        }
+        for (int i = 0; i < 20; i++) {
+            if (lineclears[i] > 0.0) {
+                lineclears[i] -= 0.05;
+
+            }
+        }
+
     }
 
 }
 void game::render() {
     //if (gameactive) {
         SDL_RenderClear(renderer);
-        backgrounds[(level)%(backgrounds.size())].render(renderer,false);
+        backgrounds[(bglevel)%(backgrounds.size())].render(renderer,false);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128 * warningalpha);
+        SDL_Rect splashbox = { 0, 0, 640, 480 };
+        SDL_RenderFillRect(renderer, &splashbox);
+
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         g.changePos(t.x, t.y, t.rot);
         t.draw();
@@ -95,8 +134,19 @@ void game::render() {
         if (holdblock > -1) {
             drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
         }
-        backgrounds[(level) % (backgrounds.size())].render(renderer, true);
+        //std::cout << "LINECLEARS\n";
+        if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR]) {
+            for (int i = 0; i < 20; i++) {
+                if (lineclears[i] > 0) {
+                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255 * lineclears[i]);
+                    SDL_Rect splashbox = { 240, 80 + i * 16, 160, 16 };
+                    SDL_RenderFillRect(renderer, &splashbox);
+                }
+                //std::cout << lineclears[i] << "\n";
 
+            }
+        }
+        backgrounds[(bglevel) % (backgrounds.size())].render(renderer, true);
         bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true, renderer);
         bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true, renderer);
         if(paused) {
@@ -119,9 +169,10 @@ int game::endlogic() {
         Mix_PlayChannel( -1, sound[5], 0 );
         ticks = 0;
         realtick = 0;
+        warningflag = false;
         checkLines(testblocks);
         memcpy(previousblocks, testblocks, sizeof previousblocks);
-    
+        
         if (!t.rebirth(2, 0, nextblocks)) {
             gameactive = false;
             return 1;
@@ -129,6 +180,7 @@ int game::endlogic() {
         g.rebirth(2, 0, t.piece, previousblocks);
         std::fill_n(ghostblocks, 200, 0);
         nextblocks = rand() % 7;
+
         return 2;
     }
     return 0;
@@ -136,6 +188,7 @@ int game::endlogic() {
 void game::keyPressed(SDL_Keycode key)
 {
     if (gameactive && !paused) {
+        t.draw();
         switch (key) {
         case SDLK_UP: {
             Mix_PlayChannel( -1, sound[3], 0 );
@@ -273,6 +326,11 @@ void game::checkLines(int(blocks)[200]) {
         int temp[10];
         for (int j = 0; j < 10; j++) {
             temp[j] = blocks[i * 10 + j];
+            if (i < 8 && temp[j] > 0) {
+                if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH]) {
+                    warningflag = true;
+                }
+            }
         }
         if (checkRow(temp)) {
             clearRow(blocks, i);
@@ -299,6 +357,9 @@ void game::checkLines(int(blocks)[200]) {
     if (times > 0) {
         level = (lines / 10) + 1;
     }
+    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE]) {
+        bglevel = level;
+    }
     changemusic();
 }
 bool game::checkRow(int(blocks)[10]) {
@@ -323,16 +384,18 @@ void game::clearRow(int(blocks)[200], int y) {
         newarray[j] = blocks[j];
     }
     memcpy(blocks, newarray, sizeof newarray);
+    lineclears[y] = 1.0;
+    std::cout << "CLEARED LINE" << "\n";
     //shiftarray(blocks, 200, -10);
 
 }
 void game::changemusic() {
-    if((level)%(backgrounds.size()) != currentsong) {
+    if((bglevel)%(backgrounds.size()) != currentsong) {
         Mix_HaltMusic();
         if( Mix_PlayingMusic() == 0 )
         {
             //Play the music
-            Mix_PlayMusic(backgrounds[(level)%(backgrounds.size())].music, -1 );
+            Mix_PlayMusic(backgrounds[(bglevel)%(backgrounds.size())].music, -1 );
         }
         //If music is being played
         else
@@ -350,8 +413,8 @@ void game::changemusic() {
                 Mix_PauseMusic();
             }
         }
-        currentsong = (level)%(backgrounds.size());
-        msg->activate("YOU ARE CURRENTLY LISTENING TO:", backgrounds[(level)%(backgrounds.size())].songname + " by: " + backgrounds[(level)%(backgrounds.size())].artist);
+        currentsong = (bglevel)%(backgrounds.size());
+        msg->activate("YOU ARE CURRENTLY LISTENING TO:", backgrounds[(bglevel)%(backgrounds.size())].songname + " by: " + backgrounds[(bglevel)%(backgrounds.size())].artist);
 
     }
 
@@ -419,4 +482,94 @@ void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int 
         sprite.y = y + oldheight / 2 - sprite.h / 2;
     }
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+}
+//DISGUSTING CODE AHEAD
+//most of these were infered based on the table stored in the NES version of tetris. I decided just to wing it and use those numbers instead of just making an array.
+//...i'm stupid
+double game::getspeed() {
+    double returndb;
+    if(activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED]) {
+        switch (level) {
+            case 1: {
+                returndb = 8;
+                break;
+            }
+            case 2: {
+                returndb = 7.5;
+                break;
+            }
+            case 3: {
+                returndb = 7;
+                break;
+            }
+            case 4: {
+                returndb = 6.5;
+                break;
+            }
+            case 5: {
+                returndb = 6.25;
+                break;
+            }
+            case 6: {
+                returndb = 6;
+                break;
+            }
+            case 7: {
+                returndb = 5.75;
+                break;
+            }
+            case 8: {
+                returndb = 5.5;
+                break;
+            }
+            case 9: {
+                returndb = 5;
+                break;
+            }
+            case 10:
+            case 11:
+            case 12: {
+                returndb = 4.5;
+                break;
+            }
+            case 13:
+            case 14:
+            case 15: {
+                returndb = 4;
+                break;
+            }
+            case 16:
+            case 17:
+            case 18: {
+                returndb = 3;
+                break;
+            }
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
+            case 27:
+            case 28: {
+                returndb = 2;
+                break;
+            }
+            default: {
+                returndb = 1;
+                break;
+            }
+            }
+
+
+
+
+
+    }
+    else {
+        returndb = 8;
+    }
+    return returndb * 12.5;
 }

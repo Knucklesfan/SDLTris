@@ -92,7 +92,7 @@ public:
 		"Hold Piece",
 		"Block Speedup",
 		"Fast Drop",
-		"Scoring System",
+		"",
 		"Exit Menu",
 		},
 		{
@@ -131,7 +131,7 @@ public:
 
 		},
 		{
-			"Decides wether to cycle through backgrounds as levels increase, or stay on the first background selected.",
+			"Enable to cycle through backgrounds as levels increase, Disable to stay on the first background selected.",
 			"Selects the first background to start each game with.",
 			"Show an animation when clearing a line.",
 			"Enables background motion.",
@@ -171,7 +171,7 @@ public:
 		{
 		true,
 		false,
-		true,
+		false,
 		true,
 		true,
 		false

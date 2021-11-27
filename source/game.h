@@ -37,8 +37,14 @@ class game
 		Uint32 score = 000000000;
 		int lines = 0;
 		int level = 1;
+		int bglevel = 1;
 		int currentsong = 0;
 		int pauseselection = 0;
+		double warningalpha = 0.0;
+		double alphalifetime = 0;
+		bool goup;
+		bool godown;
+		bool warningflag = false;
 		std::string choices[2] = {
 			"RESUME",
 			"EXIT"
@@ -57,7 +63,29 @@ class game
 		void reset();
 		unsigned int time = 0;
 		ingamemessagebox* msg;
-
+		double getspeed();
+		double lineclears[20] = {
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0
+		};
 	private:
 		void changemusic();
 		void shiftarray(int(array)[], int size, int shift);

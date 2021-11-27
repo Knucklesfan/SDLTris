@@ -73,6 +73,10 @@ void options::keyPressed(SDL_Keycode key) {
         if (currentselection > 0 && currentscreen == 0) {
             Mix_PlayChannel(-1, sound[1], 0);
             currentselection--;
+            if (currentselection == 4 && currenttitle == 0) {
+                currentselection--;
+            }
+
         }
         break;
     }
@@ -80,6 +84,9 @@ void options::keyPressed(SDL_Keycode key) {
         if (currentselection < 6 && currentscreen == 0) {
             Mix_PlayChannel(-1, sound[1], 0);
             currentselection++;
+            if (currentselection == 4 && currenttitle == 0) {
+                currentselection++;
+            }
         }
         break;
 
@@ -322,6 +329,7 @@ void options::logic(double deltatime) {
         mvright = false;
         currenttitle++;
         settingsx = 320;
+        currentselection = 0;
     }
 
     if (mvleft && settingsx < 960) {
@@ -331,6 +339,8 @@ void options::logic(double deltatime) {
         mvleft = false;
         currenttitle--;
         settingsx = 320;
+        currentselection = 0;
+
     }
 
 

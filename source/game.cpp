@@ -29,10 +29,10 @@
 //TODO: fix the stupid bug here lol
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
-game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, bool(active)[4][6]) {
+game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, int(active)[4][6]) {
     //srand((unsigned)time(0)); 
     memcpy(activations, active, sizeof activations);
-
+    volume = Mix_VolumeMusic(-1);
     time = std::time(nullptr);
     std::fill_n(testblocks, 200, 0);
     std::fill_n(ghostblocks, 200, 0);
@@ -72,12 +72,13 @@ void game::logic(double deltatime) {
         }
         msg->logic(deltatime);
     }
-    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG]) {
+    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
         backgrounds[(bglevel) % (backgrounds.size())].logic(deltatime);
     }
 
     //std::cout << bglevel << "\n";
     if (warningflag) {
+        Mix_VolumeMusic(volume/5);
         alphalifetime += deltatime / 5;
         if (warningalpha < 1.0 && godown) {
             warningalpha += deltatime / 750;
@@ -86,6 +87,7 @@ void game::logic(double deltatime) {
             godown = false;
             warningalpha = 1.0;
             alphalifetime = 0;
+            Mix_PlayChannel(-1, sound[9], 0);
 
         }
         if (warningalpha > 0 && goup) {
@@ -106,6 +108,7 @@ void game::logic(double deltatime) {
     }
     else {
         warningalpha = 0;
+
     }
     for (int i = 0; i < 20; i++) {
         if (lineclears[i] > 0.0) {
@@ -128,7 +131,7 @@ void game::render() {
         g.changePos(t.x, t.y, t.rot);
         t.draw();
         g.draw();
-        if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE]) {
+        if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
             drawCubes(ghostblocks, testangles, ghostscale, 240, 80, 200, 10, textures, renderer);
         }
         drawCubes(testblocks, testangles, testscale, 240, 80, 200, 10, textures, renderer);
@@ -139,7 +142,7 @@ void game::render() {
             drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
         }
         //std::cout << "LINECLEARS\n";
-        if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR]) {
+        if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
             for (int i = 0; i < 20; i++) {
                 if (lineclears[i] > 0) {
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255 * lineclears[i]);
@@ -173,6 +176,7 @@ int game::endlogic() {
         Mix_PlayChannel( -1, sound[5], 0 );
         ticks = 0;
         realtick = 0;
+        Mix_VolumeMusic(volume);
         warningflag = false;
         checkLines(testblocks);
         memcpy(previousblocks, testblocks, sizeof previousblocks);
@@ -196,7 +200,7 @@ void game::keyPressed(SDL_Keycode key)
         switch (key) {
         case SDLK_UP: {
             Mix_PlayChannel( -1, sound[3], 0 );
-            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP]) {
+            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP] == 1) {
                 score += t.forcedrop();
             }
             break;
@@ -223,7 +227,7 @@ void game::keyPressed(SDL_Keycode key)
             break;
         }
         case SDLK_x: {
-            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDPIECE]) {
+            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDPIECE] == 1) {
                 Mix_PlayChannel(-1, sound[4], 0);
                 //checkLines(testblocks);
                 t.draw();
@@ -331,7 +335,7 @@ void game::checkLines(int(blocks)[200]) {
         for (int j = 0; j < 10; j++) {
             temp[j] = blocks[i * 10 + j];
             if (i < 8 && temp[j] > 0) {
-                if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH]) {
+                if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
                     warningflag = true;
                 }
             }
@@ -361,8 +365,8 @@ void game::checkLines(int(blocks)[200]) {
     if (times > 0) {
         level = (lines / 10) + 1;
     }
-    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE]) {
-        bglevel = level;
+    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
+        bglevel = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
     }
     changemusic();
 }
@@ -426,6 +430,7 @@ void game::changemusic() {
 void game::reset() {
     time = std::time(nullptr);
     currentsong = -1;
+    bglevel = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     changemusic();
     std::fill_n(testblocks, 200, 0);
     std::fill_n(testangles, 200, 0);
@@ -492,7 +497,7 @@ void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int 
 //...i'm stupid
 double game::getspeed() {
     double returndb;
-    if(activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED]) {
+    if(activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED] == 1) {
         switch (level) {
             case 1: {
                 returndb = 8;

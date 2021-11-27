@@ -61,6 +61,17 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
         std::cout << "fglayer detected\n";
         fglayer = atoi(doc.first_node("fglayer")->value());
     }
+    if (doc.first_node("thumbnail") != NULL) {
+        std::cout << "thumbnail detected\n";
+        std::string thmbpath = pth "backgrounds/" + path + "/";
+        thmbpath += doc.first_node("thumbnail")->value();
+        thumbnail = SDL_CreateTextureFromSurface(renderer, SDL_LoadBMP(thmbpath.c_str()));
+    }
+    else {
+        std::string thmbpath = pth "backgrounds/nullbg.bmp";
+        thumbnail = SDL_CreateTextureFromSurface(renderer, SDL_LoadBMP(thmbpath.c_str()));
+
+    }
 
     int array[10];
     for(int i = 0; i < layers; i++) {
@@ -98,7 +109,7 @@ void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
     for (const auto& entry : std::filesystem::directory_iterator(path)) {
         if (i < 64) {
             std::string char_array{entry.path().u8string()}; //i dunno if its because im writing this at 10:55 and im passing out or what, but this code was IMPOSSIBLE to write.
-            if (hasEnding(char_array, ".bmp")) {
+            if (hasEnding(char_array, ".bmp") && !hasEnding(char_array,".nonanex.bmp")) {
                 strings.push_back(char_array);
             }
         }

@@ -53,6 +53,7 @@ public:
 	SDL_Renderer* renderer;
 	SDL_Window* window;
 	bg background;
+	std::vector<bg>  backgrounds;
 	Mix_Music* music;
 	Mix_Chunk** sound;
 	cube* cub;
@@ -74,7 +75,7 @@ public:
 	unsigned int time = 0;
 	std::vector<SDL_Texture*> texture;
 	double rot = 0.0;
-	options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures, Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts);
+	options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures, Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts, std::vector<bg> backgcollection);
 	void keyPressed(SDL_Keycode key);
 	void render();
 	void logic(double deltatime);
@@ -158,41 +159,41 @@ public:
 		}
 	};
 	
-	bool activations[4][6] = {
+	int activations[4][6] = {
 		{
-		true,
-		true,
-		false,
-		true,
-		true,
-		false
+		1,
+		1,
+		0,
+		1,
+		1,
+		0
 		},
 
 		{
-		true,
-		false,
-		true,
-		true,
-		true,
-		false
+		1,
+		0,
+		1,
+		1,
+		1,
+		0
 		},
 
 		{
-		false,
-		false,
-		false,
-		false,
-		false,
-		false
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
 		},
 
 		{
-		false,
-		false,
-		false,
-		false,
-		false,
-		false
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
 		}
 	};
 private:

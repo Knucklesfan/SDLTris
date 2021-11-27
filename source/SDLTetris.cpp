@@ -127,7 +127,7 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 1;
+    int gamemode = 4;
     long long recordticks = 0;
     for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
         if (p.is_directory()) {
@@ -159,7 +159,7 @@ int main() {
     fonts.push_back(new font("8x8font",renderer));
     fonts.push_back(new font("8x16font",renderer));
     fonts.push_back(new font("small8x8font",renderer));
-    options* opt = new options(renderer, window, configbg, textures, configbg.music, sound.data(), fonts);
+    options* opt = new options(renderer, window, configbg, textures, configbg.music, sound.data(), fonts, backgrounds);
     titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg, fonts);
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg);

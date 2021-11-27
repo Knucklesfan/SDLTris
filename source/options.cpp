@@ -1,6 +1,6 @@
 #include "options.h"
 
-options::options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures, Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts) {
+options::options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures, Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts, std::vector<bg> backgcollection) {
 	renderer = render;
 	background = backg;
 	music = musicVec;
@@ -12,6 +12,7 @@ options::options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vecto
     newhead = fonts.at(1);
     newft = fonts.at(2);
     window = windows;
+    backgrounds = backgcollection;
 }
 
 void options::keyPressed(SDL_Keycode key) {
@@ -39,6 +40,14 @@ void options::keyPressed(SDL_Keycode key) {
             }
             break;
         }
+        case 3: {
+            int currentvol = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
+            if (currentvol < backgrounds.size()-1) {
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]++;
+            }
+            break;
+        }
+
         }
         break;
     }
@@ -65,6 +74,14 @@ void options::keyPressed(SDL_Keycode key) {
             }
             break;
         }
+        case 3: {
+            int currentvol = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
+            if (currentvol > 0) {
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]--;
+            }
+            break;
+        }
+
         }
         break;
 
@@ -114,7 +131,10 @@ void options::keyPressed(SDL_Keycode key) {
                     case 5: {
                         break;
                     }
-
+                    case DISPLAYOPTIONS::FIRSTBG: {
+                        currentscreen = 3;
+                        break;
+                    }
                     default: {
                         activations[currenttitle][currentselection] = !activations[currenttitle][currentselection];
                         break;
@@ -236,8 +256,13 @@ void options::render() {
         }
     }
     if (currenttitle != 2 && currentselection != 5) {
-        std::string txt = "Enabled: ";
-        txt += activations[currenttitle][currentselection] ? "Yes" : "No";
+        std::string txt = "Value: ";
+        if (currenttitle == OPTIONTYPE::DISPLAY && currentselection == DISPLAYOPTIONS::FIRSTBG) {
+            txt += backgrounds[activations[currenttitle][currentselection]].name;
+        }
+        else {
+            txt += activations[currenttitle][currentselection] ? "Enabled" : "Disabled";
+        }
         tickertext->render(renderer, txt, 320, 360, true, 255, 0, 0);
         
     }
@@ -288,6 +313,40 @@ void options::render() {
 
             break;
         }
+        case 3: {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 80, 480, 360 };
+            SDL_RenderFillRect(renderer, &splashbox);
+
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
+            newhead->render(320, 88, "SELECT A BACKGROUND", true, renderer);
+
+            tickertext->render(renderer, "Current Selection: " + backgrounds[activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]].name, 320, 120, true, 255, 0, 255, 400);
+            int before = (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] - 1) >= 0 ? (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] - 1) : backgrounds.size() - 1;
+            int after = (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + 1) > backgrounds.size() - 1 ? 0 : (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + 1);
+
+            drawTexture(backgrounds[activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]].thumbnail, 320-64, 156, 0, 1.0, false);
+            drawTexture(backgrounds[before].thumbnail, 320 - 168, 185, 0, 0.5, false);
+            drawTexture(backgrounds[after].thumbnail, 360, 185, 0, 0.5, false);
+
+            tickertext->render(renderer, "Name: " + backgrounds[activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]].name, 320, 284, true, 255, 0, 255);
+            tickertext->render(renderer, "Creator: " + backgrounds[activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]].creator, 320, 308, true, 255, 0, 255);
+            tickertext->render(renderer, "Song Name: " + backgrounds[activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]].songname, 320, 332, true, 255, 0, 255);
+            tickertext->render(renderer, "Song Creator: " + backgrounds[activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]].artist, 320, 356, true, 255, 0, 255);
+
+            tickertext->render(320, 408, "EXIT", true, renderer);
+
+
+            break;
+        }
+
         case 9: {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
             SDL_Rect splashbox = { 0, 0, 640, 480 };

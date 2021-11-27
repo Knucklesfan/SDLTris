@@ -305,9 +305,9 @@ void titlescreen::render(highscore* score)
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
                     SDL_RenderDrawRect(renderer, &splashbox);
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
-                    double var = ((double) Mix_VolumeMusic(-1) / 128) * 58.0 + sin(time / 50) * 10;
+                    double var = ((double) Mix_VolumeMusic(-1) / 128) * 58.0 + std::sin(time / 50) * 10;
                     drawTexture(renderer, textures.at(7), 80,  360 - (int)var, 0.0, 1.0, false, 0, 0, 240, var);
-                    double coz = ((double)Mix_VolumeMusic(-1) / 128) * 58.0 + cos(time / 50) * 10;
+                    double coz = ((double)Mix_VolumeMusic(-1) / 128) * 58.0 + std::cos(time / 50) * 10;
                     drawTexture(renderer, textures.at(7), 320, 360 - (int)coz, 0.0, 1.0, false, 0, 0, 240, coz);
                     headerfont->render(320, 140, "MUSIC VOLUME", true, renderer);
                     bodyfont->render(renderer, std::to_string(Mix_VolumeMusic(-1)), 320, 180, true, 255, 0, 255);
@@ -324,9 +324,9 @@ void titlescreen::render(highscore* score)
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
                     SDL_RenderDrawRect(renderer, &splashbox);
                     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
-                    double var = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + sin(time / 50) * 10;
+                    double var = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + std::sin(time / 50) * 10;
                     drawTexture(renderer, textures.at(7), 80, 360 - (int)var, 0.0, 1.0, false, 0, 0, 240, var);
-                    double coz = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + cos(time / 50) * 10;
+                    double coz = ((double)Mix_Volume(-1, -1) / 128) * 58.0 + std::cos(time / 50) * 10;
                     drawTexture(renderer, textures.at(7), 320, 360 - (int)coz, 0.0, 1.0, false, 0, 0, 240, coz);
 
                     headerfont->render(320, 140, "SOUND VOLUME", true, renderer);

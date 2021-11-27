@@ -1,9 +1,9 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp
+OBJS = source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp
 #INC specifies what headers to include
 INC=-I include/
 #CC specifies which compiler we're using
-CC = g++
+CC = g++-8
 #Compiler flags supresses the annoying warnings
 COMPILER_FLAGS = -g -fsanitize=address -O0 -D _LINUX
 #Linker Flags give the libraries

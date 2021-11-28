@@ -7,7 +7,7 @@ CC = g++-8
 #Compiler flags supresses the annoying warnings
 COMPILER_FLAGS = -g -fsanitize=address -O0 -D _LINUX
 #Linker Flags give the libraries
-LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_mixer -fsanitize=address 
+LINKER_FLAGS = -lSDL2 -lSDL2_ttf -lSDL2_mixer -lstdc++fs -fsanitize=address 
 #Specify c++17 as well.
 CPP_VER = -std=c++17
 

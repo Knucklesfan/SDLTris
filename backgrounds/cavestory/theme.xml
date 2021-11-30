@@ -2,6 +2,7 @@
 <creator>Knuxfan</creator>
 <vers>1.0</vers>
 
+<layers>5</layers>
 
 <layer0>5</layer0>
 <layer0y>0</layer0y>
@@ -12,27 +13,12 @@
 <layer2>15</layer2>
 <layer2y>0</layer2y>
 
-
 <layer3>20</layer3>
 <layer3y>0</layer3y>
 
 <layer4>0</layer4>
 <layer4y>0</layer4y>
 
-<layer5>-25</layer5>
-<layer5y>-25</layer5y>
-
-<layer6>25</layer6>
-<layer6y>25</layer6y>
-
-<layer7>0</layer7>
-<layer7y>0</layer7y>
-
-<layer8>0</layer8>
-<layer8y>0</layer8y>
-
-<layer9>0</layer9>
-<layer9y>0</layer9y>
 
 <music>song.xm</music>
 <musicname>Take on Me Chipedit</musicname>

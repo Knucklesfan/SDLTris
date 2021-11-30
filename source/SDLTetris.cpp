@@ -3,7 +3,6 @@
 #include <enet/enet.h>
 #include <string>
 #include <iostream>
-#include <filesystem>
 #include <vector>
 #include <array>
 #include <algorithm>    // std::sort
@@ -59,8 +58,7 @@
 
 std::vector<Mix_Music*> generateMusic(std::string path);
 std::vector<Mix_Chunk*> generateSounds(std::string path);
-std::vector<SDL_Texture*> generateTextures(std::vector<SDL_Surface*> surfaces, SDL_Renderer* renderer);
-std::vector<SDL_Surface*> generateSurfaces(std::string path);
+std::vector<SDL_Texture*> generateSurfaces(std::string path, SDL_Renderer* renderer, int sprites);
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
 bool bgCompare (bg a, bg b) {return a.name<b.name;} 
@@ -115,8 +113,13 @@ int main() {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_RenderSetLogicalSize(renderer, 640, 480);
     std::string prefix = filepath;
-    std::vector<SDL_Surface*> surfaces = generateSurfaces(prefix + "sprites/"); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
-    std::vector<SDL_Texture*> textures = generateTextures(surfaces, renderer);
+
+    rapidxml::file<> spriteFile((prefix+"sprites/sprites.xml").c_str());
+    rapidxml::xml_document<> spriteDoc;
+    spriteDoc.parse<0>(spriteFile.data());
+    int sprites = atoi(spriteDoc.first_node("sprites")->value());
+
+    std::vector<SDL_Texture*> textures = generateSurfaces(prefix + "sprites/", renderer, sprites); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     std::vector<Mix_Music*> music = generateMusic(prefix + "music/");
     std::vector<Mix_Chunk*> sound = generateSounds(prefix + "sound/");
     std::vector<bg> backgrounds;
@@ -129,20 +132,25 @@ int main() {
     int realtick = 0;
     int gamemode = 0;
     long long recordticks = 0;
-    for(auto& p : std::filesystem::recursive_directory_iterator(prefix + "backgrounds/")) {
-        if (p.is_directory()) {
+    rapidxml::file<> bgFile((prefix+"backgrounds/backgrounds.xml").c_str());
+    rapidxml::xml_document<> bgDoc;
+    bgDoc.parse<0>(bgFile.data());
+    int bgs = atoi(bgDoc.first_node("bgs")->value());
+    for(int i = 0; i < bgs; i++) {
+            rapidxml::file<> bgFile((prefix+"backgrounds/backgrounds.xml").c_str());
+            rapidxml::xml_document<> bgDoc;
+            bgDoc.parse<0>(bgFile.data());
+            std::string tmp = "bg" + std::to_string(i);
+            std::cout << tmp << "\n";
+            std::string bgPath = bgDoc.first_node(tmp.c_str())->value();
+            std::cout << "loading background " << bgPath << "\n";
             //std::cout << "HELP ME:" << p.path().filename() << "\n";
-            bg backg(p.path().filename().u8string(), false, renderer);
+            bg backg(bgPath, false, renderer);
             backgrounds.push_back(backg);
-
-        }
     }
     bg optionsbg(prefix + "sprites/resultsbg", true, renderer);    
     bg configbg(prefix + "sprites/optionsbg", true, renderer);
     std::sort(backgrounds.begin(),backgrounds.end(),bgCompare);//sort the vector
-    for(auto& p : backgrounds) {
-        //std::cout << p.name << "\n";
-    }
     int titlebg = std::rand() % backgrounds.size();
     int knxfnbg = std::rand() % backgrounds.size();
     if (titlebg == knxfnbg) {
@@ -339,92 +347,51 @@ int main() {
     }
     return 0;
 }
-std::vector<SDL_Surface*> generateSurfaces(std::string path) {
-    int i = 0;
-    std::vector<SDL_Surface*>textures;
-    SDL_Surface* temp;
-    std::vector<std::string> strings;
-    for (const auto& entry : std::filesystem::directory_iterator(path)) {
-        if (i < 64) {
-            std::string char_array{entry.path().u8string()}; //i dunno if its because im writing this at 10:55 and im passing out or what, but this code was IMPOSSIBLE to write.
-            if (hasEnding(char_array, ".bmp")) {
-                strings.push_back(char_array);
-            }
-        }
-        
-        else { break; }
-    }
-    std::sort(strings.begin(),strings.end(),compareFunction);//sort the vector
-    for(auto &string : strings) {
-        temp = SDL_LoadBMP(string.c_str());
-        if (!temp) {
-            printf("Failed to load image at %s: %s\n", string, SDL_GetError());
-            return textures;
-        }
-        textures.push_back(temp);
-        printf("Successfully loaded image at %s\n", string.c_str());
-    }
-    return textures;
-
-}
 std::vector<Mix_Music*> generateMusic(std::string path) {
-    int i = 0;
+    rapidxml::file<> musFile((path+"/music.xml").c_str());
+    rapidxml::xml_document<> musDoc;
+    musDoc.parse<0>(musFile.data());
     std::vector<Mix_Music*> music;
     Mix_Music* temp;
-    std::vector<std::string> strings;
-    for (const auto& entry : std::filesystem::directory_iterator(path)) {
-        if (i < 64) {
-            std::string char_array{entry.path().u8string()}; //i dunno if its because im writing this at 10:55 and im passing out or what, but this code was IMPOSSIBLE to write.
-            strings.push_back(char_array);
-        }
-        
-        else { break; }
-    }
-    std::sort(strings.begin(),strings.end(),compareFunction);//sort the vector
-    for(auto &string : strings) {
-        temp = Mix_LoadMUS(string.c_str());
-        if (!temp) {
-            printf("Failed to load music at %s: %s\n", string, SDL_GetError());
-            return music;
-        }
-        music.push_back(temp);
-        printf("Successfully loaded music at %s\n", string.c_str());
+    int musics = atoi(musDoc.first_node("songs")->value());
+    for(int i = 0; i < musics; i++) {
+            std::string tmp = "mus" + std::to_string(i);
+            std::cout << tmp << "\n";
+            std::string musPath = path + "/" + musDoc.first_node(tmp.c_str())->value();
+            temp = Mix_LoadMUS(musPath.c_str());
+            if (!temp) {
+                printf("Failed to load music at %s: %s\n", musPath, SDL_GetError());
+                return music;
+            }
+            music.push_back(temp);
+            printf("Successfully loaded music at %s\n", musPath.c_str());
+
     }
     return music;
 }
+
+
 std::vector<Mix_Chunk*> generateSounds(std::string path) {
-    int i = 0;
-    std::vector<Mix_Chunk*> sounds;
+    rapidxml::file<> musFile((path+"/sound.xml").c_str());
+    rapidxml::xml_document<> musDoc;
+    musDoc.parse<0>(musFile.data());
+    std::vector<Mix_Chunk*> music;
     Mix_Chunk* temp;
-    std::vector<std::string> strings;
-    for (const auto& entry : std::filesystem::directory_iterator(path)) {
-        if (i < 64) {
-            std::string char_array{entry.path().u8string()}; //i dunno if its because im writing this at 10:55 and im passing out or what, but this code was IMPOSSIBLE to write.
-            strings.push_back(char_array);
-        }
-        
-        else { break; }
-    }
-    std::sort(strings.begin(),strings.end());//sort the vector
-    for(auto &string : strings) {
-        temp = Mix_LoadWAV(string.c_str());
-        if (!temp) {
-            printf("Failed to load sound at %s: %s\n", string, SDL_GetError());
-            return sounds;
-        }
-        sounds.push_back(temp);
-        printf("Successfully loaded sound at %s\n", string.c_str());
-    }
-    return sounds;
-}
+    int musics = atoi(musDoc.first_node("sounds")->value());
+    for(int i = 0; i < musics; i++) {
+            std::string tmp = "snd" + std::to_string(i);
+            std::cout << tmp << "\n";
+            std::string musPath = path + "/" + musDoc.first_node(tmp.c_str())->value();
+            temp = Mix_LoadWAV(musPath.c_str());
+            if (!temp) {
+                printf("Failed to load music at %s: %s\n", musPath, SDL_GetError());
+                return music;
+            }
+            music.push_back(temp);
+            printf("Successfully loaded music at %s\n", musPath.c_str());
 
-std::vector<SDL_Texture*> generateTextures(std::vector<SDL_Surface*> surfaces, SDL_Renderer* renderer) {
-    std::vector<SDL_Texture*>textures;
-    for (SDL_Surface* surf : surfaces) {
-        textures.push_back(SDL_CreateTextureFromSurface(renderer, surf));
     }
-    return textures;
-
+    return music;
 }
 
 bool hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me out https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
@@ -457,4 +424,34 @@ int input(int gamemode, titlescreen* title, game* gamer, results* res, options* 
 
     }
     return 0;
+}
+
+std::vector<SDL_Texture*> generateSurfaces(std::string path, SDL_Renderer* renderer, int sprites) {
+    std::vector<SDL_Surface*> surfaces;
+    std::vector<SDL_Texture*> textures;
+    for(int i = 0; i < sprites; i++) {
+        char buff[12];
+        snprintf(buff, sizeof(buff), "%02d", i);
+        std::string temppath = path + "/" + buff + ".bmp";
+
+        SDL_Surface* temp = SDL_LoadBMP(temppath.c_str());
+        if (!temp) {
+            printf("Failed to load image at %s: %s\n", temppath, SDL_GetError());
+        }
+        surfaces.push_back(temp);
+        printf("Successfully loaded sprite at %s\n", temppath.c_str());
+    }
+    for (SDL_Surface* surf : surfaces) {
+        SDL_Texture* temp = SDL_CreateTextureFromSurface(renderer, surf);
+        if(temp != NULL) {
+            textures.push_back(temp);
+            printf("pushed texture!!\n");
+            SDL_FreeSurface(surf);
+        }
+        else {
+            fprintf(stderr, "CreateTextureFromSurface failed: %s\n", SDL_GetError());
+        }
+    }
+    return textures;
+
 }

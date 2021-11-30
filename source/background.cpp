@@ -1,7 +1,6 @@
 #include "background.h"
 #include <string>
 #include <vector>
-#include <filesystem>
 #include <algorithm>    // std::sort
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
@@ -21,23 +20,7 @@
 
 bg::bg() {}
 bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
-    std::string p = pth "backgrounds/" + path;
-    if(folder) {
-        p = path;
-    }
-    generateSurfaces(p, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
-    for (int i = 0; i < layers; i++) {
-        SDL_Rect sprite;
-        SDL_QueryTexture(textures[i], NULL, NULL, &sprite.w, &sprite.h);
-        if (sprite.w > maxwidth) {
-            maxwidth = sprite.w;
-        }
-        if (sprite.h > maxheight) {
-            maxheight = sprite.h;
-        }
 
-    }
-    std::cout << "max=" << maxwidth <<"x"<< maxheight << "\n"; 
     std::string filepath = pth "backgrounds/" + path + "/theme.xml";
     if(folder) {
         filepath = path + "/theme.xml";
@@ -46,6 +29,16 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
     rapidxml::file<> xmlFile(filepath.c_str());
     rapidxml::xml_document<> doc;
     doc.parse<0>(xmlFile.data());
+    layers = atoi(doc.first_node("layers")->value());
+
+    std::string p = pth "backgrounds/" + path;
+    if(folder) {
+        p = path;
+    }
+    
+    generateSurfaces(p, renderer); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
+
+    
     name = doc.first_node("name")->value();
     creator = doc.first_node("creator")->value();
     vers = doc.first_node("vers")->value();
@@ -74,10 +67,12 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
     }
 
     int array[10];
+    std::cout << "LAYERS: " << layers;
     for(int i = 0; i < layers; i++) {
 
         std::string sr = "layer";
         sr += std::to_string(i);
+        std::cout << "TESTING::: " << sr << "\n";
         incrementsx[i] = atoi(doc.first_node(sr.c_str())->value());
         std::string sy = "layer";
         sy += std::to_string(i);
@@ -97,40 +92,30 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
         printf("Failed to load music at %s: %s\n", muspath, SDL_GetError());
     }
 
-    //std::cout << "Background name: " << name << "\n";
+    std::cout << "Finished loading: " << name << "\n";
     doc.clear();
 }
 
 void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
-    int i = 0;
     std::vector<SDL_Surface*> surfaces;
-    SDL_Surface* temp;
-    std::vector<std::string> strings;
-    for (const auto& entry : std::filesystem::directory_iterator(path)) {
-        if (i < 64) {
-            std::string char_array{entry.path().u8string()}; //i dunno if its because im writing this at 10:55 and im passing out or what, but this code was IMPOSSIBLE to write.
-            if (hasEnding(char_array, ".bmp") && !hasEnding(char_array,".nonanex.bmp")) {
-                strings.push_back(char_array);
-            }
-        }
-        
-        else { break; }
-    }
-    std::sort(strings.begin(),strings.end(),compareFunction);//sort the vector
-    for(auto &string : strings) {
-        temp = SDL_LoadBMP(string.c_str());
+    for(int i = 0; i < layers; i++) {
+        char buff[12];
+        snprintf(buff, sizeof(buff), "%02d", i);
+        std::string temppath = path + "/" + buff + ".bmp";
+
+        SDL_Surface* temp = SDL_LoadBMP(temppath.c_str());
         if (!temp) {
-            printf("Failed to load image at %s: %s\n", string, SDL_GetError());
+            printf("Failed to load image at %s: %s\n", temppath, SDL_GetError());
         }
         surfaces.push_back(temp);
-        printf("Successfully loaded image at %s\n", string.c_str());
+        printf("Successfully loaded image at %s\n", temppath.c_str());
     }
     for (SDL_Surface* surf : surfaces) {
         SDL_Texture* temp = SDL_CreateTextureFromSurface(renderer, surf);
         if(temp != NULL) {
             textures.push_back(temp);
             printf("pushed texture!!");
-            layers++;
+            SDL_FreeSurface(surf);
         }
         else {
             fprintf(stderr, "CreateTextureFromSurface failed: %s\n", SDL_GetError());

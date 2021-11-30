@@ -2,8 +2,11 @@
 <creator>Knuxfan</creator>
 <vers>1.0</vers>
 
+<layers>1</layers>
+
 <layer0>-10</layer0>
 <layer0y>-10</layer0y>
+
 
 
 <music>song.it</music>

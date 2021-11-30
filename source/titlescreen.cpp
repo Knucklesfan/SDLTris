@@ -1,6 +1,5 @@
 #include "titlescreen.h"
 #include <iostream>
-#include <filesystem>
 #include <SDL2/SDL_mixer.h>
 #include <vector>
 #include <math.h>
@@ -15,7 +14,6 @@
 
 titlescreen::titlescreen(SDL_Renderer* render, SDL_Window* windows, std::vector<bg>  backg, std::vector<SDL_Texture*> texture, Mix_Music* musicVec[], Mix_Chunk* soundVec[], int backgr, std::vector<font*> fonts)
 {
-    //std::filesystem::current_path().u8string()
     buttonfont = fonts.at(0);
     bodyfont = fonts.at(0);
     versfont = fonts.at(2);

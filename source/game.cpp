@@ -76,9 +76,9 @@ void game::logic(double deltatime) {
             realtick++;
         }
         msg->logic(deltatime);
-        if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
-            rotval += deltatime/100;
-        }
+        //if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
+            rotval += deltatime/25;
+        //}
     }
     if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
         backgrounds[(bglevel) % (backgrounds.size())].logic(deltatime);

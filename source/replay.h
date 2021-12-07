@@ -3,7 +3,6 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include <iostream>
-#include <filesystem>
 #include <vector>
 #include <array>
 #include <algorithm>    // std::sort

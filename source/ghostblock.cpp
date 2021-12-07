@@ -5,9 +5,9 @@ ghostblock::ghostblock() {
     x = 0;
     y = 0;
     rot = 0;
-    //array = new int[200];
+    //array = new int[240];
     width = 10;
-    height = 20;
+    height = 24;
     alive = false;
     piece = 0;
     lastx = 0;
@@ -15,7 +15,7 @@ ghostblock::ghostblock() {
     lastrot = 0;
 }
 
-ghostblock::ghostblock(int xspawn, int yspawn, int(barray)[200], int bwidth, int bheight, int block, int(coutsidearray)[200]) {
+ghostblock::ghostblock(int xspawn, int yspawn, int(barray)[240], int bwidth, int bheight, int block, int(coutsidearray)[240]) {
     x = xspawn;
     y = yspawn;
     lastx = xspawn;
@@ -28,7 +28,7 @@ ghostblock::ghostblock(int xspawn, int yspawn, int(barray)[200], int bwidth, int
     alive = true;
     piece = block;
     outsidearray = coutsidearray;
-    while (collides(x, y + 1, rot) && y <= 20) {
+    while (collides(x, y + 1, rot) && y <= 24) {
          removeolddraw();
          lastx = x;
          lasty = y;
@@ -38,7 +38,7 @@ ghostblock::ghostblock(int xspawn, int yspawn, int(barray)[200], int bwidth, int
     }
 
 }
-void ghostblock::rebirth(int xspawn, int yspawn, int block, int(barray)[200]) {
+void ghostblock::rebirth(int xspawn, int yspawn, int block, int(barray)[240]) {
     x = xspawn;
     y = yspawn;
     lastx = xspawn;
@@ -48,7 +48,7 @@ void ghostblock::rebirth(int xspawn, int yspawn, int block, int(barray)[200]) {
     alive = true;
     piece = block;
     array = barray;
-    while (collides(x, y + 1, rot) && y <= 20) {
+    while (collides(x, y + 1, rot) && y <= 24) {
         removeolddraw();
         lastx = x;
         lasty = y;
@@ -66,7 +66,7 @@ void ghostblock::changePos(int ax, int ay, int arot) {
     x = ax;
     y = ay-1;
     rot = arot;
-    while (collides(x, y + 1, rot) && y <= 20) {
+    while (collides(x, y + 1, rot) && y <= 24) {
         removeolddraw();
         lastx = x;
         lasty = y;
@@ -81,7 +81,7 @@ bool ghostblock::collides(int colx, int coly, int colrot) {
     lasty = y; //to ensure that undrawing works.
     lastrot = rot;
     removeolddraw();
-    if (coly > height) {
+    if (coly > height+1) {
         return false;
     }
     for (int i = 0; i < 16; i++) {

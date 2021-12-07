@@ -3,7 +3,6 @@
 #include <SDL2/SDL_mixer.h>
 #include <string>
 #include <iostream>
-#include <filesystem>
 #include <vector>
 #include <array>
 #include <cstring>
@@ -22,8 +21,8 @@ class game
 	public:
 		font* bodyfont;
 		font* header;
-		int testblocks[200], ghostblocks[200],  previousblocks[200];
-		double testangles[200], testscale[200], ghostscale[200];
+		int testblocks[240], ghostblocks[240],  previousblocks[240];
+		double testangles[240], testscale[240], ghostscale[240];
 		SDL_Renderer* renderer;
 		Mix_Music** music;
 		int (activations)[4][6];
@@ -64,7 +63,7 @@ class game
 		unsigned int time = 0;
 		ingamemessagebox* msg;
 		double getspeed();
-		double lineclears[20] = {
+		double lineclears[25] = {
 		0.0,
 		0.0,
 		0.0,
@@ -84,15 +83,20 @@ class game
 		0.0,
 		0.0,
 		0.0,
-		0.0
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
+		0.0,
 		};
 		int volume;
 	private:
 		void changemusic();
 		void shiftarray(int(array)[], int size, int shift);
-		void checkLines(int(blocks)[200]);
+		void checkLines(int(blocks)[240]);
 		bool checkRow(int(blocks)[10]);
-		void clearRow(int(blocks)[200], int y);
+		void clearRow(int(blocks)[240], int y);
 		void drawCubes(int position[], double angles[], double scale[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
 		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale);
 		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center);

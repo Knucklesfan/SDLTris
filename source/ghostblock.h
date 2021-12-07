@@ -3,7 +3,7 @@ class ghostblock
 {
 public:
     ghostblock();
-    void rebirth(int xspawn, int yspawn, int block, int(barray)[200]);
+    void rebirth(int xspawn, int yspawn, int block, int(barray)[240]);
     void changePos(int ax, int ay, int arot);
     bool collides(int colx, int coly, int colrot);
     void draw();

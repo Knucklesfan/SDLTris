@@ -1,4 +1,5 @@
 #include "results.h"
+#include <ctime>
 
 #ifdef __SWITCH__
 #define filepath  "/"

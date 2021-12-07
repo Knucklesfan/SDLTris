@@ -3,7 +3,6 @@
 #include "ghostblock.h"
 #include <string>
 #include <iostream>
-#include <filesystem>
 #include <vector>
 #include <array>
 #include <cstring>
@@ -13,11 +12,14 @@
 #include "ingamemessagebox.h"
 #include "server.h"
 #include <random>
+#include <ctime>
+
 #include "font.h"
 
 #define LINES 0
 #define LEVEL 1
-
+#define BLOCKY 2
+#define BLOCKX 2
 #ifdef __SWITCH__
 #define filepath  "/"
 #include <switch.h>
@@ -34,13 +36,13 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     memcpy(activations, active, sizeof activations);
     volume = Mix_VolumeMusic(-1);
     time = std::time(nullptr);
-    std::fill_n(testblocks, 200, 0);
-    std::fill_n(ghostblocks, 200, 0);
-    std::fill_n(previousblocks, 200, 0);
+    std::fill_n(testblocks, 240, 0);
+    std::fill_n(ghostblocks, 240, 0);
+    std::fill_n(previousblocks, 240, 0);
     renderer = renderman;
     textures = texture;
-    t = tetrimino(2, 0, testblocks, 10, 20, 0);
-    g = ghostblock(2, 0, previousblocks, 10, 20, 0, ghostblocks);
+    t = tetrimino(BLOCKX, BLOCKY, testblocks, 10, 24, 0);
+    g = ghostblock(BLOCKX, BLOCKY, previousblocks, 10, 24, 0, ghostblocks);
     g.changePos(0, 0, 0);
     double ticks = 0;
     int realtick = 0;
@@ -110,7 +112,7 @@ void game::logic(double deltatime) {
         warningalpha = 0;
 
     }
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 24; i++) {
         if (lineclears[i] > 0.0) {
             lineclears[i] -= 0.05;
 
@@ -127,23 +129,16 @@ void game::render() {
         SDL_Rect splashbox = { 0, 0, 640, 480 };
         SDL_RenderFillRect(renderer, &splashbox);
 
-        SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         g.changePos(t.x, t.y, t.rot);
         t.draw();
         g.draw();
         if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
-            drawCubes(ghostblocks, testangles, ghostscale, 240, 80, 200, 10, textures, renderer);
+            drawCubes(ghostblocks, testangles, ghostscale, 240, 16, 240, 10, textures, renderer);
         }
-        drawCubes(testblocks, testangles, testscale, 240, 80, 200, 10, textures, renderer);
-        if(nextblocks > -1 && nextblocks < 7) {
-            drawCubes(t.Pieces[nextblocks][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
-        }
-        if (holdblock > -1) {
-            drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
-        }
+        drawCubes(testblocks, testangles, testscale, 240, 16, 240, 10, textures, renderer);
         //std::cout << "LINECLEARS\n";
         if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 24; i++) {
                 if (lineclears[i] > 0) {
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255 * lineclears[i]);
                     SDL_Rect splashbox = { 240, 80 + i * 16, 160, 16 };
@@ -153,6 +148,14 @@ void game::render() {
 
             }
         }
+        SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        if(nextblocks > -1 && nextblocks < 7) {
+            drawCubes(t.Pieces[nextblocks][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
+        }
+        if (holdblock > -1) {
+            drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
+        }
+
         backgrounds[(bglevel) % (backgrounds.size())].render(renderer, true);
         bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true, renderer);
         bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true, renderer);
@@ -181,12 +184,12 @@ int game::endlogic() {
         checkLines(testblocks);
         memcpy(previousblocks, testblocks, sizeof previousblocks);
         
-        if (!t.rebirth(2, 0, nextblocks)) {
+        if (!t.rebirth(BLOCKX, BLOCKY, nextblocks)) {
             gameactive = false;
             return 1;
         }
-        g.rebirth(2, 0, t.piece, previousblocks);
-        std::fill_n(ghostblocks, 200, 0);
+        g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
+        std::fill_n(ghostblocks, 240, 0);
         nextblocks = rand() % 7;
 
         return 2;
@@ -237,14 +240,14 @@ void game::keyPressed(SDL_Keycode key)
                 int temp = holdblock;
                 holdblock = t.piece;
                 if (temp > -1) {
-                    t.rebirth(2, 0, temp);
+                    t.rebirth(BLOCKX, BLOCKY, temp);
                 }
                 else {
-                    t.rebirth(2, 0, nextblocks);
+                    t.rebirth(BLOCKX, BLOCKY, nextblocks);
                     nextblocks = rand() % 7;
                 }
-                g.rebirth(2, 0, t.piece, previousblocks);
-                std::fill_n(ghostblocks, 200, 0);
+                g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
+                std::fill_n(ghostblocks, 240, 0);
                 ticks = 0;
                 realtick = 0;
             }
@@ -328,9 +331,9 @@ void game::shiftarray(int(array)[], int size, int shift) {
     }
 }
 
-void game::checkLines(int(blocks)[200]) {
+void game::checkLines(int(blocks)[240]) {
     int times = 0;
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 24; i++) {
         int temp[10];
         for (int j = 0; j < 10; j++) {
             temp[j] = blocks[i * 10 + j];
@@ -379,22 +382,22 @@ bool game::checkRow(int(blocks)[10]) {
     return true;
 }
 
-void game::clearRow(int(blocks)[200], int y) {
-    int newarray[200];
-    std::fill_n(newarray, 200, 0);
+void game::clearRow(int(blocks)[240], int y) {
+    int newarray[240];
+    std::fill_n(newarray, 240, 0);
     for (int j = 0; j < 10; j++) {
         blocks[(y * 10) + j] = 0;
     }
     for (int j = 0; j < (y * 10); j++) {
         newarray[j + 10] = blocks[j];
     }
-    for (int j = (y * 10) + 10; j < 200; j++) {
+    for (int j = (y * 10) + 10; j < 240; j++) {
         newarray[j] = blocks[j];
     }
     memcpy(blocks, newarray, sizeof newarray);
-    lineclears[y] = 1.0;
+    //lineclears[y] = 1.0;
     std::cout << "CLEARED LINE" << "\n";
-    //shiftarray(blocks, 200, -10);
+    //shiftarray(blocks, 240, -10);
 
 }
 void game::changemusic() {
@@ -432,14 +435,14 @@ void game::reset() {
     currentsong = -1;
     bglevel = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     changemusic();
-    std::fill_n(testblocks, 200, 0);
-    std::fill_n(testangles, 200, 0);
-    std::fill_n(testscale, 200, 1);
-    std::fill_n(ghostblocks, 200, 0);
-    std::fill_n(ghostscale, 200, 0.5);
-    std::fill_n(previousblocks, 200, 0);
-    t = tetrimino(2, 0, testblocks, 10, 20, 0);
-    g = ghostblock(2, 0, previousblocks, 10, 20, 0, ghostblocks);
+    std::fill_n(testblocks, 240, 0);
+    std::fill_n(testangles, 240, 0);
+    std::fill_n(testscale, 240, 1);
+    std::fill_n(ghostblocks, 240, 0);
+    std::fill_n(ghostscale, 240, 0.5);
+    std::fill_n(previousblocks, 240, 0);
+    t = tetrimino(BLOCKX, BLOCKY, testblocks, 10, 24, 0);
+    g = ghostblock(BLOCKX, BLOCKY, previousblocks, 10, 24, 0, ghostblocks);
     g.changePos(0, 0, 0);
     double ticks = 0;
     int realtick = 0;

@@ -7,6 +7,8 @@
 #include <array>
 #include <algorithm>    // std::sort
 #include <cstring>
+#include <ctime>
+
 #include "game.h"
 #include "titlescreen.h"
 #include "background.h"

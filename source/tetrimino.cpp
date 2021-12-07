@@ -7,16 +7,16 @@ tetrimino::tetrimino() {
     x = 0;
     y = 0;
     rot = 0;
-    //array = new int[200];
+    //array = new int[240];
     width = 10;
-    height = 20;
+    height = 24;
     alive = false;
     piece = 0;
     lastx = 0;
     lasty = 0;
     lastrot = 0;
 }
-tetrimino::tetrimino(int xspawn, int yspawn, int(barray)[200], int bwidth, int bheight, int block) {
+tetrimino::tetrimino(int xspawn, int yspawn, int(barray)[240], int bwidth, int bheight, int block) {
     x = xspawn;
     y = yspawn;
     lastx = xspawn;
@@ -48,7 +48,7 @@ void tetrimino::movedown() {
         lasty = y;
         lastrot = rot;
         bool movable = collides(x, y + 1, rot);
-        if (y <= 20 && movable) {
+        if (y <= 24 && movable) {
             y += 1;
         }
         else {
@@ -60,7 +60,7 @@ void tetrimino::movedown() {
 int tetrimino::forcedrop() {
     int iterations = 0;
     if (alive) {
-        while (collides(x, y + 1, rot) && y <= 20) {
+        while (collides(x, y + 1, rot) && y <= 24) {
             removeolddraw();
             lastx = x;
             lasty = y;
@@ -110,7 +110,7 @@ bool tetrimino::collides(int colx, int coly, int colrot) {
     lasty = y; //to ensure that undrawing works.
     lastrot = rot;
     removeolddraw();
-    if (coly > height) {
+    if (coly > height+1) {
         return false;
     }
     for (int i = 0; i < 16; i++) {

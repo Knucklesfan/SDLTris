@@ -18,7 +18,7 @@
 
 #define LINES 0
 #define LEVEL 1
-#define BLOCKY 2
+#define BLOCKY 0
 #define BLOCKX 2
 #ifdef __SWITCH__
 #define filepath  "/"
@@ -31,16 +31,19 @@
 //TODO: fix the stupid bug here lol
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
-game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, int(active)[4][6]) {
+game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> textureb, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, int(active)[4][6]) {
     //srand((unsigned)time(0)); 
+    texture = SDL_CreateTexture(renderman,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+
     memcpy(activations, active, sizeof activations);
-    volume = Mix_VolumeMusic(-1);
+    //volume = Mix_VolumeMusic(-1);
     time = std::time(nullptr);
     std::fill_n(testblocks, 240, 0);
     std::fill_n(ghostblocks, 240, 0);
     std::fill_n(previousblocks, 240, 0);
     renderer = renderman;
-    textures = texture;
+    textures = textureb;
     t = tetrimino(BLOCKX, BLOCKY, testblocks, 10, 24, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, 10, 24, 0, ghostblocks);
     g.changePos(0, 0, 0);
@@ -73,14 +76,17 @@ void game::logic(double deltatime) {
             realtick++;
         }
         msg->logic(deltatime);
+        if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
+            rotval += deltatime/100;
+        }
     }
     if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
         backgrounds[(bglevel) % (backgrounds.size())].logic(deltatime);
     }
-
+    
     //std::cout << bglevel << "\n";
     if (warningflag) {
-        Mix_VolumeMusic(volume/5);
+        //Mix_VolumeMusic(volume/5);
         alphalifetime += deltatime / 5;
         if (warningalpha < 1.0 && godown) {
             warningalpha += deltatime / 750;
@@ -125,9 +131,16 @@ void game::render() {
     //if (gameactive) {
         SDL_RenderClear(renderer);
         backgrounds[(bglevel)%(backgrounds.size())].render(renderer,false);
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128 * warningalpha);
-        SDL_Rect splashbox = { 0, 0, 640, 480 };
-        SDL_RenderFillRect(renderer, &splashbox);
+        if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
+            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128 * warningalpha);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+        }
+        
+        SDL_SetRenderTarget(renderer, texture);
+        SDL_RenderClear(renderer);
+        
+        SDL_RenderCopy(renderer, textures.at(9), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
 
         g.changePos(t.x, t.y, t.rot);
         t.draw();
@@ -141,7 +154,7 @@ void game::render() {
             for (int i = 0; i < 24; i++) {
                 if (lineclears[i] > 0) {
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255 * lineclears[i]);
-                    SDL_Rect splashbox = { 240, 80 + i * 16, 160, 16 };
+                    SDL_Rect splashbox = { 240, 16 + i * 16, 160, 16 };
                     SDL_RenderFillRect(renderer, &splashbox);
                 }
                 //std::cout << lineclears[i] << "\n";
@@ -149,6 +162,13 @@ void game::render() {
             }
         }
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_SetRenderTarget(renderer, NULL);
+        drawTexture(renderer, texture, 0, 0, rotval, 1.0, false);
+
+        
+        
+        SDL_RenderCopy(renderer, textures.at(10), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         if(nextblocks > -1 && nextblocks < 7) {
             drawCubes(t.Pieces[nextblocks][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
         }
@@ -176,10 +196,11 @@ void game::render() {
 int game::endlogic() {
     
     if (!t.alive && gameactive && !paused) {
+        std::cout << "block not alive!!!";
         Mix_PlayChannel( -1, sound[5], 0 );
         ticks = 0;
         realtick = 0;
-        Mix_VolumeMusic(volume);
+        //Mix_VolumeMusic(volume);
         warningflag = false;
         checkLines(testblocks);
         memcpy(previousblocks, testblocks, sizeof previousblocks);
@@ -395,7 +416,7 @@ void game::clearRow(int(blocks)[240], int y) {
         newarray[j] = blocks[j];
     }
     memcpy(blocks, newarray, sizeof newarray);
-    //lineclears[y] = 1.0;
+    lineclears[y] = 1.0;
     std::cout << "CLEARED LINE" << "\n";
     //shiftarray(blocks, 240, -10);
 

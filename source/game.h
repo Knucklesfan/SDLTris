@@ -48,10 +48,12 @@ class game
 			"RESUME",
 			"EXIT"
 		};
+		double rotval = 0.0;
 		int optionsize = 2;
 		bool gameactive;
 		bool paused;
 		std::vector<SDL_Texture*> textures;
+    	SDL_Texture* texture;
 		std::vector<bg>  backgrounds;
 		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, int(active)[4][6]);
 		double layerpos[10];

@@ -10,49 +10,49 @@ INC=-I include/
 all: $(OBJS)
 	$(CC) -g $(OBJS)  -o $(OUT) $(LFLAGS)
 
-source/SDLTetris.o: source/SDLTetris.cpp
+SDLTetris.o: source/SDLTetris.cpp
 	$(CC) $(FLAGS) source/SDLTetris.cpp -std=c++17
 
-source/tetrimino.o: source/tetrimino.cpp
+tetrimino.o: source/tetrimino.cpp
 	$(CC) $(FLAGS) source/tetrimino.cpp -std=c++17
 
-source/ghostblock.o: source/ghostblock.cpp
+ghostblock.o: source/ghostblock.cpp
 	$(CC) $(FLAGS) source/ghostblock.cpp -std=c++17
 
-source/titlescreen.o: source/titlescreen.cpp
+titlescreen.o: source/titlescreen.cpp
 	$(CC) $(FLAGS) source/titlescreen.cpp -std=c++17
 
-source/game.o: source/game.cpp
+game.o: source/game.cpp
 	$(CC) $(FLAGS) source/game.cpp -std=c++17
 
-source/background.o: source/background.cpp
+background.o: source/background.cpp
 	$(CC) $(FLAGS) source/background.cpp -std=c++17
 
-source/ingamemessagebox.o: source/ingamemessagebox.cpp
+ingamemessagebox.o: source/ingamemessagebox.cpp
 	$(CC) $(FLAGS) source/ingamemessagebox.cpp -std=c++17
 
-source/knuxfanscreen.o: source/knuxfanscreen.cpp
+knuxfanscreen.o: source/knuxfanscreen.cpp
 	$(CC) $(FLAGS) source/knuxfanscreen.cpp -std=c++17
 
-source/server.o: source/server.cpp
+server.o: source/server.cpp
 	$(CC) $(FLAGS) source/server.cpp -std=c++17
 
-source/highscore.o: source/highscore.cpp
+highscore.o: source/highscore.cpp
 	$(CC) $(FLAGS) source/highscore.cpp -std=c++17
 
-source/replay.o: source/replay.cpp
+replay.o: source/replay.cpp
 	$(CC) $(FLAGS) source/replay.cpp -std=c++17
 
-source/results.o: source/results.cpp
+results.o: source/results.cpp
 	$(CC) $(FLAGS) source/results.cpp -std=c++17
 
-source/font.o: source/font.cpp
+font.o: source/font.cpp
 	$(CC) $(FLAGS) source/font.cpp -std=c++17
 
-source/options.o: source/options.cpp
+options.o: source/options.cpp
 	$(CC) $(FLAGS) source/options.cpp -std=c++17
 
-source/cube.o: source/cube.cpp
+cube.o: source/cube.cpp
 	$(CC) $(FLAGS) source/cube.cpp -std=c++17
 
 

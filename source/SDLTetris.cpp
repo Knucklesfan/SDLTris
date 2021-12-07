@@ -132,7 +132,7 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 0;
+    int gamemode = 1;
     long long recordticks = 0;
     rapidxml::file<> bgFile((prefix+"backgrounds/backgrounds.xml").c_str());
     rapidxml::xml_document<> bgDoc;
@@ -301,6 +301,7 @@ int main() {
 #endif
             gamer->render();
             int logic = gamer->endlogic();
+            std::cout << logic;
             if (logic == 1 || !gamer->gameactive) {
                 res->reset();
                 gamemode = 3;

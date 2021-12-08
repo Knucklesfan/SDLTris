@@ -178,7 +178,7 @@ void options::keyPressed(SDL_Keycode key) {
                 case 3: {
                     switch (currentselection) {
                         default: {
-                            currentscreen = 9;
+                            activations[currenttitle][currentselection] = !activations[currenttitle][currentselection];
                             break;
                         }
                     }

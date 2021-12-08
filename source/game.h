@@ -29,6 +29,8 @@ class game
 		Mix_Chunk** sound;
 		tetrimino t;
 		ghostblock g;
+		double visibility = 1.0;
+		double visiblelifetime = 0;
 		double ticks = 0.0;
 		int realtick = 0;
 		int nextblocks = 0;

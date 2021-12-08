@@ -76,9 +76,11 @@ void game::logic(double deltatime) {
             realtick++;
         }
         msg->logic(deltatime);
-        //if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
-            rotval += deltatime/25;
-        //}
+        visiblelifetime += deltatime;
+
+        if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
+            rotval = visiblelifetime/25;
+        }
     }
     if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
         backgrounds[(bglevel) % (backgrounds.size())].logic(deltatime);
@@ -118,6 +120,14 @@ void game::logic(double deltatime) {
         warningalpha = 0;
 
     }
+    if (activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BLINDMODE]) {
+        visibility = (sin(visiblelifetime/5000)+1)/2;
+    }
+    else {
+        visibility = 1.0;
+
+    }
+
     for (int i = 0; i < 24; i++) {
         if (lineclears[i] > 0.0) {
             lineclears[i] -= 0.05;
@@ -164,7 +174,7 @@ void game::render() {
         SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_SetRenderTarget(renderer, NULL);
-        drawTexture(renderer, texture, 0, 0, rotval, 1.0, false);
+        drawTexture(renderer, texture, 0, 0, rotval, visibility, false);
 
         
         

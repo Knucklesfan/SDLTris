@@ -14,15 +14,19 @@
 #include "ingamemessagebox.h"
 #include <random>
 #include "font.h"
-
-
+//TODO: clean all of this nonsense up
 class game
 {
 	public:
+
+
+
+
+		int boardwidth = 10;
+		int boardheight = 24;
 		font* bodyfont;
 		font* header;
-		int testblocks[240], ghostblocks[240],  previousblocks[240];
-		double testangles[240], testscale[240], ghostscale[240];
+		int testblocks[1024], ghostblocks[1024],  previousblocks[1024];
 		SDL_Renderer* renderer;
 		Mix_Music** music;
 		int (activations)[4][6];
@@ -101,7 +105,7 @@ class game
 		void checkLines(int(blocks)[240]);
 		bool checkRow(int(blocks)[10]);
 		void clearRow(int(blocks)[240], int y);
-		void drawCubes(int position[], double angles[], double scale[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
+		void drawCubes(int position[],double scale, int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
 		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale);
 		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
 };

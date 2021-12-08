@@ -20,6 +20,7 @@
 #define LEVEL 1
 #define BLOCKY 0
 #define BLOCKX 2
+
 #ifdef __SWITCH__
 #define filepath  "/"
 #include <switch.h>
@@ -39,13 +40,16 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     memcpy(activations, active, sizeof activations);
     //volume = Mix_VolumeMusic(-1);
     time = std::time(nullptr);
-    std::fill_n(testblocks, 240, 0);
-    std::fill_n(ghostblocks, 240, 0);
-    std::fill_n(previousblocks, 240, 0);
+    std::fill_n(testblocks, 1024, 0);
+    std::fill_n(ghostblocks, 1024, 0);
+    std::fill_n(previousblocks, 1024, 0);
     renderer = renderman;
     textures = textureb;
-    t = tetrimino(BLOCKX, BLOCKY, testblocks, 10, 24, 0);
-    g = ghostblock(BLOCKX, BLOCKY, previousblocks, 10, 24, 0, ghostblocks);
+    if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD]) {
+        boardwidth = 20;
+    }
+    t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
+    g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
     double ticks = 0;
     int realtick = 0;
@@ -128,7 +132,7 @@ void game::logic(double deltatime) {
 
     }
 
-    for (int i = 0; i < 24; i++) {
+    for (int i = 0; i < boardheight; i++) {
         if (lineclears[i] > 0.0) {
             lineclears[i] -= 0.05;
 
@@ -145,23 +149,27 @@ void game::render() {
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128 * warningalpha);
             SDL_Rect splashbox = { 0, 0, 640, 480 };
             SDL_RenderFillRect(renderer, &splashbox);
+            
         }
         
         SDL_SetRenderTarget(renderer, texture);
         SDL_RenderClear(renderer);
-        
-        SDL_RenderCopy(renderer, textures.at(9), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
-
+        if(boardwidth > 10) {
+            SDL_RenderCopy(renderer, textures.at(12), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        }
+        else {
+            SDL_RenderCopy(renderer, textures.at(9), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        }
         g.changePos(t.x, t.y, t.rot);
         t.draw();
         g.draw();
         if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
-            drawCubes(ghostblocks, testangles, ghostscale, 240, 16, 240, 10, textures, renderer);
+            drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth, textures, renderer);
         }
-        drawCubes(testblocks, testangles, testscale, 240, 16, 240, 10, textures, renderer);
+        drawCubes(testblocks, 1.0, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth, textures, renderer);
         //std::cout << "LINECLEARS\n";
         if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
-            for (int i = 0; i < 24; i++) {
+            for (int i = 0; i < boardheight; i++) {
                 if (lineclears[i] > 0) {
                     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255 * lineclears[i]);
                     SDL_Rect splashbox = { 240, 16 + i * 16, 160, 16 };
@@ -171,7 +179,12 @@ void game::render() {
 
             }
         }
-        SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        if(boardwidth > 10) {
+            SDL_RenderCopy(renderer, textures.at(11), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        }
+        else {
+            SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_SetRenderTarget(renderer, NULL);
         drawTexture(renderer, texture, 0, 0, rotval, visibility, false);
@@ -180,10 +193,10 @@ void game::render() {
         
         SDL_RenderCopy(renderer, textures.at(10), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         if(nextblocks > -1 && nextblocks < 7) {
-            drawCubes(t.Pieces[nextblocks][0], testangles, testscale, 512, 48, 16, 4, textures, renderer);
+            drawCubes(t.Pieces[nextblocks][0], 1.0, 512, 48, 16, 4, textures, renderer);
         }
         if (holdblock > -1) {
-            drawCubes(t.Pieces[holdblock][0], testangles, testscale, 64, 48, 16, 4, textures, renderer);
+            drawCubes(t.Pieces[holdblock][0], 1.0, 64, 48, 16, 4, textures, renderer);
         }
 
         backgrounds[(bglevel) % (backgrounds.size())].render(renderer, true);
@@ -220,7 +233,7 @@ int game::endlogic() {
             return 1;
         }
         g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
-        std::fill_n(ghostblocks, 240, 0);
+        std::fill_n(ghostblocks, 1024, 0);
         nextblocks = rand() % 7;
 
         return 2;
@@ -278,7 +291,7 @@ void game::keyPressed(SDL_Keycode key)
                     nextblocks = rand() % 7;
                 }
                 g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
-                std::fill_n(ghostblocks, 240, 0);
+                std::fill_n(ghostblocks, 1024, 0);
                 ticks = 0;
                 realtick = 0;
             }
@@ -362,12 +375,12 @@ void game::shiftarray(int(array)[], int size, int shift) {
     }
 }
 
-void game::checkLines(int(blocks)[240]) {
+void game::checkLines(int(blocks)[1024]) {
     int times = 0;
-    for (int i = 0; i < 24; i++) {
-        int temp[10];
-        for (int j = 0; j < 10; j++) {
-            temp[j] = blocks[i * 10 + j];
+    for (int i = 0; i < boardheight; i++) {
+        int temp[boardwidth];
+        for (int j = 0; j < boardwidth; j++) {
+            temp[j] = blocks[i * boardwidth + j];
             if (i < 8 && temp[j] > 0) {
                 if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
                     warningflag = true;
@@ -397,15 +410,15 @@ void game::checkLines(int(blocks)[240]) {
     }
     lines += times;
     if (times > 0) {
-        level = (lines / 10) + 1;
+        level = (lines / boardwidth) + 1;
     }
     if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
         bglevel = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
     }
     changemusic();
 }
-bool game::checkRow(int(blocks)[10]) {
-    for (int i = 0; i < 10; i++) {
+bool game::checkRow(int* (blocks)) {
+    for (int i = 0; i < boardwidth; i++) {
         if (blocks[i] == 0) {
             return false;
         }
@@ -413,16 +426,16 @@ bool game::checkRow(int(blocks)[10]) {
     return true;
 }
 
-void game::clearRow(int(blocks)[240], int y) {
-    int newarray[240];
-    std::fill_n(newarray, 240, 0);
-    for (int j = 0; j < 10; j++) {
-        blocks[(y * 10) + j] = 0;
+void game::clearRow(int(blocks)[1024], int y) {
+    int newarray[1024];
+    std::fill_n(newarray, 1024, 0);
+    for (int j = 0; j < boardwidth; j++) {
+        blocks[(y * boardwidth) + j] = 0;
     }
-    for (int j = 0; j < (y * 10); j++) {
-        newarray[j + 10] = blocks[j];
+    for (int j = 0; j < (y * boardwidth); j++) {
+        newarray[j + boardwidth] = blocks[j];
     }
-    for (int j = (y * 10) + 10; j < 240; j++) {
+    for (int j = (y * boardwidth) + boardwidth; j < 1024; j++) {
         newarray[j] = blocks[j];
     }
     memcpy(blocks, newarray, sizeof newarray);
@@ -466,14 +479,11 @@ void game::reset() {
     currentsong = -1;
     bglevel = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     changemusic();
-    std::fill_n(testblocks, 240, 0);
-    std::fill_n(testangles, 240, 0);
-    std::fill_n(testscale, 240, 1);
-    std::fill_n(ghostblocks, 240, 0);
-    std::fill_n(ghostscale, 240, 0.5);
-    std::fill_n(previousblocks, 240, 0);
-    t = tetrimino(BLOCKX, BLOCKY, testblocks, 10, 24, 0);
-    g = ghostblock(BLOCKX, BLOCKY, previousblocks, 10, 24, 0, ghostblocks);
+    std::fill_n(testblocks, 1024, 0);
+    std::fill_n(ghostblocks, 1024, 0);
+    std::fill_n(previousblocks, 1024, 0);
+    t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
+    g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
     double ticks = 0;
     int realtick = 0;
@@ -488,11 +498,11 @@ void game::reset() {
 
 }
 
-void game::drawCubes(int position[], double angles[], double scale[], int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer) {
+void game::drawCubes(int position[], double scale, int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer) {
     
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
-            drawTexture(renderer, textures.at(position[i]), x + (i % width) * 16, y + (i / width) * 16, angles[i], scale[i]);
+            drawTexture(renderer, textures.at(position[i]), x + (i % width) * 16, y + (i / width) * 16, 0, scale);
         }
     }
 }

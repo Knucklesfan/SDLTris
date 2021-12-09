@@ -29,7 +29,7 @@ void knuxfanscreen::render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255*alpha);
     SDL_Rect splashbox = { 0, 0, 640, 480 };
     SDL_RenderFillRect(renderer, &splashbox);
-    SDL_RenderPresent(renderer);
+    //SDL_RenderPresent(renderer);
 
 }
 

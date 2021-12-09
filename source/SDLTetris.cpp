@@ -15,6 +15,7 @@
 #include "knuxfanscreen.h"
 #include "replay.h"
 #include "results.h"
+#include "credits.h"
 
 #ifdef _NETCODE
 #include "server.h"
@@ -124,6 +125,15 @@ int main() {
     std::vector<SDL_Texture*> textures = generateSurfaces(prefix + "sprites/", renderer, sprites); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
     std::vector<Mix_Music*> music = generateMusic(prefix + "music/");
     std::vector<Mix_Chunk*> sound = generateSounds(prefix + "sound/");
+    SDL_Texture* rendertext = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640,480);
+
+    if(SDL_QueryTexture(rendertext, NULL, NULL, NULL, NULL) < 0) {
+        printf("TEXTURE ISSUES!!! \n");
+        std::cout << SDL_GetError() << "\n";
+    };
+
+
+
     std::vector<bg> backgrounds;
     SDL_Event event;
     bool quit = false;
@@ -132,7 +142,7 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 1;
+    int gamemode = 5;
     long long recordticks = 0;
     rapidxml::file<> bgFile((prefix+"backgrounds/backgrounds.xml").c_str());
     rapidxml::xml_document<> bgDoc;
@@ -174,6 +184,7 @@ int main() {
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg, fonts[2]);
     results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
+    credits* crd = new credits(fonts);
 #ifdef _NETCODE
     server* srver = new server();
     srver->start();
@@ -236,6 +247,8 @@ int main() {
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
         deltaTime = (double)((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
+        SDL_SetRenderTarget(renderer, rendertext);
+        SDL_RenderClear(renderer);
 #ifdef _NETCODE
         srver->logic();
 #endif
@@ -342,11 +355,19 @@ int main() {
             }
             break;
         }
+        case 5: {
+            crd->logic(deltaTime);
+            crd->render(renderer);
+            break;
+        }
         }
     #ifdef _WIN32
             rpc->logic();
     #endif
-
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, rendertext, NULL,NULL);
+    SDL_RenderPresent(renderer);
     }
     return 0;
 }

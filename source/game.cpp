@@ -151,7 +151,7 @@ void game::render() {
             SDL_RenderFillRect(renderer, &splashbox);
             
         }
-        
+        SDL_Texture* temp = SDL_GetRenderTarget(renderer);
         SDL_SetRenderTarget(renderer, texture);
         SDL_RenderClear(renderer);
         if(boardwidth > 10) {
@@ -186,7 +186,7 @@ void game::render() {
             SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         }
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_SetRenderTarget(renderer, NULL);
+        SDL_SetRenderTarget(renderer, temp);
         drawTexture(renderer, texture, 0, 0, rotval, visibility, false);
 
         
@@ -213,7 +213,7 @@ void game::render() {
             header->render(320, 240, "GAME PAUSED", true, renderer);
         }
         msg->render(renderer);
-        SDL_RenderPresent(renderer);
+        //SDL_RenderPresent(renderer);
     //}
 }
 int game::endlogic() {

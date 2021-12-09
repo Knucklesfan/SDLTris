@@ -369,7 +369,7 @@ void options::render() {
 
 
 
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 
 }
 void options::logic(double deltatime) {

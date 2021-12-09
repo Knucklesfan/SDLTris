@@ -63,15 +63,16 @@ void results::reset()
 void results::render(game* gamer) {
     SDL_RenderClear(renderer);
     background.render(renderer, false);
+    SDL_Texture* temp = SDL_GetRenderTarget(renderer);
     SDL_SetRenderTarget(renderer, rendertext);
     SDL_RenderClear(renderer);
     drawCubes(tpiece, 16, 32, 6, 3, texture, 0, abs(sin(leftangle / 25)) + 0.85, 1);
-    SDL_SetRenderTarget(renderer, NULL);
+    SDL_SetRenderTarget(renderer, temp);
     drawTexture(rendertext, 50, 200, leftangle / 2.5, 1.0, false);
     SDL_SetRenderTarget(renderer, rendertext);
     SDL_RenderClear(renderer);
     drawCubes(lpiece, 16, 32, 6, 3, texture, 0, abs(sin(leftangle / 25)) + 0.85, 2);
-    SDL_SetRenderTarget(renderer, NULL);
+    SDL_SetRenderTarget(renderer, temp);
     drawTexture(rendertext, 462, 200, leftangle / -2.5, 1.0, false);
 
     newhead->render(renderer, "LAST GAME SCORE", 320,160, true);
@@ -97,7 +98,7 @@ void results::render(game* gamer) {
     background.render(renderer, true);
 
 
-    SDL_RenderPresent(renderer);
+    //SDL_RenderPresent(renderer);
 }
 
 void results::logic(double deltatime)

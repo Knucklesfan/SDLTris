@@ -362,7 +362,7 @@ void titlescreen::render(highscore* score)
         }
 
     }
-    SDL_RenderPresent(renderer);
+    //SDL_RenderPresent(renderer);
 
 }
 

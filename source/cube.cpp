@@ -21,6 +21,7 @@ void cube::logic(double deltatime) {
 }
 void cube::render(SDL_Renderer* render, int r, int g, int b) {
 
+    SDL_Texture* temp = SDL_GetRenderTarget(render);
     SDL_SetRenderTarget(render, texture);
     SDL_RenderClear(render);
     SDL_SetRenderDrawColor(render, r, g, b, 255);
@@ -35,7 +36,7 @@ void cube::render(SDL_Renderer* render, int r, int g, int b) {
         SDL_RenderDrawLine(render, x1,y1,x2,y2);
     }
     SDL_SetRenderDrawColor(render, 0, 0, 0, 255);
-    SDL_SetRenderTarget(render, NULL);
+    SDL_SetRenderTarget(render, temp);
 
 }
 void cube::rotateZ3D(double t) {

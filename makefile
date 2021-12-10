@@ -1,5 +1,5 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o game.o background.o ingamemessagebox.o knuxfanscreen.o server.o highscore.o replay.o results.o font.o options.o cube.o credits.o
-SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o game.o background.o ingamemessagebox.o knuxfanscreen.o server.o highscore.o replay.o results.o font.o options.o cube.o credits.o sine.o
+SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
@@ -57,6 +57,9 @@ cube.o: source/cube.cpp
 	
 credits.o: source/credits.cpp
 	$(CC) $(FLAGS) source/credits.cpp -std=c++17
+
+sine.o: source/sine.cpp
+	$(CC) $(FLAGS) source/sine.cpp -std=c++17
 
 clean:
 	rm -f $(OBJS) $(OUT)

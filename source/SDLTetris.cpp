@@ -184,7 +184,7 @@ int main() {
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg, fonts[2]);
     results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
-    credits* crd = new credits(fonts);
+    credits* crd = new credits(renderer,fonts);
 #ifdef _NETCODE
     server* srver = new server();
     srver->start();

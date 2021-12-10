@@ -4,12 +4,13 @@
 #include <vector>
 #include "font.h"
 #include <array>
-
+#include "sine.h"
+#include <math.h>
 class credits 
 {
     public:
-    credits(std::vector<font*> fonts);
-
+    credits(SDL_Renderer* renderer, std::vector<font*> fonts);
+    sine* sineWave;
     void render(SDL_Renderer* renderer);
     void logic(double deltaTime);
     void keyPress(SDL_KeyCode);

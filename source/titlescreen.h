@@ -38,6 +38,7 @@ public:
 	bool showerror = false;
 	bool loadgame = false;
 	bool loadmenu = false;
+	bool loadcreds = false;
 	const int settingssize = 4;
 	std::string settingstitle = "OPTIONS";
 	std::string sets[4] = {

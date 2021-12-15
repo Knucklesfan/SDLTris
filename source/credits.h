@@ -6,17 +6,27 @@
 #include <array>
 #include "sine.h"
 #include <math.h>
+#include "background.h"
+#include "cube.h"
+
 class credits 
 {
     public:
-    credits(SDL_Renderer* renderer, std::vector<font*> fonts);
+    credits(SDL_Renderer* renderer, std::vector<font*> fonts, bg* background, std::vector<SDL_Texture*>* text);
     sine* sineWave;
     void render(SDL_Renderer* renderer);
     void logic(double deltaTime);
-    void keyPress(SDL_KeyCode);
+    void keyPressed(SDL_Keycode);
+    int endlogic();
+    void reset(Mix_Music* music);
     font* headerfont;
     font* textfont;
-
+    bg* backg;
+    cube* cub;
+    bool loadgame;
+    SDL_Texture* rendertext;
+    double time = 0.0;
+    std::vector<SDL_Texture*>* textures;
     std::string words[26] = {
         "KNUXFANS TETRIMINOS",
         "CREATED BY",
@@ -47,7 +57,7 @@ class credits
     };
 
     int wordprops[26] = {
-        1, //KNUXFANS TETRIMINOS
+        2, //KNUXFANS TETRIMINOS
         1, //CREATED BY
         0, //KNUXFAN
         1, //CODE
@@ -70,7 +80,7 @@ class credits
         0, //KEKCROC TEAM THANKS
         0, //PINECONE THANKS
         0, //SCREW YOU TRASH WOMAN
-        0, //AND ONE MORE FINAL
+        2, //AND ONE MORE FINAL
         0, //STERIOTYPICAL THANKS TO THE PLAYER
         0, //CONTINUED
     };
@@ -99,10 +109,24 @@ class credits
         64,
         64,
         256,
-        32,
+        128,
         32
     };
-    double wordsy = 512;
-
+    void drawRotatedBlock(SDL_Renderer* renderer,int x, int y, const int position[]);
     private:
+    	const int tpiece[6] = {
+		 0,2,0,
+		 2,2,2
+        };
+        const int lpiece[6] = {
+			 2,2,2,
+			 2,0,0
+		};
+        double wordsy = 512;
+        double alpha = 0.0;
+        bool goup = false;
+        bool godown = false;
+        int gamemode = 0;
+        void drawTexture(SDL_Renderer* render, SDL_Texture*, int, int, double, double, bool);
+        void drawCubes(SDL_Renderer* renderer, const int position[], int x, int y, int size, int width, std::vector<SDL_Texture*>* textures, double angle, double scale, int texture);
 };

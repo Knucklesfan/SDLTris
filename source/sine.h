@@ -7,13 +7,15 @@
 #include <algorithm>    // std::sort
 #include <cstring>
 #include <math.h>
+
 class sine
 {
 public:
+    
     double width = 320;
     double height = 240;
     void logic(double deltatime);
-    void render(SDL_Renderer* renderer, int r, int g, int b);
+    void render(SDL_Renderer* renderer, int r, int g, int b, int a, int offset);
     sine(SDL_Renderer* render, int x, int y, int width, int height);
     int x = width/2;
     int y = height/2;
@@ -21,6 +23,7 @@ public:
     SDL_Texture* texture;
 private:
     double rad(double deg);
+    double fact(double in);
     void rotateZ3D(double t);
     void rotateX3D(double t);
     void rotateY3D(double t);

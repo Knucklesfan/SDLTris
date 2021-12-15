@@ -124,6 +124,13 @@ void game::logic(double deltatime) {
         warningalpha = 0;
 
     }
+    if(warningalpha < 0.0) {
+        warningalpha = 0.0;
+    }
+    if(warningalpha > 1.0) {
+        warningalpha = 1.0;
+    }
+
     if (activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BLINDMODE]) {
         visibility = (sin(visiblelifetime/5000)+1)/2;
     }

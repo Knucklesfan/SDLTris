@@ -65,7 +65,7 @@ std::vector<SDL_Texture*> generateSurfaces(std::string path, SDL_Renderer* rende
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
 bool bgCompare (bg a, bg b) {return a.name<b.name;} 
-int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, SDL_Keycode keycode);
+int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, credits* cred, SDL_Keycode keycode);
 
 int main() {
 #ifdef __SWITCH__
@@ -142,7 +142,7 @@ int main() {
     double deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-    int gamemode = 5;
+    int gamemode = 0;
     long long recordticks = 0;
     rapidxml::file<> bgFile((prefix+"backgrounds/backgrounds.xml").c_str());
     rapidxml::xml_document<> bgDoc;
@@ -184,7 +184,7 @@ int main() {
     game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
     knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg, fonts[2]);
     results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
-    credits* crd = new credits(renderer,fonts);
+    credits* crd = new credits(renderer,fonts,&optionsbg, &textures);
 #ifdef _NETCODE
     server* srver = new server();
     srver->start();
@@ -209,38 +209,38 @@ int main() {
                 switch (event.jbutton.button) {
                 case JOY_B:
                 case JOY_A: {
-                    input(gamemode, title, gamer, res, opt, SDLK_z);
+                    input(gamemode, title, gamer, res, opt, crd, SDLK_z);
                     break;
                 }
                 case JOY_DOWN: {
-                    input(gamemode, title, gamer, res, opt, SDLK_DOWN);
+                    input(gamemode, title, gamer, res, opt, crd, SDLK_DOWN);
                     break;
                 }
                 case JOY_UP: {
-                    input(gamemode, title, gamer, res, opt, SDLK_UP);
+                    input(gamemode, title, gamer, res, opt, crd, SDLK_UP);
                     break;
                 }
                 case JOY_LEFT: {
-                    input(gamemode, title, gamer, res, opt, SDLK_LEFT);
+                    input(gamemode, title, gamer, res, opt, crd, SDLK_LEFT);
                     break;
                 }
                 case JOY_RIGHT: {
-                    input(gamemode, title, gamer, res, opt, SDLK_RIGHT);
+                    input(gamemode, title, gamer, res, opt, crd, SDLK_RIGHT);
                     break;
                 }
                 case JOY_L: {
-                    input(gamemode, title, gamer, res, opt, SDLK_x);
+                    input(gamemode, title, gamer, res, opt, crd, SDLK_x);
                     break;
                 }
                 case JOY_PLUS: {
-                    input(gamemode, title, gamer, res, opt, SDLK_ESCAPE);
+                    input(gamemode, title, gamer, res, opt, crd, SDLK_ESCAPE);
                     break;
                 }
 
                 }
             }
             if (event.type == SDL_KEYDOWN) {
-                input(gamemode, title, gamer, res, opt, event.key.keysym.sym);
+                input(gamemode, title, gamer, res, opt, crd, event.key.keysym.sym);
             }
         }
 
@@ -291,6 +291,15 @@ int main() {
                 rpc->update("Configuring the game.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
 #endif
                 title->loadmenu = false;
+            }
+            if(logicret == 3) {
+                crd->reset(music.at(2));
+                gamemode = 5;
+#ifdef _WIN32
+                rpc->update("Reading the Credits.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
+#endif
+                title->loadcreds = false;
+
             }
             break;
         }
@@ -358,6 +367,15 @@ int main() {
         case 5: {
             crd->logic(deltaTime);
             crd->render(renderer);
+            if (crd->endlogic() > 0) {
+                title->reset();
+                gamemode = 1;
+#ifdef _WIN32
+                rpc->update("In the menu.", "Top high score: " + std::to_string(score->maxscore), "icon2", time);
+#endif
+                crd->loadgame = false;
+            }
+
             break;
         }
         }
@@ -427,7 +445,7 @@ bool hasEnding(std::string const& fullString, std::string const& ending) { //tha
     }
 }
 
-int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, SDL_Keycode keycode) {
+int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, credits* cred, SDL_Keycode keycode) {
     switch(gamemode) {
         case 1: {
             title->keyPressed(keycode);
@@ -443,6 +461,10 @@ int input(int gamemode, titlescreen* title, game* gamer, results* res, options* 
         }
         case 4: {
             opt->keyPressed(keycode);
+            break;
+        }
+        case 5: {
+            cred->keyPressed(keycode);
             break;
         }
 

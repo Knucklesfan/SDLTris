@@ -88,7 +88,7 @@ void titlescreen::keyPressed(SDL_Keycode key)
                 loadmenu = true;
                 break;
             case 2:
-                currentscreen = 3;
+                loadcreds = true;
                 break;
             case 3:
                 exit(0);
@@ -379,6 +379,9 @@ int titlescreen::endlogic()
     }
     if (loadmenu) {
         return 2;
+    }
+    if (loadcreds) {
+        return 3;
     }
 	return 0;
 }

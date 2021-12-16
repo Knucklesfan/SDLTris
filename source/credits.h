@@ -112,7 +112,7 @@ class credits
         128,
         32
     };
-    void drawRotatedBlock(SDL_Renderer* renderer,int x, int y, const int position[]);
+    void drawRotatedBlock(SDL_Renderer* renderer,int x, int y, const int position[], double angle, int);
     private:
     	const int tpiece[6] = {
 		 0,2,0,

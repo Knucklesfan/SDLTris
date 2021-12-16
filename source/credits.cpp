@@ -104,7 +104,12 @@ void credits::render(SDL_Renderer* render) {
             sineWave->render(render,0,0,255,128,-2);
             cub->render(render, 255, 0, 0);
             drawTexture(render, cub->texture, 0, 0, 0, 1.0, false);
-            drawRotatedBlock(render, 16,16,lpiece);
+            drawRotatedBlock(render, 16,16,lpiece,time / 15, 1);
+            drawRotatedBlock(render, 496,16,tpiece,time / -15, 2);
+            drawRotatedBlock(render, 496,336,lpiece,time / 15, 1);
+            drawRotatedBlock(render, 16,336,tpiece,time / -15, 2);
+
+
             int layers = 0;
             for(int i = 0; i < 26; i++) {
                 switch(wordprops[i]) {
@@ -161,13 +166,13 @@ void credits::drawTexture(SDL_Renderer* render, SDL_Texture* texture, int x, int
     SDL_RenderCopyEx(render, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
 }
 
-void credits::drawRotatedBlock(SDL_Renderer* renderer,int x, int y, const int position[]) {
+void credits::drawRotatedBlock(SDL_Renderer* renderer,int x, int y, const int position[], double angle, int texture) {
     SDL_Texture* temp = SDL_GetRenderTarget(renderer);
     SDL_SetRenderTarget(renderer, rendertext);
     SDL_RenderClear(renderer);
-    drawCubes(renderer, position, 16, 32, 6, 3, textures, 0, abs(sin(time / 500)) + 0.85, 1);
+    drawCubes(renderer, position, 16, 32, 6, 3, textures, 0, abs(sin(time / 500)) + 0.85, texture);
     SDL_SetRenderTarget(renderer, temp);
-    drawTexture(renderer, rendertext, x, y, time / 15, 1.0, false);
+    drawTexture(renderer, rendertext, x, y, angle, 1.0, false);
 
 }
 

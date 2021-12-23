@@ -172,17 +172,18 @@ void font::render(SDL_Renderer* renderer, std::string words, int x, int y, bool 
     int tmpx = x-finalwidth/2;
     int i = 0;
     for(char& c : words) {
-        try {
-        if (sine) {
-            tmpy = y + (sin((pos + i)*multiplyin)*multiplyout);
+        if (mapping.find(c) != mapping.end()) {
+            if (sine) {
+                tmpy = y + (sin((pos + i) * multiplyin) * multiplyout);
+            }
+            drawTexture(renderer, texture, tmpx, tmpy, 0, 1.0, false, mapping.at(c), 0, width, height);
+            tmpx += width;
         }
-        drawTexture(renderer, texture, tmpx,  tmpy, 0, 1.0, false, mapping.at(c), 0, width, height);
-        tmpx += width;
-        } catch(const std::out_of_range& e) {
+        else {
             //std::cout << "LOADED BAD CHAR!!\n";
-            if(c == '\n') {
+            if (c == '\n') {
                 tmpy += height;
-                tmpx = x-finalwidth/2;
+                tmpx = x - finalwidth / 2;
                 std::string everythingelse = words.substr(i);
             }
             else {

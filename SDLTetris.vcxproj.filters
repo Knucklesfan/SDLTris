@@ -108,6 +108,12 @@
     <ClCompile Include="source\options.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\credits.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\sine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\tetriminos.h">
@@ -201,6 +207,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\options.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\credits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\sine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

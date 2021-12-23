@@ -385,7 +385,7 @@ void game::shiftarray(int(array)[], int size, int shift) {
 void game::checkLines(int(blocks)[1024]) {
     int times = 0;
     for (int i = 0; i < boardheight; i++) {
-        int temp[boardwidth];
+        int* temp = new int[boardwidth];
         for (int j = 0; j < boardwidth; j++) {
             temp[j] = blocks[i * boardwidth + j];
             if (i < 8 && temp[j] > 0) {
@@ -398,7 +398,9 @@ void game::checkLines(int(blocks)[1024]) {
             clearRow(blocks, i);
             times++;
         }
+        free(temp);
     }
+
     if(times == 1) {
         Mix_PlayChannel( -1, sound[6], 0 );
         score += 100 * level;

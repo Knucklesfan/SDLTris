@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -131,7 +131,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;discord_game_sdk.dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\credits.cpp" />
     <ClCompile Include="source\cube.cpp" />
     <ClCompile Include="source\font.cpp" />
     <ClCompile Include="source\options.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="source\discord\user_manager.cpp" />
     <ClCompile Include="source\discord\voice_manager.cpp" />
     <ClCompile Include="source\server.cpp" />
+    <ClCompile Include="source\sine.cpp" />
     <ClCompile Include="source\tetrimino.cpp" />
     <ClCompile Include="source\ghostblock.cpp" />
     <ClCompile Include="source\titlescreen.cpp" />
@@ -183,6 +185,7 @@
     <ClCompile Include="source\knuxfanscreen.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\credits.h" />
     <ClInclude Include="source\cube.h" />
     <ClInclude Include="source\font.h" />
     <ClInclude Include="source\options.h" />
@@ -208,6 +211,7 @@
     <ClInclude Include="source\discord\voice_manager.h" />
     <ClInclude Include="source\game.h" />
     <ClInclude Include="source\server.h" />
+    <ClInclude Include="source\sine.h" />
     <ClInclude Include="source\tetriminos.h" />
     <ClInclude Include="source\highscore.h" />
     <ClInclude Include="source\ghostblock.h" />

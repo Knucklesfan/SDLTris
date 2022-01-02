@@ -26,6 +26,7 @@ class credits
     bool loadgame;
     SDL_Texture* rendertext;
     double time = 0.0;
+    double speed = 25;
     std::vector<SDL_Texture*>* textures;
     std::string words[26] = {
         "KNUXFANS TETRIMINOS",
@@ -50,7 +51,7 @@ class credits
         "Special thanks to the RetroNX Discord server for providing a ton of code help, especially with the switch port, and just being great guys!",
         "Everyone on the Kekcroc Team discord server for encouraging me and giving feedback",
         "Super big thanks to everyone on the international society of gamers for um. well, you guys know what you did.",
-        "Huge thanks to puddle, without your help I wouldn't have made this game",
+        "And thank you to everyone else who helped me along this way!",
         "AND ONE MORE FINAL",
         "Thank YOU the player",
         "for playing my game!"

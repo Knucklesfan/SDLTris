@@ -13,8 +13,12 @@ credits::credits(SDL_Renderer* renderer,std::vector<font*> fonts, bg* background
 
 }
 void credits::keyPressed(SDL_Keycode key) {
-    if(key = SDLK_z) {
+    if(key == SDLK_z) {
         loadgame = true;
+    }
+    speed = 25;
+    if (key == SDLK_x) {
+        speed = 5;
     }
 }
 void credits::logic(double deltaTime) {
@@ -38,7 +42,7 @@ void credits::logic(double deltaTime) {
     }
     std::cout << wordsy << "\n";
     if(gamemode == 0) {
-        wordsy -= deltaTime/25;
+        wordsy -= deltaTime/speed;
     }
     else {
         wordsy = 0;
@@ -112,19 +116,26 @@ void credits::render(SDL_Renderer* render) {
 
             int layers = 0;
             for(int i = 0; i < 26; i++) {
+                int y = wordsy + layers;
+                if (i >= 24) {
+                    if (wordsy + layers < 224 + (i%24)*32) {
+                        y = 224 + (i % 24) * 32;
+                    }
+                }
+
                 switch(wordprops[i]) {
                     case 1: {
-                        textfont->render(320, wordsy+layers, words[i], true, render,580);
+                        textfont->render(320, y, words[i], true, render,580);
                         layers+=textfont->height;
                         break;
                     };
                     case 0: {
-                        headerfont->render(320, wordsy+layers, words[i], true, render,580);
+                        headerfont->render(320, y, words[i], true, render,580);
                         layers+=headerfont->height;
                         break;
                     };
                     case 2: {
-                        textfont->render(render, words[i],320, wordsy+layers, true,255,0,255,580,true,time/500, 5,20);
+                        textfont->render(render, words[i],320, y, true,255,0,255,580,true,time/500, 5,20);
                         layers+=headerfont->height;
                         break;
                     }

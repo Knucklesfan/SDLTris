@@ -49,6 +49,14 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
     if (doc.first_node("rotation") != NULL) {
         rotation = atoi(doc.first_node("rotation")->value());
     }
+    if (doc.first_node("sine") != NULL) {
+        sine = true;
+        sinelayer = atoi(doc.first_node("sine")->value());
+        snheight = atoi(doc.first_node("sineheight")->value());
+        snwidth = atoi(doc.first_node("sinewidth")->value());
+        snwid = atoi(doc.first_node("sinelayerheight")->value());
+    }
+
 
     if (doc.first_node("fglayer") != NULL) {
         std::cout << "fglayer detected\n";
@@ -161,21 +169,19 @@ void bg::render(SDL_Renderer* renderer, bool layer) {
         if (layerposy[i] > 0) {
             multiplery = -1;
         }
-
-        drawTexture(renderer, textures[i], tempx, tempy, fmod(angle, 360), 1.0, false);
-        drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy + (height * multiplery), fmod(angle, 360), 1.0, false);
-        drawTexture(renderer, textures[i], tempx + 0, tempy + (height * multiplery), fmod(angle, 360), 1.0, false);
-        drawTexture(renderer, textures[i], tempx + (width * multiplerx), tempy, fmod(angle, 360), 1.0, false);
+        bool dothis = sine && i == sinelayer;
+        drawLayer(renderer, textures[i],tempx,tempy,multiplerx,multiplery,width,height,
+        dothis,
+        snwid, //wave width in pixels
+        snwidth, //sine width
+        snheight, //sine height
+        angle //increment. 
+        );
         }
 }
 void bg::logic(double deltatime)
 {
-    if (angle > 360.0) {
-        angle = 0.0;
-    }
-    if (rotation != 0) {
-        angle += deltatime / rotation;
-    }
+    angle += deltatime / 10000;
     //std::cout << angle << "\n";
 
     for(int i = 0; i < layers; i++) {
@@ -210,6 +216,36 @@ void bg::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y,
     SDL_RenderCopyEx(renderer, texture, NULL, &sprite, 0, NULL, SDL_FLIP_NONE);
 }
 
+//lol i stole more code from font.h
+//I had this great idea for doing waves through like modifying pixel data, and then I realized "oh crap, that'll use up way too much GPU to handle"
+
+//so then i cried
+
+void bg::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch) {
+    SDL_Rect sprite;
+    SDL_Rect srcrect = {srcx, srcy, srcw, srch};
+    if(SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h) < 0) {
+        printf("TEXTURE ISSUES!!! \n");
+        std::cout << SDL_GetError() << "\n";
+    };
+    sprite.w = srcw * scale;
+    sprite.h = srch * scale;
+    if (center) {
+        sprite.x = x - srcw / 2;
+        sprite.y = y - srch / 2;
+    }
+    else {
+        sprite.x = x + srcw / 2 - sprite.w / 2;
+        sprite.y = y + srch / 2 - sprite.h / 2;
+    }
+    SDL_RenderCopy(renderer, texture, &srcrect, &sprite);
+    //since the angle system doesnt even work
+    //BUT I SWEAR GUYS ILL GET IT TO WORK EVENTUALLY
+}
+//anyways so that's the new and totally awesome relevant modern new background system thing that everyone definitely loves
+
+
+
 bool bg::hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me out https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
     if (fullString.length() >= ending.length()) {
         return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
@@ -218,3 +254,22 @@ bool bg::hasEnding(std::string const& fullString, std::string const& ending) { /
         return false;
     }
 }
+void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int tempy, int multiplerx, int multiplery, int width, int height, bool wavy, int wavywidth, int sinewidth, int sineheight, double sinepos) {
+    if (wavy) {
+        for(int i = 0; i < height; i+=wavywidth) {
+            double sinex = (sin((sinepos + i) * sinewidth) * sineheight);
+            drawTexture(renderer, texture, tempx+sinex, tempy+i, fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
+            drawTexture(renderer, texture, tempx+sinex + (width * multiplerx), tempy+ (height+i * multiplery), fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
+            drawTexture(renderer, texture, tempx+sinex + 0, tempy + (height+i * multiplery), fmod(angle, 360), 1.0, false),0,i,width,wavywidth;
+            drawTexture(renderer, texture, tempx+sinex + (width * multiplerx), tempy+i, fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
+        }
+    }
+    else {
+        drawTexture(renderer, texture, tempx, tempy, fmod(angle, 360), 1.0, false);
+        drawTexture(renderer, texture, tempx + (width * multiplerx), tempy + (height * multiplery), fmod(angle, 360), 1.0, false);
+        drawTexture(renderer, texture, tempx + 0, tempy + (height * multiplery), fmod(angle, 360), 1.0, false);
+        drawTexture(renderer, texture, tempx + (width * multiplerx), tempy, fmod(angle, 360), 1.0, false);
+    }
+
+}
+

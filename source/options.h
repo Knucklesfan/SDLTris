@@ -77,7 +77,7 @@ public:
 	options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures, Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<font*> fonts, std::vector<bg> backgcollection);
 	void keyPressed(SDL_Keycode key);
 	void render();
-	void logic(double deltatime);
+	void logic(float deltatime);
 	int endlogic();
 	void reset();
 	std::string titles[4] = {

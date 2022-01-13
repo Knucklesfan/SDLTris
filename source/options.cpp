@@ -372,7 +372,7 @@ void options::render() {
 	//SDL_RenderPresent(renderer);
 
 }
-void options::logic(double deltatime) {
+void options::logic(float deltatime) {
     if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG]) {
         background.logic(deltatime);
         cub->logic(deltatime);
@@ -399,10 +399,7 @@ void options::logic(double deltatime) {
         currenttitle--;
         settingsx = 320;
         currentselection = 0;
-
     }
-
-
 }
 int options::endlogic() {
     if (loadgame) {

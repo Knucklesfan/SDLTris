@@ -15,4 +15,9 @@
 <musicartist>arachno \ coolphat</musicartist>
 <thumbnail>thumbnail.nonanex.bmp</thumbnail>
 
+<sine>1</sine>
+<sineheight>20</sineheight>
+<sinewidth>20</sinewidth>
+<sinelayerheight>64</sinelayerheight>
+
 

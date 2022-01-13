@@ -18,6 +18,11 @@ class bg
         double layerposx[10];
         double layerposy[10];
         int layers = 0;
+        int sinelayer = 0;
+        int snwidth = 0;
+        int snheight = 0;
+        int snwid = 0;
+        bool sine = 0;
         int fglayer = 0;
         double angle = 0.0;
         double rotation;
@@ -38,8 +43,10 @@ class bg
     private:
         int maxwidth, maxheight;
     	void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
+        void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch);
         bool hasEnding(std::string const& fullString, std::string const& ending);
         void generateSurfaces(std::string path, SDL_Renderer* renderer);
         static bool compareFunction (std::string a, std::string b) {return a<b;} 
+        void drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int tempy, int multiplerx, int multiplery, int width, int height, bool wavy, int wavywidth, int sinewidth, int sineheight, double sinepos);
         
 };

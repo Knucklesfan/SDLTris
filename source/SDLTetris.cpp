@@ -8,6 +8,7 @@
 #include <algorithm>    // std::sort
 #include <cstring>
 #include <ctime>
+#include <chrono>
 
 #include "game.h"
 #include "titlescreen.h"
@@ -58,6 +59,20 @@
 #define JOY_RIGHT 14
 #define JOY_DOWN  15
 
+#define TICK_INTERVAL    7
+
+static Uint32 next_time;
+
+Uint32 time_left(void)
+{
+    Uint32 now;
+
+    now = SDL_GetTicks();
+    if(next_time <= now)
+        return 0;
+    else
+        return next_time - now;
+}
 
 std::vector<Mix_Music*> generateMusic(std::string path);
 std::vector<Mix_Chunk*> generateSounds(std::string path);
@@ -139,7 +154,7 @@ int main() {
     bool quit = false;
     Uint64 NOW = SDL_GetPerformanceCounter();
     Uint64 LAST = 0;
-    double deltaTime = 0;
+    float deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
     int gamemode = 0;
@@ -191,6 +206,7 @@ int main() {
 #endif
     highscore* score = new highscore();
 
+    next_time = SDL_GetTicks() + TICK_INTERVAL;
 
     //rpcimplement rpc();
 #ifdef _WIN32
@@ -198,9 +214,11 @@ int main() {
     discord::Timestamp time = 0;
     time = std::time(nullptr);
     rpc->update("At the Knuxfan Screen.", "Top high score: " + std::to_string(score->maxscore), "icon1", time);
-
 #endif
+    float _fps = 0;
+
     while (!quit) {
+        auto t1 = std::chrono::high_resolution_clock::now();
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
@@ -246,7 +264,7 @@ int main() {
 
         LAST = NOW;
         NOW = SDL_GetPerformanceCounter();
-        deltaTime = (double)((NOW - LAST) * 1000 / (double)SDL_GetPerformanceFrequency());
+        deltaTime = (float)((NOW - LAST) * 1000 / (float)SDL_GetPerformanceFrequency());
         SDL_SetRenderTarget(renderer, rendertext);
         SDL_RenderClear(renderer);
 #ifdef _NETCODE
@@ -323,7 +341,6 @@ int main() {
 #endif
             gamer->render();
             int logic = gamer->endlogic();
-            std::cout << logic;
             if (logic == 1 || !gamer->gameactive) {
                 res->reset();
                 gamemode = 3;
@@ -385,7 +402,18 @@ int main() {
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, rendertext, NULL,NULL);
+    fonts[0]->render(8,8,std::to_string(_fps),false, renderer);
     SDL_RenderPresent(renderer);
+
+    SDL_Delay(time_left());
+    next_time += TICK_INTERVAL;
+
+    auto t2 = std::chrono::high_resolution_clock::now();
+    Uint64 ms_int = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+    
+    _fps =  (1000000 / ms_int);
+    std::cout << "FPS: " << _fps << "\n";
+
     }
     return 0;
 }

@@ -20,7 +20,6 @@
 
 bg::bg() {}
 bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
-
     std::string filepath = pth "backgrounds/" + path + "/theme.xml";
     if(folder) {
         filepath = path + "/theme.xml";
@@ -54,7 +53,8 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
         sinelayer = atoi(doc.first_node("sine")->value());
         snheight = atoi(doc.first_node("sineheight")->value());
         snwidth = atoi(doc.first_node("sinewidth")->value());
-        snwid = atoi(doc.first_node("sinelayerheight")->value());
+        snwid = atoi(doc.first_node("sinelayerheight")->value());\
+        rate = atoi(doc.first_node("sinerate")->value());
     }
 
 
@@ -181,7 +181,7 @@ void bg::render(SDL_Renderer* renderer, bool layer) {
 }
 void bg::logic(double deltatime)
 {
-    angle += deltatime / 10000;
+    angle += deltatime / rate;
     //std::cout << angle << "\n";
 
     for(int i = 0; i < layers; i++) {
@@ -258,9 +258,13 @@ void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int 
     if (wavy) {
         for(int i = 0; i < height; i+=wavywidth) {
             double sinex = (sin((sinepos + i) * sinewidth) * sineheight);
-            drawTexture(renderer, texture, tempx+sinex, tempy+i, fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
-            drawTexture(renderer, texture, tempx+sinex + (width * multiplerx), tempy+ (height+i * multiplery), fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
-            drawTexture(renderer, texture, tempx+sinex + 0, tempy + (height+i * multiplery), fmod(angle, 360), 1.0, false),0,i,width,wavywidth;
+
+            drawTexture(renderer, texture, tempx+sinex, (tempy+i), fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
+
+            drawTexture(renderer, texture, tempx+sinex + (width * multiplerx), (tempy+i) + (height * multiplery), fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
+            
+            drawTexture(renderer, texture, tempx+sinex, (tempy+i)+(height * multiplery), fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
+
             drawTexture(renderer, texture, tempx+sinex + (width * multiplerx), tempy+i, fmod(angle, 360), 1.0, false,0,i,width,wavywidth);
         }
     }

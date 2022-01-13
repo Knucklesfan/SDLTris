@@ -26,3 +26,9 @@
 <music>song.mod</music>
 <musicname>Jump To My Beat</musicname>
 <musicartist>BabyDee / eFFect</musicartist>
+
+<sine>4</sine>
+<sineheight>5</sineheight>
+<sinewidth>5</sinewidth>
+<sinelayerheight>10</sinelayerheight>
+<sinerate>5000</sinerate>

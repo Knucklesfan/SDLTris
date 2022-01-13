@@ -16,6 +16,7 @@ public:
 	int backnum;
     knuxfanscreen(SDL_Renderer* render, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Chunk* soundVec[], int background, font* foont);
 	void render();
+	void keyPressed(SDL_Keycode key);
 	void logic(double deltatime);
 	int endlogic();
 	void reset();

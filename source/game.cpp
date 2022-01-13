@@ -398,7 +398,6 @@ void game::checkLines(int(blocks)[1024]) {
             clearRow(blocks, i);
             times++;
         }
-        free(temp);
     }
 
     if(times == 1) {

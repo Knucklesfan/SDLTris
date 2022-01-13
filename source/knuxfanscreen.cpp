@@ -32,7 +32,9 @@ void knuxfanscreen::render() {
     //SDL_RenderPresent(renderer);
 
 }
-
+void knuxfanscreen::keyPressed(SDL_Keycode key) {
+    active = false;
+}
 void knuxfanscreen::logic(double deltatime) {
 	if (active) {
 		lifetime += deltatime/5;

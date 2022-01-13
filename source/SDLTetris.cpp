@@ -80,7 +80,7 @@ std::vector<SDL_Texture*> generateSurfaces(std::string path, SDL_Renderer* rende
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
 bool bgCompare (bg a, bg b) {return a.name<b.name;} 
-int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, credits* cred, SDL_Keycode keycode);
+int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, credits* cred, knuxfanscreen* knfn, SDL_Keycode keycode);
 
 int main() {
 #ifdef __SWITCH__
@@ -227,38 +227,38 @@ int main() {
                 switch (event.jbutton.button) {
                 case JOY_B:
                 case JOY_A: {
-                    input(gamemode, title, gamer, res, opt, crd, SDLK_z);
+                    input(gamemode, title, gamer, res, opt, crd, screen, SDLK_z);
                     break;
                 }
                 case JOY_DOWN: {
-                    input(gamemode, title, gamer, res, opt, crd, SDLK_DOWN);
+                    input(gamemode, title, gamer, res, opt, crd,screen, SDLK_DOWN);
                     break;
                 }
                 case JOY_UP: {
-                    input(gamemode, title, gamer, res, opt, crd, SDLK_UP);
+                    input(gamemode, title, gamer, res, opt, crd,screen, SDLK_UP);
                     break;
                 }
                 case JOY_LEFT: {
-                    input(gamemode, title, gamer, res, opt, crd, SDLK_LEFT);
+                    input(gamemode, title, gamer, res, opt, crd,screen, SDLK_LEFT);
                     break;
                 }
                 case JOY_RIGHT: {
-                    input(gamemode, title, gamer, res, opt, crd, SDLK_RIGHT);
+                    input(gamemode, title, gamer, res, opt, crd,screen, SDLK_RIGHT);
                     break;
                 }
                 case JOY_L: {
-                    input(gamemode, title, gamer, res, opt, crd, SDLK_x);
+                    input(gamemode, title, gamer, res, opt, crd,screen, SDLK_x);
                     break;
                 }
                 case JOY_PLUS: {
-                    input(gamemode, title, gamer, res, opt, crd, SDLK_ESCAPE);
+                    input(gamemode, title, gamer, res, opt, crd,screen, SDLK_ESCAPE);
                     break;
                 }
 
                 }
             }
             if (event.type == SDL_KEYDOWN) {
-                input(gamemode, title, gamer, res, opt, crd, event.key.keysym.sym);
+                input(gamemode, title, gamer, res, opt, crd,screen, event.key.keysym.sym);
             }
         }
 
@@ -473,8 +473,12 @@ bool hasEnding(std::string const& fullString, std::string const& ending) { //tha
     }
 }
 
-int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, credits* cred, SDL_Keycode keycode) {
+int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, credits* cred, knuxfanscreen* knfn, SDL_Keycode keycode) {
     switch(gamemode) {
+        case 0: {
+            knfn->keyPressed(keycode);
+            break;
+        }
         case 1: {
             title->keyPressed(keycode);
             break;

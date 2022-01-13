@@ -22,6 +22,7 @@ class bg
         int snwidth = 0;
         int snheight = 0;
         int snwid = 0;
+        int rate = 0;
         bool sine = 0;
         int fglayer = 0;
         double angle = 0.0;

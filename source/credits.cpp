@@ -122,26 +122,27 @@ void credits::render(SDL_Renderer* render) {
                         y = 224 + (i % 24) * 32;
                     }
                 }
+                if(y < 512) {
+                    switch(wordprops[i]) {
+                        case 1: {
+                            textfont->render(320, y, words[i], true, render,580);
+                            layers+=textfont->height;
+                            break;
+                        };
+                        case 0: {
+                            headerfont->render(320, y, words[i], true, render,580);
+                            layers+=headerfont->height;
+                            break;
+                        };
+                        case 2: {
+                            textfont->render(render, words[i],320, y, true,255,0,255,580,true,time/500, 5,20);
+                            layers+=headerfont->height;
+                            break;
+                        }
 
-                switch(wordprops[i]) {
-                    case 1: {
-                        textfont->render(320, y, words[i], true, render,580);
-                        layers+=textfont->height;
-                        break;
-                    };
-                    case 0: {
-                        headerfont->render(320, y, words[i], true, render,580);
-                        layers+=headerfont->height;
-                        break;
-                    };
-                    case 2: {
-                        textfont->render(render, words[i],320, y, true,255,0,255,580,true,time/500, 5,20);
-                        layers+=headerfont->height;
-                        break;
                     }
-
+                    layers+=wordspacing[i];
                 }
-                layers+=wordspacing[i];
             }
             SDL_SetRenderDrawColor(render, 0, 0, 0, 255*alpha);
             SDL_Rect splashbox = { 0, 0, 640, 480 };

@@ -36,14 +36,19 @@ enum DISPLAYOPTIONS
 	MOVINGBG = 3,
 	NEARTOPFLASH = 4
 };
+enum SYSTEMOPTIONS
+{
+	FULLSCREEN = 0,
+	MUSIC = 1,
+	SOUNDS = 2,
+	RESET = 3,
+};
 
 enum EXTRAOPTIONS
 {
 	ROTATEBOARD = 0,
-	MOREBLOCKS = 1,
-	BIGGERBOARD = 2,
-	BLINDMODE = 3,
-	BORDERLINE = 4
+	BIGGERBOARD = 1,
+	BLINDMODE = 2,
 };
 
 class options {
@@ -68,6 +73,7 @@ public:
 	int currenttitle = 0;
 	int currentselection = 0;
 	int currentscreen = 0;
+	int currentmenuselect = 0;
 	std::string bottomtck = "GREEZ TO THE FOLLOWING PEOPLE: KK, DURANGO, JOHNNY, BOOMBOOM, FRISBEE, BLAKE, CASPER, DARK PRINCE, KRIS, CONNOR, ELENA, QUOTES, ERIKA, BRE, PETERS, EMRETECH, GENERIC, BOTTMINT, M4XW, BEHEMOTH, NATINSULA, TOTALJUSTICE, MIRZAGHALIB, AND EVERYONE ON SMWCENTRAL AND EVERYWHERE ELSE WHO'S HELPED ME THIS FAR.     ";
 	std::string tcktxt = "LEGENDARY DEVELOPER KNUXFAN PRESENTS HIS LATEST GAME- KNUXFANS TETRIMINOS. THEY MUST CREATE NEW DREAMS AND FILMS BY BREAKING TRADITIONAL STYLES. THE WORK, WHICH BECOMES A NEW GENRE ITSELF WILL BE CALLED... KNUXFAN'S TETRIMINOS. A TETRIS CLONE UNLIKE ANY OTHER WITH ASPIRATIONS FOR A HIGHER GAMEPLAY. USING CPP, SDL2 AND A WHOLE LOT OF POWER FROM MODERN PROCESSORS COMES AN AMIGA GAME FROM ANOTHER TIMELINE";
 	SDL_Texture* rendertext;
@@ -108,15 +114,15 @@ public:
 		"Music Volume",
 		"Sound Volume",
 		"Reset Settings",
-		"DELETE SAVE FILE (WARNING)",
+		"",
 		"Exit Menu",
 		},
 		{
 		"Rotating Board",
-		"More Block Shapes",
 		"Bigger Board??",
 		"Blind Mode",
-		"Borderline Unplayable",
+		"More coming in future updates!",
+		"",
 		"Exit Menu",
 		},
 	};
@@ -150,14 +156,52 @@ public:
 		},
 		{
 			"Basically, motion sickness simulator. Gotta see it to believe it.",
-			"Adds more blocks",
 			"Expands the board to an agonizing 40x20. Why would anyone play this????",
 			"The board fades in and out, making it very hard to play.",
-			"All of this.. PLUS more.",
+			"More coming soon!!",
+			"",
 			"Closes this menu."
 		}
 	};
-	
+
+	const int defaults[4][6] = {
+		{
+		1,
+		1,
+		0,
+		1,
+		1,
+		0
+		},
+
+		{
+		1,
+		0,
+		1,
+		1,
+		1,
+		0
+		},
+
+		{
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+		},
+
+		{
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+		}
+	};
+
 	int activations[4][6] = {
 		{
 		1,

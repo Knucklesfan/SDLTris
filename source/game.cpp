@@ -18,7 +18,7 @@
 
 #define LINES 0
 #define LEVEL 1
-#define BLOCKY 0
+#define BLOCKY 2
 #define BLOCKX 2
 
 #ifdef __SWITCH__
@@ -165,7 +165,7 @@ void game::render() {
             SDL_RenderCopy(renderer, textures.at(12), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         }
         else {
-            SDL_RenderCopy(renderer, textures.at(9), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+            SDL_RenderCopy(renderer, textures.at(9), NULL, NULL); //okay, so i like how when i started working on this game, I didn't even know how SDL_RenderCopy worked lmao
         }
         g.changePos(t.x, t.y, t.rot);
         t.draw();

@@ -20,7 +20,7 @@ void options::keyPressed(SDL_Keycode key) {
     case SDLK_RIGHT: {
         switch (currentscreen) {
         case 0: {
-            if (currenttitle < 3) {
+            if (currenttitle < 3 && !mvleft) {
                 mvright = true;
             }
             break;
@@ -47,6 +47,14 @@ void options::keyPressed(SDL_Keycode key) {
             }
             break;
         }
+        case 4: {
+            if(currentmenuselect < 1) {
+                currentmenuselect++;
+                Mix_PlayChannel(-1, sound[1], 0);
+            }
+
+            break;
+        }
 
         }
         break;
@@ -54,7 +62,7 @@ void options::keyPressed(SDL_Keycode key) {
     case SDLK_LEFT: {
         switch (currentscreen) {
         case 0: {
-            if (currenttitle > 0) {
+            if (currenttitle > 0 && !mvright) {
                 mvleft = true;
             }
             break;
@@ -81,7 +89,14 @@ void options::keyPressed(SDL_Keycode key) {
             }
             break;
         }
+        case 4: {
+            if(currentmenuselect > 0) {
+                currentmenuselect--;
+                Mix_PlayChannel(-1, sound[1], 0);
+            }
 
+            break;
+        }
         }
         break;
 
@@ -90,7 +105,7 @@ void options::keyPressed(SDL_Keycode key) {
         if (currentselection > 0 && currentscreen == 0) {
             Mix_PlayChannel(-1, sound[1], 0);
             currentselection--;
-            if (currentselection == 4 && currenttitle == 0) {
+            if (currentselection == 4 && (currenttitle == 0 || currenttitle == 2 || currenttitle == 3)) {
                 currentselection--;
             }
 
@@ -101,7 +116,7 @@ void options::keyPressed(SDL_Keycode key) {
         if (currentselection < 5 && currentscreen == 0) {
             Mix_PlayChannel(-1, sound[1], 0);
             currentselection++;
-            if (currentselection == 4 && currenttitle == 0) {
+            if (currentselection == 4 && (currenttitle == 0 || currenttitle == 2 || currenttitle == 3)) {
                 currentselection++;
             }
         }
@@ -149,6 +164,7 @@ void options::keyPressed(SDL_Keycode key) {
                     }
 
                     case 0: {
+                        activations[currenttitle][currentselection] = !activations[currenttitle][currentselection];
                         Uint32 FullscreenFlag = SDL_WINDOW_FULLSCREEN;
                         bool IsFullscreen = SDL_GetWindowFlags(window) & FullscreenFlag;
                         SDL_SetWindowFullscreen(window, IsFullscreen ? 0 : FullscreenFlag);
@@ -164,11 +180,11 @@ void options::keyPressed(SDL_Keycode key) {
                         break;
                     }
                     case 3: {
-                        currentscreen = 9;
+                        currentscreen = 4;
                         break;
                     }
                     case 4: {
-                        currentscreen = 9;
+                        currentscreen = 4;
                         break;
                     }
 
@@ -188,6 +204,17 @@ void options::keyPressed(SDL_Keycode key) {
                 if (currentselection == 5) {
                     loadgame = true;
                 }
+                break;
+            }
+            case 4: {
+                if(currentmenuselect == 0) {
+                    for(int i = 0; i < 4; i++) {
+                        for(int j = 0; j < 6; j++) {
+                            activations[i][j] = defaults[i][j];
+                        }
+                    }
+                }
+                currentscreen = 0;
                 break;
             }
             default: {
@@ -255,10 +282,16 @@ void options::render() {
 
         }
     }
-    if (currenttitle != 2 && currentselection != 5) {
+    if ((!(currenttitle == 3 && currentselection == 3)) && currentselection != 5) {
         std::string txt = "Value: ";
         if (currenttitle == OPTIONTYPE::DISPLAY && currentselection == DISPLAYOPTIONS::FIRSTBG) {
             txt += backgrounds[activations[currenttitle][currentselection]].name;
+        }
+        else if(currenttitle == OPTIONTYPE::SYSTEM && currentselection == SYSTEMOPTIONS::MUSIC) {
+            txt += std::to_string(Mix_VolumeMusic(-1));
+        }
+        else if(currenttitle == OPTIONTYPE::SYSTEM && currentselection == SYSTEMOPTIONS::SOUNDS) {
+            txt += std::to_string(Mix_Volume(-1,-1));
         }
         else {
             txt += activations[currenttitle][currentselection] ? "Enabled" : "Disabled";
@@ -346,7 +379,23 @@ void options::render() {
 
             break;
         }
+        case 4: {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+            SDL_Rect splashbox = { 0, 0, 640, 480 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 200);
+            splashbox = { 320 - 240, 240 - 120, 480, 240 };
+            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+            SDL_RenderDrawRect(renderer, &splashbox);
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 26);
 
+            newhead->render(320, 140, "ARE YOU SURE?", true, renderer);
+            tickertext->render(320, 180, "This will reset all of your settings!", true, renderer, 448);
+            tickertext->render(renderer, "YES", 256, 300, true, (currentmenuselect == 0?255:0), 0, 0);
+            tickertext->render(renderer, "NO", 384, 300, true, (currentmenuselect == 1?255:0), 0, 0);
+            break;
+        }
         case 9: {
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
             SDL_Rect splashbox = { 0, 0, 640, 480 };
@@ -361,7 +410,7 @@ void options::render() {
             newhead->render(320, 140, "UNFINISHED", true, renderer);
             tickertext->render(320, 180, "I swear it'll be here when I'm done...", true, renderer, 448);
             tickertext->render(320, 300, "EXIT", true, renderer);
-
+            break;
         }
     }
 

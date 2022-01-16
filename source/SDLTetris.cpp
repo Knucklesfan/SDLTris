@@ -402,7 +402,9 @@ int main() {
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderClear(renderer);
     SDL_RenderCopy(renderer, rendertext, NULL,NULL);
-    fonts[0]->render(8,8,std::to_string(_fps),false, renderer);
+    if (opt->activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
+        fonts[0]->render(8, 8, std::to_string(_fps), false, renderer);
+    }
     SDL_RenderPresent(renderer);
 
     SDL_Delay(time_left());
@@ -412,7 +414,7 @@ int main() {
     Uint64 ms_int = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
     
     _fps =  (1000000 / ms_int);
-    std::cout << "FPS: " << _fps << "\n";
+    //std::cout << "FPS: " << _fps << "\n";
 
     }
     return 0;

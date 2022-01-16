@@ -304,6 +304,19 @@ void game::keyPressed(SDL_Keycode key)
             }
             break;
         }
+        case SDLK_y: {
+            if (activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
+                level++;
+            }
+            break;
+        }
+        case SDLK_u: {
+            if (activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
+                level--;
+            }
+            break;
+        }
+
         }
     }
     else {
@@ -549,36 +562,32 @@ void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int 
 //...i'm stupid
 double game::getspeed() {
     double returndb;
-    if(activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED] == 1) {
+    if(activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED]) {
+        std::cout << "Speed!!!\n";
         switch (level) {
+            case 0: {
+                returndb = 8.5;
+                break;
+            }
             case 1: {
                 returndb = 8;
                 break;
             }
-            case 2: {
-                returndb = 7.5;
-                break;
-            }
+            case 2:
             case 3: {
                 returndb = 7;
                 break;
             }
-            case 4: {
-                returndb = 6.5;
-                break;
-            }
+            case 4:
             case 5: {
-                returndb = 6.25;
+                returndb = 6.5;
                 break;
             }
             case 6: {
                 returndb = 6;
                 break;
             }
-            case 7: {
-                returndb = 5.75;
-                break;
-            }
+            case 7:
             case 8: {
                 returndb = 5.5;
                 break;
@@ -630,7 +639,7 @@ double game::getspeed() {
 
     }
     else {
-        returndb = 8;
+        returndb = 12;
     }
-    return returndb * 12.5;
+    return returndb * 6;
 }

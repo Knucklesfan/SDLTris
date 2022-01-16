@@ -16,7 +16,8 @@ enum OPTIONTYPE
 	GAMEPLAY = 0,
 	DISPLAY = 1,
 	SYSTEM = 2,
-	EXTRA = 3
+	EXTRA = 3,
+	DEBUG = 4
 };
 
 enum GAMEPLAYOPTIONS
@@ -49,6 +50,10 @@ enum EXTRAOPTIONS
 	ROTATEBOARD = 0,
 	BIGGERBOARD = 1,
 	BLINDMODE = 2,
+};
+
+enum DEBUGOPTIONS {
+	DEBUGENABLED = 0
 };
 
 class options {
@@ -164,7 +169,7 @@ public:
 		}
 	};
 
-	const int defaults[4][6] = {
+	const int defaults[5][6] = {
 		{
 		1,
 		1,
@@ -192,6 +197,14 @@ public:
 		0
 		},
 
+		{
+		0,
+		0,
+		0,
+		0,
+		0,
+		0
+		},
 		{
 		0,
 		0,
@@ -200,9 +213,10 @@ public:
 		0,
 		0
 		}
+
 	};
 
-	int activations[4][6] = {
+	int activations[5][6] = {
 		{
 		1,
 		1,
@@ -218,6 +232,15 @@ public:
 		1,
 		1,
 		1,
+		0
+		},
+
+		{
+		0,
+		0,
+		0,
+		0,
+		0,
 		0
 		},
 
@@ -238,6 +261,7 @@ public:
 		0,
 		0
 		}
+
 	};
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);

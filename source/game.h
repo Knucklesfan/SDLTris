@@ -29,7 +29,7 @@ class game
 		int testblocks[1024], ghostblocks[1024],  previousblocks[1024];
 		SDL_Renderer* renderer;
 		Mix_Music** music;
-		int (activations)[4][6];
+		int (activations)[5][6];
 		Mix_Chunk** sound;
 		tetrimino t;
 		ghostblock g;
@@ -61,7 +61,7 @@ class game
 		std::vector<SDL_Texture*> textures;
     	SDL_Texture* texture;
 		std::vector<bg>  backgrounds;
-		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, int(active)[4][6]);
+		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<font*> fonts, int(active)[5][6]);
 		double layerpos[10];
 		void keyPressed(SDL_Keycode key);
 		void render();

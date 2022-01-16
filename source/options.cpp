@@ -225,7 +225,10 @@ void options::keyPressed(SDL_Keycode key) {
         Mix_PlayChannel(-1, sound[0], 0);
         break;
     }
-
+    case SDLK_F1: {
+        activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED] = !activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED];
+        break;
+    }
     }
 }
 

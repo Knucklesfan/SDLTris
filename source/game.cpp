@@ -10,6 +10,7 @@
 #include <cmath>
 #include "background.h"
 #include "ingamemessagebox.h"
+
 #include "server.h"
 #include <random>
 #include <ctime>

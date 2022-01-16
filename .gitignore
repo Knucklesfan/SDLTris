@@ -6,3 +6,5 @@ SDLTris.zip
 Debug/**
 build/**
 x64/**
+Release/**
+*.bak

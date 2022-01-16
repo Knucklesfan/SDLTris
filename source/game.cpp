@@ -226,7 +226,7 @@ void game::render() {
 int game::endlogic() {
     
     if (!t.alive && gameactive && !paused) {
-        std::cout << "block not alive!!!";
+        //std::cout << "block not alive!!!";
         Mix_PlayChannel( -1, sound[5], 0 );
         ticks = 0;
         realtick = 0;
@@ -461,7 +461,7 @@ void game::clearRow(int(blocks)[1024], int y) {
     }
     memcpy(blocks, newarray, sizeof newarray);
     lineclears[y] = 1.0;
-    std::cout << "CLEARED LINE" << "\n";
+    //std::cout << "CLEARED LINE" << "\n";
     //shiftarray(blocks, 240, -10);
 
 }
@@ -563,7 +563,7 @@ void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int 
 double game::getspeed() {
     double returndb;
     if(activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED]) {
-        std::cout << "Speed!!!\n";
+        //std::cout << "Speed!!!\n";
         switch (level) {
             case 0: {
                 returndb = 8.5;

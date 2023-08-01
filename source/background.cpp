@@ -245,8 +245,8 @@ void bg::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y,
 //anyways so that's the new and totally awesome relevant modern new background system thing that everyone definitely loves
 
 
-
-bool bg::hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me out https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
+//(edit added pun)
+bool bg::hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me right https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
     if (fullString.length() >= ending.length()) {
         return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
     }
@@ -254,6 +254,7 @@ bool bg::hasEnding(std::string const& fullString, std::string const& ending) { /
         return false;
     }
 }
+
 void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int tempy, int multiplerx, int multiplery, int width, int height, bool wavy, int wavywidth, int sinewidth, int sineheight, double sinepos) {
     if (wavy) {
         for(int i = 0; i < height; i+=wavywidth) {
@@ -276,4 +277,3 @@ void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int 
     }
 
 }
-

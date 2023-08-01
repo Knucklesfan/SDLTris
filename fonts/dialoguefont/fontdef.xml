@@ -1,0 +1,578 @@
+<!--.-->
+
+<height>16</height>
+<!--literally the only thing required outside of this..-->
+<width>16</width>
+<!--this width is the sprite of the drawn image.-->
+
+<spwidth>7</spwidth>
+<!--this is a VERY rough estimate of per character size for wordwrap calculation. Just, try to get a good estimate? Might make this auto generated.-->
+
+
+<row>8</row>
+<letters>
+
+   <letter>
+        <posx>0</posx>
+        <posy>0</posy>
+        <char>0</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>0</posy>
+        <char>1</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>0</posy>
+        <char>2</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>0</posy>
+        <char>3</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>0</posy>
+        <char>4</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>0</posy>
+        <char>5</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>6</posx>
+        <posy>0</posy>
+        <char>6</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>7</posx>
+        <posy>0</posy>
+        <char>7</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>0</posx>
+        <posy>1</posy>
+        <char>8</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>1</posy>
+        <char>9</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>1</posy>
+        <char>A</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>1</posy>
+        <char>B</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>1</posy>
+        <char>C</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>1</posy>
+        <char>D</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>6</posx>
+        <posy>1</posy>
+        <char>E</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>7</posx>
+        <posy>1</posy>
+        <char>F</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>0</posx>
+        <posy>2</posy>
+        <char>G</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>2</posy>
+        <char>H</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>2</posy>
+        <char>I</char>
+        <charwid>5</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>2</posy>
+        <char>J</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>2</posy>
+        <char>K</char>
+        <charwid>8</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>2</posy>
+        <char>L</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>6</posx>
+        <posy>2</posy>
+        <char>M</char>
+        <charwid>9</charwid>
+    </letter>
+
+   <letter>
+        <posx>7</posx>
+        <posy>2</posy>
+        <char>N</char>
+        <charwid>8</charwid>
+    </letter>
+
+   <letter>
+        <posx>0</posx>
+        <posy>3</posy>
+        <char>O</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>3</posy>
+        <char>P</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>3</posy>
+        <char>Q</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>3</posy>
+        <char>R</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>3</posy>
+        <char>S</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>3</posy>
+        <char>T</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>6</posx>
+        <posy>3</posy>
+        <char>U</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>7</posx>
+        <posy>3</posy>
+        <char>V</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>0</posx>
+        <posy>4</posy>
+        <char>W</char>
+        <charwid>11</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>4</posy>
+        <char>X</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>4</posy>
+        <char>Y</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>4</posy>
+        <char>Z</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>4</posy>
+        <char>a</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>4</posy>
+        <char>b</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>6</posx>
+        <posy>4</posy>
+        <char>c</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>7</posx>
+        <posy>4</posy>
+        <char>d</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>0</posx>
+        <posy>5</posy>
+        <char>e</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>5</posy>
+        <char>f</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>5</posy>
+        <char>g</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>5</posy>
+        <char>h</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>5</posy>
+        <char>i</char>
+        <charwid>3</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>5</posy>
+        <char>j</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>6</posx>
+        <posy>5</posy>
+        <char>k</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>7</posx>
+        <posy>5</posy>
+        <char>l</char>
+        <charwid>3</charwid>
+    </letter>
+
+   <letter>
+        <posx>0</posx>
+        <posy>6</posy>
+        <char>m</char>
+        <charwid>11</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>6</posy>
+        <char>n</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>6</posy>
+        <char>o</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>6</posy>
+        <char>p</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>6</posy>
+        <char>q</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>6</posy>
+        <char>r</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>6</posx>
+        <posy>6</posy>
+        <char>s</char>
+        <charwid>6</charwid>
+    </letter>
+
+   <letter>
+        <posx>7</posx>
+        <posy>6</posy>
+        <char>t</char>
+        <charwid>5</charwid>
+    </letter>
+
+   <letter>
+        <posx>0</posx>
+        <posy>7</posy>
+        <char>u</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>1</posx>
+        <posy>7</posy>
+        <char>v</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>2</posx>
+        <posy>7</posy>
+        <char>w</char>
+        <charwid>11</charwid>
+    </letter>
+
+   <letter>
+        <posx>3</posx>
+        <posy>7</posy>
+        <char>x</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>4</posx>
+        <posy>7</posy>
+        <char>y</char>
+        <charwid>7</charwid>
+    </letter>
+
+   <letter>
+        <posx>5</posx>
+        <posy>7</posy>
+        <char>z</char>
+        <charwid>7</charwid>
+    </letter>
+	<letter>
+        <posx>0</posx>
+        <posy>8</posy>
+        <char>!</char>
+        <charwid>3</charwid>
+    </letter>
+	<letter>
+        <posx>2</posx>
+        <posy>8</posy>
+        <char>?</char>
+        <charwid>7</charwid>
+    </letter>
+	<letter>
+        <posx>6</posx>
+        <posy>8</posy>
+        <char>"</char>
+        <charwid>6</charwid>
+    </letter>
+	<letter>
+        <posx>3</posx>
+        <posy>9</posy>
+        <char>'</char>
+        <charwid>3</charwid>
+    </letter>
+	<letter>
+        <posx>4</posx>
+        <posy>9</posy>
+        <char>,</char>
+        <charwid>3</charwid>
+    </letter>
+	<letter>
+        <posx>5</posx>
+        <posy>9</posy>
+        <char>.</char>
+        <charwid>3</charwid>
+    </letter>
+	<letter>
+        <posx>6</posx>
+        <posy>9</posy>
+        <char>-</char>
+        <charwid>7</charwid>
+    </letter>
+	<letter>
+        <posx>7</posx>
+        <posy>9</posy>
+        <char>_</char>
+        <charwid>7</charwid>
+    </letter>
+	<letter>
+        <posx>1</posx>
+        <posy>10</posy>
+        <char>%</char>
+        <charwid>11</charwid>
+    </letter>
+	<letter>
+        <posx>2</posx>
+        <posy>10</posy>
+        <char>#</char>
+        <charwid>9</charwid>
+    </letter>
+	<letter>
+        <posx>3</posx>
+        <posy>10</posy>
+        <char>/</char>
+        <charwid>6</charwid>
+    </letter>
+	<letter>
+        <posx>4</posx>
+        <posy>10</posy>
+        <char>\</char>
+        <charwid>6</charwid>
+    </letter>
+	<letter>
+        <posx>5</posx>
+        <posy>10</posy>
+        <char>;</char>
+        <charwid>3</charwid>
+    </letter>
+	<letter>
+        <posx>6</posx>
+        <posy>10</posy>
+        <char>:</char>
+        <charwid>3</charwid>
+    </letter>
+	<letter>
+        <posx>7</posx>
+        <posy>10</posy>
+        <char>(</char>
+        <charwid>4</charwid>
+    </letter>
+	<letter>
+        <posx>0</posx>
+        <posy>11</posy>
+        <char>)</char>
+        <charwid>4</charwid>
+    </letter>
+	<letter>
+        <posx>1</posx>
+        <posy>11</posy>
+        <char>[</char>
+        <charwid>4</charwid>
+    </letter>
+	<letter>
+        <posx>2</posx>
+        <posy>11</posy>
+        <char>]</char>
+        <charwid>4</charwid>
+    </letter>
+	<letter>
+        <posx>3</posx>
+        <posy>11</posy>
+        <char>{</char>
+        <charwid>5</charwid>
+    </letter>
+	<letter>
+        <posx>4</posx>
+        <posy>11</posy>
+        <char>}</char>
+        <charwid>5</charwid>
+    </letter>
+	<letter>
+        <posx>4</posx>
+        <posy>14</posy>
+        <char>*</char>
+        <charwid>15</charwid>
+    </letter>
+
+	
+	
+	
+</letters>

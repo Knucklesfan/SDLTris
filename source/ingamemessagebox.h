@@ -24,8 +24,8 @@ class ingamemessagebox
         void render(SDL_Renderer* renderer);
         std::vector<SDL_Texture*> textures;
         SDL_Renderer* renderer;
-        font* letterfont;
-        ingamemessagebox(std::string name, std::string desc, SDL_Renderer* renderer, std::vector<SDL_Texture*> texture, font* font, int loc);
+        Font* letterfont;
+        ingamemessagebox(std::string name, std::string desc, SDL_Renderer* renderer, std::vector<SDL_Texture*> texture, Font* font, int loc);
         ingamemessagebox();
 
         void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch);

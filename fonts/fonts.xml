@@ -1,0 +1,15 @@
+<fonts>
+	<font>
+		<type>pixfont</type>
+		<path>8x8font</path>
+	</font>
+	<font>
+		<type>pixfont</type>
+		<path>8x16font</path>
+	</font>
+	<font>
+		<type>pixfont</type>
+		<path>small8x8font</path>
+	</font>
+
+</fonts>

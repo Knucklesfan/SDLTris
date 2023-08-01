@@ -1,1 +1,78 @@
-<sprites>14</sprites>
+<sprites>
+	<sprite>
+	    <name>bbackdrop</name>
+	    <path>./sprites/bbackdrop.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>bblock</name>
+	    <path>./sprites/bblock.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>bigstage</name>
+	    <path>./sprites/bigstage.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>hold</name>
+	    <path>./sprites/hold.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>knfnlogo</name>
+	    <path>./sprites/knfnlogo.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>knfnpres</name>
+	    <path>./sprites/knfnpres.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>mblock</name>
+	    <path>./sprites/mblock.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>pblock</name>
+	    <path>./sprites/pblock.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>rblock</name>
+	    <path>./sprites/rblock.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>ring</name>
+	    <path>./sprites/ring.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>sbackdrop</name>
+	    <path>./sprites/sbackdrop.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>stage</name>
+	    <path>./sprites/stage.png</path>
+	</sprite>
+	
+	<sprite>
+	    <name>thxforplaying</name>
+	    <path>./sprites/thxforplaying.png</path>
+	</sprite>
+	<sprite>
+	    <name>visualizer</name>
+	    <path>./sprites/visualizer.png</path>
+	</sprite>
+	<sprite>
+		<name>knuxfan</name>
+		<path>./sprites/knuxfan.png</path>
+	</sprite>
+	<sprite>
+		<name>presents</name>
+		<path>./sprites/presents.png</path>
+	</sprite>
+</sprites>

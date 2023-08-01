@@ -32,13 +32,13 @@ void ingamemessagebox::render(SDL_Renderer* renderer)
 	SDL_RenderFillRect(renderer, &splashbox);
 	int tmpx = (int) (uptime / 2.5) % 378;
 	drawTexture(renderer, textures.at(7), x - 2, y+44, 0, 1.0, false, tmpx, 0, 252, 38);
-	letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255, 250, true, uptime / 20, 1, 5);
+	letterfont->render(name, x, y + 4, false, 255, 0, 255, 250, true, uptime / 20, 1, 5,1);
 	//letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
-	letterfont->render(renderer, content, x, y + 20, false, 255, 255, 255,250);
+	letterfont->render(content, x, y + 20, false, 255, 255, 255,250,false,0,0,0,1);
 }	
 
 
-ingamemessagebox::ingamemessagebox(std::string title, std::string desc, SDL_Renderer* render, std::vector<SDL_Texture*> texture, font* letters, int loc)
+ingamemessagebox::ingamemessagebox(std::string title, std::string desc, SDL_Renderer* render, std::vector<SDL_Texture*> texture, Font* letters, int loc)
 {
 	name = title;
 	content = desc;

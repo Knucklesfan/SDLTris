@@ -58,7 +58,7 @@ void titlescreen::input(SDL_Keycode key)
                 loadmenu = true;
                 break;
             case 2:
-                currentscreen = 3;
+                loadcreds = true;
                 break;
             case 3:
                 exit(0);
@@ -358,7 +358,7 @@ Transition titlescreen::endLogic()
         loadgame = false;
     }
     if (loadmenu) {
-        t.gamemode = 0;
+        t.gamemode = 3;
         t.transition = true;
         loadmenu = false;
     }

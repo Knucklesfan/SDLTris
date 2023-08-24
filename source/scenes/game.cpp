@@ -9,7 +9,7 @@
 
 #include <random>
 #include <ctime>
-
+#include "../utils/defs.h"
 
 #define LINES 0
 #define LEVEL 1
@@ -27,20 +27,21 @@
 //TODO: fix the stupid bug here lol
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
-game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> textureb, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<Font*> fonts, int(active)[4][6]) {
+game::game() {
     //srand((unsigned)time(0)); 
-    texture = SDL_CreateTexture(renderman,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
+    texture = SDL_CreateTexture(graphics::render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 
-    memcpy(activations, active, sizeof activations);
+    // memcpy(activations, active, sizeof activations);
     //volume = Mix_VolumeMusic(-1);
     time = std::time(nullptr);
     std::fill_n(testblocks, 1024, 0);
     std::fill_n(ghostblocks, 1024, 0);
     std::fill_n(previousblocks, 1024, 0);
-    renderer = renderman;
-    textures = textureb;
-    if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD]) {
+    // renderer = renderman;
+    // textures = textureb;
+    std::cout << "bigger? " << settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD] << "\n";
+    if(settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD]) {
         boardwidth = 20;
     }
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
@@ -51,16 +52,16 @@ game::game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*
     //int nextblocks[16];
     nextblocks = std::rand() % 7;
     int holdblock = -1;
-    music = musicVec;
-    sound = soundVec;
+    // music = musicVec;
+    // sound = soundVec;
     gameactive = false;
-    backgrounds = backg;
+    // backgrounds = backg;
     lines = LINES;
     level = LEVEL;
     paused = false;
-    bodyfont = fonts.at(2);
-    header = fonts.at(1);
-    msg = new ingamemessagebox("null","null",renderer, textures, bodyfont, 0);
+    bodyfont = graphics::fonts->at(2);
+    header = graphics::fonts->at(1);
+    msg = new ingamemessagebox("null","null", 0);
 
 }
 void game::logic(double deltatime) {
@@ -77,12 +78,12 @@ void game::logic(double deltatime) {
         msg->logic(deltatime);
         visiblelifetime += deltatime;
 
-        if(activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
+        if(settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
             rotval = visiblelifetime/25;
         }
     }
-    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
-        backgrounds[(bglevel) % (backgrounds.size())].logic(deltatime);
+    if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).logic(deltatime);
     }
     
     //std::cout << bglevel << "\n";
@@ -96,7 +97,8 @@ void game::logic(double deltatime) {
             godown = false;
             warningalpha = 1.0;
             alphalifetime = 0;
-            Mix_PlayChannel(-1, sound[9], 0);
+            
+            Mix_PlayChannel(-1, audio::sfx->at(9), 0);
 
         }
         if (warningalpha > 0 && goup) {
@@ -126,7 +128,7 @@ void game::logic(double deltatime) {
         warningalpha = 1.0;
     }
 
-    if (activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BLINDMODE]) {
+    if (settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BLINDMODE]) {
         visibility = (sin(visiblelifetime/5000)+1)/2;
     }
     else {
@@ -145,84 +147,89 @@ void game::logic(double deltatime) {
 }
 void game::render() {
     //if (gameactive) {
-        SDL_RenderClear(renderer);
-        backgrounds[(bglevel)%(backgrounds.size())].render(renderer,false);
-        if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
-            SDL_SetRenderDrawColor(renderer, 255, 0, 0, 128 * warningalpha);
+        SDL_RenderClear(graphics::render);
+        // graphics::backgrounds[(bglevel)%(backgrounds.size())].render(renderer,false);
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render(graphics::render,false);
+        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
+            SDL_SetRenderDrawColor(graphics::render, 255, 0, 0, 128 * warningalpha);
             SDL_Rect splashbox = { 0, 0, 640, 480 };
-            SDL_RenderFillRect(renderer, &splashbox);
+            SDL_RenderFillRect(graphics::render, &splashbox);
             
         }
-        SDL_Texture* temp = SDL_GetRenderTarget(renderer);
-        SDL_SetRenderTarget(renderer, texture);
-        SDL_RenderClear(renderer);
+        SDL_Texture* temp = SDL_GetRenderTarget(graphics::render);
+        SDL_SetRenderTarget(graphics::render, texture);
+        SDL_RenderClear(graphics::render);
         if(boardwidth > 10) {
-            SDL_RenderCopy(renderer, textures.at(12), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+            SDL_RenderCopy(graphics::render, graphics::sprites.at("bbackdrop"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         }
         else {
-            SDL_RenderCopy(renderer, textures.at(9), NULL, NULL); //okay, so i like how when i started working on this game, I didn't even know how SDL_RenderCopy worked lmao
+            SDL_RenderCopy(graphics::render, graphics::sprites.at("sbackdrop"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         }
         g.changePos(t.x, t.y, t.rot);
         t.draw();
         g.draw();
-        if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
-            drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth, textures, renderer);
+        if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
+            drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
         }
-        drawCubes(testblocks, 1.0, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth, textures, renderer);
+        drawCubes(testblocks, 1.0, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
         //std::cout << "LINECLEARS\n";
-        if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
+        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
             for (int i = 0; i < boardheight; i++) {
                 if (lineclears[i] > 0) {
-                    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255 * lineclears[i]);
+                    SDL_SetRenderDrawColor(graphics::render, 255, 255, 255, 255 * lineclears[i]);
                     SDL_Rect splashbox = { 240, 16 + i * 16, 160, 16 };
-                    SDL_RenderFillRect(renderer, &splashbox);
+                    SDL_RenderFillRect(graphics::render, &splashbox);
                 }
                 //std::cout << lineclears[i] << "\n";
 
             }
         }
         if(boardwidth > 10) {
-            SDL_RenderCopy(renderer, textures.at(11), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+            SDL_RenderCopy(graphics::render, graphics::sprites.at("bigstage"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         }
         else {
-            SDL_RenderCopy(renderer, textures.at(0), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+            SDL_RenderCopy(graphics::render, graphics::sprites.at("stage"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         }
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_SetRenderTarget(renderer, temp);
-        drawTexture(renderer, texture, 0, 0, rotval, visibility, false);
+        SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255);
+        SDL_SetRenderTarget(graphics::render, temp);
+        graphics::drawTexture(texture, 0, 0, rotval, visibility, false);
 
         
         
-        SDL_RenderCopy(renderer, textures.at(10), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
+        SDL_RenderCopy(graphics::render, graphics::sprites.at("hold"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
         if(nextblocks > -1 && nextblocks < 7) {
-            drawCubes(t.Pieces[nextblocks][0], 1.0, 512, 48, 16, 4, textures, renderer);
+            drawCubes(t.Pieces[nextblocks][0], 1.0, 512, 48, 16, 4);
         }
         if (holdblock > -1) {
-            drawCubes(t.Pieces[holdblock][0], 1.0, 64, 48, 16, 4, textures, renderer);
+            drawCubes(t.Pieces[holdblock][0], 1.0, 64, 48, 16, 4);
         }
 
-        backgrounds[(bglevel) % (backgrounds.size())].render(renderer, true);
-        // bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true, renderer);
-        // bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true, renderer);
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render(graphics::render,true);
+        bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true);
+        bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true);
+        
+        msg->render();
+
         if(paused) {
-                SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
+                SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
                 SDL_Rect splashbox = { 0, 0, 640, 480 };
-                SDL_RenderFillRect(renderer, &splashbox);
+                SDL_RenderFillRect(graphics::render, &splashbox);
                 for (int i = 0; i < optionsize; i++) {
-                    // bodyfont->render(renderer, choices[i], 320, 300 + (i * 12), true, 255, (i == pauseselection?0:255), 255);
+                    bodyfont->render(320, 300 + (i * 12),choices[i],
+                    true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
                 }
 
-            // header->render(320, 240, "GAME PAUSED", true, renderer);
+            header->render(320, 240, "GAME PAUSED", true);
         }
-        msg->render(renderer);
         //SDL_RenderPresent(renderer);
     //}
 }
-int game::endlogic() {
+Transition game::endLogic() {
     
     if (!t.alive && gameactive && !paused) {
         //std::cout << "block not alive!!!";
-        Mix_PlayChannel( -1, sound[5], 0 );
+        Mix_PlayChannel(-1, audio::sfx->at(5), 0);
+
         ticks = 0;
         realtick = 0;
         //Mix_VolumeMusic(volume);
@@ -232,52 +239,76 @@ int game::endlogic() {
         
         if (!t.rebirth(BLOCKX, BLOCKY, nextblocks)) {
             gameactive = false;
-            return 1;
+            return {
+                0.001,
+                1,
+                320,
+                240,
+                FADETYPE::BLOCKS,
+                true
+            };
         }
         g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
         std::fill_n(ghostblocks, 1024, 0);
         nextblocks = rand() % 7;
-
-        return 2;
     }
-    return 0;
+    if(!gameactive) {
+        return {
+            0.001,
+            1,
+            320,
+            240,
+            FADETYPE::BLOCKS,
+            true
+        };
+
+    }
+    return {
+                0.001,
+                1,
+                320,
+                240,
+                FADETYPE::BLOCKS,
+                false
+            };
+;
 }
-void game::keyPressed(SDL_Keycode key)
+void game::input(SDL_Keycode key)
 {
     if (gameactive && !paused) {
         t.draw();
         switch (key) {
         case SDLK_UP: {
-            Mix_PlayChannel( -1, sound[3], 0 );
-            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP] == 1) {
+            Mix_PlayChannel(-1, audio::sfx->at(3), 0);
+            if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP] == 1) {
                 score += t.forcedrop();
             }
             break;
         }
         case SDLK_DOWN: {
-            Mix_PlayChannel( -1, sound[2], 0 );
+            Mix_PlayChannel(-1, audio::sfx->at(2), 0);
             t.movedown();
             score++;
             break;
         }
         case SDLK_LEFT: {
-            Mix_PlayChannel( -1, sound[2], 0 );
+            Mix_PlayChannel(-1, audio::sfx->at(2), 0);
             t.moveleft();
             break;
         }
         case SDLK_RIGHT: {
-            Mix_PlayChannel( -1, sound[2], 0 );
+            Mix_PlayChannel(-1, audio::sfx->at(2), 0);
             t.moveright();
             break;
         }
         case SDLK_z: {
-            Mix_PlayChannel( -1, sound[1], 0 );
+            Mix_PlayChannel(-1, audio::sfx->at(1), 0);
             t.rotate();
             break;
         }
         case SDLK_x: {
-            if (activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDPIECE] == 1) {
-                Mix_PlayChannel(-1, sound[4], 0);
+            if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDPIECE] == 1) {
+                Mix_PlayChannel(-1, audio::sfx->at(4), 0);
                 //checkLines(testblocks);
                 t.draw();
                 t.removeolddraw();
@@ -300,13 +331,13 @@ void game::keyPressed(SDL_Keycode key)
             break;
         }
         case SDLK_y: {
-            if (activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
+            if (settings::activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
                 level++;
             }
             break;
         }
         case SDLK_u: {
-            if (activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
+            if (settings::activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
                 level--;
             }
             break;
@@ -320,14 +351,14 @@ void game::keyPressed(SDL_Keycode key)
                 if (pauseselection > 0) {
                     pauseselection = (pauseselection - 1);
                 }
-                Mix_PlayChannel( -1, sound[1], 0 );
+                Mix_PlayChannel(-1, audio::sfx->at(1), 0);
                 break;
             }
             case(SDLK_DOWN): {
                 if (pauseselection < optionsize - 1) {
                     pauseselection = (pauseselection + 1);
                 }
-                Mix_PlayChannel( -1, sound[1], 0 );
+                Mix_PlayChannel(-1, audio::sfx->at(1), 0);
                 break;
             }
             case(SDLK_z): {
@@ -397,7 +428,7 @@ void game::checkLines(int(blocks)[1024]) {
         for (int j = 0; j < boardwidth; j++) {
             temp[j] = blocks[i * boardwidth + j];
             if (i < 8 && temp[j] > 0) {
-                if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
+                if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
                     warningflag = true;
                 }
             }
@@ -409,27 +440,27 @@ void game::checkLines(int(blocks)[1024]) {
     }
 
     if(times == 1) {
-        Mix_PlayChannel( -1, sound[6], 0 );
+        Mix_PlayChannel(-1, audio::sfx->at(6), 0);
         score += 100 * level;
     } else if(times == 2) {
-        Mix_PlayChannel( -1, sound[7], 0 );
+        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
         score += 300 * level;
 
     }
     else if (times == 3) {
-        Mix_PlayChannel(-1, sound[7], 0);
+        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
         score += 500 * level;
     }
     else if(times >= 4) {
-        Mix_PlayChannel( -1, sound[8], 0 );
+        Mix_PlayChannel(-1, audio::sfx->at(8), 0);
         score += 800 * level;
     }
     lines += times;
     if (times > 0) {
-        level = (lines / boardwidth) + 1;
+        level = (lines / settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::LEVELLENGTH]) + 1;
     }
-    if (activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
-        bglevel = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
+    if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
+        bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
     }
     changemusic();
 }
@@ -461,12 +492,12 @@ void game::clearRow(int(blocks)[1024], int y) {
 
 }
 void game::changemusic() {
-    if((bglevel)%(backgrounds.size()) != currentsong) {
+    if((bglevel)%(graphics::backgrounds->size()) != currentsong) {
         Mix_HaltMusic();
         if( Mix_PlayingMusic() == 0 )
         {
             //Play the music
-            Mix_PlayMusic(backgrounds[(bglevel)%(backgrounds.size())].music, -1 );
+            Mix_PlayMusic(graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).music, -1 );
         }
         //If music is being played
         else
@@ -484,8 +515,8 @@ void game::changemusic() {
                 Mix_PauseMusic();
             }
         }
-        currentsong = (bglevel)%(backgrounds.size());
-        msg->activate("YOU ARE CURRENTLY LISTENING TO:", backgrounds[(bglevel)%(backgrounds.size())].songname + " by: " + backgrounds[(bglevel)%(backgrounds.size())].artist);
+        currentsong = (bglevel)%(graphics::backgrounds->size());
+        msg->activate("YOU ARE CURRENTLY LISTENING TO:", graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).songname + " by: " + graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).artist);
 
     }
 
@@ -493,7 +524,7 @@ void game::changemusic() {
 void game::reset() {
     time = std::time(nullptr);
     currentsong = -1;
-    bglevel = activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
+    bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     changemusic();
     std::fill_n(testblocks, 1024, 0);
     std::fill_n(ghostblocks, 1024, 0);
@@ -514,50 +545,21 @@ void game::reset() {
 
 }
 
-void game::drawCubes(int position[], double scale, int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer) {
+void game::drawCubes(int position[], double scale, int x, int y, int size, int width) {
     
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
-            drawTexture(renderer, textures.at(position[i]), x + (i % width) * 16, y + (i / width) * 16, 0, scale);
+            graphics::drawTexture(graphics::blocks->at(position[i]), x + (i % width) * 16, y + (i / width) * 16, 0, scale,false);
         }
     }
 }
 
-void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale) {
-    SDL_Rect sprite;
-    SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
-    int oldwidth = sprite.w;
-    int oldheight = sprite.h;
-    sprite.w = sprite.w * scale;
-    sprite.h = sprite.h * scale;
-
-    sprite.x = x + oldwidth / 2 - sprite.w / 2;
-    sprite.y = y + oldheight / 2 - sprite.h / 2;
-    SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
-}
-void game::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
-    SDL_Rect sprite;
-    SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
-    int oldwidth = sprite.w;
-    int oldheight = sprite.h;
-    sprite.w = sprite.w * scale;
-    sprite.h = sprite.h * scale;
-    if (center) {
-        sprite.x = x - oldwidth / 2;
-        sprite.y = y - oldheight / 2;
-    }
-    else {
-        sprite.x = x + oldwidth / 2 - sprite.w / 2;
-        sprite.y = y + oldheight / 2 - sprite.h / 2;
-    }
-    SDL_RenderCopyEx(renderer, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
-}
 //DISGUSTING CODE AHEAD
 //most of these were infered based on the table stored in the NES version of tetris. I decided just to wing it and use those numbers instead of just making an array.
 //...i'm stupid
 double game::getspeed() {
     double returndb;
-    if(activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED]) {
+    if(settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED]) {
         //std::cout << "Speed!!!\n";
         switch (level) {
             case 0: {

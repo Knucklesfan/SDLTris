@@ -16,6 +16,9 @@
 #include "scenes/knuxfanscreen.h"
 #include "scenes/titlescreen.h"
 #include "scenes/credits.h"
+#include "scenes/game.h"
+#include "scenes/options.h"
+
 #include "scenes/white.h"
 
 #ifdef _NETCODE
@@ -111,14 +114,14 @@ int main() {
     graphics::generatefonts();
     audio::generatemusic();
     audio::generatesound();
+    settings::loadSettings();
 
     GlobalGamemode* global = new GlobalGamemode();
-    // SDL_Texture* rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640,480);
+    SDL_Texture* rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640,480);
 
-    // if(SDL_QueryTexture(rendertext, NULL, NULL, NULL, NULL) < 0) {
-    //     printf("TEXTURE ISSUES!!! \n");
-    //     std::cout << SDL_GetError() << "\n";
-    // };
+    if(SDL_QueryTexture(rendertext, NULL, NULL, NULL, NULL) < 0) {
+        printf("Failed to make render texture... What happened??? %s\n",SDL_GetError());
+    };
 
 
 
@@ -135,9 +138,11 @@ int main() {
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
         // new white(),
-        new knuxfanscreen(),
-        new titlescreen(),
-        new credits()
+        new knuxfanscreen(), //0
+        new titlescreen(), //1
+        new game(), //2
+        new options(), //3
+        new credits() //4
     };
     std::cout << "test2";
     int gamemode = 0;
@@ -167,8 +172,7 @@ int main() {
     // results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
     // credits* crd = new credits(renderer,fonts,&optionsbg, &textures);
 
-    highscore* score = new highscore();
-
+    // highscore* score = new highscore();
     next_time = SDL_GetTicks() + TICK_INTERVAL;
 
     //rpcimplement rpc();

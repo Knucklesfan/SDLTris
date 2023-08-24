@@ -12,6 +12,8 @@
 SDL_Renderer* graphics::render = nullptr;
 SDL_Window* graphics::window = nullptr;
 double graphics::deltaTime = 0;
+int settings::maxscore = 0;
+int settings::previousscore = 0;
 std::vector<bg>* graphics::backgrounds = new std::vector<bg>();
 std::map<std::string,SDL_Texture*> graphics::sprites = std::map<std::string,SDL_Texture*>();
 // std::vector<ObjectTemplate>* graphics::objects = new std::vector<ObjectTemplate>();
@@ -19,8 +21,85 @@ std::vector<Font*>* graphics::fonts = new std::vector<Font*>();
 std::vector<Mix_Music*>* audio::music = new std::vector<Mix_Music*>();
 std::vector<Mix_Chunk*>* audio::sfx = new std::vector<Mix_Chunk*>();
 std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
+std::array<std::array<int, 12>, 5> settings::defaults = {{
+		{ //GAMEPLAY
+		1, //Ghost Piece
+		1, //Hold Piece
+		0, //Block Speed-Up
+		1, //Fast drop
+		1, //Scoring System
+		0, //Repeat Holding
+        0, //Hold scoring
+        20, //Level Length
+        0, //Further memory added in case of expansion
+        0,
+        0,
+        0,
+		},
 
+		{ //DISPLAY
+		1, //BG Cycle Mode
+		0, //First Background selection
+		1, //Line Clear Animation
+		1, //Moving background animation
+		1, //Near Top Flash
+		0, //Low performance mode
+        0, //Further memory added in case of expansion
+        0, 
+        0,
+        0,
+        0,
+        0,
+		},
 
+		{ //SYSTEM
+		0, //FULLSCREEN
+		0, //MUSIC
+		0, //SOUND
+		0, //RESET
+		0, //Further memory added in case of expansion
+		0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+
+		},
+
+		{ //EXTRA
+		0, //Rotate Board
+		0, //Bigger Board
+		0, //Blind Mode
+		0, //Anti-Gravity (Blocks fall opposite direction)
+		0, //Bomb block (explosion destroys blocks in region around drop site)
+		0, //Mysteryblock!! (covers the block with a censor so you can't see it)
+        0, //Mirror Mode
+        0, //Acid bath (Acid falls on intrevals from random sides of the board, ocassionally covering large parts and consuming pieces and chunks in the process)
+        0,
+        0,
+        0,
+        0
+
+		}, //DEBUG
+		{
+		0, //Show FPS
+		0, //Show 
+		0,
+		0,
+		0,
+		0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+		}
+
+    }};
+std::array<std::array<int, 12>, 5> settings::activations = std::array<std::array<int, 12>, 5>();
 const Uint8 *graphics::state = SDL_GetKeyboardState(nullptr);
 SDL_Texture* utils::getSDLTexture(std::string path, SDL_Renderer* renderer) {
         SDL_Surface* surf = IMG_Load(path.c_str());
@@ -210,7 +289,7 @@ int graphics::generatesprites() {
 
 }
 
-void utils::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, bool center, int srcx, int srcy, int srcw, int srch, int scalex, int scaley) {
+void graphics::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, bool center, int srcx, int srcy, int srcw, int srch, int scalex, int scaley) {
     SDL_Rect sprite;
     SDL_Rect srcrect = {srcx, srcy, srcw, srch};
     if(SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h) < 0) {
@@ -330,6 +409,90 @@ int utils::getMouseY() {
 int utils::mouseCheck(int keycode) {
     Uint32 buttons = SDL_GetMouseState(NULL, NULL);
     return (buttons & keycode) != 0;
+}
+void settings::loadSettings() {
+	std::ifstream f("./save.xml"); //load in the save file first, get our high scores and whatnot
+
+	if (f.good()) { //if save file does exist
+        
+		rapidxml::file<> xmlFile("./save.xml"); //load it
+		rapidxml::xml_document<> doc;
+		doc.parse<0>(xmlFile.data());
+		maxscore = atoi(doc.first_node("scoring")->first_node("highscore")->value());
+		previousscore = atoi(doc.first_node("scoring")->first_node("highscore")->value());
+
+	}
+	else { //otherwise, we gotta make it ourselves
+		std::ofstream outfile("./save.xml"); //making this bad boy
+		outfile << "<scoring><lastscore>0</lastscore>\n" 
+			<< "<highscore>0</highscore></scoring>"; //HARDCODED BECAUSE IM A SIMP
+		outfile.close();
+		maxscore = 0;
+		previousscore = 0;
+
+	}
+
+	f.close(); //always close your shit
+
+    std::ifstream s("./settings.xml"); //load in the save file first, get our high scores and whatnot
+    if (s.good()) { //if file exists, time to load
+        rapidxml::file<> xmlFile("./settings.xml"); //load it
+        rapidxml::xml_document<> doc;
+		doc.parse<0>(xmlFile.data());
+        for (rapidxml::xml_node<char>* child = doc.first_node("settings")->first_node(); child != NULL; child = child->next_sibling()) {
+            std::string name = child->name();
+            std::cout << "loading " << child->name() << "\n";
+            //INCOMING! NASTY YANDEREDEV IF CASES!!!
+            if(name == "gameplay") { //handle gameplay
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] = atoi(child->first_node("ghost")->value());
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDPIECE] = atoi(child->first_node("hold")->value());
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::BLOCKSPEED] = atoi(child->first_node("speedup")->value());
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP] = atoi(child->first_node("fastdrop")->value());
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::SCORING] = atoi(child->first_node("scoring")->value());
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::REPEATHOLD] = atoi(child->first_node("repeathold")->value());
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::HOLDSCORING] = atoi(child->first_node("holdscoring")->value());
+                activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::LEVELLENGTH] = atoi(child->first_node("levellength")->value());
+            }
+            else if(name == "display") {
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] = atoi(child->first_node("bgcycle")->value());
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] = atoi(child->first_node("firstbg")->value());
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] = atoi(child->first_node("lineclear")->value());
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] = atoi(child->first_node("motion")->value());
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] = atoi(child->first_node("neartop")->value());
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LOWPERF] = atoi(child->first_node("lowperf")->value());
+
+            }
+            else if(name == "system") {
+                activations[OPTIONTYPE::SYSTEM][SYSTEMOPTIONS::FULLSCREEN] = atoi(child->first_node("fullscreen")->value());
+                activations[OPTIONTYPE::SYSTEM][SYSTEMOPTIONS::MUSIC] = atoi(child->first_node("music")->value());
+                activations[OPTIONTYPE::SYSTEM][SYSTEMOPTIONS::SOUNDS] = atoi(child->first_node("sound")->value());
+                activations[OPTIONTYPE::SYSTEM][SYSTEMOPTIONS::RESET] = atoi(child->first_node("reset")->value());
+
+            }
+            else if(name == "extra") {
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD] = atoi(child->first_node("rotate")->value());
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD] = atoi(child->first_node("bigger")->value());
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BLINDMODE] = atoi(child->first_node("blind")->value());
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ANTIGRAVITY] = atoi(child->first_node("antigravity")->value());
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BOMB] = atoi(child->first_node("bomb")->value());
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::MYSTERYBLOCK] = atoi(child->first_node("mysteryblock")->value());
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::MIRROR] = atoi(child->first_node("mirror")->value());
+                activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ACIDBATH] = atoi(child->first_node("acidbath")->value());
+
+            }
+            else if(name == "debug") {
+                activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED] = atoi(child->first_node("showfps")->value());
+            }
+
+        }
+
+
+	}
+    else { //if file does not exist, then dont' have any settings
+        activations = defaults;
+    }
+    f.close();
+    //lmao ugly ass debug code coming
 }
 std::vector<std::string> utils::seperateWords(std::string string, char sep, int x) {
     std::vector<std::string> parts;

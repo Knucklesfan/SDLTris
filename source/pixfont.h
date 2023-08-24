@@ -63,8 +63,10 @@ class pixfont : public Font
         std::string name;
         std::string path;
         std::map<char, letter> mapping;
-        void render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
-        void render(int x, int y,std::string words, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout);
+        void render(std::string words, int x, int y, bool center, 
+        int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
+        void render(int x, int y,std::string words, bool center, 
+        int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout);
 
         void render(int x, int y, std::string strg, bool center);
         SDL_Texture* texture;
@@ -76,5 +78,8 @@ class pixfont : public Font
         bool hasEnding(std::string const& fullString, std::string const& ending);
         void generateSurfaces(std::string path);
         static bool compareFunction (std::string a, std::string b) {return a<b;} 
+        std::vector<std::string> seperateWords(std::string string);
+        std::vector<std::string> split(const std::string& input, char delimiter);
+        std::string wrap(std::string str, int pixels);
         color tintColor(const color& baseColor, const color& tintColor);
 };

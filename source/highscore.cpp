@@ -8,8 +8,8 @@ highscore::highscore()  {
 
 	if (!f.good()) {
 		std::ofstream outfile("./save.xml");
-		outfile << "<lastscore>0</lastscore>\n" 
-			<< "<highscore>0</highscore>"; //HARDCODED BECAUSE IM A SIMP
+		outfile << "<scoring><lastscore>0</lastscore>\n" 
+			<< "<highscore>0</highscore></scoring>"; //HARDCODED BECAUSE IM A SIMP
 		outfile.close();
 		maxscore = 0;
 		previousscore = 0;
@@ -19,8 +19,8 @@ highscore::highscore()  {
 		rapidxml::file<> xmlFile("./save.xml");
 		rapidxml::xml_document<> doc;
 		doc.parse<0>(xmlFile.data());
-		maxscore = atoi(doc.first_node("highscore")->value());
-		previousscore = atoi(doc.first_node("lastscore")->value());
+		maxscore = atoi(doc.first_node("scoring")->first_node("highscore")->value());
+		previousscore = atoi(doc.first_node("scoring")->first_node("highscore")->value());
 		
 	}
 	f.close();
@@ -31,7 +31,7 @@ void highscore::update(int prev) {
 	}
 	previousscore = prev;
 	std::ofstream outfile("save.xml");
-	outfile << "<lastscore>" << std::to_string(previousscore).c_str() << "</lastscore>\n"
-		<< "<highscore>" << std::to_string(maxscore).c_str() << "</highscore>"; //HARDCODED BECAUSE IM A SIMP
+	outfile << "<scoring>\n<lastscore>" << std::to_string(previousscore).c_str() << "</lastscore>\n"
+		<< "<highscore>" << std::to_string(maxscore).c_str() << "</highscore>\n</scoring>"; //HARDCODED BECAUSE IM A SIMP
 	outfile.close();
 }

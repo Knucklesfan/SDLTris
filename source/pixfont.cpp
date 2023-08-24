@@ -103,15 +103,16 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
 
     }
     // std::cout << words << "\n";
-    // if(wordwrap > 0) {
-    //     words = generic::wrap(words, wordwrap/ wordsize);
-    // } //sorry, not yet
+    if(wordwrap > 0  && words.length()*width > wordwrap) {
+        words = wrap(words, wordwrap/ wordsize);
 
+    } //sorry, not yet
+    std::vector<std::string> wordVector = split(words,'\n');
     double tmpy = y;
-    int tmpx = (x-finalwidth/2);
     int i = 0;
+    for(std::string word : wordVector) {
+    int tmpx = (x-(word.length() * width)/2);
     for(char& c : words) {
-
         if (i >= 1 && words.at(i-1) == '@') {
             i++;
             continue;
@@ -127,17 +128,16 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             a = std::toupper(c);
         }
         if (mapping.find(a) != mapping.end()) {
+            double drawy = tmpy;
             if (sine) {
-                tmpy = (y + (sin((pos + i) * multiplyin) * multiplyout));
+                drawy = (tmpy + (sin((pos + i) * multiplyin) * multiplyout));
             }
-            drawTexture(texture, tmpx, tmpy, 0, scale, false, mapping.at(a).x * width, mapping.at(a).y * height, mapping.at(a).width, height);
+            drawTexture(texture, tmpx, drawy, 0, scale, false, mapping.at(a).x * width, mapping.at(a).y * height, mapping.at(a).width, height);
             tmpx += (mapping.at(a).width);
         }
         else {
             //std::cout << "LOADED BAD CHAR!!\n";
             if (a == '\n') {
-                tmpy += height;
-                tmpx = x - finalwidth / 2;
             }
             else if (a == '@') {
                 if (i + 1 < words.length()) {
@@ -151,6 +151,8 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             }
         }
         i++;
+    }
+        tmpy += height;       
     }
     SDL_SetTextureColorMod(texture, 255,255,255);
 
@@ -219,5 +221,88 @@ color pixfont::tintColor(const color& baseColor, const color& tintColor) {
     return color(tintedRed, tintedGreen, tintedBlue);
 }
 
+std::vector<std::string> pixfont::seperateWords(std::string string) {
+    std::vector<std::string> parts;
+    int startindex = 0;
+    while(true) {
+        int index = string.find_first_of(' ', startindex);
+        if(index == -1) {
+            parts.push_back(string.substr(startindex));
+            return parts;
+        }
 
+        std::string word = string.substr(startindex,index-startindex);
+        char nextchar = string.substr(index,1).at(0);
+        if(nextchar = ' ') {
 
+            parts.push_back(word);
+            parts.push_back(std::string(1, nextchar));
+        }
+        startindex = index + 1;
+    }
+}
+
+std::string pixfont::wrap(std::string str, int pixels) {
+    
+    std::vector<std::string> words = seperateWords(str);
+    int currentline = 0;
+    std::string output = "";
+    
+    for(int i = 0; i < words.size(); i++) {
+        std::string word = words.at(i);
+        int length = 0;
+        bool next = false;
+        for(int x = 0; x < word.length();x++) {
+            if(word.at(x) == '@') {
+                next = true;
+                continue;
+            }
+            else if(next) {
+                next = false;
+                continue;
+            }
+            else {
+                length++;
+            }
+
+        }
+        if(currentline + length > pixels) {
+            if(currentline > 0) {
+                output += "\n";
+                currentline = 0;
+            }
+            /*while(word.length() > pixels) {
+                output += word.substr(0, pixels-1) + ".";
+                word = word.substr(pixels-1);
+                output += "\n";
+            }
+            word = word.substr(word.find_first_of(' ')+1);
+            */
+        }
+        output += word;
+        currentline += word.length();
+    }
+    
+    return output;
+}
+std::vector<std::string> pixfont::split(const std::string& input, char delimiter) {
+    std::vector<std::string> result;
+    std::string token;
+    
+    for (char c : input) {
+        if (c == delimiter) {
+            if (!token.empty()) {
+                result.push_back(token);
+                token.clear();
+            }
+        } else {
+            token += c;
+        }
+    }
+
+    if (!token.empty()) {
+        result.push_back(token);
+    }
+    
+    return result;
+}

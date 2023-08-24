@@ -10,61 +10,12 @@
 #include "../font.h"
 #include "../cube.h"
 #include "../background.h"
-
-enum OPTIONTYPE
-{
-	GAMEPLAY = 0,
-	DISPLAY = 1,
-	SYSTEM = 2,
-	EXTRA = 3,
-	DEBUG = 4
-};
-
-enum GAMEPLAYOPTIONS
-{
-	GHOSTPIECE = 0,
-	HOLDPIECE = 1,
-	BLOCKSPEED = 2,
-	FASTDROP = 3,
-	SCORING = 4
-};
-
-enum DISPLAYOPTIONS
-{
-	BGMODE = 0,
-	FIRSTBG = 1,
-	LINECLEAR = 2,
-	MOVINGBG = 3,
-	NEARTOPFLASH = 4
-};
-enum SYSTEMOPTIONS
-{
-	FULLSCREEN = 0,
-	MUSIC = 1,
-	SOUNDS = 2,
-	RESET = 3,
-};
-
-enum EXTRAOPTIONS
-{
-	ROTATEBOARD = 0,
-	BIGGERBOARD = 1,
-	BLINDMODE = 2,
-};
-
-enum DEBUGOPTIONS {
-	DEBUGENABLED = 0
-};
-
-class options {
+#include "../utils/defs.h"
+#include "../gamemode.h"
+class options: public Gamemode {
 public:
 	bool loadgame = false;
-	SDL_Renderer* renderer;
-	SDL_Window* window;
 	bg background;
-	std::vector<bg>  backgrounds;
-	Mix_Music* music;
-	Mix_Chunk** sound;
 	cube* cub;
 	cube* bigcub;
 	Font* newft;
@@ -80,30 +31,41 @@ public:
 	int currentscreen = 0;
 	int currentmenuselect = 0;
 	std::string bottomtck = "GREEZ TO THE FOLLOWING PEOPLE: KK, DURANGO, JOHNNY, BOOMBOOM, FRISBEE, BLAKE, CASPER, DARK PRINCE, KRIS, CONNOR, ELENA, QUOTES, ERIKA, BRE, PETERS, EMRETECH, GENERIC, BOTTMINT, M4XW, BEHEMOTH, NATINSULA, TOTALJUSTICE, MIRZAGHALIB, AND EVERYONE ON SMWCENTRAL AND EVERYWHERE ELSE WHO'S HELPED ME THIS FAR.     ";
-	std::string tcktxt = "LEGENDARY DEVELOPER KNUXFAN PRESENTS HIS LATEST GAME- KNUXFANS TETRIMINOS. THEY MUST CREATE NEW DREAMS AND FILMS BY BREAKING TRADITIONAL STYLES. THE WORK, WHICH BECOMES A NEW GENRE ITSELF WILL BE CALLED... KNUXFAN'S TETRIMINOS. A TETRIS CLONE UNLIKE ANY OTHER WITH ASPIRATIONS FOR A HIGHER GAMEPLAY. USING CPP, SDL2 AND A WHOLE LOT OF POWER FROM MODERN PROCESSORS COMES AN AMIGA GAME FROM ANOTHER TIMELINE";
+	std::string tcktxt = "BACK FROM THE DEAD RETURNS A TETRIMINO BASED GAME UNLIKE ANY OTHER. BROUGHT TO YOU BY KNUXFAN, WORLD UNKNOWN DEVELOPER KNOWN FOR SUCH CLASSIC HITS AS CHICKEN SHOOT 3 AND AMONG THEM COMES THE LATEST IN TETRIMINO ACTION. AN AMIGA GAME FROM AN ALTERNATE TIMELINE, BROUGHT TO LIFE WITH CPP, MODERN PROCESSORS AND A WHOLE LOT OF EFFORT COMES A GAME UNLIKE ANY OTHER.";
 	SDL_Texture* rendertext;
 	unsigned int time = 0;
 	std::vector<SDL_Texture*> texture;
 	double rot = 0.0;
-	options(SDL_Renderer* render, SDL_Window* windows, bg backg, std::vector<SDL_Texture*> textures, Mix_Music* musicVec, Mix_Chunk** soundVec, std::vector<Font*> fonts, std::vector<bg> backgcollection);
-	void keyPressed(SDL_Keycode key);
+	options();
+	void input(SDL_Keycode key);
 	void render();
-	void logic(float deltatime);
-	int endlogic();
+	void logic(double deltatime);
+	Transition endLogic();
 	void reset();
-	std::string titles[4] = {
+	std::string titles[5] = {
 		"GAMEPLAY SETTINGS",
 		"VISUAL SETTINGS",
 		"SYSTEM SETTINGS",
 		"EXTRA SETTINGS",
+		"DEBUG SETTINGS"
 	};
-	std::string opts[4][6] = {
+	const int maxes[5] = {
+		8,
+		6,
+		4,
+		8,
+		1,
+	};
+	std::string opts[5][12] = {
 		{
 		"Ghost Piece",
 		"Hold Piece",
 		"Block Speedup",
 		"Fast Drop",
-		"",
+		"Scoring System",
+		"Repeat Holding",
+		"Hold Scoring",
+		"Level Length",
 		"Exit Menu",
 		},
 		{
@@ -112,6 +74,7 @@ public:
 		"Line Clear animation",
 		"Moving Backgrounds",
 		"Near Top Flash",
+		"@2Low Performance Mode",
 		"Exit Menu",
 		},
 		{
@@ -119,19 +82,25 @@ public:
 		"Music Volume",
 		"Sound Volume",
 		"Reset Settings",
-		"",
 		"Exit Menu",
 		},
 		{
 		"Rotating Board",
 		"Bigger Board??",
 		"Blind Mode",
-		"More coming in future updates!",
-		"",
+		"Anti-Gravity",
+		"Bomb Block",
+		"Mystery Block!!",
+		"Mirror Mode",
+		"Acid Bath",
 		"Exit Menu",
 		},
+		{
+			"Debug",
+			"Exit Menu"
+		}
 	};
-	std::string details[4][6] = {
+	std::string details[5][12] = {
 		{
 			"Shows a ghost piece near where your block will land.",
 			"Allows you to hold a block in a container on the side of the screen.",
@@ -169,100 +138,6 @@ public:
 		}
 	};
 
-	const int defaults[5][6] = {
-		{
-		1,
-		1,
-		0,
-		1,
-		1,
-		0
-		},
-
-		{
-		1,
-		0,
-		1,
-		1,
-		1,
-		0
-		},
-
-		{
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-		},
-
-		{
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-		},
-		{
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-		}
-
-	};
-
-	int activations[5][6] = {
-		{
-		1,
-		1,
-		0,
-		1,
-		1,
-		0
-		},
-
-		{
-		1,
-		0,
-		1,
-		1,
-		1,
-		0
-		},
-
-		{
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-		},
-
-		{
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-		},
-
-		{
-		0,
-		0,
-		0,
-		0,
-		0,
-		0
-		}
-
-	};
 private:
 	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
 	void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch);

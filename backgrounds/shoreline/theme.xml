@@ -1,0 +1,19 @@
+<name>Shoreline</name>
+<creator>Knuxfan</creator>
+<vers>1.0</vers>
+
+<layers>2</layers>
+
+<layer0>0</layer0>
+<layer0y>0</layer0y>
+
+<layer1>-15</layer1>
+<layer1y>-15</layer1y>
+
+<music>empty_feeling_qz.xm</music>
+<musicname>Empty Feeling (qz)</musicname>
+<musicartist>Quoz</musicartist>
+<thumbnail>thumbnail.png</thumbnail>
+
+
+

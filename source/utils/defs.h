@@ -69,6 +69,61 @@ struct vect {
         z=c;
     }
 };
+enum OPTIONTYPE
+{
+	GAMEPLAY = 0,
+	DISPLAY = 1,
+	SYSTEM = 2,
+	EXTRA = 3,
+	DEBUG = 4
+};
+
+enum GAMEPLAYOPTIONS
+{
+	GHOSTPIECE = 0,
+	HOLDPIECE = 1,
+	BLOCKSPEED = 2,
+	FASTDROP = 3,
+	SCORING = 4,
+    REPEATHOLD = 5,
+    HOLDSCORING = 6,
+    LEVELLENGTH = 7
+};
+
+enum DISPLAYOPTIONS
+{
+	BGMODE = 0,
+	FIRSTBG = 1,
+	LINECLEAR = 2,
+	MOVINGBG = 3,
+	NEARTOPFLASH = 4,
+    LOWPERF = 5
+};
+enum SYSTEMOPTIONS
+{
+	FULLSCREEN = 0,
+	MUSIC = 1,
+	SOUNDS = 2,
+	RESET = 3,
+};
+
+enum EXTRAOPTIONS
+{
+	ROTATEBOARD = 0,
+	BIGGERBOARD = 1,
+	BLINDMODE = 2,
+    ANTIGRAVITY = 3,
+    BOMB,
+    MYSTERYBLOCK,
+    MIRROR,
+    ACIDBATH
+
+};
+
+enum DEBUGOPTIONS {
+	DEBUGENABLED = 0
+};
+
 class audio {
     public:
         static void generatemusic();
@@ -89,15 +144,27 @@ class graphics {
         const static Uint8 *state;
         static double deltaTime;
         static void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
-        // static int generateobjects();
+	    static void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, bool center, int srcx, int srcy, int srcw, int srch, int scalex, int scaley);
         static int generatefonts();
         static int generatebgs();
         static int generatesprites();
         static std::vector<SDL_Texture*>* blocks;
     //uhhh put other static stuff here.
 };
+class settings {
+    public:
+    static int previousscore;
+    static int maxscore;
+    //...updates the high score
+    //@param prev the Previous score
+    static void updateHighScore(int prev); 
+
+    static void loadSettings();
+	static std::array<std::array<int, 12>, 5> defaults;
+
+	static std::array<std::array<int, 12>, 5> activations;
+};
 namespace utils {
-	void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, bool center, int srcx, int srcy, int srcw, int srch, int scalex, int scaley);
 	double lerp(double a, double b, double t);
 	SDL_Texture* getSDLTexture(std::string path, SDL_Renderer* renderer);
     int sign(int);
@@ -112,7 +179,6 @@ namespace utils {
     std::vector<std::string> seperateWords(std::string string, char sep);
     std::vector<std::string> seperateWords(std::string string, char sep, int);
     vect rotate_to_point(vect object_position, vect point);
-
     double rad(double i);
 
 };

@@ -10,6 +10,7 @@
 #include <cstring>
 #include <cmath>
 #include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_image.h>
 #ifdef __SWITCH__
 #define pth  "/"
 #include <switch.h>
@@ -66,11 +67,11 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
         std::cout << "thumbnail detected\n";
         std::string thmbpath = pth "backgrounds/" + path + "/";
         thmbpath += doc.first_node("thumbnail")->value();
-        thumbnail = SDL_CreateTextureFromSurface(renderer, SDL_LoadBMP(thmbpath.c_str()));
+        thumbnail = SDL_CreateTextureFromSurface(renderer, IMG_Load(thmbpath.c_str()));
     }
     else {
-        std::string thmbpath = pth "backgrounds/nullbg.bmp";
-        thumbnail = SDL_CreateTextureFromSurface(renderer, SDL_LoadBMP(thmbpath.c_str()));
+        std::string thmbpath = pth "backgrounds/nullbg.png";
+        thumbnail = SDL_CreateTextureFromSurface(renderer, IMG_Load(thmbpath.c_str()));
 
     }
 
@@ -109,9 +110,9 @@ void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
     for(int i = 0; i < layers; i++) {
         char buff[12];
         snprintf(buff, sizeof(buff), "%02d", i);
-        std::string temppath = path + "/" + buff + ".bmp";
+        std::string temppath = path + "/" + buff + ".png";
 
-        SDL_Surface* temp = SDL_LoadBMP(temppath.c_str());
+        SDL_Surface* temp = IMG_Load(temppath.c_str());
         if (!temp) {
             printf("Failed to load image at %s: %s\n", temppath, SDL_GetError());
         }

@@ -12,7 +12,7 @@ struct Transition {
     int gamemode = 0;
     int originX = 320;
     int originY = 240;
-    FADETYPE fade = FADETYPE::BLOCKS;
+    FADETYPE fade = FADETYPE::FADE;
     bool transition = false;
 };
 

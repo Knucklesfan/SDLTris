@@ -260,5 +260,64 @@ characters that i generated for SDLTetris meant doing dumb things like this. Not
         <char>Z</char>
         <charwid>8</charwid>
     </letter>
-
+   <letter>
+        <posx>36</posx>
+        <posy>0</posy>
+        <char>.</char>
+        <charwid>8</charwid>
+    </letter>
+    <letter>
+        <posx>37</posx>
+        <posy>0</posy>
+        <char>,</char>
+        <charwid>8</charwid>
+    </letter>
+    <letter>
+        <posx>38</posx>
+        <posy>0</posy>
+        <char>*</char>
+        <charwid>8</charwid>
+    </letter>
+    <letter>
+        <posx>39</posx>
+        <posy>0</posy>
+        <char>_</char>
+        <charwid>8</charwid>
+    </letter>
+    <letter>
+        <posx>40</posx>
+        <posy>0</posy>
+        <char>-</char>
+        <charwid>8</charwid>
+    </letter>
+    <letter>
+        <posx>41</posx>
+        <posy>0</posy>
+        <char>!</char>
+        <charwid>8</charwid>
+    </letter>
+    <letter>
+        <posx>42</posx>
+        <posy>0</posy>
+        <char>$</char>
+        <charwid>8</charwid>
+    </letter> 
+    <letter>
+        <posx>44</posx>
+        <posy>0</posy>
+        <char>=</char>
+        <charwid>8</charwid>
+    </letter>
+    <letter>
+        <posx>45</posx>
+        <posy>0</posy>
+        <char>:</char>
+        <charwid>8</charwid>
+    </letter> 
+    <letter>
+        <posx>46</posx>
+        <posy>0</posy>
+        <char>'</char>
+        <charwid>8</charwid>
+    </letter> 
 </letters>

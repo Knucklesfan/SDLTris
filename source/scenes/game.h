@@ -10,12 +10,12 @@
 #include "../tetriminos.h"
 #include "../ghostblock.h"
 #include "../background.h"
-#include "../server.h"
+#include "../gamemode.h"
 #include "../ingamemessagebox.h"
 #include <random>
 #include "../font.h"
 //TODO: clean all of this nonsense up
-class game
+class game: public Gamemode
 {
 	public:
 
@@ -27,10 +27,7 @@ class game
 		Font* bodyfont;
 		Font* header;
 		int testblocks[1024], ghostblocks[1024],  previousblocks[1024];
-		SDL_Renderer* renderer;
-		Mix_Music** music;
-		int (activations)[5][6];
-		Mix_Chunk** sound;
+		// int (activations)[5][6];
 		tetrimino t;
 		ghostblock g;
 		double visibility = 1.0;
@@ -58,15 +55,15 @@ class game
 		int optionsize = 2;
 		bool gameactive;
 		bool paused;
-		std::vector<SDL_Texture*> textures;
+		// std::vector<SDL_Texture*> textures;
     	SDL_Texture* texture;
-		std::vector<bg>  backgrounds;
-		game(SDL_Renderer* renderman, SDL_Window* window, std::vector<SDL_Texture*> texture, std::vector<bg>  backg, Mix_Music* musicVec[], Mix_Chunk* soundVec[], std::vector<Font*> fonts, int(active)[5][6]);
+		// std::vector<bg>  backgrounds;
+		game();
 		double layerpos[10];
-		void keyPressed(SDL_Keycode key);
+		void input(SDL_Keycode key);
 		void render();
 		void logic(double deltatime);
-		int endlogic();
+		Transition endLogic();
 		void reset();
 		unsigned int time = 0;
 		ingamemessagebox* msg;
@@ -105,8 +102,6 @@ class game
 		void checkLines(int(blocks)[240]);
 		bool checkRow(int(blocks)[10]);
 		void clearRow(int(blocks)[240], int y);
-		void drawCubes(int position[],double scale, int x, int y, int size, int width, std::vector<SDL_Texture*> textures, SDL_Renderer* renderer);
-		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale);
-		void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
+		void drawCubes(int position[],double scale, int x, int y, int size, int width);
 };
 

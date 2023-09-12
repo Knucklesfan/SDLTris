@@ -28,7 +28,7 @@ void ingamemessagebox::logic(double deltatime)
 void ingamemessagebox::render()
 {
 	SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
-	SDL_Rect splashbox = { x-2, y, 252, 100 };
+	SDL_Rect splashbox = { (int)x-2, (int)y, 252, 100 };
 	SDL_RenderFillRect(graphics::render, &splashbox);
 	int tmpx = (int) (uptime / 2.5) % 378;
 	graphics::drawTexture(graphics::render,graphics::sprites.at("visualizer"), x - 2, y+44, false, tmpx, 0, 252, 38,1,1);

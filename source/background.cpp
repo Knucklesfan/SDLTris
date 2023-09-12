@@ -98,7 +98,7 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
     muspath += doc.first_node("music")->value();
     music = Mix_LoadMUS(muspath.c_str());
     if (!music) {
-        printf("Failed to load music at %s: %s\n", muspath, SDL_GetError());
+        printf("Failed to load music at %s: %s\n", muspath.c_str(), SDL_GetError());
     }
 
     std::cout << "Finished loading: " << name << "\n";
@@ -114,7 +114,7 @@ void  bg::generateSurfaces(std::string path, SDL_Renderer* renderer) {
 
         SDL_Surface* temp = IMG_Load(temppath.c_str());
         if (!temp) {
-            printf("Failed to load image at %s: %s\n", temppath, SDL_GetError());
+            printf("Failed to load image at %s: %s\n", temppath.c_str(), SDL_GetError());
         }
         surfaces.push_back(temp);
         printf("Successfully loaded image at %s\n", temppath.c_str());

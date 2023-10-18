@@ -8,3 +8,5 @@ build/**
 x64/**
 Release/**
 *.bak
+*.o
+SDLTetris

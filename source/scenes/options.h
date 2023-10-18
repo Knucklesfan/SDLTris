@@ -30,7 +30,7 @@ public:
 	int currentselection = 0;
 	int currentscreen = 0;
 	int currentmenuselect = 0;
-	std::string bottomtck = "GREEZ TO THE FOLLOWING PEOPLE: KK, DURANGO, JOHNNY, BOOMBOOM, FRISBEE, BLAKE, CASPER, DARK PRINCE, KRIS, CONNOR, ELENA, QUOTES, ERIKA, BRE, PETERS, EMRETECH, GENERIC, BOTTMINT, M4XW, BEHEMOTH, NATINSULA, TOTALJUSTICE, MIRZAGHALIB, AND EVERYONE ON SMWCENTRAL AND EVERYWHERE ELSE WHO'S HELPED ME THIS FAR.     ";
+	std::string bottomtck = "GREEZ TO THE FOLLOWING PEOPLE: KK, DURANGO, JOHNNY, BOOMBOOM, FRISBEE, BLAKE, CASPER, DARK PRINCE, KRIS, CONNOR, ELENA, QUOTES, ERIKA, PETERS, KARMEN, ISAIAH, JALEN, EMRETECH, GENERIC, BOTTMINT, M4XW, BEHEMOTH, NATINSULA, TOTALJUSTICE, MIRZAGHALIB, AND EVERYONE ON SMWCENTRAL AND EVERYWHERE ELSE WHO'S HELPED ME THIS FAR.     ";
 	std::string tcktxt = "BACK FROM THE DEAD RETURNS A TETRIMINO BASED GAME UNLIKE ANY OTHER. BROUGHT TO YOU BY KNUXFAN, WORLD UNKNOWN DEVELOPER KNOWN FOR SUCH CLASSIC HITS AS CHICKEN SHOOT 3 AND AMONG THEM COMES THE LATEST IN TETRIMINO ACTION. AN AMIGA GAME FROM AN ALTERNATE TIMELINE, BROUGHT TO LIFE WITH CPP, MODERN PROCESSORS AND A WHOLE LOT OF EFFORT COMES A GAME UNLIKE ANY OTHER.";
 	SDL_Texture* rendertext;
 	unsigned int time = 0;
@@ -67,6 +67,9 @@ public:
 		"Hold Scoring",
 		"Level Length",
 		"Exit Menu",
+		"",
+		"",
+		""
 		},
 		{
 		"Background mode",
@@ -76,6 +79,11 @@ public:
 		"Near Top Flash",
 		"@2Low Performance Mode",
 		"Exit Menu",
+		"",
+		"",
+		"",
+		"",
+		""
 		},
 		{
 		"Full Screen",
@@ -102,7 +110,7 @@ public:
 	};
 	std::string details[5][12] = {
 		{
-			"Shows a ghost piece near where your block will land.",
+			"Shows a ghost piece near where your block will land",
 			"Allows you to hold a block in a container on the side of the screen.",
 			"Enables faster blocks as levels increase. Disable for a more casual experience.",
 			"Allows dropping blocks faster with the UP key. Recommended to use alongside Ghost Piece.",

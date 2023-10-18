@@ -108,12 +108,13 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
 
     } //sorry, not yet
     std::vector<std::string> wordVector = split(words,'\n');
+    std::cout << wordVector.size() << '\n';
     double tmpy = y;
-    int i = 0;
     for(std::string word : wordVector) {
+    int i = 0;
     int tmpx = (x-(word.length() * width)/2);
-    for(char& c : words) {
-        if (i >= 1 && words.at(i-1) == '@') {
+    for(char& c : word) {
+        if (i >= 1 && word.at(i-1) == '@') {
             i++;
             continue;
         }
@@ -123,8 +124,8 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         else { //i feel sick writing code like this
             SDL_SetTextureColorMod(texture, red, green, blue);
         }
-        char& a = c;
-        if (mapping.find(c) == mapping.end()) {
+        char a = c;
+        if (mapping.find(a) == mapping.end()) {
             a = std::toupper(c);
         }
         if (mapping.find(a) != mapping.end()) {
@@ -138,10 +139,11 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         else {
             //std::cout << "LOADED BAD CHAR!!\n";
             if (a == '\n') {
+                tmpy += height;       
             }
             else if (a == '@') {
-                if (i + 1 < words.length()) {
-                    drawcolor = atoi(&words.at(i + 1));
+                if (i + 1 < word.length()) {
+                    drawcolor = atoi(&word.at(i + 1));
                     i++;
                 }
                 continue;
@@ -152,9 +154,9 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         }
         i++;
     }
-        tmpy += height;       
-    }
+    tmpy += wordsize;
     SDL_SetTextureColorMod(texture, 255,255,255);
+    }
 
 }
 //uses the modern drawtexture from background.h, hopefully there's no bugs?

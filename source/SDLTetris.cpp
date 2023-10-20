@@ -39,6 +39,14 @@
 // 4. I'm lazy.
 // If for some reason you want to compile with the netcode, then add _NETCODE to your definitions. Other than that, sorry!
 
+
+/*
+SDLTetris.cpp or how I learned to stop worrying and love the OpenGL
+Today, my friends, it begins. The full recode and port of SDLTetris to use... well, not SDL2! Instead,
+we are bringing it over to a new OpenGL Renderer that's been cooking for a while,
+unfinished but soon to be finished!
+
+*/
 #undef main
 
 static Uint32 next_time;
@@ -77,6 +85,7 @@ int main() {
 
         return 1;
     }
+#ifdef __LEGACY_RENDER
     graphics::render = SDL_CreateRenderer(graphics::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
     if (graphics::render == nullptr) {
@@ -88,7 +97,9 @@ int main() {
         return 1;
     }
     SDL_SetRenderDrawBlendMode(graphics::render, SDL_BLENDMODE_BLEND);
+#else
 
+#endif
     //Initialize SDL_mixer
     if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
     {
@@ -103,10 +114,13 @@ int main() {
     SDL_Joystick* joystick;
 
     SDL_Joystick* gGameController = SDL_JoystickOpen(0);
-
+#ifdef __LEGACY_RENDER
     SDL_SetRenderDrawBlendMode(graphics::render, SDL_BLENDMODE_BLEND);
 
     SDL_RenderSetLogicalSize(graphics::render, 640, 480);
+#else
+
+#endif
     std::string prefix = filepath;
 
     graphics::generatebgs();
@@ -117,11 +131,16 @@ int main() {
     settings::loadSettings();
 
     GlobalGamemode* global = new GlobalGamemode();
+    #ifdef __LEGACY_RENDER
     SDL_Texture* rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640,480);
-
+    
     if(SDL_QueryTexture(rendertext, NULL, NULL, NULL, NULL) < 0) {
         printf("Failed to make render texture... What happened??? %s\n",SDL_GetError());
     };
+
+    #else
+
+    #endif
 
 
 
@@ -181,8 +200,12 @@ int main() {
         if(graphics::deltaTime > 1000/60.0) {
             oldTime = time;
             SDL_PumpEvents();
+            #ifdef __LEGACY_RENDER
             SDL_RenderClear(graphics::render);
             SDL_SetRenderTarget(graphics::render,rendertext);
+            #else
+
+            #endif
             gamemodes[gamemode]->logic(graphics::deltaTime);
             gamemodes[gamemode]->render();
             Transition endlogic = gamemodes[gamemode]->endLogic();
@@ -194,42 +217,14 @@ int main() {
                 gamemodes[gamemode]->reset();
             }
             global->render();
+            #ifdef __LEGACY_RENDER
             SDL_SetRenderTarget(graphics::render,NULL);
             SDL_RenderCopy(graphics::render,rendertext,NULL,NULL);
             std::cout << tFps << "\n";
             graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
             SDL_RenderPresent(graphics::render);
+            #else
+            #endif
     }
 }
 }
-
-// int input(int gamemode, titlescreen* title, game* gamer, results* res, options* opt, credits* cred, knuxfanscreen* knfn, SDL_Keycode keycode) { //THIS IS HORRIBLE
-//     switch(gamemode) {
-//         case 0: {
-//             knfn->keyPressed(keycode);
-//             break;
-//         }
-//         case 1: {
-//             title->keyPressed(keycode);
-//             break;
-//         }
-//         case 2: {
-//             gamer->keyPressed(keycode);
-//             break;
-//         }
-//         case 3: {
-//             res->keyPressed(keycode);
-//             break;
-//         }
-//         case 4: {
-//             opt->keyPressed(keycode);
-//             break;
-//         }
-//         case 5: {
-//             cred->keyPressed(keycode);
-//             break;
-//         }
-
-//     }
-//     return 0;
-// }

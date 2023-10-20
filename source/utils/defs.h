@@ -2,6 +2,11 @@
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+#define INTERNAL_WIDTH 640
+#define INTERNAL_HEIGHT 480
+#define COORDINATE_WIDTH INTERNAL_WIDTH
+#define COORDINATE_HEIGHT INTERNAL_HEIGHT
+
 #ifdef __SWITCH__
     #define filepath  "/"
     #include <switch.h>
@@ -34,6 +39,13 @@
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
 #include "../background.h"
+#ifndef __LEGACY_RENDER
+    #include "../opengl/shader.h"
+    #include "../opengl/texture.h"
+    #include "../opengl/sprite.h"
+    #include "../opengl/rect.h"
+
+#endif
 //#include "Object.h"
 #include "../font.h"
 
@@ -43,6 +55,12 @@ struct letter {
     int width;
     int x;
     int y;
+};
+class bgconverters { //i *sighs the worlds deepest sigh of human history* love background.h
+    public:
+        static std::map<std::string, actiontype> actionmap;
+        static std::map<std::string, layertype> layermap;
+        static std::map<std::string, headerdata> headermap;
 };
 
 struct color { //technically didnt need this, but included it anyways because SDL_color is jank
@@ -136,8 +154,15 @@ class audio {
 };
 class graphics {
     public:
+    #ifdef __LEGACY_RENDER
         static SDL_Renderer* render;
         static SDL_Window* window;
+    #else
+        static std::vector<shader*> shaders;
+        static std::vector<texture*> textures;
+        static spriteRenderer* sprite;
+        static rectRenderer* rect;
+    #endif
         static std::vector<bg>* backgrounds;
         static std::map<std::string,SDL_Texture*> sprites;
         static std::vector<Font*>* fonts;
@@ -148,6 +173,11 @@ class graphics {
         static int generatefonts();
         static int generatebgs();
         static int generatesprites();
+        #ifndef __LEGACY_RENDER
+            static int generateshaders();
+            static int generatetextures();
+        #endif
+
         static std::vector<SDL_Texture*>* blocks;
     //uhhh put other static stuff here.
 };
@@ -167,6 +197,11 @@ class settings {
 namespace utils {
 	double lerp(double a, double b, double t);
 	SDL_Texture* getSDLTexture(std::string path, SDL_Renderer* renderer);
+    std::string loadFile(std::string filename);
+    static unsigned int renderFB;
+    static unsigned int renderTexture;
+    bool checkNode(rapidxml::xml_node<char>* node);
+
     int sign(int);
     int unsign(int);
     double deg(double value);
@@ -181,4 +216,22 @@ namespace utils {
     vect rotate_to_point(vect object_position, vect point);
     double rad(double i);
 
+};
+enum actiontype {
+    MOVE,
+    SCALE,
+    ROTATE
+};
+enum layertype {
+    BACKGROUND,
+    LEGACY,
+    BG3D,
+    BG2D
+};
+enum headerdata {
+    TITLE,
+    VERSION,
+    CREATOR,
+    MUSIC,
+    FILENAME
 };

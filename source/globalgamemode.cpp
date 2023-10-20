@@ -31,6 +31,7 @@ void GlobalGamemode::setFade(Transition resp) {
     
 }
 void GlobalGamemode::render() {
+    #ifdef __LEGACY_RENDER
     switch(currentTransition.fade) {
         case FADE: {
             SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255 * alpha);
@@ -57,6 +58,9 @@ void GlobalGamemode::render() {
             break;
         }
     }
+    #else
+    
+    #endif
 
 }
 double math::easeOutBounce(double x) {

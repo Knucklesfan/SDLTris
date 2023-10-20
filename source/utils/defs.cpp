@@ -9,8 +9,37 @@
 #include "../pixfont.h"
 #include "../ttffont.h"
 #include <cmath>
+#ifdef __LEGACY_RENDER
 SDL_Renderer* graphics::render = nullptr;
 SDL_Window* graphics::window = nullptr;
+#else
+    rectRenderer* graphics::rect = new rectRenderer();
+    spriteRenderer* graphics::sprite = new spriteRenderer();
+    std::vector<texture *> graphics::textures = std::vector<texture *>();
+    std::vector<shader *> graphics::shaders = std::vector<shader *>();
+
+    std::map<std::string, actiontype> bgconverters::actionmap =
+        {
+            {"move", actiontype::MOVE},
+            {"scale", actiontype::SCALE},
+            {"rotate", actiontype::ROTATE}};
+    std::map<std::string, layertype> bgconverters::layermap = {
+        {"background", layertype::BACKGROUND}, //
+        {"legacy", layertype::LEGACY},
+        {"bg3d", layertype::BG3D},
+        {"bg2d", layertype::BG2D}};
+    ;
+    std::map<std::string, headerdata> bgconverters::headermap =
+        {
+            {"title", headerdata::TITLE},
+            {"version", headerdata::VERSION},
+            {"music", headerdata::MUSIC},
+            {"filename", headerdata::FILENAME},
+            {"creator", headerdata::CREATOR}
+
+    };
+
+#endif
 double graphics::deltaTime = 0;
 int settings::maxscore = 0;
 int settings::previousscore = 0;
@@ -21,6 +50,7 @@ std::vector<Font*>* graphics::fonts = new std::vector<Font*>();
 std::vector<Mix_Music*>* audio::music = new std::vector<Mix_Music*>();
 std::vector<Mix_Chunk*>* audio::sfx = new std::vector<Mix_Chunk*>();
 std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
+
 std::array<std::array<int, 12>, 5> settings::defaults = {{
 		{ //GAMEPLAY
 		1, //Ghost Piece

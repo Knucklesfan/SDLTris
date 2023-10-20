@@ -74,8 +74,8 @@ class bg
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "texture.h"
-#include "shader.h"
+#include "opengl/texture.h"
+#include "opengl/shader.h"
 class layer { 
     public:
     //this is the way the system should've always been done, but of course that's not how it was done.

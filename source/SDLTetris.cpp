@@ -132,7 +132,7 @@ int main() {
     float deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
-        double time = 0; //time of current frame
+    double time = 0; //time of current frame
     double oldTime = 0; //time of previous framea
     long long recordticks = 0;
     std::cout << "Finished initializing!\n";
@@ -146,33 +146,12 @@ int main() {
     };
     std::cout << "test2";
     int gamemode = 0;
-    // bg optionsbg(prefix + "sprites/resultsbg", true, renderer);    
-    // bg configbg(prefix + "sprites/optionsbg", true, renderer);
 
     int titlebg = std::rand() % graphics::backgrounds->size();
     int knxfnbg = std::rand() % graphics::backgrounds->size();
     if (titlebg == knxfnbg) {
         knxfnbg = std::rand() % graphics::backgrounds->size(); //WHY TF AM I DOING THIS
     }
-
-    //time to load fonts
-    //HERES HOW I WANTED THIS TO WORK:
-    //each object generates its own fonts, but since that wastes a ton of memory, i guess we're doing this now!
-    //The code is a bit more messy, mostly because I feel like i'm passing so much crap as pointers to these objects
-    //but who cares as long as it works
-
-    // std::vector<font*> fonts;
-    // fonts.push_back(new font("8x8font",renderer));
-    // fonts.push_back(new font("8x16font",renderer));
-    // fonts.push_back(new font("small8x8font",renderer));
-    // options* opt = new options(renderer, window, configbg, textures, configbg.music, sound.data(), fonts, backgrounds);
-    // titlescreen* title = new titlescreen(renderer, window, backgrounds, textures, music.data(), sound.data(), titlebg, fonts);
-    // game* gamer = new game(renderer, window, textures, backgrounds, music.data(), sound.data(), fonts, opt->activations);
-    // knuxfanscreen* screen = new knuxfanscreen(renderer, textures, backgrounds, sound.data(),knxfnbg, fonts[2]);
-    // results* res = new results(renderer, window, optionsbg, textures, optionsbg.music, sound.data(), fonts);
-    // credits* crd = new credits(renderer,fonts,&optionsbg, &textures);
-
-    // highscore* score = new highscore();
     next_time = SDL_GetTicks() + TICK_INTERVAL;
 
     //rpcimplement rpc();
@@ -182,50 +161,13 @@ int main() {
     time = std::time(nullptr);
     rpc->update("At the Knuxfan Screen.", "Top high score: " + std::to_string(score->maxscore), "icon1", time);
 #endif
-    float _fps = 0;
-
     while (!quit) {
         auto t1 = std::chrono::high_resolution_clock::now();
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
             }
-            // if (event.type == SDL_JOYBUTTONDOWN) {
-            //     switch (event.jbutton.button) {
-            //     case JOY_B:
-            //     case JOY_A: {
-            //         input(gamemode, title, gamer, res, opt, crd, screen, SDLK_z);
-            //         break;
-            //     }
-            //     case JOY_DOWN: {
-            //         input(gamemode, title, gamer, res, opt, crd,screen, SDLK_DOWN);
-            //         break;
-            //     }
-            //     case JOY_UP: {
-            //         input(gamemode, title, gamer, res, opt, crd,screen, SDLK_UP);
-            //         break;
-            //     }
-            //     case JOY_LEFT: {
-            //         input(gamemode, title, gamer, res, opt, crd,screen, SDLK_LEFT);
-            //         break;
-            //     }
-            //     case JOY_RIGHT: {
-            //         input(gamemode, title, gamer, res, opt, crd,screen, SDLK_RIGHT);
-            //         break;
-            //     }
-            //     case JOY_L: {
-            //         input(gamemode, title, gamer, res, opt, crd,screen, SDLK_x);
-            //         break;
-            //     }
-            //     case JOY_PLUS: {
-            //         input(gamemode, title, gamer, res, opt, crd,screen, SDLK_ESCAPE);
-            //         break;
-            //     }
-
-            //     }
-            // }
             if (event.type == SDL_KEYDOWN) {
-                // input(gamemode, title, gamer, res, opt, crd,screen, event.key.keysym.sym);
                 gamemode[gamemodes]->input(event.key.keysym.sym);
             }
         }
@@ -234,12 +176,13 @@ int main() {
 
         graphics::deltaTime = (time - oldTime); //frameTime is the time this frame has taken, in seconds
         double frameTime = graphics::deltaTime /1000.0;
+        double tFps = (1.0 / frameTime);
+
         if(graphics::deltaTime > 1000/60.0) {
-            double fps = (1.0 / frameTime);
             oldTime = time;
             SDL_PumpEvents();
             SDL_RenderClear(graphics::render);
-
+            SDL_SetRenderTarget(graphics::render,rendertext);
             gamemodes[gamemode]->logic(graphics::deltaTime);
             gamemodes[gamemode]->render();
             Transition endlogic = gamemodes[gamemode]->endLogic();
@@ -251,56 +194,10 @@ int main() {
                 gamemodes[gamemode]->reset();
             }
             global->render();
-
-            /*
-            backg->logic(graphics::deltaTime);
-            backg->render(graphics::render,false);
-            fbg->render(graphics::render,frameTime);
-            cub->logic();
-            cub->render(255, 128, 128);
-            graphics::drawTexture(cub->texture, 0, 0, 0, 1, false);
-            switch (ball->logic(frameTime, player1, player2)) {
-                case NONE:
-                    break;
-                case LEFT:
-                    fbg->flash(LEFT, 255, 255, 255);
-                    break;
-                case RIGHT:
-                    fbg->flash(RIGHT, 255, 255, 255);
-                    break;
-                case 3: //left close shave
-                    fbg->flash(LEFT, 0, 0, 255);
-                    break;
-                case 4: //right close shave
-                    fbg->flash(RIGHT, 0, 0, 255);
-                    break;
-                default: {
-                    break;
-                }
-            }
-            switch(player1->logic(frameTime)) {
-                case FULL: {
-                    fbg->flash(FULL, 255, 255, 0);
-                    break;
-                }
-                default: {
-                    break;
-                }
-            };
-            switch(player2->logic(frameTime)) {
-                case FULL: {
-                    fbg->flash(FULL, 255, 255, 0);
-                    break;
-                }
-                default: {
-                    break;
-                }
-            };
-            player1->render(graphics::render);
-            player2->render(graphics::render);
-            ball->render(graphics::render);
-            */
-            //pix->render(16, 16, std::to_string(fps), false);
+            SDL_SetRenderTarget(graphics::render,NULL);
+            SDL_RenderCopy(graphics::render,rendertext,NULL,NULL);
+            std::cout << tFps << "\n";
+            graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
             SDL_RenderPresent(graphics::render);
     }
 }

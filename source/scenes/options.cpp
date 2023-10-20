@@ -314,19 +314,19 @@ void options::render()
 
     drawTexture(bigcub->texture, 0, 0, 0, 1.0, false);
 
-    std::string toprint = tcktxt.substr(txtpos, txtpos + 41);
+    std::string toprint = tcktxt.substr(txtpos, (42));
     if (txtpos >= tcktxt.length())
     {
         txtpos = 0;
     }
 
-    if (txtpos + 41 > tcktxt.length())
+    if (txtpos + 42 > tcktxt.length())
     {
-        toprint = tcktxt.substr(txtpos, tcktxt.length()) + " " + tcktxt.substr(0, txtpos + 41 - tcktxt.length());
+        toprint = tcktxt.substr(txtpos) + tcktxt.substr(0, (42));
     }
     tickertext->render(fmod(-txtpos * 16, 16), 0, toprint, false);
 
-    toprint = bottomtck.substr(bottompos, bottompos + 41);
+    toprint = bottomtck.substr(bottompos, (42));
     if (bottompos >= bottomtck.length())
     {
         bottompos = 0;
@@ -334,7 +334,7 @@ void options::render()
 
     if (bottompos + 41 > bottomtck.length())
     {
-        toprint = bottomtck.substr(bottompos, bottomtck.length()) + " " + bottomtck.substr(0, bottompos + 41 - bottomtck.length());
+        toprint = bottomtck.substr(bottompos, bottomtck.length()-bottompos) + " " + bottomtck.substr(0, 41);
     }
     tickertext->render(fmod(-bottompos * 16, 16), 464, toprint, false);
 
@@ -444,7 +444,7 @@ void options::render()
         SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 26);
         newhead->render(320, 88, "SELECT A BACKGROUND", true);
 
-        tickertext->render(320, 120, "Current Selection: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).name, true, 255, 0, 255, 400, false, 0, 0, 0);
+        graphics::fonts->at(2)->render(320, 120, "Current Selection: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).name, true, 255, 0, 255, 400, false, 0, 0, 0);
         int before = (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] - 1) >= 0 ? (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] - 1) : graphics::backgrounds->size() - 1;
         int after = (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + 1) > graphics::backgrounds->size() - 1 ? 0 : (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + 1);
 
@@ -452,10 +452,10 @@ void options::render()
         drawTexture(graphics::backgrounds->at(before).thumbnail, 320 - 168, 185, 0, 0.5, false);
         drawTexture(graphics::backgrounds->at(after).thumbnail, 360, 185, 0, 0.5, false);
 
-        tickertext->render(320, 284, "Name: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).name, true, 255, 0, 255, 0, false, 0, 0, 0);
-        tickertext->render(320, 308, "Creator: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).creator, true, 255, 0, 255, 0, false, 0, 0, 0);
-        tickertext->render(320, 332, "Song Name: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).songname, true, 255, 0, 255, 0, false, 0, 0, 0);
-        tickertext->render(320, 356, "Song Creator: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).artist, true, 255, 0, 255, 0, false, 0, 0, 0);
+        newft->render(320, 294, "Name: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).name, true, 255, 0, 255, 0, false, 0, 0, 0);
+        newft->render(320, 302, "Creator: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).creator, true, 255, 0, 255, 0, false, 0, 0, 0);
+        newft->render(320, 310, "Song Name: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).songname, true, 255, 0, 255, 0, false, 0, 0, 0);
+        newft->render(320, 318, "Song Creator: " + graphics::backgrounds->at(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG]).artist, true, 255, 0, 255, 0, false, 0, 0, 0);
 
         tickertext->render(320, 408, "EXIT", true);
 

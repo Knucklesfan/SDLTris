@@ -59,7 +59,6 @@ class pixfont : public Font
         int numberpos = 0;
         int alphabetpos = 10;
         int specialpos = 36;
-        int wordsize = 0;
         std::string name;
         std::string path;
         std::map<char, letter> mapping;
@@ -67,7 +66,7 @@ class pixfont : public Font
         int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
         void render(int x, int y,std::string words, bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout);
-
+        
         void render(int x, int y, std::string strg, bool center);
         SDL_Texture* texture;
         pixfont(std::string path);

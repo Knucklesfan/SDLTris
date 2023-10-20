@@ -18,4 +18,8 @@ class Font {
         virtual void render(int x, int y, std::string strg, bool center){};
         virtual void logic(double deltatime){};
 
+        int wordsize; 
+        //very simple variable designed to wrap the width of a word for rendering purposes
+        //designed to be ROUGH, only use this for calculations with pixfonts!
+        //if a ttf font uses it, who knowssssss
 };

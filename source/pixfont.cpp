@@ -91,11 +91,11 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
     int finalwidth = 0;
     int drawcolor = 0;
     if(center) {
-        if (wordwrap > 0 && words.length()*width > wordwrap) {
+        if (wordwrap > 0 && words.length()*wordsize > wordwrap) {
             finalwidth = wordwrap;
         }
         else {
-            finalwidth = words.length() * width;
+            finalwidth = words.length() * wordsize;
         }
     }
     if(red > 0 || blue > 0 || green > 0) {
@@ -103,16 +103,15 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
 
     }
     // std::cout << words << "\n";
-    if(wordwrap > 0  && words.length()*width > wordwrap) {
+    if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
         words = wrap(words, wordwrap/ wordsize);
 
     } //sorry, not yet
     std::vector<std::string> wordVector = split(words,'\n');
-    std::cout << wordVector.size() << '\n';
     double tmpy = y;
     for(std::string word : wordVector) {
     int i = 0;
-    int tmpx = (x-(word.length() * width)/2);
+    int tmpx = center?(x-(word.length() * wordsize)/2):x;
     for(char& c : word) {
         if (i >= 1 && word.at(i-1) == '@') {
             i++;
@@ -308,3 +307,4 @@ std::vector<std::string> pixfont::split(const std::string& input, char delimiter
     
     return result;
 }
+

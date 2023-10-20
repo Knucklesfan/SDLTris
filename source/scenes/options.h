@@ -12,6 +12,8 @@
 #include "../background.h"
 #include "../utils/defs.h"
 #include "../gamemode.h"
+#define FONT_WIDTH 16
+#define FONT_GAP (640/FONT_WIDTH)
 class options: public Gamemode {
 public:
 	bool loadgame = false;
@@ -31,7 +33,7 @@ public:
 	int currentscreen = 0;
 	int currentmenuselect = 0;
 	std::string bottomtck = "GREEZ TO THE FOLLOWING PEOPLE: KK, DURANGO, JOHNNY, BOOMBOOM, FRISBEE, BLAKE, CASPER, DARK PRINCE, KRIS, CONNOR, ELENA, QUOTES, ERIKA, PETERS, KARMEN, ISAIAH, JALEN, EMRETECH, GENERIC, BOTTMINT, M4XW, BEHEMOTH, NATINSULA, TOTALJUSTICE, MIRZAGHALIB, AND EVERYONE ON SMWCENTRAL AND EVERYWHERE ELSE WHO'S HELPED ME THIS FAR.     ";
-	std::string tcktxt = "BACK FROM THE DEAD RETURNS A TETRIMINO BASED GAME UNLIKE ANY OTHER. BROUGHT TO YOU BY KNUXFAN, WORLD UNKNOWN DEVELOPER KNOWN FOR SUCH CLASSIC HITS AS CHICKEN SHOOT 3 AND AMONG THEM COMES THE LATEST IN TETRIMINO ACTION. AN AMIGA GAME FROM AN ALTERNATE TIMELINE, BROUGHT TO LIFE WITH CPP, MODERN PROCESSORS AND A WHOLE LOT OF EFFORT COMES A GAME UNLIKE ANY OTHER.";
+	std::string tcktxt = " BACK FROM THE DEAD RETURNS A TETRIMINO BASED GAME UNLIKE ANY OTHER. BROUGHT TO YOU BY KNUXFAN, WORLD UNKNOWN DEVELOPER KNOWN FOR SUCH CLASSIC HITS AS CHICKEN SHOOT 3 AND AMONG THEM COMES THE LATEST IN TETRIMINO ACTION. AN AMIGA GAME FROM AN ALTERNATE TIMELINE, BROUGHT TO LIFE WITH CPP, MODERN PROCESSORS AND A WHOLE LOT OF EFFORT COMES A GAME UNLIKE ANY OTHER.";
 	SDL_Texture* rendertext;
 	unsigned int time = 0;
 	std::vector<SDL_Texture*> texture;
@@ -115,6 +117,9 @@ public:
 			"Enables faster blocks as levels increase. Disable for a more casual experience.",
 			"Allows dropping blocks faster with the UP key. Recommended to use alongside Ghost Piece.",
 			"Select which scoring system to use.",
+			"Allows you to hold multiple times in the same turn without dropping a block.",
+			"Should score be revoked if a hold is used?",
+			"Allows you to customize level length before changing backgrounds",
 			"Closes this menu."
 
 		},
@@ -124,6 +129,7 @@ public:
 			"Show an animation when clearing a line.",
 			"Enables background motion.",
 			"Flashes the side of the screen when blocks are near the top.",
+			"Disables several graphical effects and uses an older renderer on new versions",
 			"Closes this menu."
 
 		},
@@ -140,8 +146,11 @@ public:
 			"Basically, motion sickness simulator. Gotta see it to believe it.",
 			"Expands the board to an agonizing 40x20. Why would anyone play this????",
 			"The board fades in and out, making it very hard to play.",
-			"More coming soon!!",
-			"",
+			"Blocks fall upside down! Makes things a bit more trickier...",
+			"Random chance to get a black, explosive block that destroys the blocks around it!",
+			"Covers your block until it hits the ground to make it more mysterious which block you got",
+			"Mirrors the entire playfield, including controls. A little trippier when combined with other effects.",
+			"ACID BATH! Randomly, acid may drop from an edge and destroy everything in it's path, including your block. Watch out!"
 			"Closes this menu."
 		}
 	};

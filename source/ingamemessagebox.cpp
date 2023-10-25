@@ -27,6 +27,7 @@ void ingamemessagebox::logic(double deltatime)
 
 void ingamemessagebox::render()
 {
+	#ifdef __LEGACY_RENDER
 	SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
 	SDL_Rect splashbox = { (int)x-2, (int)y, 252, 100 };
 	SDL_RenderFillRect(graphics::render, &splashbox);
@@ -35,6 +36,8 @@ void ingamemessagebox::render()
 	graphics::fonts->at(2)->render(x, y + 4,name, false, 255, 0, 255, 250, true, uptime / 20, 1, 5);
 	//letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
 	graphics::fonts->at(2)->render(x, y + 20,content, false, 255, 255, 255,250,false,0,0,0);
+	#else
+	#endif
 }	
 
 

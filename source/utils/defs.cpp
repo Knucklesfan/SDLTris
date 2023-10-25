@@ -12,10 +12,15 @@
 #ifdef __LEGACY_RENDER
 SDL_Renderer* graphics::render = nullptr;
 SDL_Window* graphics::window = nullptr;
+std::map<std::string,SDL_Texture*> graphics::sprites = std::map<std::string,SDL_Texture*>();
+std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
+
 #else
     rectRenderer* graphics::rect = new rectRenderer();
     spriteRenderer* graphics::sprite = new spriteRenderer();
-    std::vector<texture *> graphics::textures = std::vector<texture *>();
+    std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
+
+    std::map<std::string,texture*> graphics::sprites = std::map<std::string,texture*>();
     std::vector<shader *> graphics::shaders = std::vector<shader *>();
 
     std::map<std::string, actiontype> bgconverters::actionmap =
@@ -44,12 +49,10 @@ double graphics::deltaTime = 0;
 int settings::maxscore = 0;
 int settings::previousscore = 0;
 std::vector<bg>* graphics::backgrounds = new std::vector<bg>();
-std::map<std::string,SDL_Texture*> graphics::sprites = std::map<std::string,SDL_Texture*>();
 // std::vector<ObjectTemplate>* graphics::objects = new std::vector<ObjectTemplate>();
 std::vector<Font*>* graphics::fonts = new std::vector<Font*>();
 std::vector<Mix_Music*>* audio::music = new std::vector<Mix_Music*>();
 std::vector<Mix_Chunk*>* audio::sfx = new std::vector<Mix_Chunk*>();
-std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
 
 std::array<std::array<int, 12>, 5> settings::defaults = {{
 		{ //GAMEPLAY
@@ -131,6 +134,7 @@ std::array<std::array<int, 12>, 5> settings::defaults = {{
     }};
 std::array<std::array<int, 12>, 5> settings::activations = std::array<std::array<int, 12>, 5>();
 const Uint8 *graphics::state = SDL_GetKeyboardState(nullptr);
+#ifdef __LEGACY_RENDER
 SDL_Texture* utils::getSDLTexture(std::string path, SDL_Renderer* renderer) {
         SDL_Surface* surf = IMG_Load(path.c_str());
         if (!surf) {
@@ -145,6 +149,8 @@ SDL_Texture* utils::getSDLTexture(std::string path, SDL_Renderer* renderer) {
         SDL_FreeSurface(surf);
         return ret;
 }
+#else
+#endif
 int graphics::generatefonts() {
     rapidxml::file<> bgFile((filepath"fonts/fonts.xml"));
     rapidxml::xml_document<> bgDoc;
@@ -177,7 +183,11 @@ int graphics::generatebgs() {
        std::cout << "loading background " << child->value() << "\n";
        //std::cout << "HELP ME:" << p.path().filename() << "\n";
        if(child->value() != "") {
+        #ifdef __LEGACY_RENDER
            bg backg(child->value(), false, render);
+        #else
+           bg backg(child->value(), false);
+        #endif
            backgrounds->push_back(backg);
        }
 
@@ -308,7 +318,11 @@ int graphics::generatesprites() {
 
         std::cout << "loading sprite " << child->first_node("path")->value() << "\n";
         //std::cout << "HELP ME:" << p.path().filename() << "\n";        
+        #ifdef __LEGACY_RENDER
         sprites[child->first_node("name")->value()]=(utils::getSDLTexture(child->first_node("path")->value(),graphics::render));
+        #else
+        sprites[child->first_node("name")->value()]=new texture(child->first_node("path")->value());
+        #endif
     }
     blocks->push_back(sprites["bblock"]);
     blocks->push_back(sprites["pblock"]);
@@ -316,9 +330,52 @@ int graphics::generatesprites() {
     blocks->push_back(sprites["rblock"]);
 
     return 0;
-
 }
+int graphics::generateshaders() {
+    rapidxml::file<> bgFile((filepath"shaders/shaders.xml"));
+    rapidxml::xml_document<> bgDoc;
+    bgDoc.parse<0>(bgFile.data());
+    rapidxml::xml_node<char>* parent = bgDoc.first_node("shaders");
+    for (rapidxml::xml_node<char>* child = parent->first_node(); child != NULL; child = child->next_sibling()) {
 
+        std::cout << "loading shader " << child->first_node("vertex")->value() << " " << child->first_node("fragment")->value() << "\n";
+        //std::cout << "HELP ME:" << p.path().filename() << "\n";        
+        #ifdef __LEGACY_RENDER
+        sprites[child->first_node("name")->value()]=(utils::getSDLTexture(child->first_node("path")->value(),graphics::render));
+        #else
+        shaders.push_back(new shader(child->first_node("vertex")->value(),child->first_node("fragment")->value()));
+        #endif
+    }
+
+    return 0;
+}
+double utils::lerp(double a, double b, double t)    {
+        if (t <= 0.5)
+            return a+(b-a)*t;
+        else
+            return b-(b-a)*(1.0-t);
+    }
+int utils::sign(int x) { //generic sign function
+    return (x > 0) - (x < 0);
+}
+#ifdef __LEGACY_RENDER
+void graphics::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
+    SDL_Rect sprite;
+    SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
+    int oldwidth = sprite.w;
+    int oldheight = sprite.h;
+    sprite.w = sprite.w * scale;
+    sprite.h = sprite.h * scale;
+    if (center) {
+        sprite.x = x - oldwidth / 2;
+        sprite.y = y - oldheight / 2;
+    }
+    else {
+        sprite.x = x + oldwidth / 2 - sprite.w / 2;
+        sprite.y = y + oldheight / 2 - sprite.h / 2;
+    }
+    SDL_RenderCopyEx(render, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+}
 void graphics::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, bool center, int srcx, int srcy, int srcw, int srch, int scalex, int scaley) {
     SDL_Rect sprite;
     SDL_Rect srcrect = {srcx, srcy, srcw, srch};
@@ -338,33 +395,8 @@ void graphics::drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, 
     SDL_RenderCopy(renderer, texture, &srcrect, &sprite);
 }
 
-double utils::lerp(double a, double b, double t)    {
-        if (t <= 0.5)
-            return a+(b-a)*t;
-        else
-            return b-(b-a)*(1.0-t);
-    }
-int utils::sign(int x) { //generic sign function
-    return (x > 0) - (x < 0);
-}
+#endif
 
-void graphics::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
-    SDL_Rect sprite;
-    SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
-    int oldwidth = sprite.w;
-    int oldheight = sprite.h;
-    sprite.w = sprite.w * scale;
-    sprite.h = sprite.h * scale;
-    if (center) {
-        sprite.x = x - oldwidth / 2;
-        sprite.y = y - oldheight / 2;
-    }
-    else {
-        sprite.x = x + oldwidth / 2 - sprite.w / 2;
-        sprite.y = y + oldheight / 2 - sprite.h / 2;
-    }
-    SDL_RenderCopyEx(render, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
-}
 float utils::mean(float arr[], int from, int to) {
     float ret = 0.0;
     for(int i = from; i < to; i++) {

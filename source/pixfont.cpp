@@ -43,6 +43,8 @@ pixfont::pixfont(std::string path) {
     doc.parse<0>(xmlFile.data());
     width = atoi(doc.first_node("width")->value());
     height = atoi(doc.first_node("height")->value());
+    shad = graphics::shaders.at(atoi(doc.first_node("shader")->value())); //specifies the shader slot number to pick from the shaders
+
     size = atoi(doc.first_node("row")->value()); 
     if (doc.first_node("spwidth") != NULL) {
         wordsize = atoi(doc.first_node("spwidth")->value());
@@ -98,10 +100,13 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             finalwidth = words.length() * wordsize;
         }
     }
+    //coloring yet to be supported by ogl renderer
+	#ifdef __LEGACY_RENDER
     if(red > 0 || blue > 0 || green > 0) {
         SDL_SetTextureColorMod( texture, red, blue, green );
 
     }
+    #endif
     // std::cout << words << "\n";
     if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
         words = wrap(words, wordwrap/ wordsize);
@@ -117,12 +122,14 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             i++;
             continue;
         }
+        #ifdef __LEGACY_RENDER
         if(red == 255 && green == 255 && blue == 255) {
             SDL_SetTextureColorMod(texture, colors[drawcolor].r, colors[drawcolor].g, colors[drawcolor].b);
         }
         else { //i feel sick writing code like this
             SDL_SetTextureColorMod(texture, red, green, blue);
         }
+        #endif
         char a = c;
         if (mapping.find(a) == mapping.end()) {
             a = std::toupper(c);
@@ -132,7 +139,17 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             if (sine) {
                 drawy = (tmpy + (sin((pos + i) * multiplyin) * multiplyout));
             }
-            drawTexture(texture, tmpx, drawy, 0, scale, false, mapping.at(a).x * width, mapping.at(a).y * height, mapping.at(a).width, height);
+        #ifdef __LEGACY_RENDER
+            drawTexture(txt, tmpx, drawy, 0, scale, false, mapping.at(a).x * width, mapping.at(a).y * height, mapping.at(a).width, height);
+        #else
+            graphics::sprite->render(shad, txt,
+            glm::vec2(tmpx,tmpy), //position to draw at
+            glm::vec2(mapping.at(a).width, height), //width and height to draw
+            0, //rotation
+            glm::vec2(mapping.at(a).x * width,mapping.at(a).y * height), //where in texture to grab from
+            glm::vec2(mapping.at(a).width, height)); //width and height to grab
+
+        #endif
             tmpx += (mapping.at(a).width);
         }
         else {
@@ -154,13 +171,16 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         i++;
     }
     tmpy += wordsize;
-    SDL_SetTextureColorMod(texture, 255,255,255);
+    #ifdef __LEGACY_RENDER
+    SDL_SetTextureColorMod(txt, 255,255,255);
+    #endif
     }
 
 }
 //uses the modern drawtexture from background.h, hopefully there's no bugs?
 
 //had to add a few more parameters becauuuuuse rendering sprite sheets is our new intention with drawTexture
+#ifdef __LEGACY_RENDER
 
 void pixfont::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch) {
     SDL_Rect sprite;
@@ -181,6 +201,7 @@ void pixfont::drawTexture(SDL_Texture* texture, int x, int y, double angle, doub
     }
     SDL_RenderCopy(graphics::render, texture, &srcrect, &sprite);
 }
+#endif
 
 bool pixfont::hasEnding(std::string const& fullString, std::string const& ending) { //thank you kdt on Stackoverflow, its late at night and you helped me out https://stackoverflow.com/questions/874134/find-out-if-string-ends-with-another-string-in-c
     if (fullString.length() >= ending.length()) {
@@ -207,10 +228,14 @@ bool pixfont::hasEnding(std::string const& fullString, std::string const& ending
 
 
 void  pixfont::generateSurfaces(std::string path) {
+    #ifdef __LEGACY_RENDER
     std::string tmppth = path + "/font.bmp";
     SDL_Surface* tmpsurf = SDL_LoadBMP(tmppth.c_str());
-    texture = SDL_CreateTextureFromSurface(graphics::render, tmpsurf);
+    txt = SDL_CreateTextureFromSurface(graphics::render, tmpsurf);
     SDL_FreeSurface(tmpsurf);
+    #else
+    txt = new texture(path);
+    #endif
 }
 color pixfont::tintColor(const color& baseColor, const color& tintColor) {
     float tintAmount = 0.5; // Adjust this value to control the tinting amount (0.0 to 1.0)

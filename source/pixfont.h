@@ -68,12 +68,19 @@ class pixfont : public Font
         int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout);
         
         void render(int x, int y, std::string strg, bool center);
-        SDL_Texture* texture;
+        #ifdef __LEGACY_RENDER
+        SDL_Texture* txt;
+        #else
+        texture* txt;
+        shader* shad;
+        #endif
         pixfont(std::string path);
         pixfont();
 
     private:
+    	#ifdef __LEGACY_RENDER
     	void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center, int srcx, int srcy, int srcw, int srch);
+        #endif
         bool hasEnding(std::string const& fullString, std::string const& ending);
         void generateSurfaces(std::string path);
         static bool compareFunction (std::string a, std::string b) {return a<b;} 

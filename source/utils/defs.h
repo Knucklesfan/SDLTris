@@ -154,22 +154,27 @@ class audio {
 };
 class graphics {
     public:
+    static SDL_Window* window;
+
     #ifdef __LEGACY_RENDER
         static SDL_Renderer* render;
-        static SDL_Window* window;
+        static std::map<std::string,SDL_Texture*> sprites;
+        static std::vector<SDL_Texture*>* blocks;
     #else
         static std::vector<shader*> shaders;
-        static std::vector<texture*> textures;
+        static std::map<std::string,texture*> sprites;
+        static std::vector<texture*>* blocks;
         static spriteRenderer* sprite;
         static rectRenderer* rect;
     #endif
         static std::vector<bg>* backgrounds;
-        static std::map<std::string,SDL_Texture*> sprites;
         static std::vector<Font*>* fonts;
         const static Uint8 *state;
         static double deltaTime;
+     #ifdef __LEGACY_RENDER
         static void drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center);
 	    static void drawTexture(SDL_Renderer* renderer, SDL_Texture* texture, int x, int y, bool center, int srcx, int srcy, int srcw, int srch, int scalex, int scaley);
+    #endif
         static int generatefonts();
         static int generatebgs();
         static int generatesprites();
@@ -178,7 +183,6 @@ class graphics {
             static int generatetextures();
         #endif
 
-        static std::vector<SDL_Texture*>* blocks;
     //uhhh put other static stuff here.
 };
 class settings {
@@ -196,7 +200,10 @@ class settings {
 };
 namespace utils {
 	double lerp(double a, double b, double t);
-	SDL_Texture* getSDLTexture(std::string path, SDL_Renderer* renderer);
+	#ifdef __LEGACY_RENDER
+    SDL_Texture* getSDLTexture(std::string path, SDL_Renderer* renderer);
+    #else
+    #endif
     std::string loadFile(std::string filename);
     static unsigned int renderFB;
     static unsigned int renderTexture;

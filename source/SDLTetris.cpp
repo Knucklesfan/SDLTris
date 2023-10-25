@@ -18,7 +18,9 @@
 #include "scenes/credits.h"
 #include "scenes/game.h"
 #include "scenes/options.h"
-
+#ifndef __LEGACY_RENDER
+#include "opengl/buffermanager.h"
+#endif
 #include "scenes/white.h"
 
 #ifdef _NETCODE
@@ -77,6 +79,7 @@ int main() {
         return 1;
     }
     
+#ifdef __LEGACY_RENDER
     graphics::window = SDL_CreateWindow("Knuxfan's Tetriminos", 100, 100, 640, 480, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     if (graphics::window == nullptr) {
         std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
@@ -85,7 +88,7 @@ int main() {
 
         return 1;
     }
-#ifdef __LEGACY_RENDER
+
     graphics::render = SDL_CreateRenderer(graphics::window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     
     if (graphics::render == nullptr) {
@@ -98,7 +101,40 @@ int main() {
     }
     SDL_SetRenderDrawBlendMode(graphics::render, SDL_BLENDMODE_BLEND);
 #else
+	//Use OpenGL 3.1 core
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	// Create an SDL window
+	SDL_Window*  window = SDL_CreateWindow("SDLTetris Rewritten", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (!window) {
+		// we'll print an error message and exit
+		std::cerr << "Error failed to create window!\n";
+		return 1;
+	}
 
+
+	// Create an OpenGL context (so we can use OpenGL functions)
+	SDL_GLContext context = SDL_GL_CreateContext(window);
+
+	// if we failed to create a context
+	if (!context) {
+		// we'll print out an error message and exit
+		std::cerr << "Error failed to create a context\n!";
+		return 2;
+	}
+	glewExperimental = GL_TRUE;
+	GLenum glewError = glewInit();
+	if (glewError != GLEW_OK)
+	{
+		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
+	}
+
+	//Use Vsync
+	if (SDL_GL_SetSwapInterval(1) < 0)
+	{
+		printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
+	}
 #endif
     //Initialize SDL_mixer
     if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
@@ -119,6 +155,15 @@ int main() {
 
     SDL_RenderSetLogicalSize(graphics::render, 640, 480);
 #else
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);  
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
+	buffermanager buffer = buffermanager(INTERNAL_WIDTH,INTERNAL_HEIGHT);
 
 #endif
     std::string prefix = filepath;
@@ -204,7 +249,11 @@ int main() {
             SDL_RenderClear(graphics::render);
             SDL_SetRenderTarget(graphics::render,rendertext);
             #else
-
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                buffer.enable();
+                glm::mat4 projection;
+                projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+                glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
             #endif
             gamemodes[gamemode]->logic(graphics::deltaTime);
             gamemodes[gamemode]->render();
@@ -212,6 +261,7 @@ int main() {
             if(endlogic.transition) {
                 global->setFade(endlogic);
             };
+            
             if(global->logic(graphics::deltaTime)) {
                 gamemode=global->currentTransition.gamemode;
                 gamemodes[gamemode]->reset();
@@ -224,6 +274,10 @@ int main() {
             graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
             SDL_RenderPresent(graphics::render);
             #else
+            buffer.disable(INTERNAL_WIDTH,INTERNAL_HEIGHT);
+		    buffer.render(graphics::shaders[3],INTERNAL_WIDTH,INTERNAL_HEIGHT);
+		    SDL_GL_SwapWindow(window);
+
             #endif
     }
 }

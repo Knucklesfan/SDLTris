@@ -25,8 +25,9 @@ ghostblock.o: source/ghostblock.cpp
 titlescreen.o: source/scenes/titlescreen.cpp
 	$(CC) $(FLAGS) source/scenes/titlescreen.cpp -std=c++17
 
-game.o: source/scenes/game.cpp
-	$(CC) $(FLAGS) source/scenes/game.cpp -std=c++17
+#removed for now!
+# game.o: source/scenes/game.cpp
+# 	$(CC) $(FLAGS) source/scenes/game.cpp -std=c++17
 
 background.o: source/background.cpp
 	$(CC) $(FLAGS) source/background.cpp -std=c++17
@@ -37,8 +38,8 @@ ingamemessagebox.o: source/ingamemessagebox.cpp
 knuxfanscreen.o: source/scenes/knuxfanscreen.cpp
 	$(CC) $(FLAGS) source/scenes/knuxfanscreen.cpp -std=c++17
 
-server.o: source/server.cpp
-	$(CC) $(FLAGS) source/server.cpp -std=c++17
+# server.o: source/server.cpp
+# 	$(CC) $(FLAGS) source/server.cpp -std=c++17
 
 highscore.o: source/highscore.cpp
 	$(CC) $(FLAGS) source/highscore.cpp -std=c++17
@@ -46,22 +47,22 @@ highscore.o: source/highscore.cpp
 replay.o: source/replay.cpp
 	$(CC) $(FLAGS) source/replay.cpp -std=c++17
 
-results.o: source/scenes/results.cpp
-	$(CC) $(FLAGS) source/scenes/results.cpp -std=c++17
+# results.o: source/scenes/results.cpp
+# 	$(CC) $(FLAGS) source/scenes/results.cpp -std=c++17
 
 pixfont.o: source/pixfont.cpp
 	$(CC) $(FLAGS) source/pixfont.cpp 
 ttffont.o: source/ttffont.cpp
 	$(CC) $(FLAGS) source/ttffont.cpp 
 
-options.o: source/scenes/options.cpp
-	$(CC) $(FLAGS) source/scenes/options.cpp -std=c++17
+# options.o: source/scenes/options.cpp
+# 	$(CC) $(FLAGS) source/scenes/options.cpp -std=c++17
 
 cube.o: source/cube.cpp
 	$(CC) $(FLAGS) source/cube.cpp -std=c++17
 	
-credits.o: source/scenes/credits.cpp
-	$(CC) $(FLAGS) source/scenes/credits.cpp -std=c++17
+# credits.o: source/scenes/credits.cpp
+# 	$(CC) $(FLAGS) source/scenes/credits.cpp -std=c++17
 
 sine.o: source/sine.cpp
 	$(CC) $(FLAGS) source/sine.cpp -std=c++17

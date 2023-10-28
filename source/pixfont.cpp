@@ -143,7 +143,7 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             drawTexture(txt, tmpx, drawy, 0, scale, false, mapping.at(a).x * width, mapping.at(a).y * height, mapping.at(a).width, height);
         #else
             graphics::sprite->render(shad, txt,
-            glm::vec2(tmpx,tmpy), //position to draw at
+            glm::vec2(tmpx,drawy), //position to draw at
             glm::vec2(mapping.at(a).width, height), //width and height to draw
             0, //rotation
             glm::vec2(mapping.at(a).x * width,mapping.at(a).y * height), //where in texture to grab from
@@ -228,13 +228,13 @@ bool pixfont::hasEnding(std::string const& fullString, std::string const& ending
 
 
 void  pixfont::generateSurfaces(std::string path) {
-    #ifdef __LEGACY_RENDER
     std::string tmppth = path + "/font.bmp";
+    #ifdef __LEGACY_RENDER
     SDL_Surface* tmpsurf = SDL_LoadBMP(tmppth.c_str());
     txt = SDL_CreateTextureFromSurface(graphics::render, tmpsurf);
     SDL_FreeSurface(tmpsurf);
     #else
-    txt = new texture(path);
+    txt = new texture(tmppth);
     #endif
 }
 color pixfont::tintColor(const color& baseColor, const color& tintColor) {

@@ -56,12 +56,6 @@ struct letter {
     int x;
     int y;
 };
-class bgconverters { //i *sighs the worlds deepest sigh of human history* love background.h
-    public:
-        static std::map<std::string, actiontype> actionmap;
-        static std::map<std::string, layertype> layermap;
-        static std::map<std::string, headerdata> headermap;
-};
 
 struct color { //technically didnt need this, but included it anyways because SDL_color is jank
 public:
@@ -87,6 +81,26 @@ struct vect {
         z=c;
     }
 };
+enum actiontype {
+    MOVE,
+    SCALE,
+    ROTATE
+};
+enum layertype {
+    BACKGROUND,
+    LEGACY,
+    BG3D,
+    BG2D,
+    SHADER
+};
+enum headerdata {
+    TITLE,
+    VERSION,
+    CREATOR,
+    BGMUSIC,
+    FILENAME
+};
+
 enum OPTIONTYPE
 {
 	GAMEPLAY = 0,
@@ -140,6 +154,12 @@ enum EXTRAOPTIONS
 
 enum DEBUGOPTIONS {
 	DEBUGENABLED = 0
+};
+class bgconverters { //i *sighs the worlds deepest sigh of human history* love background.h
+    public:
+        static std::map<std::string, actiontype> actionmap;
+        static std::map<std::string, layertype> layermap;
+        static std::map<std::string, headerdata> headermap;
 };
 
 class audio {
@@ -223,22 +243,4 @@ namespace utils {
     vect rotate_to_point(vect object_position, vect point);
     double rad(double i);
 
-};
-enum actiontype {
-    MOVE,
-    SCALE,
-    ROTATE
-};
-enum layertype {
-    BACKGROUND,
-    LEGACY,
-    BG3D,
-    BG2D
-};
-enum headerdata {
-    TITLE,
-    VERSION,
-    CREATOR,
-    MUSIC,
-    FILENAME
 };

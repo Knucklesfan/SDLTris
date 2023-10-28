@@ -22,7 +22,7 @@
 
 bg::bg() {}
 bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
-    std::string filepath = pth "backgrounds/" + path + "/theme.xml";
+    std::string filepath = pth "backgrounds_legacy/" + path + "/theme.xml";
     if(folder) {
         filepath = path + "/theme.xml";
     }
@@ -32,7 +32,7 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
     doc.parse<0>(xmlFile.data());
     layers = atoi(doc.first_node("layers")->value());
 
-    std::string p = pth "backgrounds/" + path;
+    std::string p = pth "backgrounds_legacy/" + path;
     if(folder) {
         p = path;
     }
@@ -66,12 +66,12 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
     }
     if (doc.first_node("thumbnail") != NULL) {
         std::cout << "thumbnail detected\n";
-        std::string thmbpath = pth "backgrounds/" + path + "/";
+        std::string thmbpath = pth "backgrounds_legacy/" + path + "/";
         thmbpath += doc.first_node("thumbnail")->value();
         thumbnail = SDL_CreateTextureFromSurface(renderer, IMG_Load(thmbpath.c_str()));
     }
     else {
-        std::string thmbpath = pth "backgrounds/nullbg.png";
+        std::string thmbpath = pth "backgrounds_legacy/nullbg.png";
         thumbnail = SDL_CreateTextureFromSurface(renderer, IMG_Load(thmbpath.c_str()));
 
     }
@@ -91,7 +91,7 @@ bg::bg(std::string path, bool folder, SDL_Renderer* renderer) {
         //std::cout << "INFORMATION!!!: " << atoi(doc.first_node(sy.c_str())->value()) << "\n";
     }
 
-    std::string muspath = pth "backgrounds/" + path + "/";
+    std::string muspath = pth "backgrounds_legacy/" + path + "/";
     if(folder) {
         muspath = path + "/";
     }
@@ -391,7 +391,6 @@ void legacylayer::render() {
 	graphics::shaders[4]->setVec2("texOffset",glm::value_ptr(texOffset));
 	graphics::shaders[4]->setVec2("scale",glm::value_ptr(texScale));
     glm::vec4 sinedata = glm::vec4(sine.x,sine.y,sine.z,angle);
-    std::cout << sinedata.x << " " << sinedata.y << " " << sinedata.z << " " << sinedata.w << "\n"; 
     graphics::shaders[4]->setVec4("sineinfo",glm::value_ptr(sinedata));
     glm::vec2 texinfo = glm::vec2(t.w,t.h);
     graphics::shaders[4]->setVec2("texinfo",glm::value_ptr(texinfo));
@@ -403,8 +402,32 @@ void legacylayer::render() {
     glDepthMask(GL_TRUE);
 
 }
+shaderlayer::shaderlayer(std::string vert,std::string frag, std::vector<texture*> textures) {
+    shad = new shader(vert,frag);
+    data = textures;
+    //generates the VBO and stufff
+    unsigned int VBO;
 
+    glGenVertexArrays(1, &this->quadVAO);
+    glGenBuffers(1, &VBO);
 
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(this->quadVAO);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+}
+void shaderlayer::logic(double deltatime) {
+}
+void shaderlayer::render() {
+    shad->setInt("time",SDL_GetTicks());
+    
+    
+}
 
 bg::bg() {}
 bg::bg(std::string path, bool folder) {
@@ -433,7 +456,7 @@ bg::bg(std::string path, bool folder) {
                 name = child->value();
                 break;
             }
-            case headerdata::MUSIC: {
+            case headerdata::BGMUSIC: {
                 for (rapidxml::xml_node<char>* muskid = child->first_node(); muskid != NULL; muskid = muskid->next_sibling()) {
                     switch(bgconverters::headermap[muskid->name()]) {
                         case headerdata::TITLE: {
@@ -518,7 +541,30 @@ bg::bg(std::string path, bool folder) {
 
                     l = new legacylayer(layerpath, glm::vec2(atoi(x->value()),atoi(y->value())),sinedata);
                 }break;
+                case layertype::SHADER: {
+                    rapidxml::xml_node<char>* shaderpath = child->first_node("shader");
+                    if(shaderpath == nullptr) {
+                        std::cout << "Failed to load shader for " << path << ".\n";
+                        return;
+                    }   
+                    std::vector<texture*> textures;
+                    rapidxml::xml_node<char>* texturesPath = child->first_node("textures");
+                    if(texturesPath == nullptr) {
+                        std::cout << "Failed to load texture for " << path << ".\n";
+                        return;
+                    }  
+                    for (rapidxml::xml_node<char>* chlds = chlds->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
+                        texture* tmp = new texture(chlds->first_node("path")->value());
+                        if(tmp != nullptr) {
+                            textures.push_back(tmp);
+                        }
+                    }
+                    std::string vertpath = shaderpath->first_node("vertex")->value();
+                    std::string fragpath = shaderpath->first_node("fragment")->value();
+                    l = new shaderlayer(vertpath,fragpath,textures);
 
+                    
+                }break;
                 default: std::cout<<"unimplemented layer type\n";break;
             }
             if(l != nullptr) {
@@ -534,7 +580,7 @@ bg::bg(std::string path, bool folder) {
     doc.clear();
 }
 
-void bg::render(shader* shad) {
+void bg::render() {
     //BACKGROUND.H RETURNS!!!
     for(int i = 0; i < layers.size(); i++) {
         layers[i]->render();

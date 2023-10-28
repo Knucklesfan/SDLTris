@@ -1,10 +1,10 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o game.o background.o ingamemessagebox.o knuxfanscreen.o server.o highscore.o replay.o results.o options.o cube.o credits.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o cube.o buffermanager.o sprite.o stbi_image.o
 SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
-FLAGS	 = $(INC) -g -c -Wall -fsanitize=address -O0 -D _LINUX
-LFLAGS	 = -lSDL2 -lSDL2_ttf -lSDL2_mixer -lSDL2_image -fsanitize=address
+FLAGS	 = $(INC) -g -c -Wall -fsanitize=address -O0 -D _LINUX -DCLIENT
+LFLAGS	 = -lSDL2 -lGLEW -lGL -lSDL2_ttf -lSDL2_mixer -lSDL2_image -fsanitize=address
 INC=-I include/
 
 LFLAGS += -L/opt/homebrew/lib
@@ -70,6 +70,20 @@ SDL_FontCache.o: source/SDL_FontCache/SDL_FontCache.c
 	$(CC) $(FLAGS) source/SDL_FontCache/SDL_FontCache.c 
 globalgamemode.o: source/globalgamemode.cpp
 	$(CC) $(FLAGS) source/globalgamemode.cpp
+shader.o: source/opengl/shader.cpp
+	$(CC) $(FLAGS) source/opengl/shader.cpp
+texture.o: source/opengl/texture.cpp
+	$(CC) $(FLAGS) source/opengl/texture.cpp
+plane.o: source/opengl/plane.cpp
+	$(CC) $(FLAGS) source/opengl/plane.cpp
+rect.o: source/opengl/rect.cpp
+	$(CC) $(FLAGS) source/opengl/rect.cpp
+buffermanager.o: source/opengl/buffermanager.cpp
+	$(CC) $(FLAGS) source/opengl/buffermanager.cpp
+sprite.o: source/opengl/sprite.cpp
+	$(CC) $(FLAGS) source/opengl/sprite.cpp
+stbi_image.o: source/opengl/stbi_image.c
+	$(CC) $(FLAGS) source/opengl/stbi_image.c 
 
 defs.o: source/utils/defs.cpp
 	$(CC) $(FLAGS) source/utils/defs.cpp 

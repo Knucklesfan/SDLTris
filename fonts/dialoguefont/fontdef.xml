@@ -4,6 +4,7 @@
 <!--literally the only thing required outside of this..-->
 <width>16</width>
 <!--this width is the sprite of the drawn image.-->
+<shader>4</shader>
 
 <spwidth>8</spwidth>
 <!--this is a VERY rough estimate of per character size for wordwrap calculation. Just, try to get a good estimate? Might make this auto generated.-->

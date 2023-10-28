@@ -1,16 +1,25 @@
-<name>Clouds</name>
-<creator>Knuxfan</creator>
-<vers>1.0</vers>
-
-<layers>2</layers>
-
-<layer0>0</layer0>
-<layer0y>0</layer0y>
-
-<layer1>25</layer1>
-<layer1y>0</layer1y>
-
-<music>song.mod</music>
-<musicname>Jump Around</musicname>
-<musicartist>Mikael Eriksson</musicartist>
-<thumbnail>thumbnail.nonanex.png</thumbnail>
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Clouds</title>
+      <version>Clouds</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Jump Around</title>
+         <creator>Mikael Eriksson</creator>
+         <filename>song.mod</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="static">
+         <filename>00.png</filename>
+      </layer>
+      <layer type="legacy">
+         <filename>01.png</filename>
+         <movement>
+            <x>25</x>
+            <y>0</y>
+         </movement>
+      </layer>
+   </layers>
+</background>

@@ -1,6 +1,7 @@
 <name>Small 8x16 font</name>
 <width>16</width>
 <height>32</height>
+<shader>4</shader>
 
 <!--this is kinda a hack.
 the font code was designed with multiple rows in mind, but in order to ensure somewhat compatibility with the old font

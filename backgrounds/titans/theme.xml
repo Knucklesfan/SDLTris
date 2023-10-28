@@ -1,18 +1,22 @@
-<name>Titans</name>
-<creator>kris_0520</creator>
-<vers>1.0</vers>
-
-<layers>1</layers>
-
-<layer0>0</layer0>
-<layer0y>5</layer0y>
-
-<layer1>-10</layer1>
-<layer1y>-10</layer1y>
-<rotation>64</rotation>
-
-<music>Titans.xm</music>
-<musicname>Titans</musicname>
-<musicartist>kris_0520</musicartist>
-<thumbnail>thumbnail.nonanex.png</thumbnail>
-
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Titans</title>
+      <version>Titans</version>
+      <creator>kris_0520</creator>
+      <music visualize="false">
+         <title>Titans</title>
+         <creator>kris_0520</creator>
+         <filename>Titans.xm</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="legacy">
+         <filename>00.png</filename>
+         <movement>
+            <x>0</x>
+            <y>5</y>
+         </movement>
+      </layer>
+   </layers>
+</background>

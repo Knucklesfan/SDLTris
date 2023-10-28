@@ -1,5 +1,5 @@
 #include "shader.h"
-#include "utils.h"
+#include "../utils/defs.h"
 #ifdef CLIENT
 #include <SDL2/SDL.h>
 #include <GL/glew.h>

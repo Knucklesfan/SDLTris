@@ -3,7 +3,7 @@
 ttffont::ttffont(std::string name, int size) {
     font = FC_CreateFont();  
     std::string pth = "./fonts/" + name+ ".ttf";
-    FC_LoadFont(font, graphics::render, pth.c_str(), size, FC_MakeColor(255,255,255,255), TTF_STYLE_NORMAL);
+    // FC_LoadFont(font, graphics::render, pth.c_str(), size, FC_MakeColor(255,255,255,255), TTF_STYLE_NORMAL);
 }
 
 void ttffont::render(int x, int y, std::string strg, bool center) {
@@ -26,5 +26,5 @@ void ttffont::render(std::string words, int x, int y, bool center, int red, int 
     render(words, x, y, center, red, blue, green, wordwrap, false, 0, 0, 0, 1.0);
 }
 void ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
-    FC_Draw(font, graphics::render, x, y, words.c_str()); 
+    // FC_Draw(font, graphics::render, x, y, words.c_str()); 
 }

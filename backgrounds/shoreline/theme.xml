@@ -16,4 +16,42 @@
 <thumbnail>thumbnail.png</thumbnail>
 
 
+<background>
+	<head>
+		<title>Shoreline</title>
+		<version>1.0</version>
+		<creator>Knuxfan</creator>
+		<!--This is an example of a classic theme ported to the modern engine. Of course, it's still missing some features.-->
+		<!--Eventually, there will be an automatic script to convert SDLTris features to SDLTrisRewritten.-->
+		<music visualize="false">
+			<title>Empty Feeling (qz)</title>
+			<creator>Quoz</creator>
+			<filename>empty_feeling_qz.xm</filename>
+		</music>
+	</head>
+	<layers>
+		<!--depths are handled a 0-inf scale, with 0 being the furthest back, and preceeding numbers going up.-->
+		<layer type="background" depth="0">
+			<filename>shoreline.png</filename>
+		</layer>
 
+		<!--Legacy backgrounds function identical to the original game's backgrounds, including paralax and whatnot (paralax yet to be implemented).-->
+		<!--I DO NOT recommend using legacy backgrounds. They are merely just a direct reimplementation of the original system to ensure compatibility and easy porting. -->
+		<!--!!!PLEASE DO NOT USE FOR A REAL BG PACK!!!-->
+
+		<layer type="legacy" depth="1">
+			<filename>words.png</filename>
+			<movement>
+					<x>15</x>
+					<y>15</y>
+					<sine>
+						<width>20</width>
+						<height>20</height>
+						<layerheight>64</layerheight>
+						<rate>10000</rate>
+					</sine>
+
+			</movement>
+		</layer>
+	</layers>
+</background>

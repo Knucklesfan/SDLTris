@@ -14,10 +14,10 @@
 #include "globalgamemode.h"
 #include "gamemode.h"
 #include "scenes/knuxfanscreen.h"
-#include "scenes/titlescreen.h"
-#include "scenes/credits.h"
-#include "scenes/game.h"
-#include "scenes/options.h"
+// #include "scenes/titlescreen.h"
+// #include "scenes/credits.h"
+// #include "scenes/game.h"
+// #include "scenes/options.h"
 #ifndef __LEGACY_RENDER
 #include "opengl/buffermanager.h"
 #endif
@@ -66,7 +66,8 @@ Uint32 time_left(void)
 
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
-
+int WINDOW_WIDTH = INTERNAL_WIDTH;
+int WINDOW_HEIGHT = INTERNAL_HEIGHT;
 int main() {
 #ifdef __SWITCH__
     consoleInit(NULL);
@@ -135,6 +136,8 @@ int main() {
 	{
 		printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
+    graphics::rect = new rectRenderer();
+    graphics::sprite = new spriteRenderer();
 #endif
     //Initialize SDL_mixer
     if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
@@ -155,19 +158,20 @@ int main() {
 
     SDL_RenderSetLogicalSize(graphics::render, 640, 480);
 #else
+
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glDepthFunc(GL_LESS);
-	glEnable(GL_DEPTH_TEST);  
+	// glDepthFunc(GL_LESS);
+	// glEnable(GL_DEPTH_TEST);  
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 	buffermanager buffer = buffermanager(INTERNAL_WIDTH,INTERNAL_HEIGHT);
+    graphics::generateshaders();
 
 #endif
     std::string prefix = filepath;
-
     graphics::generatebgs();
     graphics::generatesprites();
     graphics::generatefonts();
@@ -197,16 +201,18 @@ int main() {
     double ticks = 0;
     int realtick = 0;
     double time = 0; //time of current frame
-    double oldTime = 0; //time of previous framea
+    double oldTime = SDL_GetTicks(); //time of previous framea
     long long recordticks = 0;
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
         // new white(),
         new knuxfanscreen(), //0
-        new titlescreen(), //1
-        new game(), //2
-        new options(), //3
-        new credits() //4
+        new white(),
+        new white()
+        // new titlescreen(), //1
+        // new game(), //2
+        // new options(), //3
+        // new credits() //4
     };
     std::cout << "test2";
     int gamemode = 0;
@@ -234,6 +240,13 @@ int main() {
             if (event.type == SDL_KEYDOWN) {
                 gamemode[gamemodes]->input(event.key.keysym.sym);
             }
+            if(event.type == SDL_WINDOWEVENT) {
+				if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+
+					WINDOW_WIDTH =(event.window.data1);
+					WINDOW_HEIGHT = (event.window.data2);
+        		}
+			}
         }
 
         time = SDL_GetTicks();
@@ -274,11 +287,20 @@ int main() {
             graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
             SDL_RenderPresent(graphics::render);
             #else
-            buffer.disable(INTERNAL_WIDTH,INTERNAL_HEIGHT);
-		    buffer.render(graphics::shaders[3],INTERNAL_WIDTH,INTERNAL_HEIGHT);
+		    buffer.disable(WINDOW_WIDTH,WINDOW_HEIGHT);
+        	buffer.render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT);
 		    SDL_GL_SwapWindow(window);
 
             #endif
     }
+
 }
+	SDL_GL_DeleteContext(context);
+
+	// Destroy the window
+	SDL_DestroyWindow(window);
+
+	// And quit SDL
+	SDL_Quit();
+
 }

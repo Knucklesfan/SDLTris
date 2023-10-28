@@ -193,19 +193,23 @@ void titlescreen::input(SDL_Keycode key)
 
 void titlescreen::render()
 {
+#ifdef __LEGACY_RENDER
     SDL_RenderClear(graphics::render);
+#else
+#endif
+    graphics::backgrounds->at(bgnum).render(graphics::shaders[2]);
 
-    graphics::backgrounds->at(bgnum).render(graphics::render, false);
-
+#ifdef __LEGACY_RENDER
     SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
     SDL_Rect bx = { 160, 250, 320, 210 };
     SDL_RenderFillRect(graphics::render, &bx);
     SDL_SetRenderDrawColor(graphics::render, 255, 255, 255, 255);
     SDL_RenderDrawRect(graphics::render, &bx);
     SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
-
     graphics::drawTexture(graphics::sprites.at("knfnlogo"), 0, 0, 0.0, 1.0, false);
-
+#else
+    graphics::sprite->render(graphics::shaders[4],graphics::sprites.at("knfnlogo"),glm::vec2(0,0),glm::vec2(640,480),0,glm::vec2(0,0),glm::vec2(640,480));
+#endif
 
     for (int i = 0; i < selections; i++) {
         graphics::fonts->at(1)->render(320, 300 + (i * 32),settings[i],  true, 255, 0, ((i == currentselection && currentscreen == 0)?0:255),-1,false,0,0,0);
@@ -217,15 +221,15 @@ void titlescreen::render()
     // versfont->render(320, 265, "Previous Score: " + std::to_string(score->previousscore), true, renderer);
     switch (currentscreen) {
         case(1): {
-            SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
-            SDL_Rect splashbox = { 0, 0, 640, 480 };
-            SDL_RenderFillRect(graphics::render, &splashbox);
-            SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 200);
-            splashbox = { 320 - 240, 240 - 120, 480, 240 };
-            SDL_RenderFillRect(graphics::render, &splashbox);
-            SDL_SetRenderDrawColor(graphics::render, 255, 255, 255, 255);
-            SDL_RenderDrawRect(graphics::render, &splashbox);
-            SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 26);
+            // SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
+            // SDL_Rect splashbox = { 0, 0, 640, 480 };
+            // SDL_RenderFillRect(graphics::render, &splashbox);
+            // SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 200);
+            // splashbox = { 320 - 240, 240 - 120, 480, 240 };
+            // SDL_RenderFillRect(graphics::render, &splashbox);
+            // SDL_SetRenderDrawColor(graphics::render, 255, 255, 255, 255);
+            // SDL_RenderDrawRect(graphics::render, &splashbox);
+            // SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 26);
 
             // headerfont->render(320, 140, messagetitle, true, renderer);
             // bodyfont->render(320, 180, messagebody, true, renderer,448);

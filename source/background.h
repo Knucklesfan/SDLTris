@@ -128,6 +128,36 @@ class legacylayer : public layer { //Basically, functions identical to the old s
         };
 
 };
+class shaderlayer : public layer { //a flat, nonmoving layer that shows a shader and supports multiple textures.
+
+// Designed to allow people to make cool, trippy shader effects, and can be overlayed on top of other layers!
+// the shader is also public and exposed in case of other code potentially allowing visualization or something...
+// this layer is both the most powerful, and potentially most difficult layer to implement for a background,
+// as a bad shader could cause bad framerates.
+// however, that may or may not be an issue, depending on your use case.
+// shaders can be used for post processing as well!
+
+    public:
+        shaderlayer(std::string vertpath,std::string fragpath, std::vector<texture*> textures);
+        void render();
+        void logic(double deltatime);
+        shader* shad; //exposed to allow doing cool stuff
+
+    private:
+        std::vector<texture*> data;
+        unsigned int quadVAO;
+        float vertices[24] = { 
+            // pos      // tex
+            0.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f, 
+
+            0.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 0.0f, 1.0f, 0.0f
+        };
+};
+
 class flatlayer : layer { //a 2D layer, that can be manipulated in many ways, including paralax.
 
 };
@@ -148,7 +178,7 @@ class bg
 #endif
         std::string songname;
         std::string artist;
-        void render(shader* shad);
+        void render();
         std::vector<layer*> layers;
         bg(std::string path, bool folder);
         bg();  

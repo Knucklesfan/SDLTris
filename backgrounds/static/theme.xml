@@ -1,23 +1,39 @@
-<name>Statically Typed</name>
-<creator>Knuxfan</creator>
-<vers>1.0</vers>
-
-<layers>4</layers>
-
-<layer0>0</layer0>
-<layer0y>0</layer0y>
-
-<layer1>5</layer1>
-<layer1y>5</layer1y>
-
-<layer2>2</layer2>
-<layer2y>2</layer2y>
-
-<layer3>1</layer3>
-<layer3y>1</layer3y>
-
-
-<music>song.mod</music>
-<musicname>Jump (FunkyRemix)</musicname>
-<musicartist>Marco Schindler</musicartist>
-<thumbnail>thumbnail.nonanex.png</thumbnail>
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Statically Typed</title>
+      <version>Statically Typed</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Jump (FunkyRemix)</title>
+         <creator>Marco Schindler</creator>
+         <filename>song.mod</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="static">
+         <filename>00.png</filename>
+      </layer>
+      <layer type="legacy">
+         <filename>01.png</filename>
+         <movement>
+            <x>5</x>
+            <y>5</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>02.png</filename>
+         <movement>
+            <x>2</x>
+            <y>2</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>03.png</filename>
+         <movement>
+            <x>1</x>
+            <y>1</y>
+         </movement>
+      </layer>
+   </layers>
+</background>

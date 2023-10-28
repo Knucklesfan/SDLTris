@@ -9,15 +9,16 @@
 #include "../pixfont.h"
 #include "../ttffont.h"
 #include <cmath>
+#include <sstream> //std::stringstream
+SDL_Window* graphics::window = nullptr;
 #ifdef __LEGACY_RENDER
 SDL_Renderer* graphics::render = nullptr;
-SDL_Window* graphics::window = nullptr;
 std::map<std::string,SDL_Texture*> graphics::sprites = std::map<std::string,SDL_Texture*>();
 std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
 
 #else
-    rectRenderer* graphics::rect = new rectRenderer();
-    spriteRenderer* graphics::sprite = new spriteRenderer();
+    rectRenderer* graphics::rect = NULL;
+    spriteRenderer* graphics::sprite = NULL;
     std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
 
     std::map<std::string,texture*> graphics::sprites = std::map<std::string,texture*>();
@@ -32,13 +33,14 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
         {"background", layertype::BACKGROUND}, //
         {"legacy", layertype::LEGACY},
         {"bg3d", layertype::BG3D},
-        {"bg2d", layertype::BG2D}};
+        {"bg2d", layertype::BG2D},
+        {"shader", layertype::SHADER}};
     ;
     std::map<std::string, headerdata> bgconverters::headermap =
         {
             {"title", headerdata::TITLE},
             {"version", headerdata::VERSION},
-            {"music", headerdata::MUSIC},
+            {"music", headerdata::BGMUSIC},
             {"filename", headerdata::FILENAME},
             {"creator", headerdata::CREATOR}
 
@@ -619,4 +621,13 @@ vect utils::rotate_to_point(vect object_position, vect point) {
     rotation.x = deg(rotationAxis[0] * rotationAngle);
     rotation.y = deg(rotationAxis[1] * rotationAngle);
     rotation.z = deg(rotationAxis[2] * rotationAngle);
+}
+std::string utils::loadFile(std::string filename)
+{
+    std::ifstream inFile;
+    inFile.open(filename); // open the input file
+
+    std::stringstream strStream;
+    strStream << inFile.rdbuf(); // read the file
+    return strStream.str();      // str holds the content of the file
 }

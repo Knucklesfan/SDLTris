@@ -31,36 +31,52 @@ void GlobalGamemode::setFade(Transition resp) {
     
 }
 void GlobalGamemode::render() {
-    #ifdef __LEGACY_RENDER
+
     switch(currentTransition.fade) {
         case FADE: {
+            #ifdef __LEGACY_RENDER
             SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255 * alpha);
             SDL_Rect splashbox = { 0, 0, 640, 480 };
             SDL_RenderFillRect(graphics::render, &splashbox);
+            #else
+            graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,alpha},false,-1);
+            #endif
             break;
         }
         case BLOCKS: {
+            #ifdef __LEGACY_RENDER
             SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255);
+            #endif
             if(fade) {
+                #ifdef __LEGACY_RENDER
                 SDL_Rect splashbox = { 0, -480+math::easeOutBounce((alpha*0.75))*480, 640, 480};
                 SDL_RenderFillRect(graphics::render, &splashbox);
+                #else
+                graphics::rect->render(graphics::shaders.at(1),{
+                    0,
+                    0
+                },{
+                    640,
+                    math::easeOutBounce((alpha*0.75))*480
+                    },0,{0,0,0,1},false,-1);
+                #endif
             }
             else {
+                #ifdef __LEGACY_RENDER
                 SDL_Rect splashbox = { 
                     0,
                      -480+(1-math::easeOutBounce(1-alpha))*480,
                       640,
                        480};
                 SDL_RenderFillRect(graphics::render, &splashbox);
+                #else
+                graphics::rect->render(graphics::shaders.at(1),{0,-480+(1-math::easeOutBounce(1-alpha))*480},{640,480},0,{0,0,0,1},false,-1);
+                #endif
 
             }
-
             break;
         }
     }
-    #else
-    
-    #endif
 
 }
 double math::easeOutBounce(double x) {

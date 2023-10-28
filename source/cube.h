@@ -7,14 +7,14 @@
 #include <algorithm>    // std::sort
 #include <cstring>
 
-class cube
+class wireframecube
 {
 public:
     double width = 320;
     double height = 240;
     void logic(double deltatime);
     void render(SDL_Renderer* renderer, int r, int g, int b);
-    cube(SDL_Renderer* render, int x, int y, int width, int height);
+    wireframecube(SDL_Renderer* render, int x, int y, int width, int height);
     int x = width/2;
     int y = height/2;
     double rotation = 0.0;

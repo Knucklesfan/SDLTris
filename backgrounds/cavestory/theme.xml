@@ -1,26 +1,46 @@
-<name>Cave Story BG</name>
-<creator>Knuxfan</creator>
-<vers>1.0</vers>
-
-<layers>5</layers>
-
-<layer0>5</layer0>
-<layer0y>0</layer0y>
-
-<layer1>10</layer1>
-<layer1y>0</layer1y>
-
-<layer2>15</layer2>
-<layer2y>0</layer2y>
-
-<layer3>20</layer3>
-<layer3y>0</layer3y>
-
-<layer4>0</layer4>
-<layer4y>0</layer4y>
-
-
-<music>song.xm</music>
-<musicname>Take on Me Chipedit</musicname>
-<musicartist>Zalza of Tequila</musicartist>
-<thumbnail>thumbnail.nonanex.png</thumbnail>
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Cave Story BG</title>
+      <version>Cave Story BG</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Take on Me Chipedit</title>
+         <creator>Zalza of Tequila</creator>
+         <filename>song.xm</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="legacy">
+         <filename>00.png</filename>
+         <movement>
+            <x>5</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>01.png</filename>
+         <movement>
+            <x>10</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>02.png</filename>
+         <movement>
+            <x>15</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>03.png</filename>
+         <movement>
+            <x>20</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <layer type="static">
+         <filename>04.png</filename>
+      </layer>
+   </layers>
+</background>

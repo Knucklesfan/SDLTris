@@ -42,7 +42,7 @@ texture::texture(std::string path) {
         this->flipv=true;
         this->type="";
         this->path=path;
-
+        std::cout << "sprite width: " << w << " sprite height: " << h << "\n";
 }
 texture::~texture() {
     //glDeleteTextures(1, &this->id);

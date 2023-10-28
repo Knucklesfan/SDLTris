@@ -31,6 +31,7 @@ knuxfanscreen::knuxfanscreen() {
 
 }
 void knuxfanscreen::render() {
+#ifdef __LEGACY_RENDER
     SDL_RenderClear(graphics::render);
     graphics::backgrounds->at(backnum).render(graphics::render, false);
     drawTexture(graphics::sprites["knuxfan"], knuxfanx, knuxfany, rotate, 1.0, false);
@@ -41,6 +42,13 @@ void knuxfanscreen::render() {
     SDL_Rect splashbox = { 0, 0, 640, 480 };
     SDL_RenderFillRect(graphics::render, &splashbox);
     //SDL_RenderPresent(renderer);
+    #else
+    graphics::backgrounds->at(backnum).render();
+    graphics::sprite->render(graphics::shaders.at(4),graphics::sprites["knuxfan"], glm::vec2(knuxfanx, knuxfany), glm::vec2(graphics::sprites["knuxfan"]->w,graphics::sprites["knuxfan"]->h), rotate, glm::vec2(0,0), glm::vec2(graphics::sprites["knuxfan"]->w,graphics::sprites["knuxfan"]->h));
+    graphics::sprite->render(graphics::shaders.at(4),graphics::sprites["presents"], glm::vec2(presentsx, presentsy), glm::vec2(graphics::sprites["presents"]->w,graphics::sprites["presents"]->h), -rotate, glm::vec2(0,0), glm::vec2(graphics::sprites["presents"]->w,graphics::sprites["presents"]->h));
+    graphics::fonts->at(2)->render(320, 450, splashes[splash], true);
+
+    #endif
 
 }
 void knuxfanscreen::keyPressed(SDL_Keycode key) {
@@ -122,6 +130,7 @@ Transition knuxfanscreen::endLogic() {
     return t;
 }
 void knuxfanscreen::drawTexture(SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
+    #ifdef __LEGACY_RENDER
     SDL_Rect sprite;
     SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
     int oldwidth = sprite.w;
@@ -137,4 +146,5 @@ void knuxfanscreen::drawTexture(SDL_Texture* texture, int x, int y, double angle
         sprite.y = y + oldheight / 2 - sprite.h / 2;
     }
     SDL_RenderCopyEx(graphics::render, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
+    #endif
 }

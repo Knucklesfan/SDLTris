@@ -21,7 +21,7 @@ rectRenderer::rectRenderer() {
 }
 
 void rectRenderer::render(shader* shad, glm::vec2 firstcoord, glm::vec2 secondcoord,
-float rotate,float alpha,bool outline, int thickness) {
+float rotate,glm::vec4 color,bool outline, int thickness) {
     // prepare transformations
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(COORDINATE_WIDTH), 
     static_cast<float>(COORDINATE_HEIGHT), 0.0f, -1.0f, 1.0f);
@@ -38,6 +38,7 @@ float rotate,float alpha,bool outline, int thickness) {
     model = glm::scale(model, glm::vec3(secondcoord.x-firstcoord.x,secondcoord.y-firstcoord.y, 1.0f)); // last scale
 
     shad->setVector("model", glm::value_ptr(model));
+    shad->setVec4("col",glm::value_ptr(color));
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);

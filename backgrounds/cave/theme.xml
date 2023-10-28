@@ -1,22 +1,39 @@
-<name>SMW Cave</name>
-<creator>Knuxfan</creator>
-<vers>1.0</vers>
-
-<layers>4</layers>
-
-<layer0>0</layer0>
-<layer0y>0</layer0y>
-
-<layer1>0</layer1>
-<layer1y>5</layer1y>
-
-<layer2>0</layer2>
-<layer2y>2</layer2y>
-
-<layer3>0</layer3>
-<layer3y>100</layer3y>
-
-<music>song.xm</music>
-<musicname>Lost without (her)</musicname>
-<musicartist>DROZERiX</musicartist>
-<thumbnail>thumbnail.nonanex.png</thumbnail>
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>SMW Cave</title>
+      <version>SMW Cave</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Lost without (her)</title>
+         <creator>DROZERiX</creator>
+         <filename>song.xm</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="static">
+         <filename>00.png</filename>
+      </layer>
+      <layer type="legacy">
+         <filename>01.png</filename>
+         <movement>
+            <x>0</x>
+            <y>5</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>02.png</filename>
+         <movement>
+            <x>0</x>
+            <y>2</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>03.png</filename>
+         <movement>
+            <x>0</x>
+            <y>100</y>
+         </movement>
+      </layer>
+   </layers>
+</background>

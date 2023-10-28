@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>SMW Underwater</title>
+      <version>SMW Underwater</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Jolly Roger Bay</title>
+         <creator>Emil Broling</creator>
+         <filename>sm64-wat.xm</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="static">
+         <filename>00.png</filename>
+      </layer>
+      <layer type="static">
+         <filename>01.png</filename>
+      </layer>
+   </layers>
+</background>

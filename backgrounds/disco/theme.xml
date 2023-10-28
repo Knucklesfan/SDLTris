@@ -1,16 +1,29 @@
-<name>Disco</name>
-<creator>Knuxfan</creator>
-<vers>1.0</vers>
-
-<layers>2</layers>
-
-<layer0>0</layer0>
-<layer0y>5</layer0y>
-
-<layer1>-10</layer1>
-<layer1y>-10</layer1y>
-
-<music>song.xm</music>
-<musicname>Jump To My Beat</musicname>
-<musicartist>BabyDee / eFFect</musicartist>
-<thumbnail>thumbnail.nonanex.png</thumbnail>
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Disco</title>
+      <version>Disco</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Jump To My Beat</title>
+         <creator>BabyDee / eFFect</creator>
+         <filename>song.xm</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="legacy">
+         <filename>00.png</filename>
+         <movement>
+            <x>0</x>
+            <y>5</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>01.png</filename>
+         <movement>
+            <x>-10</x>
+            <y>-10</y>
+         </movement>
+      </layer>
+   </layers>
+</background>

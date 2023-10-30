@@ -1,6 +1,6 @@
 <background>
 	<head>
-		<title>Sine</title>
+		<title>Credits</title>
 		<version>1.0</version>
 		<creator>Knuxfan</creator>
 		<!--This is an example of a classic theme ported to the modern engine. Of course, it's still missing some features.-->
@@ -13,16 +13,8 @@
 	</head>
 	<layers>
 		<!--depths are handled a 0-inf scale, with 0 being the furthest back, and preceeding numbers going up.-->
-		<layer type="shader" depth="0">
-			<textures>
-				<texture>
-					<path>Fractal_Flythrough_iChannel0.png</path>
-				</texture>
-			</textures>
-			<shader>
-				<vertex>vertex.glsl</vertex>
-				<fragment>fractal.glsl</fragment>
-			</shader>
+		<layer type="background" depth="0">
+			<filename>thxforplaying.png</filename>
 		</layer>
 
 		<!--Legacy backgrounds function identical to the original game's backgrounds, including paralax and whatnot (paralax yet to be implemented).-->

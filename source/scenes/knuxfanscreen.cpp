@@ -117,6 +117,8 @@ void knuxfanscreen::reset() {
 
 	 explode = false;
 	 rotate = 0;
+    backnum = std::rand() % graphics::backgrounds->size();
+    splash = rand() % 35;
 
 
 }

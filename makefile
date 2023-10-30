@@ -1,4 +1,4 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o cube.o buffermanager.o sprite.o stbi_image.o
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o
 SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp
 HEADER	= 
 OUT	= SDLTetris
@@ -58,8 +58,8 @@ ttffont.o: source/ttffont.cpp
 # options.o: source/scenes/options.cpp
 # 	$(CC) $(FLAGS) source/scenes/options.cpp -std=c++17
 
-cube.o: source/cube.cpp
-	$(CC) $(FLAGS) source/cube.cpp -std=c++17
+cube.o: source/opengl/cube.cpp
+	$(CC) $(FLAGS) source/opengl/cube.cpp -std=c++17
 	
 # credits.o: source/scenes/credits.cpp
 # 	$(CC) $(FLAGS) source/scenes/credits.cpp -std=c++17

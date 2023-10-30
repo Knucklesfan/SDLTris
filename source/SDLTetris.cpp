@@ -206,7 +206,7 @@ int main() {
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
         // new white(),
-        new white(),
+        new knuxfanscreen(),
         new white()
         // new titlescreen(), //1
         // new game(), //2
@@ -261,8 +261,8 @@ int main() {
             SDL_RenderClear(graphics::render);
             SDL_SetRenderTarget(graphics::render,rendertext);
             #else
-                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 buffer.enable();
+                global->startRender();
                 glm::mat4 projection;
                 projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
                 glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective

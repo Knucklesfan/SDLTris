@@ -36,7 +36,7 @@ float rotate,glm::vec4 color,bool outline, int thickness) {
     model = glm::translate(model, glm::vec3(-0.5f * secondcoord.x-firstcoord.x, -0.5f * secondcoord.y-firstcoord.y, 0.0f)); // move origin back
 
     model = glm::scale(model, glm::vec3(secondcoord.x-firstcoord.x,secondcoord.y-firstcoord.y, 1.0f)); // last scale
-
+    
     shad->setVector("model", glm::value_ptr(model));
     shad->setVec4("col",glm::value_ptr(color));
     glBindVertexArray(this->quadVAO);

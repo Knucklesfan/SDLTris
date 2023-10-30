@@ -12,13 +12,15 @@ class buffermanager {
     public:
     buffermanager(int width, int height);
     void enable();
-    void disable(int WINDOW_WIDTH, int WINDOW_HEIGHT);
-    void render(shader* shad,int WINDOW_WIDTH, int WINDOW_HEIGHT);
+    void disable(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool restore  = false);
+    void render(shader* shad,int WINDOW_WIDTH, int WINDOW_HEIGHT, bool aspect);
     const int width;
     const int height;
+    texture renderTexture;
     private:
     GLuint framebuffer;
-    GLuint renderTexture;
+    GLint previousFB;
+
     unsigned int VBO, VAO, EBO;
     float vertices[20] = {
         // positions          // texture coords

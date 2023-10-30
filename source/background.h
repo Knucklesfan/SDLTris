@@ -60,6 +60,9 @@ class bg
 #include <cstring>
 #include <map>
 #ifdef CLIENT
+#include "opengl/texture.h"
+#include "opengl/shader.h"
+#include "opengl/buffermanager.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_mixer.h>
@@ -74,8 +77,6 @@ class bg
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "opengl/texture.h"
-#include "opengl/shader.h"
 class layer { 
     public:
     //this is the way the system should've always been done, but of course that's not how it was done.
@@ -145,16 +146,17 @@ class shaderlayer : public layer { //a flat, nonmoving layer that shows a shader
 
     private:
         std::vector<texture*> data;
-        unsigned int quadVAO;
-        float vertices[24] = { 
-            // pos      // tex
-            0.0f, 1.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 0.0f, 
-
-            0.0f, 1.0f, 0.0f, 1.0f,
-            1.0f, 1.0f, 1.0f, 1.0f,
-            1.0f, 0.0f, 1.0f, 0.0f
+        unsigned int VBO, VAO, EBO;
+        float vertices[20] = {
+            // positions             // texture coords
+            1.0f,  1.0f, 0.0f,     1.0f, 0.0f, // top right
+            1.0f, -1.0f, 0.0f,     1.0f, 1.0f, // bottom right
+            -1.0f, -1.0f, 0.0f,     0.0f, 1.0f, // bottom left
+            -1.0f,  1.0f, 0.0f,     0.0f, 0.0f  // top left 
+        };
+        unsigned int indices[6] = {
+            0, 1, 3, // first triangle
+            1, 2, 3
         };
 };
 
@@ -173,6 +175,9 @@ class bg
         std::string path;
         std::string creator;
         std::string vers;
+        layer* postproc; //kinda like postcroc but cooler
+        bool postprocess;
+        buffermanager* buffer;
 #ifdef CLIENT
         Mix_Music* music;
 #endif
@@ -180,6 +185,7 @@ class bg
         std::string artist;
         void render();
         std::vector<layer*> layers;
+
         bg(std::string path, bool folder);
         bg();  
 };

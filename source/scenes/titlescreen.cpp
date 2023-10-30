@@ -197,7 +197,7 @@ void titlescreen::render()
     SDL_RenderClear(graphics::render);
 #else
 #endif
-    graphics::backgrounds->at(bgnum).render(graphics::shaders[2]);
+    graphics::backgrounds->at(bgnum).render();
 
 #ifdef __LEGACY_RENDER
     SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);

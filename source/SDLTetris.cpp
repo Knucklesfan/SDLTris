@@ -206,7 +206,6 @@ int main() {
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
         // new white(),
-        new knuxfanscreen(), //0
         new white(),
         new white()
         // new titlescreen(), //1
@@ -288,7 +287,7 @@ int main() {
             SDL_RenderPresent(graphics::render);
             #else
 		    buffer.disable(WINDOW_WIDTH,WINDOW_HEIGHT);
-        	buffer.render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT);
+        	buffer.render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
 		    SDL_GL_SwapWindow(window);
 
             #endif

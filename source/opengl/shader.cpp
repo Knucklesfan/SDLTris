@@ -12,7 +12,7 @@
 #include <string>
 shader::shader(std::string vertPath, std::string fragPath) //TODO: fix weird spelling thing (im lazy so this is a TODO)
 {
-
+    success = true;
     int suc; //debug stuff
     char infoLog[512];
 
@@ -47,7 +47,8 @@ shader::shader(std::string vertPath, std::string fragPath) //TODO: fix weird spe
     {
         __glewGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
         error += "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" + std::string(infoLog) + "\n";
-        suc = false;
+        success = false;
+        
 
     }
 
@@ -66,6 +67,10 @@ shader::shader(std::string vertPath, std::string fragPath) //TODO: fix weird spe
     __glewDeleteShader(fragmentShader);
     vert = vertPath;
     frag = fragPath;
+    if(!success) {
+        std::cerr << "Error in shader compilation has occurred, crashing...";
+        exit(-1);
+    }
 }
 
 void shader::activate()

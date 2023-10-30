@@ -1,0 +1,44 @@
+<background>
+	<head>
+		<title>Sine</title>
+		<version>1.0</version>
+		<creator>Knuxfan</creator>
+		<!--This is an example of a classic theme ported to the modern engine. Of course, it's still missing some features.-->
+		<!--Eventually, there will be an automatic script to convert SDLTris features to SDLTrisRewritten.-->
+		<music visualize="false">
+			<title>Long Train Runnin'</title>
+			<creator>The Doobie Brothers</creator>
+			<filename>longtrain.mp3</filename>
+		</music>
+	</head>
+	<layers>
+		<!--depths are handled a 0-inf scale, with 0 being the furthest back, and preceeding numbers going up.-->
+		<layer type="shader" depth="0">
+			<textures>
+				<texture>
+					<path>Fractal_Flythrough_iChannel0.png</path>
+				</texture>
+			</textures>
+			<shader>
+				<vertex>vertex.glsl</vertex>
+				<fragment>fractal.glsl</fragment>
+			</shader>
+		</layer>
+
+		<!--Legacy backgrounds function identical to the original game's backgrounds, including paralax and whatnot (paralax yet to be implemented).-->
+		<!--I DO NOT recommend using legacy backgrounds. They are merely just a direct reimplementation of the original system to ensure compatibility and easy porting. -->
+		<!--!!!PLEASE DO NOT USE FOR A REAL BG PACK!!!-->
+	</layers>
+	<!--Backgrounds also now support post processing! Although optional, these effects are shaders that can be overlayed on top of the background, allowing you to do some neat stuff. These work similarly to shader layers.-->
+	<!-- <framebuffer>
+			<textures>
+				<texture>
+					<path>Fractal_Flythrough_iChannel0.png</path>
+				</texture>
+			</textures>
+			<shader>
+				<vertex>vertex.glsl</vertex>
+				<fragment>fractal.glsl</fragment>
+			</shader>
+	</framebuffer> -->
+</background>

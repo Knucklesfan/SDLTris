@@ -1,13 +1,14 @@
 #include "buffermanager.h"
+#include <iostream>
 
 buffermanager::buffermanager(int w, int h):width(w),height(h) {
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer); //handles running the game at the set resolution
 
-	glGenTextures(1, &renderTexture); //generates a texture to render to
+	glGenTextures(1, &renderTexture.id); //generates a texture to render to
 
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, renderTexture);
+	glBindTexture(GL_TEXTURE_2D, renderTexture.id);
 
 	// Give an empty image to OpenGL ( the last "0" )
 	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
@@ -23,7 +24,7 @@ buffermanager::buffermanager(int w, int h):width(w),height(h) {
 
 
 	// Set "renderedTexture" as our colour attachement #0
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderTexture, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, renderTexture.id, 0);
 	// Set the list of draw buffers.
 	GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
 	glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
@@ -55,34 +56,46 @@ buffermanager::buffermanager(int w, int h):width(w),height(h) {
 
 }
 void buffermanager::enable() {
+		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFB); //store previous framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		glViewport(0,0,width,height); // Activate and render at texture size.
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void buffermanager::disable(int WINDOW_WIDTH, int WINDOW_HEIGHT) {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+void buffermanager::disable(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool restore) {
+		if(restore) {
+			glBindFramebuffer(GL_FRAMEBUFFER, previousFB); //restore previous framebuffer
+		}
+		else {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0); //restore previous framebuffer
+		}
 		glViewport(0,0,WINDOW_WIDTH,WINDOW_HEIGHT); //Restore old frame buffer, we're done here.
 		glMatrixMode(GL_PROJECTION);
 }
-void buffermanager::render(shader* shad,int WINDOW_WIDTH, int WINDOW_HEIGHT) {
+void buffermanager::render(shader* shad,int WINDOW_WIDTH, int WINDOW_HEIGHT, bool aspect) {
     glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, renderTexture);
+	glBindTexture(GL_TEXTURE_2D, renderTexture.id);
     shad->activate();
-    glm::mat4 bgmtrans = glm::mat4(1.0f); //the actual transform of the model itself
-    float currentaspect = (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT;
-    float intendedaspect = (float)width/(float)height;
-    float outputwidth = WINDOW_WIDTH;
-    float outputheight = WINDOW_HEIGHT;
-    if(intendedaspect > currentaspect) {
-        outputheight = outputwidth / intendedaspect;
-    }
-    else {
-        outputwidth = outputheight * intendedaspect;
-    }
-    bgmtrans = glm::scale(bgmtrans, glm::vec3(outputwidth/WINDOW_WIDTH,outputheight/WINDOW_HEIGHT,1.0f));
+	if(aspect) {
+		glm::mat4 bgmtrans = glm::mat4(1.0f); //the actual transform of the model itself
+		float currentaspect = (float)WINDOW_WIDTH/(float)WINDOW_HEIGHT;
+		float intendedaspect = (float)width/(float)height;
+		float outputwidth = WINDOW_WIDTH;
+		float outputheight = WINDOW_HEIGHT;
+		if(intendedaspect > currentaspect) {
+			outputheight = outputwidth / intendedaspect;
+		}
+		else {
+			outputwidth = outputheight * intendedaspect;
+		}
+		bgmtrans = glm::scale(bgmtrans, glm::vec3(outputwidth/WINDOW_WIDTH,outputheight/WINDOW_HEIGHT,1.0f));
+		shad->setVector("model",glm::value_ptr(bgmtrans));
+	}
+	else {
+		glm::mat4 modelmatrix = glm::mat4(1.0f);
+		shad->setVector("model",glm::value_ptr(modelmatrix));
+	}
 
     shad->setInt("texture1",0);
-    shad->setVector("model",glm::value_ptr(bgmtrans));
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

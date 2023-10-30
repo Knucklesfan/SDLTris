@@ -406,31 +406,53 @@ shaderlayer::shaderlayer(std::string vert,std::string frag, std::vector<texture*
     shad = new shader(vert,frag);
     data = textures;
     //generates the VBO and stufff
-    unsigned int VBO;
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+	glBindVertexArray(VAO);
 
-    glGenVertexArrays(1, &this->quadVAO);
-    glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glBindVertexArray(this->quadVAO);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 }
 void shaderlayer::logic(double deltatime) {
 }
 void shaderlayer::render() {
-    shad->setInt("time",SDL_GetTicks());
-    
+    glDepthMask(GL_FALSE);
+    int i = 0;
+    // std::cout << data.size() << "\n";
+    for(texture* t : data) {
+        t->activate(i);
+        if(i == 0) {
+            shad->activate();
+        }
+        shad->setInt("texture"+std::to_string(i),i);
+    }
+        shad->setFloat("time",(float)SDL_GetTicks()/(float)1000);
+
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDepthMask(GL_TRUE);
+
     
 }
 
-bg::bg() {}
+bg::bg() {
+    buffer = new buffermanager(640,480);
+}
 bg::bg(std::string path, bool folder) {
+    postprocess = false;
+    buffer = new buffermanager(640,480);
 
     std::string filePath = pth "backgrounds/" + path + "/theme.xml";
     std::cout << filePath <<"\n";
@@ -553,16 +575,15 @@ bg::bg(std::string path, bool folder) {
                         std::cout << "Failed to load texture for " << path << ".\n";
                         return;
                     }  
-                    for (rapidxml::xml_node<char>* chlds = chlds->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
-                        texture* tmp = new texture(chlds->first_node("path")->value());
+                    for (rapidxml::xml_node<char>* chlds = child->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
+                        texture* tmp = new texture(pth "backgrounds/" + path + "/" +chlds->first_node("path")->value());
                         if(tmp != nullptr) {
                             textures.push_back(tmp);
                         }
                     }
-                    std::string vertpath = shaderpath->first_node("vertex")->value();
-                    std::string fragpath = shaderpath->first_node("fragment")->value();
+                    std::string vertpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("vertex")->value();
+                    std::string fragpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("fragment")->value();
                     l = new shaderlayer(vertpath,fragpath,textures);
-
                     
                 }break;
                 default: std::cout<<"unimplemented layer type\n";break;
@@ -575,6 +596,33 @@ bg::bg(std::string path, bool folder) {
             std::cout << "unknown element " << child->name() <<"! Ignored.\n";
         }
     }
+    
+    rapidxml::xml_node<char>* framebuffer = doc.first_node("background")->first_node("framebuffer");
+    if(framebuffer != nullptr) {
+        rapidxml::xml_node<char>* shaderpath = lyrs->first_node("shader");
+        if(shaderpath == nullptr) {
+            std::cout << "Failed to load shader for " << path << ".\n";
+            return;
+        }   
+        std::vector<texture*> textures;
+        rapidxml::xml_node<char>* texturesPath = lyrs->first_node("textures");
+        if(texturesPath == nullptr) {
+            std::cout << "Failed to load texture for " << path << ".\n";
+            return;
+        }  
+        textures.push_back(&buffer->renderTexture);
+        for (rapidxml::xml_node<char>* chlds = lyrs->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
+            texture* tmp = new texture(pth "backgrounds/" + path + "/" +chlds->first_node("path")->value());
+            if(tmp != nullptr) {
+                textures.push_back(tmp);
+            }
+        }
+        std::string vertpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("vertex")->value();
+        std::string fragpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("fragment")->value();
+        postproc = new shaderlayer(vertpath,fragpath,textures);
+        postprocess = true;
+
+    }
 
     std::cout << "Finished loading: " << name << "\n";
     doc.clear();
@@ -582,8 +630,16 @@ bg::bg(std::string path, bool folder) {
 
 void bg::render() {
     //BACKGROUND.H RETURNS!!!
+    buffer->enable();
     for(int i = 0; i < layers.size(); i++) {
         layers[i]->render();
+    }
+    buffer->disable(640,480,true);
+    if(postprocess) {
+        postproc->render();
+    }
+    else {
+        buffer->render(graphics::shaders[3],0,0,false);
     }
 }
 void bg::logic(double deltatime)
@@ -591,7 +647,7 @@ void bg::logic(double deltatime)
     for(int i = 0; i < layers.size(); i++) {
         layers[i]->logic(deltatime);
     }
-
+    
 }
 
 #endif

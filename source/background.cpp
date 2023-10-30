@@ -431,12 +431,11 @@ void shaderlayer::render() {
     glDepthMask(GL_FALSE);
     int i = 0;
     // std::cout << data.size() << "\n";
+    shad->activate();
     for(texture* t : data) {
         t->activate(i);
-        if(i == 0) {
-            shad->activate();
-        }
         shad->setInt("texture"+std::to_string(i),i);
+        i++; //forgot to increment this... wtf is wrong with me
     }
         shad->setFloat("time",(float)SDL_GetTicks()/(float)1000);
 
@@ -599,27 +598,27 @@ bg::bg(std::string path, bool folder) {
     
     rapidxml::xml_node<char>* framebuffer = doc.first_node("background")->first_node("framebuffer");
     if(framebuffer != nullptr) {
-        rapidxml::xml_node<char>* shaderpath = lyrs->first_node("shader");
+        rapidxml::xml_node<char>* shaderpath = framebuffer->first_node("shader");
         if(shaderpath == nullptr) {
             std::cout << "Failed to load shader for " << path << ".\n";
             return;
         }   
-        std::vector<texture*> textures;
-        rapidxml::xml_node<char>* texturesPath = lyrs->first_node("textures");
+        std::vector<texture*> shaderlayertextures;
+        rapidxml::xml_node<char>* texturesPath = framebuffer->first_node("textures");
         if(texturesPath == nullptr) {
             std::cout << "Failed to load texture for " << path << ".\n";
             return;
         }  
-        textures.push_back(&buffer->renderTexture);
-        for (rapidxml::xml_node<char>* chlds = lyrs->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
+        shaderlayertextures.push_back(&buffer->renderTexture);
+        for (rapidxml::xml_node<char>* chlds = framebuffer->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
             texture* tmp = new texture(pth "backgrounds/" + path + "/" +chlds->first_node("path")->value());
             if(tmp != nullptr) {
-                textures.push_back(tmp);
+                shaderlayertextures.push_back(tmp);
             }
         }
         std::string vertpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("vertex")->value();
         std::string fragpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("fragment")->value();
-        postproc = new shaderlayer(vertpath,fragpath,textures);
+        postproc = new shaderlayer(vertpath,fragpath,shaderlayertextures);
         postprocess = true;
 
     }
@@ -636,6 +635,7 @@ void bg::render() {
     }
     buffer->disable(640,480,true);
     if(postprocess) {
+
         postproc->render();
     }
     else {

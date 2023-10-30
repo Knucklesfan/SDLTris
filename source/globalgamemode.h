@@ -9,6 +9,7 @@
 class GlobalGamemode {
     public:
         int logic(double); 
+        void startRender();
         void render();
         void setFade(Transition);
         Transition currentTransition;

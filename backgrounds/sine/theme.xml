@@ -30,15 +30,15 @@
 		<!--!!!PLEASE DO NOT USE FOR A REAL BG PACK!!!-->
 	</layers>
 	<!--Backgrounds also now support post processing! Although optional, these effects are shaders that can be overlayed on top of the background, allowing you to do some neat stuff. These work similarly to shader layers.-->
-	<!-- <framebuffer>
+	<framebuffer>
 			<textures>
 				<texture>
-					<path>Fractal_Flythrough_iChannel0.png</path>
+					<path>bayer4tile8.png</path>
 				</texture>
 			</textures>
 			<shader>
 				<vertex>vertex.glsl</vertex>
-				<fragment>fractal.glsl</fragment>
+				<fragment>postproc.glsl</fragment>
 			</shader>
-	</framebuffer> -->
+	</framebuffer>
 </background>

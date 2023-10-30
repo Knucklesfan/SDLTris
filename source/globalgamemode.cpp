@@ -30,6 +30,11 @@ void GlobalGamemode::setFade(Transition resp) {
     }
     
 }
+void GlobalGamemode::startRender() {
+    #ifndef __LEGACY_RENDER
+
+    #endif
+}
 void GlobalGamemode::render() {
 
     switch(currentTransition.fade) {

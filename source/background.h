@@ -160,7 +160,32 @@ class shaderlayer : public layer { //a flat, nonmoving layer that shows a shader
         };
 };
 
-class flatlayer : layer { //a 2D layer, that can be manipulated in many ways, including paralax.
+class flatlayer : layer { //a 2D layer, that can be manipulated in many ways, but mostly is used for being a quick and flat model.
+    public:
+        flatlayer(std::string vertpath,std::string fragpath, std::vector<texture*> textures);
+        void render();
+        void logic(double deltatime);
+        glm::vec3 position;
+        glm::vec3 scale;
+        glm::vec3 rotation;
+    private:
+        std::vector<texture*> data;
+        glm::mat4 transform;
+        glm::mat4 projection;
+        glm::mat4 view;
+
+        unsigned int VBO, VAO, EBO;
+        float vertices[20] = {
+            // positions             // texture coords
+            1.0f,  1.0f, 0.0f,     1.0f, 0.0f, // top right
+            1.0f, -1.0f, 0.0f,     1.0f, 1.0f, // bottom right
+            -1.0f, -1.0f, 0.0f,     0.0f, 1.0f, // bottom left
+            -1.0f,  1.0f, 0.0f,     0.0f, 0.0f  // top left 
+        };
+        unsigned int indices[6] = {
+            0, 1, 3, // first triangle
+            1, 2, 3
+        };
 
 };
 class depthlayer : layer { //an advanced 3D layer, supporting OBJ loading for models, positioning and whatnot. Blender addon included to generate this type of object, from blender animations.

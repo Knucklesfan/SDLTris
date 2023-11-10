@@ -14,7 +14,37 @@
 	<layers>
 		<!--depths are handled a 0-inf scale, with 0 being the furthest back, and preceeding numbers going up.-->
 		<layer type="background" depth="0">
-			<filename>thxforplaying.png</filename>
+			<filename>00.png</filename>
+		</layer>
+
+		<layer type="bg2d" depth="1">
+			<textures>
+				<texture> <!--The texture to use-->
+					<path>mariokart.png</path>
+				</texture>
+			</textures>
+			<shader> <!--Shader that the BG uses-->
+				<vertex>vertex_unlit.glsl</vertex>
+				<fragment>fragment_unlit.glsl</fragment>
+			</shader>
+			<transform> <!--The initial transform of the object-->
+			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
+				<position>
+					<x>0</x>
+					<y>0</y>
+					<z>-3</z>
+				</position>
+				<rotation>
+					<x>-100</x>
+					<y>0</y>
+					<z>0</z>
+				</rotation>
+				<scale>
+					<x>100</x>
+					<y>100</y>
+					<z>1</z>
+				</scale>
+			</transform>
 		</layer>
 
 		<!--Legacy backgrounds function identical to the original game's backgrounds, including paralax and whatnot (paralax yet to be implemented).-->

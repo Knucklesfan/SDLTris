@@ -77,6 +77,7 @@ class bg
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "utils/animation.h"
 class layer { 
     public:
     //this is the way the system should've always been done, but of course that's not how it was done.
@@ -160,19 +161,19 @@ class shaderlayer : public layer { //a flat, nonmoving layer that shows a shader
         };
 };
 
-class flatlayer : layer { //a 2D layer, that can be manipulated in many ways, but mostly is used for being a quick and flat model.
+class flatlayer : public layer { //a 2D layer, that can be manipulated in many ways (including animation), but mostly is used for being a quick and flat model.
     public:
-        flatlayer(std::string vertpath,std::string fragpath, std::vector<texture*> textures);
+        flatlayer(std::string vertpath,std::string fragpath, std::vector<texture*> textures, transform t);
         void render();
         void logic(double deltatime);
-        glm::vec3 position;
-        glm::vec3 scale;
-        glm::vec3 rotation;
     private:
+        transform trans;
+        animation anim;
         std::vector<texture*> data;
-        glm::mat4 transform;
+        glm::mat4 matTrans;
         glm::mat4 projection;
         glm::mat4 view;
+        shader* shad; //hidden because its not supposed to be cool
 
         unsigned int VBO, VAO, EBO;
         float vertices[20] = {

@@ -442,8 +442,61 @@ void shaderlayer::render() {
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glDepthMask(GL_TRUE);
+}
 
-    
+flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> textures, transform t) {
+    //this class has a lot in common with the shader layer, but with the key difference that the shader layer is designed to just show shaders, while this one can show a LOT more
+    shad = new shader(vert,frag);
+    data = textures;
+    trans = t;
+    //generates the VBO and stufff
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+	projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+	view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+	view = glm::translate(view, glm::vec3(0.0, 0, -6.0)); 
+}
+void flatlayer::render() {
+    matTrans = glm::mat4(1.0f); //the actual transform of the model itself
+
+    matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));  
+	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));  
+	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));  
+	matTrans = glm::scale(matTrans, trans.scale);
+	matTrans = glm::translate(matTrans,trans.position);
+
+    shad->activate();
+    int i = 0;
+    for(texture* t : data) {
+        t->activate(i);
+        shad->setInt("texture"+std::to_string(i),i);
+        i++; //forgot to increment this... wtf is wrong with me
+    }
+    shad->setVector("model", glm::value_ptr(matTrans));
+    shad->setVector("projection", glm::value_ptr(projection));
+	shad->setVector("view", glm::value_ptr(view));
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+};
+void flatlayer::logic(double deltatime) {
+
 }
 
 bg::bg() {
@@ -524,6 +577,7 @@ bg::bg(std::string path, bool folder) {
         std::string name = child->name();
         layer* l;
         if(name == "layer") {
+            
             switch(bgconverters::layermap[child->first_attribute("type")->value()]) {
                 case layertype::BACKGROUND: {
                     rapidxml::xml_node<char>* tmppath = child->first_node("filename");
@@ -585,9 +639,53 @@ bg::bg(std::string path, bool folder) {
                     l = new shaderlayer(vertpath,fragpath,textures);
                     
                 }break;
+                case layertype::BG2D: {
+                    rapidxml::xml_node<char>* shaderpath = child->first_node("shader");
+                    if(shaderpath == nullptr) {
+                        std::cout << "Failed to load shader for " << path << ".\n";
+                        return;
+                    }   
+                    std::vector<texture*> textures;
+                    rapidxml::xml_node<char>* texturesPath = child->first_node("textures");
+                    if(texturesPath == nullptr) {
+                        std::cout << "Failed to load texture for " << path << ".\n";
+                        return;
+                    }  
+                    rapidxml::xml_node<char>* transformPath = child->first_node("transform");
+                    if(texturesPath == nullptr) {
+                        std::cout << "Failed to load transform for " << path << ".\n";
+                        return;
+                    }  
+
+                    for (rapidxml::xml_node<char>* chlds = child->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
+                        texture* tmp = new texture(pth "backgrounds/" + path + "/" +chlds->first_node("path")->value());
+                        if(tmp != nullptr) {
+                            textures.push_back(tmp);
+                        }
+                    }
+                    std::string vertpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("vertex")->value();
+                    std::string fragpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("fragment")->value();
+                    transform t;
+                    t.position.x = atoi(transformPath->first_node("position")->first_node("x")->value());
+                    t.position.y = atoi(transformPath->first_node("position")->first_node("y")->value());
+                    t.position.z = atoi(transformPath->first_node("position")->first_node("z")->value());
+                    t.rotation.x = atoi(transformPath->first_node("rotation")->first_node("x")->value());
+                    t.rotation.y = atoi(transformPath->first_node("rotation")->first_node("y")->value());
+                    t.rotation.z = atoi(transformPath->first_node("rotation")->first_node("z")->value());
+                    t.scale.x = atoi(transformPath->first_node("scale")->first_node("x")->value());
+                    t.scale.y = atoi(transformPath->first_node("scale")->first_node("y")->value());
+                    t.scale.z = atoi(transformPath->first_node("scale")->first_node("z")->value());
+                    
+                    l = new flatlayer(vertpath,fragpath,textures,t);
+                    
+                }break;
+
                 default: std::cout<<"unimplemented layer type\n";break;
             }
             if(l != nullptr) {
+                if(child->first_attribute("depth") != nullptr) {
+                    l->depth = atoi(child->first_attribute("depth")->value());
+                }
                 layers.push_back(l);
             }
         }

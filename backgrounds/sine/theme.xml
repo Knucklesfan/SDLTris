@@ -21,7 +21,7 @@
 			</textures>
 			<shader>
 				<vertex>vertex.glsl</vertex>
-				<fragment>fractal.glsl</fragment>
+				<fragment>ocean.glsl</fragment>
 			</shader>
 		</layer>
 
@@ -32,9 +32,6 @@
 	<!--Backgrounds also now support post processing! Although optional, these effects are shaders that can be overlayed on top of the background, allowing you to do some neat stuff. These work similarly to shader layers.-->
 	<!-- <framebuffer>
 			<textures>
-				<texture>
-					<path>bayer4tile8.png</path>
-				</texture>
 			</textures>
 			<shader>
 				<vertex>vertex.glsl</vertex>

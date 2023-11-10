@@ -24,11 +24,6 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
     std::map<std::string,texture*> graphics::sprites = std::map<std::string,texture*>();
     std::vector<shader *> graphics::shaders = std::vector<shader *>();
 
-    std::map<std::string, actiontype> bgconverters::actionmap =
-        {
-            {"move", actiontype::MOVE},
-            {"scale", actiontype::SCALE},
-            {"rotate", actiontype::ROTATE}};
     std::map<std::string, layertype> bgconverters::layermap = {
         {"background", layertype::BACKGROUND}, //
         {"legacy", layertype::LEGACY},

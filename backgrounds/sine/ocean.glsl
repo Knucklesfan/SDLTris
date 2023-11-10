@@ -17,7 +17,7 @@ float GWM = 1.15;
 float TM = 0.25;
 
 float getAmp(float frequency) {
-    return 0;
+    return 0.0;
 }
 
 float getWeight(float f) {

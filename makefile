@@ -1,9 +1,9 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o
-SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o
+SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp source/animation.cpp
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
-FLAGS	 = $(INC) -g -c -Wall -fsanitize=address -O0 -D _LINUX -DCLIENT
+FLAGS	 = $(INC) -g -c -Wall -O0 -D _LINUX -DCLIENT -fsanitize=address
 LFLAGS	 = -lSDL2 -lGLEW -lGL -lSDL2_ttf -lSDL2_mixer -lSDL2_image -fsanitize=address
 INC=-I include/
 
@@ -83,8 +83,9 @@ buffermanager.o: source/opengl/buffermanager.cpp
 sprite.o: source/opengl/sprite.cpp
 	$(CC) $(FLAGS) source/opengl/sprite.cpp
 stbi_image.o: source/opengl/stbi_image.c
-	$(CC) $(FLAGS) source/opengl/stbi_image.c 
-
+	$(CC) $(FLAGS) source/opengl/stbi_image.c
+animation.o: source/utils/animation.cpp
+	$(CC) $(FLAGS) source/utils/animation.cpp
 defs.o: source/utils/defs.cpp
 	$(CC) $(FLAGS) source/utils/defs.cpp 
 clean:

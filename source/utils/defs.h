@@ -31,6 +31,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -81,11 +82,8 @@ struct vect {
         z=c;
     }
 };
-enum actiontype {
-    MOVE,
-    SCALE,
-    ROTATE
-};
+
+
 enum layertype {
     BACKGROUND,
     LEGACY,
@@ -157,7 +155,6 @@ enum DEBUGOPTIONS {
 };
 class bgconverters { //i *sighs the worlds deepest sigh of human history* love background.h
     public:
-        static std::map<std::string, actiontype> actionmap;
         static std::map<std::string, layertype> layermap;
         static std::map<std::string, headerdata> headermap;
 };

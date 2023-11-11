@@ -39,7 +39,7 @@ public:
 	double rotate = 0;
 	int splash = 0;
 
-	std::string splashes[35] = {
+	const char* splashes[35] = {
 	"STILL BETTER THAN LEAF BLOWERS!",
 	"GO AHEAD, CRY ABOUT IT",
 	"FALLOUT 76, EAT YOUR HEART OUT",

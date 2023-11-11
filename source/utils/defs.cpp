@@ -626,3 +626,16 @@ std::string utils::loadFile(std::string filename)
     strStream << inFile.rdbuf(); // read the file
     return strStream.str();      // str holds the content of the file
 }
+
+void memory::freeBackgrounds() {
+
+}
+void memory::freeFonts() {
+
+}
+void memory::freeShaders() {
+
+}
+void memory::freeSprites() {
+    
+}

@@ -87,8 +87,8 @@ void knuxfanscreen::logic(double deltatime) {
             alpha = 1.0;
         }
         if(!explode) {
-            knuxfany = utils::lerp(knuxfany,210,0.05);
-            presentsy = utils::lerp(presentsy,210,0.05);
+            knuxfany = utils::lerp(knuxfany,210,deltatime*0.005);
+            presentsy = utils::lerp(presentsy,210,deltatime*0.005);
         }
         else {
             rotate += deltatime;

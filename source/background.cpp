@@ -303,7 +303,10 @@ void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int 
 #include "utils/defs.h"
 
 staticlayer::staticlayer(std::string path) {
+    std::cout << "loading texture for " << path << "\n";
+
     t = texture(path);
+    
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -337,7 +340,7 @@ void staticlayer::render() {
 }
 
 legacylayer::legacylayer(std::string path, glm::vec2 vel, glm::vec4 sn) {
-    std::cout << path << "\n";
+    std::cout << "loading texture for " << path << "\n";
     t = texture(path);
     velocity = vel;
     sine = sn;
@@ -675,7 +678,7 @@ bg::bg(std::string path, bool folder) {
                     t.scale.x = atoi(transformPath->first_node("scale")->first_node("x")->value());
                     t.scale.y = atoi(transformPath->first_node("scale")->first_node("y")->value());
                     t.scale.z = atoi(transformPath->first_node("scale")->first_node("z")->value());
-                    
+
                     l = new flatlayer(vertpath,fragpath,textures,t);
                     
                 }break;

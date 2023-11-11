@@ -30,9 +30,9 @@ class white : public Gamemode { //literally just renders a white screen to test 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         }
-        graphics::fonts->at(2)->render(16,16,"Currently selected transition: "+transitions[transition],false);
-        graphics::fonts->at(2)->render(16,32,"Currently selected bg: "+std::to_string(background),false);
-        graphics::fonts->at(2)->render(16,48,"Left -trans Right +trans Down -bg Up +bg",false);
+        graphics::fonts->at(2)->render(16,32,"Currently selected transition: "+transitions[transition],false);
+        graphics::fonts->at(2)->render(16,48,"Currently selected bg: "+std::to_string(background),false);
+        graphics::fonts->at(2)->render(16,64,"Left -trans Right +trans Down -bg Up +bg",false);
 
 
         #endif

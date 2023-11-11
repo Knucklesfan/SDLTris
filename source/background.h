@@ -111,9 +111,9 @@ class legacylayer : public layer { //Basically, functions identical to the old s
         void logic(double deltatime);
         texture t;
         shader* shad;
-        glm::vec2 velocity;
-        glm::vec2 position;
-        glm::vec4 sine;
+        glm::vec2 velocity = {0,0};
+        glm::vec2 position = {0,0};
+        glm::vec4 sine = {0,0,0,0};
         double angle = 0;
 
     private:

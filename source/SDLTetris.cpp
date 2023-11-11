@@ -9,7 +9,7 @@
 #include <cstring>
 #include <ctime>
 #include <chrono>
-
+#include <thread>
 #include "utils/defs.h"
 #include "globalgamemode.h"
 #include "gamemode.h"
@@ -51,6 +51,29 @@ unfinished but soon to be finished!
 */
 #undef main
 
+void preciseSleep(double seconds) {
+    static double estimate = 5e-3;
+    static double mean = 5e-3;
+    static double m2 = 0;
+    static int64_t count = 1;
+    while (seconds > estimate) {
+        auto start = std::chrono::high_resolution_clock::now();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        auto end = std::chrono::high_resolution_clock::now();
+        double observed = (end - start).count() / 1e9;
+        seconds -= observed;
+        ++count;
+        double delta = observed - mean;
+        mean += delta / count;
+        m2 += delta * (observed - mean);
+        double stddev = sqrt(m2 / (count - 1));
+        estimate = mean + stddev;
+    }
+    auto start = std::chrono::high_resolution_clock::now();
+    auto spinNs = (int64_t)(seconds * 1e9);
+    auto delay = std::chrono::nanoseconds(spinNs);
+    while (std::chrono::high_resolution_clock::now() - start < delay);
+}
 static Uint32 next_time;
 
 Uint32 time_left(void)
@@ -195,8 +218,8 @@ int main() {
 
     SDL_Event event;
     bool quit = false;
-    Uint64 NOW = SDL_GetPerformanceCounter();
-    Uint64 LAST = 0;
+    float NOW = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+    float LAST = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
     float deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
@@ -213,7 +236,6 @@ int main() {
         // new options(), //3
         // new credits() //4
     };
-    std::cout << "test2";
     int gamemode = 0;
 
     int titlebg = std::rand() % graphics::backgrounds->size();
@@ -231,7 +253,6 @@ int main() {
     rpc->update("At the Knuxfan Screen.", "Top high score: " + std::to_string(score->maxscore), "icon1", time);
 #endif
     while (!quit) {
-        auto t1 = std::chrono::high_resolution_clock::now();
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
                 quit = true;
@@ -241,7 +262,7 @@ int main() {
             }
             if(event.type == SDL_WINDOWEVENT) {
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-
+		            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 					WINDOW_WIDTH =(event.window.data1);
 					WINDOW_HEIGHT = (event.window.data2);
         		}
@@ -249,49 +270,49 @@ int main() {
         }
 
         time = SDL_GetTicks();
-
-        graphics::deltaTime = (time - oldTime); //frameTime is the time this frame has taken, in seconds
+        NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+        graphics::deltaTime = (NOW - LAST); //frameTime is the time this frame has taken, in seconds
         double frameTime = graphics::deltaTime /1000.0;
         double tFps = (1.0 / frameTime);
+        oldTime = time;
+        LAST = NOW;
+        SDL_PumpEvents();
+        #ifdef __LEGACY_RENDER
+        SDL_RenderClear(graphics::render);
+        SDL_SetRenderTarget(graphics::render,rendertext);
+        #else
+            buffer.enable();
+            global->startRender();
+        #endif
+        gamemodes[gamemode]->logic(graphics::deltaTime);
+        gamemodes[gamemode]->render();
+        Transition endlogic = gamemodes[gamemode]->endLogic();
+        if(endlogic.transition) {
+            global->setFade(endlogic);
+        };
+        
+        if(global->logic(graphics::deltaTime)) {
+            gamemode=global->currentTransition.gamemode;
+            gamemodes[gamemode]->reset();
+        }
+        global->render();
+        #ifdef __LEGACY_RENDER
 
-        if(graphics::deltaTime > 1000/60.0) {
-            oldTime = time;
-            SDL_PumpEvents();
-            #ifdef __LEGACY_RENDER
-            SDL_RenderClear(graphics::render);
-            SDL_SetRenderTarget(graphics::render,rendertext);
-            #else
-                buffer.enable();
-                global->startRender();
-                glm::mat4 projection;
-                projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
-                glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
-            #endif
-            gamemodes[gamemode]->logic(graphics::deltaTime);
-            gamemodes[gamemode]->render();
-            Transition endlogic = gamemodes[gamemode]->endLogic();
-            if(endlogic.transition) {
-                global->setFade(endlogic);
-            };
-            
-            if(global->logic(graphics::deltaTime)) {
-                gamemode=global->currentTransition.gamemode;
-                gamemodes[gamemode]->reset();
-            }
-            global->render();
-            #ifdef __LEGACY_RENDER
-            SDL_SetRenderTarget(graphics::render,NULL);
-            SDL_RenderCopy(graphics::render,rendertext,NULL,NULL);
-            std::cout << tFps << "\n";
-            graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
-            SDL_RenderPresent(graphics::render);
-            #else
-		    buffer.disable(WINDOW_WIDTH,WINDOW_HEIGHT);
-        	buffer.render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
-		    SDL_GL_SwapWindow(window);
+        SDL_SetRenderTarget(graphics::render,NULL);
+        SDL_RenderCopy(graphics::render,rendertext,NULL,NULL);
+        std::cout << tFps << "\n";
+        SDL_RenderPresent(graphics::render);
 
-            #endif
-    }
+        #else
+
+        graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
+
+        buffer.disable(WINDOW_WIDTH,WINDOW_HEIGHT);
+        buffer.render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
+        // preciseSleep(floor(1000.0f/60.0f - deltaTime)/1000.0f);
+        SDL_GL_SwapWindow(window);
+
+        #endif
 
 }
 	SDL_GL_DeleteContext(context);

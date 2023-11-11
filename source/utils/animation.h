@@ -42,5 +42,5 @@ struct action { //used for animations and a description of how to use them
 class animation {
     std::vector<action> actions;
     void tick(double);
-    int action;
+    int currentFrame;
 };

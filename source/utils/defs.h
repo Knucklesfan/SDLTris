@@ -241,3 +241,10 @@ namespace utils {
     double rad(double i);
 
 };
+//File full of a bunch of really simple and easy things to free up memory
+namespace memory {
+    void freeSprites();
+    void freeShaders();
+    void freeBackgrounds();
+    void freeFonts();
+}

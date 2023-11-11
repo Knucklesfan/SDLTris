@@ -229,7 +229,7 @@ int main() {
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
         // new white(),
-        new knuxfanscreen(),
+        // new knuxfanscreen(),
         new white()
         // new titlescreen(), //1
         // new game(), //2

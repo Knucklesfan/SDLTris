@@ -32,7 +32,7 @@ struct transform {
 };
 
 struct action { //used for animations and a description of how to use them
-    int framenumber; //the frame (60fps hard locked, but interpolated up to 120fps if needed!) that this action happens on
+    int framenumber; //the frame (30fps hard locked, but interpolated up to 120fps if needed!) that this action happens on
     interpolation interpolate; //the method to interpolate from the previous frame to this one
     actiontype type; //the type of action
     std::vector<glm::vec3> dataToSet; //the value to set
@@ -43,4 +43,5 @@ class animation {
     std::vector<action> actions;
     void tick(double);
     int currentFrame;
+    int currentTick;
 };

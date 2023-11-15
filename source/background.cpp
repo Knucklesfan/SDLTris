@@ -484,6 +484,7 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
                 switch(animConverters::modifiermap.at(child->name())) {
                 case modifiertype::POSITION: {
                     effectedParameters.push_back(&t.position);
+                    dataToSet.push_back({});
                     
                 }break;
                 case modifiertype::ROTATION: {

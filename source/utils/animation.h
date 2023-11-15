@@ -19,9 +19,15 @@ enum actiontype {
     TRANSFORMANIMATION, //stupid easy transformations
     SHADERANIMATION, //applies the transform to a shader supplied value
 };
-class animConverters {
+enum modifiertype {
+    POSITION,
+    ROTATION,
+    SCALE
+};
+namespace animConverters {
     static std::map<std::string, actiontype> actionmap;
     static std::map<std::string, interpolation> interpolationmap;
+    static std::map<std::string, modifiertype> modifiermap;
 
 };
 
@@ -32,7 +38,7 @@ struct transform {
 };
 
 struct action { //used for animations and a description of how to use them
-    int framenumber; //the frame (30fps hard locked, but interpolated up to 120fps if needed!) that this action happens on
+    int framenumber; //the frame that this action happens on
     interpolation interpolate; //the method to interpolate from the previous frame to this one
     actiontype type; //the type of action
     std::vector<glm::vec3> dataToSet; //the value to set
@@ -40,8 +46,12 @@ struct action { //used for animations and a description of how to use them
 
 };
 class animation {
-    std::vector<action> actions;
-    void tick(double);
-    int currentFrame;
-    int currentTick;
+    public:
+        animation(std::vector<action> actions);
+        void tick(double);
+        int currentAction = 0;
+
+    private:
+        std::vector<action> actions;
+        double currentTick;
 };

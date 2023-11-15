@@ -163,7 +163,7 @@ class shaderlayer : public layer { //a flat, nonmoving layer that shows a shader
 
 class flatlayer : public layer { //a 2D layer, that can be manipulated in many ways (including animation), but mostly is used for being a quick and flat model.
     public:
-        flatlayer(std::string vertpath,std::string fragpath, std::vector<texture*> textures, transform t);
+        flatlayer(std::string vertpath,std::string fragpath, std::vector<texture*> textures, transform t,rapidxml::xml_node<char>* chlds);
         void render();
         void logic(double deltatime);
     private:

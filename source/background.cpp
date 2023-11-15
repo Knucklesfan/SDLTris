@@ -447,7 +447,7 @@ void shaderlayer::render() {
         glDepthMask(GL_TRUE);
 }
 
-flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> textures, transform t) {
+flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> textures, transform t,rapidxml::xml_node<char>* animationPath) {
     //this class has a lot in common with the shader layer, but with the key difference that the shader layer is designed to just show shaders, while this one can show a LOT more
     shad = new shader(vert,frag);
     data = textures;
@@ -473,6 +473,30 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
 	projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
 	view = glm::mat4(1.0f); //view is the **Camera**'s perspective
 	view = glm::translate(view, glm::vec3(0.0, 0, -6.0)); 
+    std::vector<action> actions = std::vector<action>();
+    for (rapidxml::xml_node<char>* chlds = animationPath->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
+        int frame = atoi(chlds->first_attribute("frame")->value());
+        interpolation inter = animConverters::interpolationmap.at(chlds->first_attribute("frame")->value());
+        std::vector<glm::vec3> dataToSet;
+        std::vector<glm::vec3*> effectedParameters;
+
+        for (rapidxml::xml_node<char>* child = chlds->first_node(); child != NULL; child = child->next_sibling()) {
+                switch(animConverters::modifiermap.at(child->name())) {
+                case modifiertype::POSITION: {
+                    effectedParameters.push_back(&t.position);
+                    
+                }break;
+                case modifiertype::ROTATION: {
+
+                }break;
+                case modifiertype::SCALE: {
+
+                }break;
+            }
+        }
+
+    }
+
 }
 void flatlayer::render() {
     matTrans = glm::mat4(1.0f); //the actual transform of the model itself
@@ -499,7 +523,7 @@ void flatlayer::render() {
 
 };
 void flatlayer::logic(double deltatime) {
-
+    anim.tick(deltatime);
 }
 
 bg::bg() {
@@ -655,8 +679,13 @@ bg::bg(std::string path, bool folder) {
                         return;
                     }  
                     rapidxml::xml_node<char>* transformPath = child->first_node("transform");
-                    if(texturesPath == nullptr) {
+                    if(transformPath == nullptr) {
                         std::cout << "Failed to load transform for " << path << ".\n";
+                        return;
+                    }  
+                    rapidxml::xml_node<char>* animationPath = child->first_node("transform");
+                    if(animationPath == nullptr) {
+                        std::cout << "Failed to load animation for " << path << ".\n";
                         return;
                     }  
 
@@ -679,7 +708,7 @@ bg::bg(std::string path, bool folder) {
                     t.scale.y = atoi(transformPath->first_node("scale")->first_node("y")->value());
                     t.scale.z = atoi(transformPath->first_node("scale")->first_node("z")->value());
 
-                    l = new flatlayer(vertpath,fragpath,textures,t);
+                    l = new flatlayer(vertpath,fragpath,textures,t,animationPath);
                     
                 }break;
 

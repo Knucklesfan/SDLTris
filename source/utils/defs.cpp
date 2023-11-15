@@ -351,7 +351,7 @@ double utils::lerp(double a, double b, double t)    {
             return a+(b-a)*t;
         else
             return b-(b-a)*(1.0-t);
-    }
+}
 int utils::sign(int x) { //generic sign function
     return (x > 0) - (x < 0);
 }
@@ -637,5 +637,5 @@ void memory::freeShaders() {
 
 }
 void memory::freeSprites() {
-    
+
 }

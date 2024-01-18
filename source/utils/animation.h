@@ -43,16 +43,17 @@ struct action { //used for animations and a description of how to use them
     interpolation interpolate; //the method to interpolate from the previous frame to this one
     actiontype type; //the type of action
     std::vector<glm::vec3> dataToSet; //the value to set
-    std::vector<glm::vec3*> effectedParameters; //a pointer to the vec3 that is effected by each slot of the previous vector (basically, it's assigned the transform etc of an object, then applies the animation to that.)
+    std::vector<modifiertype> effectedParameters; //a pointer to the vec3 that is effected by each slot of the previous vector (basically, it's assigned the transform etc of an object, then applies the animation to that.)
 
 };
 class animation {
     public:
-        animation(std::vector<action> actions);
-        void tick(double);
+        animation(std::vector<action> actions, transform t);
+        void tick(double, transform*);
         int currentAction = 0;
 
     private:
         std::vector<action> actions;
         double currentTick;
+        transform snapshot;
 };

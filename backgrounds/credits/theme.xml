@@ -16,8 +16,7 @@
 		<layer type="background" depth="0">
 			<filename>00.png</filename>
 		</layer>
-
-		<layer type="bg2d" depth="1">
+<layer type="bg2d" depth="2">
 			<textures>
 				<texture> <!--The texture to use-->
 					<path>mariokart.png</path>
@@ -31,11 +30,11 @@
 			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
 				<position>
 					<x>0</x>
-					<y>0</y>
-					<z>-3</z>
+					<y>-10</y>
+					<z>0</z>
 				</position>
 				<rotation>
-					<x>-100</x>
+					<x>-70</x>
 					<y>0</y>
 					<z>0</z>
 				</rotation>
@@ -46,13 +45,56 @@
 				</scale>
 			</transform>
 			
+			<animation> <!--First, start by declaring the layer's animation-->
+				<action frame="50" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
+					<transform>
+					<position>
+						<x>0</x>
+						<y>0</y>
+						<z>-20</z>
+					</position>
+
+					</transform>
+				</action>
+			</animation>
+		</layer>
+
+		<layer type="bg2d" depth="1">
+			<textures>
+				<texture> <!--The texture to use-->
+					<path>guy.png</path>
+				</texture>
+			</textures>
+			<shader> <!--Shader that the BG uses-->
+				<vertex>vertex_unlit.glsl</vertex>
+				<fragment>fragment_unlit.glsl</fragment>
+			</shader>
+			<transform> <!--The initial transform of the object-->
+			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
+				<position>
+					<x>0</x>
+					<y>0</y>
+					<z>0</z>
+				</position>
+				<rotation>
+					<x>-180</x>
+					<y>0</y>
+					<z>0</z>
+				</rotation>
+				<scale>
+					<x>1</x>
+					<y>1</y>
+					<z>1</z>
+				</scale>
+			</transform>
+			
 			<!--And so, It begins.-->
 			<!--The SDLTris engine, or as I have started calling it: QuadEngine now supports animations!-->
 			<!--These animations were inspired by engines like Unity, with it's linear node editor and the ability for animations to effect any object's properties-->
 			<!--In this animation engine, you can find very basic support for 3 different types of interpolation, the ability to place frames and the ability to adjust the frame timing.-->
 			<!--Right now its gonna take a LOT of math to get meaningful results, but hey, at least it works!-->
 			<animation> <!--First, start by declaring the layer's animation-->
-				<action frame="0" interpolation="LINEAR"><!--Actions are what occurs linearly in the animation. Frame numbers MUST be specified, as that determines the length of a keyframe.-->
+				<action frame="10" interpolation="LINEAR"><!--Actions are what occurs linearly in the animation. Frame numbers MUST be specified, as that determines the length of a keyframe.-->
 					<transform> <!--This tells the action that the action to be committed is a transform: i.e, the action will translate directly the value needed to a vec3-->
 					<!--TRANSFORMS ONLY WORK WITH VEC3s! Any 3D vector can be changed, this could mean position, rotation, scaling, hell even more exotic things like skewing or whatnot is allowed-->
 					<!--This does have one downside: It only works with objects and has no support for changing shader values-->
@@ -60,15 +102,11 @@
 					<!--If to compare this engine to Unity, think of these as each row of these things (i have no idea what they are called nor care)-->
 					<!--Basically it's this [https://docs.unity3d.com/uploads/Main/AnimationEditorUnfoldedProperty.png]-->
 						<position> <!--Tells it to modify the position value-->
-							<x>0</x>
-							<y>0</y>
-							<z>-3</z>
-						</position>
-						<rotation> <!--Tells it to modify the rotation value-->
-							<x>-100</x>
+							<x>3</x>
 							<y>0</y>
 							<z>0</z>
-						</rotation>
+						</position>
+
 						<!--Since it is omitted, scale will not be touched!-->
 					</transform>
 				</action> <!--I aint reading allat 💀💀💀-->
@@ -77,7 +115,7 @@
 						<position> <!--Tells it to modify the position value-->
 							<x>0</x>
 							<y>0</y>
-							<z>-6</z>
+							<z>0</z>
 						</position>
 						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
 						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->
@@ -85,38 +123,47 @@
 						<!--Might implement this as a feature in the engine itself, we'll see-->
 					</transform>
 				</action>
-				<action frame="30" interpolation="IMMEDIATE"> <!--The instant interpolation means that once the frame hits it's valuable number for the next frame, we instantly transition with no overlap-->
+
+				<action frame="30" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
 					<transform>
-						<position>
-							<x>0</x>
+						<position> <!--Tells it to modify the position value-->
+							<x>-3</x>
 							<y>0</y>
-							<z>-10</z>
+							<z>0</z>
 						</position>
-						<rotation>
-							<x>-100</x> <!--Keeping the same-->
-							<y>360</y> <!--SPIN!-->
+						<rotation> <!--Tells it to modify the position value-->
+							<x>0</x>
+							<y>-180</y>
 							<z>0</z>
 						</rotation>
+						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
+						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->
+						<!--If i get enough outcry about this, I would rework this, but for a temporary solution, you can just calculate the midpoint between the the points, and find where on that graph this point is-->
+						<!--Might implement this as a feature in the engine itself, we'll see-->
 					</transform>
 				</action>
-				<action frame="31" interpolation="LINEAR">
+				<action frame="40" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
 					<transform>
-						<position>
+						<position> <!--Tells it to modify the position value-->
 							<x>0</x>
 							<y>0</y>
-							<z>-20</z>
-						</position>
-						<rotation>
-							<x>-80</x> <!--Keeping the same-->
-							<y>0</y> <!--SPIN!-->
 							<z>0</z>
+						</position>
+						<rotation> <!--Tells it to modify the position value-->
+							<x>0</x>
+							<y>-180</y>
+							<z>-180</z>
 						</rotation>
+
+						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
+						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->
+						<!--If i get enough outcry about this, I would rework this, but for a temporary solution, you can just calculate the midpoint between the the points, and find where on that graph this point is-->
+						<!--Might implement this as a feature in the engine itself, we'll see-->
 					</transform>
 				</action>
 
 			</animation>
 		</layer>
-
 		<!--Legacy backgrounds function identical to the original game's backgrounds, including paralax and whatnot (paralax yet to be implemented).-->
 		<!--I DO NOT recommend using legacy backgrounds. They are merely just a direct reimplementation of the original system to ensure compatibility and easy porting. -->
 		<!--!!!PLEASE DO NOT USE FOR A REAL BG PACK!!!-->

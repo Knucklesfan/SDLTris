@@ -474,27 +474,27 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
 	view = glm::mat4(1.0f); //view is the **Camera**'s perspective
 	view = glm::translate(view, glm::vec3(0.0, 0, -6.0)); 
     std::vector<action> actions = std::vector<action>();
+    std::vector<glm::vec3> defaultPos;
+
+    defaultPos.push_back({t.position.x,t.position.y,t.position.z});
+    defaultPos.push_back({t.rotation.x,t.rotation.y,t.rotation.z});
+    defaultPos.push_back({t.scale.x,t.scale.y,t.scale.z});
+
+    std::vector<modifiertype> effect = {POSITION,ROTATION,SCALE};
+
+    actions.push_back({0,LINEAR,TRANSFORMANIMATION,defaultPos,effect});
     for (rapidxml::xml_node<char>* chlds = animationPath->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
         int frame = atoi(chlds->first_attribute("frame")->value());
+        std::cout << "FRAME NUMBER!!! " << frame << "\n";
         interpolation inter = animConverters::interpolationmap.at(chlds->first_attribute("interpolation")->value());
         std::vector<glm::vec3> dataToSet;
-        std::vector<glm::vec3*> effectedParameters;
+        std::vector<modifiertype> effectedParameters;
         actiontype type = animConverters::actionmap.at(chlds->first_node()->name());
         switch(type) {
         case actiontype::TRANSFORMANIMATION: {
             for (rapidxml::xml_node<char>* child = chlds->first_node()->first_node(); child != NULL; child = child->next_sibling()) {
-                switch(animConverters::modifiermap.at(child->name())) {
-                    case modifiertype::POSITION: {
-                        effectedParameters.push_back(&t.position);                        
-                    }break;
-                    case modifiertype::ROTATION: {
-                        effectedParameters.push_back(&t.rotation);
-                    }break;
-                    case modifiertype::SCALE: {
-                        effectedParameters.push_back(&t.scale);
-
-                    }break;
-                }
+                effectedParameters.push_back(animConverters::modifiermap.at(child->name()));                        
+                
                 float x = atoi(child->first_node("x")->value());
                 float y = atoi(child->first_node("y")->value());
                 float z = atoi(child->first_node("z")->value());
@@ -510,16 +510,18 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
         }
         actions.push_back({frame,inter,type,dataToSet,effectedParameters});
     }
-    anim = new animation(actions);
+    anim = new animation(actions,trans);
 }
 void flatlayer::render() {
     matTrans = glm::mat4(1.0f); //the actual transform of the model itself
+	
+    matTrans = glm::translate(matTrans,trans.position);
 
     matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));  
 	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));  
 	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));  
+
 	matTrans = glm::scale(matTrans, trans.scale);
-	matTrans = glm::translate(matTrans,trans.position);
 
     shad->activate();
     int i = 0;
@@ -537,7 +539,10 @@ void flatlayer::render() {
 
 };
 void flatlayer::logic(double deltatime) {
-    anim->tick(deltatime);
+    std::cout << "before " << trans.scale.x << "\n";
+    anim->tick(deltatime,&trans);
+    std::cout << "after " << trans.scale.x << "\n";
+
 }
 
 bg::bg() {

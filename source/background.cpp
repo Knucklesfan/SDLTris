@@ -476,28 +476,41 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
     std::vector<action> actions = std::vector<action>();
     for (rapidxml::xml_node<char>* chlds = animationPath->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
         int frame = atoi(chlds->first_attribute("frame")->value());
-        interpolation inter = animConverters::interpolationmap.at(chlds->first_attribute("frame")->value());
+        interpolation inter = animConverters::interpolationmap.at(chlds->first_attribute("interpolation")->value());
         std::vector<glm::vec3> dataToSet;
         std::vector<glm::vec3*> effectedParameters;
-
-        for (rapidxml::xml_node<char>* child = chlds->first_node(); child != NULL; child = child->next_sibling()) {
+        actiontype type = animConverters::actionmap.at(chlds->first_node()->name());
+        switch(type) {
+        case actiontype::TRANSFORMANIMATION: {
+            for (rapidxml::xml_node<char>* child = chlds->first_node()->first_node(); child != NULL; child = child->next_sibling()) {
                 switch(animConverters::modifiermap.at(child->name())) {
-                case modifiertype::POSITION: {
-                    effectedParameters.push_back(&t.position);
-                    dataToSet.push_back({});
-                    
-                }break;
-                case modifiertype::ROTATION: {
+                    case modifiertype::POSITION: {
+                        effectedParameters.push_back(&t.position);                        
+                    }break;
+                    case modifiertype::ROTATION: {
+                        effectedParameters.push_back(&t.rotation);
+                    }break;
+                    case modifiertype::SCALE: {
+                        effectedParameters.push_back(&t.scale);
 
-                }break;
-                case modifiertype::SCALE: {
+                    }break;
+                }
+                float x = atoi(child->first_node("x")->value());
+                float y = atoi(child->first_node("y")->value());
+                float z = atoi(child->first_node("z")->value());
 
-                }break;
+                dataToSet.push_back({x,y,z});
+
             }
+            }break;
+            case actiontype::SHADERANIMATION: {
+
+            }break;
+
         }
-
+        actions.push_back({frame,inter,type,dataToSet,effectedParameters});
     }
-
+    anim = new animation(actions);
 }
 void flatlayer::render() {
     matTrans = glm::mat4(1.0f); //the actual transform of the model itself
@@ -524,7 +537,7 @@ void flatlayer::render() {
 
 };
 void flatlayer::logic(double deltatime) {
-    anim.tick(deltatime);
+    anim->tick(deltatime);
 }
 
 bg::bg() {
@@ -684,7 +697,7 @@ bg::bg(std::string path, bool folder) {
                         std::cout << "Failed to load transform for " << path << ".\n";
                         return;
                     }  
-                    rapidxml::xml_node<char>* animationPath = child->first_node("transform");
+                    rapidxml::xml_node<char>* animationPath = child->first_node("animation");
                     if(animationPath == nullptr) {
                         std::cout << "Failed to load animation for " << path << ".\n";
                         return;

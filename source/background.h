@@ -74,6 +74,8 @@ class bg
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
 #endif
+#include <rapidxml.hpp>
+#include <rapidxml_utils.hpp>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -168,7 +170,7 @@ class flatlayer : public layer { //a 2D layer, that can be manipulated in many w
         void logic(double deltatime);
     private:
         transform trans;
-        animation anim;
+        animation* anim;
         std::vector<texture*> data;
         glm::mat4 matTrans;
         glm::mat4 projection;

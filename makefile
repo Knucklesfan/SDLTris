@@ -5,10 +5,9 @@ OUT	= SDLTetris
 CC	 = g++
 FLAGS	 = $(INC) -g -c -Wall -O0 -D _LINUX -DCLIENT -fsanitize=address
 LFLAGS	 = -lSDL2 -lGLEW -lGL -lSDL2_ttf -lSDL2_mixer -lSDL2_image -fsanitize=address
-INC=-I include/
+INC=-I./include/
 
 LFLAGS += -L/opt/homebrew/lib
-INC += -I/opt/homebrew/include
 
 all: $(OBJS)
 	$(CC) -g $(OBJS)  -o $(OUT) $(LFLAGS)

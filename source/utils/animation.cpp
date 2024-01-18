@@ -40,6 +40,7 @@ void animation::tick(double deltatime) {
         }break;
         case LINEAR: {
             for(int i= 0; i < CURRENT.effectedParameters.size();i++) {
+                std::cout << "size: " << CURRENT.effectedParameters.size() << " i: " << i << " current action: " << currentAction << " actions: " << actions.at(currentAction).dataToSet.size() << " \n";
                 CURRENT.effectedParameters.at(i)->x = 
                 utils::lerp(actions.at(currentAction).effectedParameters.at(i)->x,
                 actions.at(currentAction).dataToSet.at(i).x,

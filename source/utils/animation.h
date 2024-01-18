@@ -24,7 +24,8 @@ enum modifiertype {
     ROTATION,
     SCALE
 };
-namespace animConverters {
+class animConverters {
+    public:
     static std::map<std::string, actiontype> actionmap;
     static std::map<std::string, interpolation> interpolationmap;
     static std::map<std::string, modifiertype> modifiermap;

@@ -530,6 +530,8 @@ void flatlayer::render() {
         shad->setInt("texture"+std::to_string(i),i);
         i++; //forgot to increment this... wtf is wrong with me
     }
+    shad->setFloat("time",(float)SDL_GetTicks()/(float)1000);
+    std::cout << (float)SDL_GetTicks()/(float)1000 << "\n";
     shad->setVector("model", glm::value_ptr(matTrans));
     shad->setVector("projection", glm::value_ptr(projection));
 	shad->setVector("view", glm::value_ptr(view));

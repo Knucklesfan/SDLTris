@@ -62,12 +62,12 @@
 		<layer type="bg2d" depth="1">
 			<textures>
 				<texture> <!--The texture to use-->
-					<path>guy.png</path>
+					<path>dancin.png</path>
 				</texture>
 			</textures>
 			<shader> <!--Shader that the BG uses-->
 				<vertex>vertex_unlit.glsl</vertex>
-				<fragment>fragment_unlit.glsl</fragment>
+				<fragment>fragment_animation.glsl</fragment>
 			</shader>
 			<transform> <!--The initial transform of the object-->
 			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->

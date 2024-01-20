@@ -14,7 +14,8 @@ std::map<std::string, actiontype> animConverters::actionmap = {
 std::map<std::string, modifiertype> animConverters::modifiermap = {
     {"position", modifiertype::POSITION},
     {"rotation",modifiertype::ROTATION},
-    {"scale",modifiertype::SCALE}
+    {"scale",modifiertype::SCALE},
+    {"shader",modifiertype::SHADEREFFECT}
 };
 
 animation::animation(std::vector<action> actions, transform t) {
@@ -43,6 +44,8 @@ void animation::tick(double deltatime, transform* t) {
             t->position = actions.at(0).dataToSet.at(0);
             t->rotation = actions.at(0).dataToSet.at(1);
             t->scale = actions.at(0).dataToSet.at(2);
+            t->shader = actions.at(0).dataToSet.at(3);
+
 
         }
         else {
@@ -53,6 +56,7 @@ void animation::tick(double deltatime, transform* t) {
         snapshot.position= {t->position.x,t->position.y,t->position.z};
         snapshot.rotation= {t->rotation.x,t->rotation.y,t->rotation.z};
         snapshot.scale= {t->scale.x,t->scale.y,t->scale.z};
+        snapshot.shader= {t->shader.x,t->shader.y,t->shader.z};
     }
 
     currentTick += deltatime/100; //convert to deciseconds
@@ -137,7 +141,30 @@ void animation::tick(double deltatime, transform* t) {
 
 
                     }break;
+                    case SHADEREFFECT: {
+                        t->shader.x= utils::lerp(
+                            t->shader.x,
+                            
+                            NEXT.dataToSet.at(i).x,
+                            
+                            (1.0/(animationlength))*(deltatime/25)
+                        );
+                        t->shader.y= utils::lerp(
+                            t->shader.y,
+                            
+                            NEXT.dataToSet.at(i).y,
+                            
+                            (1.0/(animationlength))*(deltatime/25)
+                        );
+                        t->shader.z= utils::lerp(
+                            t->shader.z,
+                            
+                            NEXT.dataToSet.at(i).z,
+                            
+                            (1.0/(animationlength))*(deltatime/25)
+                        );
 
+                    }break;
                 }
             }
         }break;
@@ -162,6 +189,12 @@ void animation::tick(double deltatime, transform* t) {
                         t->scale.y = utils::lerp(snapshot.scale.y,NEXT.dataToSet.at(i).y,currentTick/animationlength);
                         t->scale.z = utils::lerp(snapshot.scale.z,NEXT.dataToSet.at(i).z,currentTick/animationlength);
 
+
+                    }break;
+                    case SHADEREFFECT: {
+                        t->shader.x = utils::lerp(snapshot.shader.x,NEXT.dataToSet.at(i).x,currentTick/animationlength);
+                        t->shader.y = utils::lerp(snapshot.shader.y,NEXT.dataToSet.at(i).y,currentTick/animationlength);
+                        t->shader.z = utils::lerp(snapshot.shader.z,NEXT.dataToSet.at(i).z,currentTick/animationlength);
 
                     }break;
 
@@ -191,6 +224,11 @@ void animation::tick(double deltatime, transform* t) {
                         t->scale.z= NEXT.dataToSet.at(i).z;
 
 
+                    }break;
+                    case SHADEREFFECT: {
+                        t->shader.x= NEXT.dataToSet.at(i).x;
+                        t->shader.y= NEXT.dataToSet.at(i).y;
+                        t->shader.z= NEXT.dataToSet.at(i).z;
                     }break;
 
                 }

@@ -479,10 +479,11 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
     defaultPos.push_back({t.position.x,t.position.y,t.position.z});
     defaultPos.push_back({t.rotation.x,t.rotation.y,t.rotation.z});
     defaultPos.push_back({t.scale.x,t.scale.y,t.scale.z});
+    defaultPos.push_back({t.shader.x,t.shader.y,t.shader.z});
 
-    std::vector<modifiertype> effect = {POSITION,ROTATION,SCALE};
+    std::vector<modifiertype> effect = {POSITION,ROTATION,SCALE,SHADEREFFECT};
 
-    actions.push_back({0,LINEAR,TRANSFORMANIMATION,defaultPos,effect});
+    actions.push_back({0,LINEAR,TRANSFORMANIMATION,defaultPos,effect}); //TODO: Let the user chose the looping effect animation type
     for (rapidxml::xml_node<char>* chlds = animationPath->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
         int frame = atoi(chlds->first_attribute("frame")->value());
         std::cout << "FRAME NUMBER!!! " << frame << "\n";
@@ -532,6 +533,11 @@ void flatlayer::render() {
     }
     shad->setFloat("time",(float)SDL_GetTicks()/(float)1000);
     std::cout << (float)SDL_GetTicks()/(float)1000 << "\n";
+
+    shad->setFloat("parameter1",trans.shader.x);
+    shad->setFloat("parameter2",trans.shader.y);
+    shad->setFloat("parameter3",trans.shader.z);
+
     shad->setVector("model", glm::value_ptr(matTrans));
     shad->setVector("projection", glm::value_ptr(projection));
 	shad->setVector("view", glm::value_ptr(view));
@@ -728,6 +734,9 @@ bg::bg(std::string path, bool folder) {
                     t.scale.x = atoi(transformPath->first_node("scale")->first_node("x")->value());
                     t.scale.y = atoi(transformPath->first_node("scale")->first_node("y")->value());
                     t.scale.z = atoi(transformPath->first_node("scale")->first_node("z")->value());
+                    t.shader.x = atoi(transformPath->first_node("shader")->first_node("x")->value());
+                    t.shader.y = atoi(transformPath->first_node("shader")->first_node("y")->value());
+                    t.shader.z = atoi(transformPath->first_node("shader")->first_node("z")->value());
 
                     l = new flatlayer(vertpath,fragpath,textures,t,animationPath);
                     

@@ -5,7 +5,7 @@ in vec2 TexCoord;
 // texture sampler
 uniform sampler2D texture1;
 uniform float time;
-
+uniform float parameter1;
 
 // Animator settings
 
@@ -18,19 +18,17 @@ const float animationCycleTime = 60.0 / 142.0;
 const int length = 48;
 
 // Pre-computed values
-const float animationDeltaTime = animationCycleTime / float(length);
-const int[] animation = int[](0,1,2,3,4,5,6,7,8);
+const float animationDeltaTime = animationCycleTime / 60.0;
+
 void main()
 {
-    int frame = animation[(int(floor(time*100)))%8];
+    int frame = (int(floor(time*100)))%length;
     vec2 vectorspace = vec2(
-                    (TexCoord.x / columns),
-                    (TexCoord.y / columns)
+                    (TexCoord.x / 8.0)+(frame%columns)/8.0,
+                    (TexCoord.y / 6.0)-(frame/columns)/6.0
     );
-    vectorspace.x += int(time)%8;
-    vectorspace.y += frame*100;
 
-    FragColor = texture(texture1,vec2(vectorspace.x,TexCoord.y/columns+(0)));
+    FragColor = texture(texture1,vec2(vectorspace.x,vectorspace.y));
 } 
 
 

@@ -69,7 +69,7 @@ void buffermanager::disable(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool restore) {
 			glBindFramebuffer(GL_FRAMEBUFFER, 0); //restore previous framebuffer
 		}
 		glViewport(0,0,WINDOW_WIDTH,WINDOW_HEIGHT); //Restore old frame buffer, we're done here.
-		glMatrixMode(GL_PROJECTION);
+		// glMatrixMode(GL_PROJECTION);
 }
 void buffermanager::render(shader* shad,int WINDOW_WIDTH, int WINDOW_HEIGHT, bool aspect) {
     glActiveTexture(GL_TEXTURE0);

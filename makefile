@@ -3,8 +3,8 @@ SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
-FLAGS	 = $(INC) -g -c -Wall -O0 -D _LINUX -DCLIENT -fsanitize=address
-LFLAGS	 = -lSDL2 -lGLEW -lGL -lSDL2_ttf -lSDL2_mixer -lSDL2_image -fsanitize=address
+FLAGS	 = $(INC) -g -c -Wall -O0 -D _LINUX -DCLIENT
+LFLAGS	 = -lSDL2 -lGLEW -lGL -lSDL2_ttf -lSDL2_mixer -lSDL2_image
 INC=-I./include/
 
 LFLAGS += -L/opt/homebrew/lib

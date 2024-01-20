@@ -22,7 +22,8 @@ enum actiontype {
 enum modifiertype {
     POSITION,
     ROTATION,
-    SCALE
+    SCALE,
+    SHADEREFFECT
 };
 class animConverters {
     public:
@@ -36,6 +37,7 @@ struct transform {
     glm::vec3 position;
     glm::vec3 rotation;
     glm::vec3 scale;
+    glm::vec3 shader;
 };
 
 struct action { //used for animations and a description of how to use them

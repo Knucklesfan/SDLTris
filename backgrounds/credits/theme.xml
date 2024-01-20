@@ -43,6 +43,12 @@
 					<y>100</y>
 					<z>1</z>
 				</scale>
+				<shader> <!--Every transform also has 3 extra shader properties that are passed to both the fragment and vertex shaders for you to use for whatever you want. They are also animated too!-->
+					<x>0</x>
+					<y>0</y>
+					<z>0</z>
+				</shader>
+
 			</transform>
 			
 			<animation> <!--First, start by declaring the layer's animation-->
@@ -86,6 +92,11 @@
 					<y>1</y>
 					<z>1</z>
 				</scale>
+				<shader> <!--Every transform also has 3 extra shader properties that are passed to both the fragment and vertex shaders for you to use for whatever you want. They are also animated too!-->
+					<x>0</x>
+					<y>0</y>
+					<z>0</z>
+				</shader>
 			</transform>
 			
 			<!--And so, It begins.-->
@@ -106,6 +117,11 @@
 							<y>0</y>
 							<z>0</z>
 						</position>
+						<shader> <!--Tells it to modify the position value-->
+							<x>48</x>
+							<y>0</y>
+							<z>0</z>
+						</shader>
 
 						<!--Since it is omitted, scale will not be touched!-->
 					</transform>
@@ -117,11 +133,18 @@
 							<y>0</y>
 							<z>0</z>
 						</position>
+						<shader> <!--Tells it to modify the position value-->
+							<x>0</x>
+							<y>0</y>
+							<z>0</z>
+						</shader>
+
 						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
 						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->
 						<!--If i get enough outcry about this, I would rework this, but for a temporary solution, you can just calculate the midpoint between the the points, and find where on that graph this point is-->
 						<!--Might implement this as a feature in the engine itself, we'll see-->
 					</transform>
+					
 				</action>
 
 				<action frame="30" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
@@ -136,6 +159,12 @@
 							<y>-180</y>
 							<z>0</z>
 						</rotation>
+						<scale> <!--Tells it to modify the position value-->
+							<x>5</x>
+							<y>0</y>
+							<z>0</z>
+						</scale>
+
 						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
 						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->
 						<!--If i get enough outcry about this, I would rework this, but for a temporary solution, you can just calculate the midpoint between the the points, and find where on that graph this point is-->
@@ -154,6 +183,11 @@
 							<y>-180</y>
 							<z>-180</z>
 						</rotation>
+						<scale> <!--Tells it to modify the position value-->
+							<x>0.02</x>
+							<y>0</y>
+							<z>0</z>
+						</scale>
 
 						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
 						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->

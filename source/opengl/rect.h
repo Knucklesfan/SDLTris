@@ -14,7 +14,7 @@ class rectRenderer {
     public:
         rectRenderer();
         void render(shader* shad, glm::vec2 firstcoord, glm::vec2 secondcoord,
-float rotate,glm::vec4,bool outline, int thickness);
+float rotate,glm::vec4,bool outline, float thickness, glm::vec4 borderColo);
     private:
         unsigned int quadVAO;
         float vertices[24] = { 

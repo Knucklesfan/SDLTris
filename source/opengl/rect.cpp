@@ -21,7 +21,7 @@ rectRenderer::rectRenderer() {
 }
 
 void rectRenderer::render(shader* shad, glm::vec2 firstcoord, glm::vec2 secondcoord,
-float rotate,glm::vec4 color,bool outline, int thickness) {
+float rotate,glm::vec4 color,bool outline, float thickness, glm::vec4 borderColor) {
     // prepare transformations
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(COORDINATE_WIDTH), 
     static_cast<float>(COORDINATE_HEIGHT), 0.0f, -1.0f, 1.0f);
@@ -31,14 +31,19 @@ float rotate,glm::vec4 color,bool outline, int thickness) {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(firstcoord, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
-    model = glm::translate(model, glm::vec3(0.5f * secondcoord.x-firstcoord.x, 0.5f * secondcoord.y-firstcoord.y, 0.0f)); // move origin of rotation to center of quad
+    model = glm::translate(model, glm::vec3(0.5f * (secondcoord.x-firstcoord.x), 0.5f * (secondcoord.y-firstcoord.y), 0.0f)); // move origin of rotation to center of quad
     model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
-    model = glm::translate(model, glm::vec3(-0.5f * secondcoord.x-firstcoord.x, -0.5f * secondcoord.y-firstcoord.y, 0.0f)); // move origin back
+    model = glm::translate(model, glm::vec3(-0.5f * (secondcoord.x-firstcoord.x), -0.5f * (secondcoord.y-firstcoord.y), 0.0f)); // move origin back
 
     model = glm::scale(model, glm::vec3(secondcoord.x-firstcoord.x,secondcoord.y-firstcoord.y, 1.0f)); // last scale
     
     shad->setVector("model", glm::value_ptr(model));
     shad->setVec4("col",glm::value_ptr(color));
+    shad->setVec4("bordercol",glm::value_ptr(borderColor));
+    shad->setFloat("border_width",(thickness));
+    float aspect = (secondcoord.y-firstcoord.y)/(secondcoord.x-firstcoord.x);
+    shad->setFloat("aspect",aspect);
+    printf("aspect: %f, thickness: %f\n",aspect,thickness);
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);

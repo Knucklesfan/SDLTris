@@ -19,7 +19,7 @@ titlescreen::titlescreen()
     versfont = graphics::fonts->at(2);
     headerfont = graphics::fonts->at(1);
     bgnum = std::rand() % graphics::backgrounds->size();
-
+    
 }
 void titlescreen::reset()
 {
@@ -208,6 +208,7 @@ void titlescreen::render()
     SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
     graphics::drawTexture(graphics::sprites.at("knfnlogo"), 0, 0, 0.0, 1.0, false);
 #else
+    graphics::rect->render(graphics::shaders.at(1),{160,250},{160+320,250+210},0,{0,0,0,1},true,0.01,glm::vec4(1,1,1,1));
     graphics::sprite->render(graphics::shaders[4],graphics::sprites.at("knfnlogo"),glm::vec2(0,0),glm::vec2(640,480),0,glm::vec2(0,0),glm::vec2(640,480));
 #endif
 

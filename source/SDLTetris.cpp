@@ -14,7 +14,7 @@
 #include "globalgamemode.h"
 #include "gamemode.h"
 #include "scenes/knuxfanscreen.h"
-// #include "scenes/titlescreen.h"
+#include "scenes/titlescreen.h"
 // #include "scenes/credits.h"
 // #include "scenes/game.h"
 // #include "scenes/options.h"
@@ -230,8 +230,8 @@ int main() {
     Gamemode* gamemodes[] = {
         // new white(),
         new knuxfanscreen(),
-        new white()
-        // new titlescreen(), //1
+        // new white()
+        new titlescreen(), //1
         // new game(), //2
         // new options(), //3
         // new credits() //4

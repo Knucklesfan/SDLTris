@@ -12,29 +12,29 @@
 #endif
 
 cube::cube(glm::vec3 prepos, glm::vec3 postpos, glm::vec3 scale, glm::vec3 rotation) {
-        float vertices[216] = {
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, //final side
-            0.5f, -0.5f, -0.5f,  -1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  -1.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  -1.0f, 1.0f,
+        float vertices[180] = {
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
             -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-           -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, //original side
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
             0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-           -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-           -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, //demo side
-            -0.5f,  0.5f, -0.5f,  -1.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  -1.0f, -1.0f,
-            -0.5f, -0.5f, -0.5f,  -1.0f, -1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f, //unused by transition
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
             0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
             0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
@@ -53,7 +53,7 @@ cube::cube(glm::vec3 prepos, glm::vec3 postpos, glm::vec3 scale, glm::vec3 rotat
             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
             0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
             -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
         };
     __glewGenVertexArrays(1, &VAO);
     __glewGenBuffers(1, &VBO);
@@ -63,16 +63,13 @@ cube::cube(glm::vec3 prepos, glm::vec3 postpos, glm::vec3 scale, glm::vec3 rotat
     __glewBindBuffer(GL_ARRAY_BUFFER, VBO);
     __glewBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-
+    std::cout << sizeof(vertices) << " <-SIZE OF VERTICES!\n";
 	// position attribute
-    __glewVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    __glewVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     __glewEnableVertexAttribArray(0);
 	// texture coord attribute
-    __glewVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    __glewVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     __glewEnableVertexAttribArray(2);
-    // texture to use
-    __glewVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(5 * sizeof(float)));
-    __glewEnableVertexAttribArray(3);
 
     this->rotation = rotation;
     this->position = prepos;
@@ -97,7 +94,6 @@ cube::cube(glm::vec3 prepos, glm::vec3 postpos, glm::vec3 scale, glm::vec3 rotat
 	// texture coord attribute
     __glewVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     __glewEnableVertexAttribArray(2);
-    // texture to use
 
     this->rotation = rotation;
     this->position = prepos;

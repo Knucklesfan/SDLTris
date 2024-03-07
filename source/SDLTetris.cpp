@@ -230,6 +230,7 @@ int main() {
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
         // new white(),
+
         new knuxfanscreen(),
         // new white()
         new titlescreen(), //1
@@ -267,12 +268,8 @@ int main() {
             }
             if(event.type == SDL_WINDOWEVENT) {
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-                    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	                glClearDepth(1.0);
-		            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 					WINDOW_WIDTH =(event.window.data1);
 					WINDOW_HEIGHT = (event.window.data2);
-                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         		}
 			}
@@ -290,6 +287,8 @@ int main() {
         SDL_RenderClear(graphics::render);
         SDL_SetRenderTarget(graphics::render,rendertext);
         #else
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
             buffer.enable();
             global->startRender();
         #endif

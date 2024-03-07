@@ -34,6 +34,9 @@ game::game() {
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     #else
         playfield = new buffermanager(640,480,true);
+        cubeRenderer = new cube(glm::vec3(3.0f,0.0f,-2.0f),glm::vec3(0.0f,0.0f,0.0f),
+	glm::vec3(1.0f,1.0f,1.0f),glm::vec3((-85.0f), 45.0f, 0.0f));
+
     #endif
     // memcpy(activations, active, sizeof activations);
     //volume = Mix_VolumeMusic(-1);
@@ -264,6 +267,12 @@ void game::render() {
             playfield->disable(640,480,true);
             graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render();
             playfield->render(graphics::shaders.at(3),0,0,false);
+                glm::mat4 projection;
+		    projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+		    glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+		    view = glm::translate(view, glm::vec3(0.0, 0, -6.0)); 
+
+            cubeRenderer->render(graphics::shaders.at(0),graphics::sprites.at("thxforplaying"),projection,view);
         #endif
         //SDL_RenderPresent(renderer);
     //}

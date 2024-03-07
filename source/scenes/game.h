@@ -60,6 +60,7 @@ class game: public Gamemode
     	#ifdef __LEGACY_RENDER
 			SDL_Texture* texture;
 		#else
+			cube* cubeRenderer;
 			buffermanager* playfield; //the buffer that is used for the playfield
 		#endif
 		// std::vector<bg>  backgrounds;

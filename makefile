@@ -1,5 +1,5 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o
-SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp source/animation.cpp
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o SDL_FontCache.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o
+SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp source/animation.cpp source/opengl/line.cpp source/scenes/game.cpp
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
@@ -25,8 +25,8 @@ titlescreen.o: source/scenes/titlescreen.cpp
 	$(CC) $(FLAGS) source/scenes/titlescreen.cpp -std=c++17
 
 #removed for now!
-# game.o: source/scenes/game.cpp
-# 	$(CC) $(FLAGS) source/scenes/game.cpp -std=c++17
+game.o: source/scenes/game.cpp
+	$(CC) $(FLAGS) source/scenes/game.cpp -std=c++17
 
 background.o: source/background.cpp
 	$(CC) $(FLAGS) source/background.cpp -std=c++17
@@ -87,6 +87,9 @@ animation.o: source/utils/animation.cpp
 	$(CC) $(FLAGS) source/utils/animation.cpp
 defs.o: source/utils/defs.cpp
 	$(CC) $(FLAGS) source/utils/defs.cpp 
+line.o: source/opengl/line.cpp
+	$(CC) $(FLAGS) source/opengl/line.cpp
+
 clean:
 	rm -f $(OBJS) $(OUT)
 

@@ -29,9 +29,12 @@
 //TODO: take a shower
 game::game() {
     //srand((unsigned)time(0)); 
+    #ifdef __LEGACY_RENDER
     texture = SDL_CreateTexture(graphics::render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-
+    #else
+        playfield = new buffermanager(640,480);
+    #endif
     // memcpy(activations, active, sizeof activations);
     //volume = Mix_VolumeMusic(-1);
     time = std::time(nullptr);
@@ -147,9 +150,12 @@ void game::logic(double deltatime) {
 }
 void game::render() {
     //if (gameactive) {
+        #ifdef __LEGACY_RENDER
         SDL_RenderClear(graphics::render);
+        #endif
         // graphics::backgrounds[(bglevel)%(backgrounds.size())].render(renderer,false);
-        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render(graphics::render,false);
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render();
+        #ifdef __LEGACY_RENDER
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
             SDL_SetRenderDrawColor(graphics::render, 255, 0, 0, 128 * warningalpha);
             SDL_Rect splashbox = { 0, 0, 640, 480 };
@@ -221,6 +227,44 @@ void game::render() {
 
             header->render(320, 240, "GAME PAUSED", true);
         }
+        #else
+            if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
+                graphics::rect->render(
+                    graphics::shaders.at(1),
+                    {0,0},
+                    {640,480},0,{0,0,0,0.5*warningalpha},false,-1,glm::vec4(1,1,1,1));                
+            }
+            playfield->enable();
+            if(boardwidth > 10) {
+                graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("bbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
+            }
+            else {
+                graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("sbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
+            }
+            g.changePos(t.x, t.y, t.rot);
+            t.draw();
+            g.draw();
+            if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
+                drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
+            }
+            drawCubes(testblocks, 1.0, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
+        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
+            for (int i = 0; i < boardheight; i++) {
+                if (lineclears[i] > 0) {
+                    graphics::rect->render(graphics::shaders.at(1),{240,16+i*16},{240+160,(16+i*16)+16},0,{1,1,1,lineclears[i]},false,-1,{0,0,0,0});
+                }
+                //std::cout << lineclears[i] << "\n";
+            }
+        }
+        if(boardwidth > 10) {
+            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("bigstage"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
+        }
+        else {
+            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("stage"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
+        }
+            playfield->disable(640,480,true);
+            playfield->render(graphics::shaders.at(2),640,480,false);
+        #endif
         //SDL_RenderPresent(renderer);
     //}
 }
@@ -549,7 +593,7 @@ void game::drawCubes(int position[], double scale, int x, int y, int size, int w
     
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
-            graphics::drawTexture(graphics::blocks->at(position[i]), x + (i % width) * 16, y + (i / width) * 16, 0, scale,false);
+            graphics::sprite->render(graphics::shaders[4],graphics::blocks->at(position[i]),{(x + (i % width) * 16), (y + (i / width) * 16)}, {16*scale,16*scale}, 0,{0,0},{16,16});
         }
     }
 }

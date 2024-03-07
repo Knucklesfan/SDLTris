@@ -47,5 +47,11 @@ float rotate,glm::vec4 color,bool outline, float thickness, glm::vec4 borderColo
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
+    if(outline) {
+        graphics::line->render(graphics::shaders.at(1),{firstcoord.x,secondcoord.y},{firstcoord.x,firstcoord.y},thickness,borderColor);
+        graphics::line->render(graphics::shaders.at(1),{secondcoord.x,firstcoord.y},{firstcoord.x,firstcoord.y},thickness,borderColor);
+        graphics::line->render(graphics::shaders.at(1),{secondcoord.x,firstcoord.y},{secondcoord.x,secondcoord.y},thickness,borderColor);
+        graphics::line->render(graphics::shaders.at(1),{firstcoord.x,secondcoord.y},{secondcoord.x,secondcoord.y},thickness,borderColor);
 
+    }
   }

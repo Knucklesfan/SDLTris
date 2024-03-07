@@ -5,8 +5,6 @@ out vec2 TexCoords;
 
 uniform mat4 model;
 uniform mat4 projection;
-uniform vec2 texOffset;
-uniform vec2 scale;
 
 void main()
 {

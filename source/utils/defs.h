@@ -45,6 +45,7 @@
     #include "../opengl/texture.h"
     #include "../opengl/sprite.h"
     #include "../opengl/rect.h"
+    #include "../opengl/line.h"
 
 #endif
 //#include "Object.h"
@@ -183,6 +184,7 @@ class graphics {
         static std::vector<texture*>* blocks;
         static spriteRenderer* sprite;
         static rectRenderer* rect;
+        static lineRenderer* line;
     #endif
         static std::vector<bg>* backgrounds;
         static std::vector<Font*>* fonts;
@@ -198,6 +200,7 @@ class graphics {
         #ifndef __LEGACY_RENDER
             static int generateshaders();
             static int generatetextures();
+            static void screenshot(); //takes a screenshot and saves it to the running folder
         #endif
 
     //uhhh put other static stuff here.

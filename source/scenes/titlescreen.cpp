@@ -208,7 +208,7 @@ void titlescreen::render()
     SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
     graphics::drawTexture(graphics::sprites.at("knfnlogo"), 0, 0, 0.0, 1.0, false);
 #else
-    graphics::rect->render(graphics::shaders.at(1),{160,250},{160+320,250+210},0,{0,0,0,1},true,0.01,glm::vec4(1,1,1,1));
+    graphics::rect->render(graphics::shaders.at(1),{160,250},{160+320,250+210},0,{0,0,0,1},true,1,glm::vec4(1,1,1,1));
     graphics::sprite->render(graphics::shaders[4],graphics::sprites.at("knfnlogo"),glm::vec2(0,0),glm::vec2(640,480),0,glm::vec2(0,0),glm::vec2(640,480));
 #endif
 
@@ -216,10 +216,10 @@ void titlescreen::render()
         graphics::fonts->at(1)->render(320, 300 + (i * 32),settings[i],  true, 255, 0, ((i == currentselection && currentscreen == 0)?0:255),-1,false,0,0,0);
     }
 
-    graphics::fonts->at(2)->render(490, 165, "Now with @4Banana @0Free!", true,255,255,255,-1,true,time/100,1,5);
+    graphics::fonts->at(2)->render(490, 165, "Return of the Block!", true,255,255,255,-1,true,time/100,1,5);
     // graphics::fonts->at(0)->render("VERS 1.0 BABY!", 490, 165, true, 0, 0, 0, 0, true, time/100, 1, 5,1);
-    // versfont->render(320, 280, "High Score: " + std::to_string(score->maxscore), true,renderer);
-    // versfont->render(320, 265, "Previous Score: " + std::to_string(score->previousscore), true, renderer);
+    versfont->render(320, 280, "High Score: " + std::to_string(settings::maxscore), true);
+    versfont->render(320, 265, "Previous Score: " + std::to_string(settings::previousscore), true);
     switch (currentscreen) {
         case(1): {
             // SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);

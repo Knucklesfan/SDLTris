@@ -6,7 +6,7 @@
 #include <vector>
 #include <array>
 #include <cstring>
-#include "options.h"
+// #include "options.h"
 #include "../tetriminos.h"
 #include "../ghostblock.h"
 #include "../background.h"
@@ -56,7 +56,11 @@ class game: public Gamemode
 		bool gameactive;
 		bool paused;
 		// std::vector<SDL_Texture*> textures;
-    	SDL_Texture* texture;
+    	#ifdef __LEGACY_RENDER
+			SDL_Texture* texture;
+		#else
+			buffermanager* playfield; //the buffer that is used for the playfield
+		#endif
 		// std::vector<bg>  backgrounds;
 		game();
 		double layerpos[10];

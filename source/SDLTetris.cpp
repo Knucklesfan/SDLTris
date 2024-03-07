@@ -16,7 +16,7 @@
 #include "scenes/knuxfanscreen.h"
 #include "scenes/titlescreen.h"
 // #include "scenes/credits.h"
-// #include "scenes/game.h"
+#include "scenes/game.h"
 // #include "scenes/options.h"
 #ifndef __LEGACY_RENDER
 #include "opengl/buffermanager.h"
@@ -160,6 +160,7 @@ int main() {
 		printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
     graphics::rect = new rectRenderer();
+    graphics::line = new lineRenderer();
     graphics::sprite = new spriteRenderer();
 #endif
     //Initialize SDL_mixer
@@ -232,7 +233,7 @@ int main() {
         new knuxfanscreen(),
         // new white()
         new titlescreen(), //1
-        // new game(), //2
+        new game(), //2
         // new options(), //3
         // new credits() //4
     };
@@ -258,6 +259,9 @@ int main() {
                 quit = true;
             }
             if (event.type == SDL_KEYDOWN) {
+                if(event.key.keysym.sym == SDLK_F12) {
+                    graphics::screenshot();
+                }
                 gamemode[gamemodes]->input(event.key.keysym.sym);
             }
             if(event.type == SDL_WINDOWEVENT) {

@@ -10,7 +10,7 @@
 
 class buffermanager {
     public:
-    buffermanager(int width, int height);
+    buffermanager(int width, int height, bool alpha = false);
     void enable();
     void disable(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool restore  = false);
     void render(shader* shad,int WINDOW_WIDTH, int WINDOW_HEIGHT, bool aspect);

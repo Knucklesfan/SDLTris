@@ -19,7 +19,7 @@
 <layer type="bg2d" depth="2">
 			<textures>
 				<texture> <!--The texture to use-->
-					<path>mariokart.png</path>
+					<path>clouds.png</path>
 				</texture>
 			</textures>
 			<shader> <!--Shader that the BG uses-->
@@ -30,11 +30,11 @@
 			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
 				<position>
 					<x>0</x>
-					<y>-10</y>
+					<y>0</y>
 					<z>0</z>
 				</position>
 				<rotation>
-					<x>-70</x>
+					<x>100</x>
 					<y>0</y>
 					<z>0</z>
 				</rotation>
@@ -56,8 +56,8 @@
 					<transform>
 					<position>
 						<x>0</x>
-						<y>0</y>
-						<z>-20</z>
+						<y>-20</y>
+						<z>0</z>
 					</position>
 
 					</transform>
@@ -78,7 +78,7 @@
 			<transform> <!--The initial transform of the object-->
 			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
 				<position>
-					<x>0</x>
+					<x>-3</x>
 					<y>0</y>
 					<z>0</z>
 				</position>
@@ -113,41 +113,15 @@
 					<!--If to compare this engine to Unity, think of these as each row of these things (i have no idea what they are called nor care)-->
 					<!--Basically it's this [https://docs.unity3d.com/uploads/Main/AnimationEditorUnfoldedProperty.png]-->
 						<position> <!--Tells it to modify the position value-->
-							<x>3</x>
+							<x>-3</x>
 							<y>0</y>
 							<z>0</z>
 						</position>
-						<shader> <!--Tells it to modify the position value-->
-							<x>48</x>
-							<y>0</y>
-							<z>0</z>
-						</shader>
 
 						<!--Since it is omitted, scale will not be touched!-->
 					</transform>
 				</action> <!--I aint reading allat 💀💀💀-->
-				<action frame="20" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
-					<transform>
-						<position> <!--Tells it to modify the position value-->
-							<x>0</x>
-							<y>0</y>
-							<z>0</z>
-						</position>
-						<shader> <!--Tells it to modify the position value-->
-							<x>0</x>
-							<y>0</y>
-							<z>0</z>
-						</shader>
-
-						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
-						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->
-						<!--If i get enough outcry about this, I would rework this, but for a temporary solution, you can just calculate the midpoint between the the points, and find where on that graph this point is-->
-						<!--Might implement this as a feature in the engine itself, we'll see-->
-					</transform>
-					
-				</action>
-
-				<action frame="30" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
+				<action frame="80" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
 					<transform>
 						<position> <!--Tells it to modify the position value-->
 							<x>-3</x>
@@ -155,39 +129,10 @@
 							<z>0</z>
 						</position>
 						<rotation> <!--Tells it to modify the position value-->
-							<x>0</x>
-							<y>-180</y>
-							<z>0</z>
+							<x>-180</x>
+							<y>0</y>
+							<z>-360</z>
 						</rotation>
-						<scale> <!--Tells it to modify the position value-->
-							<x>5</x>
-							<y>0</y>
-							<z>0</z>
-						</scale>
-
-						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
-						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->
-						<!--If i get enough outcry about this, I would rework this, but for a temporary solution, you can just calculate the midpoint between the the points, and find where on that graph this point is-->
-						<!--Might implement this as a feature in the engine itself, we'll see-->
-					</transform>
-				</action>
-				<action frame="40" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
-					<transform>
-						<position> <!--Tells it to modify the position value-->
-							<x>0</x>
-							<y>0</y>
-							<z>0</z>
-						</position>
-						<rotation> <!--Tells it to modify the position value-->
-							<x>0</x>
-							<y>-180</y>
-							<z>-180</z>
-						</rotation>
-						<scale> <!--Tells it to modify the position value-->
-							<x>0.02</x>
-							<y>0</y>
-							<z>0</z>
-						</scale>
 
 						<!--notice how rotation isn't touched, thus only will it move *after* this frame, because we do touch it in the next one!-->
 						<!--This is a complaint I've always had with animating software, and although I am no animator, I've always found it annoying that it tries to interpolate values that aren't immediately needed-->

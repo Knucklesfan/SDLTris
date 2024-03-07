@@ -280,7 +280,7 @@ void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int 
 
 }
 #else
-
+#define GLM_ENABLE_EXPERIMENTAL
 #include "background.h"
 #include <string>
 #include <vector>
@@ -292,6 +292,7 @@ void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int 
 #include <algorithm>    // std::sort
 #include <cstring>
 #include <cmath>
+#include <glm/gtx/quaternion.hpp>
 
 #ifdef __SWITCH__
 #define pth  "/"
@@ -521,8 +522,9 @@ void flatlayer::render() {
     matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));  
 	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));  
 	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));  
+    matTrans = glm::scale(matTrans, trans.scale);
 
-	matTrans = glm::scale(matTrans, trans.scale);
+
 
     shad->activate();
     int i = 0;
@@ -547,9 +549,7 @@ void flatlayer::render() {
 
 };
 void flatlayer::logic(double deltatime) {
-    std::cout << "before " << trans.scale.x << "\n";
     anim->tick(deltatime,&trans);
-    std::cout << "after " << trans.scale.x << "\n";
 
 }
 

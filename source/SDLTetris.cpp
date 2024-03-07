@@ -234,6 +234,7 @@ int main() {
         // new white()
         new titlescreen(), //1
         new game(), //2
+        new white()
         // new options(), //3
         // new credits() //4
     };

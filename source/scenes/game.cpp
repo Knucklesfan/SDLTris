@@ -33,7 +33,7 @@ game::game() {
     texture = SDL_CreateTexture(graphics::render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     #else
-        playfield = new buffermanager(640,480);
+        playfield = new buffermanager(640,480,true);
     #endif
     // memcpy(activations, active, sizeof activations);
     //volume = Mix_VolumeMusic(-1);
@@ -154,7 +154,6 @@ void game::render() {
         SDL_RenderClear(graphics::render);
         #endif
         // graphics::backgrounds[(bglevel)%(backgrounds.size())].render(renderer,false);
-        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render();
         #ifdef __LEGACY_RENDER
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
             SDL_SetRenderDrawColor(graphics::render, 255, 0, 0, 128 * warningalpha);
@@ -263,7 +262,8 @@ void game::render() {
             graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("stage"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
         }
             playfield->disable(640,480,true);
-            playfield->render(graphics::shaders.at(2),640,480,false);
+            graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render();
+            playfield->render(graphics::shaders.at(3),0,0,false);
         #endif
         //SDL_RenderPresent(renderer);
     //}
@@ -589,11 +589,22 @@ void game::reset() {
 
 }
 
-void game::drawCubes(int position[], double scale, int x, int y, int size, int width) {
+void game::drawCubes(int position[], double scale, int x, int y, int size, int width, bool threed, glm::vec3 rotation) {
     
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
-            graphics::sprite->render(graphics::shaders[4],graphics::blocks->at(position[i]),{(x + (i % width) * 16), (y + (i / width) * 16)}, {16*scale,16*scale}, 0,{0,0},{16,16});
+            if(!threed) {
+                graphics::sprite->render(graphics::shaders[4],
+                graphics::blocks->at(position[i]),
+                {
+                (x + (i % width) * 16)+(16-(16*scale))/2,
+                (y + (i / width) * 16)+(16-(16*scale))/2
+                },
+                {16*scale,16*scale}, 0,{0,0},{16,16});
+            }
+            else { //handle 3d rendering of blocks
+
+            }
         }
     }
 }

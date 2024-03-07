@@ -11,6 +11,7 @@
 #include "../ghostblock.h"
 #include "../background.h"
 #include "../gamemode.h"
+#include "../opengl/cube.h"
 #include "../ingamemessagebox.h"
 #include <random>
 #include "../font.h"
@@ -106,6 +107,6 @@ class game: public Gamemode
 		void checkLines(int(blocks)[240]);
 		bool checkRow(int(blocks)[10]);
 		void clearRow(int(blocks)[240], int y);
-		void drawCubes(int position[],double scale, int x, int y, int size, int width);
+		void drawCubes(int position[],double scale, int x, int y, int size, int width,bool threed=false, glm::vec3 rotation={0,0,0});
 };
 

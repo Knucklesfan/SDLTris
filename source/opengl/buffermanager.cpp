@@ -1,7 +1,7 @@
 #include "buffermanager.h"
 #include <iostream>
 
-buffermanager::buffermanager(int w, int h):width(w),height(h) {
+buffermanager::buffermanager(int w, int h,bool alpha):width(w),height(h) {
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer); //handles running the game at the set resolution
 
@@ -11,7 +11,12 @@ buffermanager::buffermanager(int w, int h):width(w),height(h) {
 	glBindTexture(GL_TEXTURE_2D, renderTexture.id);
 
 	// Give an empty image to OpenGL ( the last "0" )
-	glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+	if(alpha) { //cant believe we have to do this, but some shaders dont like to play fair...
+		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGBA, width, height, 0,GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	}
+	else {
+		glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, width, height, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+	}
 	// Poor filtering. Needed !
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -59,6 +64,9 @@ void buffermanager::enable() {
 		glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFB); //store previous framebuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		glViewport(0,0,width,height); // Activate and render at texture size.
+		glColorMask(1, 1, 1, 1);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		glClearDepth(1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void buffermanager::disable(int WINDOW_WIDTH, int WINDOW_HEIGHT, bool restore) {

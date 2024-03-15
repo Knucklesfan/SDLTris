@@ -1,6 +1,6 @@
 #include "sprite.h"
 #include "../utils/defs.h"
-#include <glm/gtx/string_cast.hpp>
+
 
 spriteRenderer::spriteRenderer() {
     //generates the VBO and stuff

@@ -10,7 +10,7 @@
 #include <algorithm>    // std::sort
 #include <cstring>
 #include <cmath>
-#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_mixer_ext.h>
 #include <SDL2/SDL_image.h>
 #ifdef __SWITCH__
 #define pth  "/"
@@ -723,7 +723,7 @@ bg::bg(std::string path, bool folder) {
                     }  
 
                     for (rapidxml::xml_node<char>* chlds = child->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
-                        texture* tmp = new texture(path + "/" +chlds->first_node("path")->value());
+                        texture* tmp = new texture(correctPath + "/" +chlds->first_node("path")->value());
                         if(tmp != nullptr) {
                             textures.push_back(tmp);
                         }
@@ -793,7 +793,7 @@ bg::bg(std::string path, bool folder) {
         rapidxml::xml_node<char>* currentblock = packOBlock->first_node();
 
         for (int i = 0; i< 7; i++) {
-            texture* tmp = new texture(path + "/" +currentblock->value());
+            texture* tmp = new texture(correctPath + "/" +currentblock->value());
             if(tmp != nullptr) {
                 blockpack[i] = tmp;
             }

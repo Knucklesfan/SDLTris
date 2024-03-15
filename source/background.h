@@ -7,7 +7,7 @@
 #include <array>
 #include <algorithm>    // std::sort
 #include <cstring>
-#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_mixer_ext_ext.h>
 
 class bg
 {
@@ -65,7 +65,7 @@ class bg
 #include "opengl/buffermanager.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
-#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_mixer_ext.h>
 #include <SDL2/SDL_opengl.h> // otherwise we want to use OpenGL
 #else
 #include <QOpenGLWidget>

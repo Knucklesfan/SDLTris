@@ -4,10 +4,10 @@ HEADER	=
 OUT	= SDLTetris
 CC	 = g++
 FLAGS	 = $(INC) -g -c -Wall -O0 -D _LINUX -DCLIENT
-LFLAGS	 = -lSDL2 -lGLEW -lGL -lSDL2_ttf -lSDL2_mixer -lSDL2_image
+LFLAGS	 = -Wl,-Bstatic -lSDL2_mixer_ext -lopusfile -lopus -ltimidity_sdl2 -logg -lwavpack -lmodplug -lEDMIDI -lzlib -lSDL2 -Wl,-Bdynamic -lGL -lpthread -lm -ldl -static-libgcc -lstdc++ -lGLEW -lSDL2_ttf -lSDL2_image
 INC=-I./include/
 
-LFLAGS += -L/opt/homebrew/lib
+LFLAGS += -L./lib/
 
 all: $(OBJS)
 	$(CC) -g $(OBJS)  -o $(OUT) $(LFLAGS)

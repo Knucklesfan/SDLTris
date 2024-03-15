@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_mixer_ext.h>
 //#include <enet/enet.h>
 #include <string>
 #include <iostream>

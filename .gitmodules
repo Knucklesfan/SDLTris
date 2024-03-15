@@ -1,0 +1,3 @@
+[submodule "SDL-Mixer-X"]
+	path = SDL-Mixer-X
+	url = https://github.com/WohlSoft/SDL-Mixer-X.git

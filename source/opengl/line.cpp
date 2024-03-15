@@ -1,6 +1,6 @@
 #include "line.h"
 #include "../utils/defs.h"
-#include <glm/gtx/string_cast.hpp>
+
 
 lineRenderer::lineRenderer() {
     //generates the VBO and stuff

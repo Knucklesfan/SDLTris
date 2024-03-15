@@ -1,6 +1,6 @@
 #include "titlescreen.h"
 #include <iostream>
-#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_mixer_ext.h>
 #include <vector>
 #include <math.h>
 #include "../utils/defs.h"

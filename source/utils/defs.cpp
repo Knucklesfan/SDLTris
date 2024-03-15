@@ -11,6 +11,198 @@
 #include <cmath>
 #include <sstream> //std::stringstream
 SDL_Window* graphics::window = nullptr;
+int gameplay::Pieces[7][4][16] = {
+            //S PIECE 
+            {
+            {0,1,1,0,
+             0,0,1,1,
+             0,0,0,0,
+             0,0,0,0
+            },
+            {0,0,1,0,
+             0,1,1,0,
+             0,1,0,0,
+             0,0,0,0
+            },
+            {0,0,0,1,
+             0,0,1,1,
+             0,0,1,0,
+             0,0,0,0
+            },
+            {0,0,0,0,
+             0,1,1,0,
+             0,0,1,1,
+             0,0,0,0
+            }
+        },
+            //T PIECE
+            {
+            {
+             0,0,2,0,
+             0,2,2,0,
+             0,0,2,0,
+             0,0,0,0
+            },
+            {
+             0,0,2,0,
+             0,2,2,2,
+             0,0,0,0,
+             0,0,0,0
+            },
+            {
+             0,0,2,0,
+             0,0,2,2,
+             0,0,2,0,
+             0,0,0,0
+            },
+            {
+             0,0,0,0,
+             0,2,2,2,
+             0,0,2,0,
+             0,0,0,0
+            },
+
+        },
+            //B PIECE
+            {
+            {
+             0,3,0,0,
+             0,3,3,0,
+             0,0,3,0,
+             0,0,0,0
+            },
+            {
+             0,0,3,3,
+             0,3,3,0,
+             0,0,0,0,
+             0,0,0,0
+            },
+            {
+             0,3,0,0,
+             0,3,3,0,
+             0,0,3,0,
+             0,0,0,0
+            },
+            {
+             0,0,0,0,
+             0,0,3,3,
+             0,3,3,0,
+             0,0,0,0
+            },
+
+        },
+            //C PIECE
+            {
+            {
+             0,0,0,0,
+             0,4,4,0,
+             0,4,4,0,
+             0,0,0,0
+            },
+            {
+             0,0,0,0,
+             0,4,4,0,
+             0,4,4,0,
+             0,0,0,0
+            },
+            {
+             0,0,0,0,
+             0,4,4,0,
+             0,4,4,0,
+             0,0,0,0
+            },
+            {
+             0,0,0,0,
+             0,4,4,0,
+             0,4,4,0,
+             0,0,0,0
+            },
+
+        },
+            //L PIECE
+            {
+            {
+             0,0,0,0,
+             0,5,5,5,
+             0,5,0,0,
+             0,0,0,0
+            },
+            {
+             0,5,5,0,
+             0,0,5,0,
+             0,0,5,0,
+             0,0,0,0
+            },
+            {
+             0,0,0,5,
+             0,5,5,5,
+             0,0,0,0,
+             0,0,0,0
+            },
+            {
+             0,0,5,0,
+             0,0,5,0,
+             0,0,5,5,
+             0,0,0,0
+            },
+
+        },
+            //P PIECE
+            {
+            {
+             0,6,0,0,
+             0,6,6,6,
+             0,0,0,0,
+             0,0,0,0
+            },
+            {
+             0,0,6,6,
+             0,0,6,0,
+             0,0,6,0,
+             0,0,0,0
+            },
+            {
+             0,6,6,6,
+             0,0,0,6,
+             0,0,0,0,
+             0,0,0,0
+            },
+            {
+             0,0,6,0,
+             0,0,6,0,
+             0,6,6,0,
+             0,0,0,0
+            },
+
+        },
+            //R PIECE
+            {
+            {
+             0,0,0,0,
+             7,7,7,7,
+             0,0,0,0,
+             0,0,0,0
+            },
+            {
+             0,0,7,0,
+             0,0,7,0,
+             0,0,7,0,
+             0,0,7,0
+            },
+            {
+             0,0,0,0,
+             0,0,0,0,
+             7,7,7,7,
+             0,0,0,0
+            },
+            {
+             0,7,0,0,
+             0,7,0,0,
+             0,7,0,0,
+             0,7,0,0
+            },
+        }
+        };
 #ifdef __LEGACY_RENDER
 SDL_Renderer* graphics::render = nullptr;
 std::map<std::string,SDL_Texture*> graphics::sprites = std::map<std::string,SDL_Texture*>();
@@ -47,6 +239,9 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
 double graphics::deltaTime = 0;
 int settings::maxscore = 0;
 int settings::previousscore = 0;
+int settings::lastlevel = 0;
+int settings::lastlines = 0;
+int settings::lasttime = 0;
 std::vector<bg>* graphics::backgrounds = new std::vector<bg>();
 // std::vector<ObjectTemplate>* graphics::objects = new std::vector<ObjectTemplate>();
 std::vector<Font*>* graphics::fonts = new std::vector<Font*>();
@@ -344,6 +539,9 @@ int graphics::generatesprites() {
     blocks->push_back(sprites["pblock"]);
     blocks->push_back(sprites["mblock"]);
     blocks->push_back(sprites["rblock"]);
+    blocks->push_back(sprites["gblock"]);
+    blocks->push_back(sprites["yblock"]);
+    blocks->push_back(sprites["tblock"]);
 
     return 0;
 }

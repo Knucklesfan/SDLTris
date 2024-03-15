@@ -34,8 +34,8 @@ game::game() {
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     #else
         playfield = new buffermanager(640,480,true);
-        cubeRenderer = new cube(glm::vec3(3.0f,0.0f,-2.0f),glm::vec3(0.0f,0.0f,0.0f),
-	glm::vec3(1.0f,1.0f,1.0f),glm::vec3((-85.0f), 45.0f, 0.0f));
+        cubeRenderer = new cube(glm::vec3(0.0f,0.0f,-24.0f),glm::vec3(0.0f,0.0f,0.0f),
+	glm::vec3(1.0f,1.0f,1.0f),glm::vec3((-0.0f), 0.0f, 0.0f));
 
     #endif
     // memcpy(activations, active, sizeof activations);
@@ -60,7 +60,6 @@ game::game() {
     int holdblock = -1;
     // music = musicVec;
     // sound = soundVec;
-    gameactive = false;
     // backgrounds = backg;
     lines = LINES;
     level = LEVEL;
@@ -68,9 +67,11 @@ game::game() {
     bodyfont = graphics::fonts->at(2);
     header = graphics::fonts->at(1);
     msg = new ingamemessagebox("null","null", 0);
+    gameactive = true;
 
 }
 void game::logic(double deltatime) {
+    // graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).renderLyrics();
     if (gameactive && !paused) {
         if (fmod(realtick, getspeed()) == 0) {
             score++;
@@ -230,12 +231,6 @@ void game::render() {
             header->render(320, 240, "GAME PAUSED", true);
         }
         #else
-            if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
-                graphics::rect->render(
-                    graphics::shaders.at(1),
-                    {0,0},
-                    {640,480},0,{0,0,0,0.5*warningalpha},false,-1,glm::vec4(1,1,1,1));                
-            }
             playfield->enable();
             if(boardwidth > 10) {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("bbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
@@ -244,8 +239,9 @@ void game::render() {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("sbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             }
             g.changePos(t.x, t.y, t.rot);
-            t.draw();
             g.draw();
+                        t.draw();
+
             if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
                 drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
             }
@@ -266,13 +262,37 @@ void game::render() {
         }
             playfield->disable(640,480,true);
             graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render();
-            playfield->render(graphics::shaders.at(3),0,0,false);
-                glm::mat4 projection;
-		    projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
-		    glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
-		    view = glm::translate(view, glm::vec3(0.0, 0, -6.0)); 
+            if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
+                graphics::rect->render(
+                    graphics::shaders.at(1),
+                    {0,0},
+                    {640,480},0,{255,0,0,0.5*warningalpha},false,-1,glm::vec4(1,1,1,1));                
+            }
 
-            cubeRenderer->render(graphics::shaders.at(0),graphics::sprites.at("thxforplaying"),projection,view);
+            playfield->render(graphics::shaders.at(3),0,0,false);
+            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("hold"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
+            
+            if(nextblocks > -1 && nextblocks < 7) {
+                drawCubes(gameplay::Pieces[nextblocks][0], 1.0, 10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
+            }
+            if (holdblock > -1) {
+                drawCubes(gameplay::Pieces[holdblock][0], 1.0, -10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
+            }
+
+            bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true);
+            bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true);
+            
+            msg->render();
+            if(paused) {
+                    graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
+                    for (int i = 0; i < optionsize; i++) {
+                        bodyfont->render(320, 300 + (i * 12),choices[i],
+                        true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
+                    }
+
+                header->render(320, 240, "GAME PAUSED", true);
+            }
+
         #endif
         //SDL_RenderPresent(renderer);
     //}
@@ -291,10 +311,15 @@ Transition game::endLogic() {
         memcpy(previousblocks, testblocks, sizeof previousblocks);
         
         if (!t.rebirth(BLOCKX, BLOCKY, nextblocks)) {
+            settings::lastlevel = level;
+            settings::lastlines = lines;
+            settings::lasttime = time;
+            settings::previousscore = score;
+
             gameactive = false;
             return {
                 0.001,
-                1,
+                3,
                 320,
                 240,
                 FADETYPE::BLOCKS,
@@ -306,9 +331,14 @@ Transition game::endLogic() {
         nextblocks = rand() % 7;
     }
     if(!gameactive) {
+        warningflag = false;
+        settings::lastlevel = level;
+        settings::lastlines = lines;
+        settings::lasttime = time;
+        settings::previousscore = score;
         return {
             0.001,
-            1,
+            3,
             320,
             240,
             FADETYPE::BLOCKS,
@@ -318,7 +348,7 @@ Transition game::endLogic() {
     }
     return {
                 0.001,
-                1,
+                3,
                 320,
                 240,
                 FADETYPE::BLOCKS,
@@ -570,6 +600,7 @@ void game::changemusic() {
         }
         currentsong = (bglevel)%(graphics::backgrounds->size());
         msg->activate("YOU ARE CURRENTLY LISTENING TO:", graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).songname + " by: " + graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).artist);
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).backgroundAge = SDL_GetTicks();
 
     }
 
@@ -594,24 +625,65 @@ void game::reset() {
     nextblocks = std::rand() % 7;
     //srand((unsigned)time(0)); 
     gameactive = true;
+    warningflag = false;
+
 
 
 }
 
-void game::drawCubes(int position[], double scale, int x, int y, int size, int width, bool threed, glm::vec3 rotation) {
-    
+void game::drawCubes(int position[], float scale, float x, float y, int size, int width, bool threed, glm::vec3 rotation) {
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+    glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+    view = glm::translate(view, glm::vec3(0.0, 0, -6.0)); 
+                cubeRenderer->position = {x,y,-20};
+
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
             if(!threed) {
-                graphics::sprite->render(graphics::shaders[4],
-                graphics::blocks->at(position[i]),
-                {
-                (x + (i % width) * 16)+(16-(16*scale))/2,
-                (y + (i / width) * 16)+(16-(16*scale))/2
-                },
-                {16*scale,16*scale}, 0,{0,0},{16,16});
+                if(graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).blockpack[0] == NULL) {
+                    graphics::sprite->render(graphics::shaders[4],
+                    graphics::blocks->at(position[i]-1),
+                    {
+                    (x + (i % width) * 16)+(16-(16*scale))/2,
+                    (y + (i / width) * 16)+(16-(16*scale))/2
+                    },
+                    {16*scale,16*scale}, 0,{0,0},{16,16});
+                }
+                else {
+                    graphics::sprite->render(graphics::shaders[4],
+                    graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).blockpack[(position[i]-1)],
+                    {
+                    (x + (i % width) * 16)+(16-(16*scale))/2,
+                    (y + (i / width) * 16)+(16-(16*scale))/2
+                    },
+                    {16*scale,16*scale}, 0,{0,0},{16,16});
+
+                }
             }
             else { //handle 3d rendering of blocks
+                glEnable(GL_DEPTH_TEST);  
+
+                cubeRenderer->postposition = {
+                    -width/2.0f+(i % width),
+                    -(size/width)/2.0f+(i/width),
+                    0
+                    };
+                cubeRenderer->rotation = rotation;
+                if(graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).blockpack[0] == NULL) {
+                    cubeRenderer->render(
+                        graphics::shaders.at(0),
+                        graphics::blocks->at(position[i]-1),
+                        projection,view);
+                }
+                else {
+                    cubeRenderer->render(
+                        graphics::shaders.at(0),
+                        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).blockpack[(position[i]-1)],
+                        projection,view);
+
+                }
+                glDisable(GL_DEPTH_TEST);  
 
             }
         }

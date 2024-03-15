@@ -17,6 +17,7 @@
 #include "scenes/titlescreen.h"
 // #include "scenes/credits.h"
 #include "scenes/game.h"
+#include "scenes/results.h"
 // #include "scenes/options.h"
 #ifndef __LEGACY_RENDER
 #include "opengl/buffermanager.h"
@@ -230,14 +231,12 @@ int main() {
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
         // new white(),
-
         new knuxfanscreen(),
-        // new white()
         new titlescreen(), //1
         new game(), //2
-        new white()
-        // new options(), //3
-        // new credits() //4
+        new results(), //3
+        // new options(), //4
+        // new credits() //5
     };
     int gamemode = 0;
 

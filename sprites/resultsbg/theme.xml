@@ -1,34 +1,57 @@
-<name>Results Background</name>
-<creator>Knuxfan</creator>
-<vers>1.0</vers>
-<fglayer>4</fglayer>
-
-<layers>5</layers>
-
-<layer0>10</layer0>
-<layer0y>0</layer0y>
-
-<layer1>20</layer1>
-<layer1y>0</layer1y>
-
-<layer2>25</layer2>
-<layer2y>0</layer2y>
-
-<layer3>15</layer3>
-<layer3y>0</layer3y>
-
-<layer4>0</layer4>
-<layer4y>0</layer4y>
-
-<layer5>5</layer5>
-<layer5y>0</layer5y>
-
-<music>song.mod</music>
-<musicname>Jump To My Beat</musicname>
-<musicartist>BabyDee / eFFect</musicartist>
-
-<sine>4</sine>
-<sineheight>5</sineheight>
-<sinewidth>5</sinewidth>
-<sinelayerheight>10</sinelayerheight>
-<sinerate>5000</sinerate>
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Results Background</title>
+      <version>1.0</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Chill Da Beach Funk</title>
+         <creator>???</creator>
+         <filename>song.mod</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="legacy">
+         <filename>00.png</filename>
+         <movement>
+            <x>10</x>
+            <y>0</y>
+         </movement>
+      </layer>
+    <layer type="legacy">
+         <filename>01.png</filename>
+         <movement>
+            <x>20</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>02.png</filename>
+         <movement>
+            <x>25</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>03.png</filename>
+         <movement>
+            <x>15</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>04.png</filename>
+         <movement>
+            <x>0</x>
+            <y>0</y>
+         </movement>
+      </layer>
+      <!-- <layer type="legacy">
+         <filename>05.png</filename>
+         <movement>
+            <x>5</x>
+            <y>0</y>
+         </movement>
+      </layer> -->
+   </layers>
+</background>

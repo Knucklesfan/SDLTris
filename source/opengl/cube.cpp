@@ -111,12 +111,17 @@ void cube::render(shader* shad, texture* t, glm::mat4 projection, glm::mat4 view
     shad->activate();
     shad->setInt("texture1",0);
     glm::mat4 transform = glm::mat4(0.5f); //the actual transform of the model itself
+
     transform = glm::translate(transform,position);
+    
     transform = glm::rotate(transform, glm::radians(rotation[0]), glm::vec3(0.5f, 0.0f, 0.0f));
     transform = glm::rotate(transform, glm::radians(rotation[1]), glm::vec3(0.0f, 0.5f, 0.0f));
     transform = glm::rotate(transform, glm::radians(rotation[2]), glm::vec3(0.0f, 0.0f, 0.5f));
-    transform = glm::scale(transform, scale);
+
+    transform = glm::scale(transform, {1.0f,1.0f,1.0f});
+
     transform = glm::translate(transform,postposition);
+    transform = glm::scale(transform, scale);
 
     shad->setVector("model", glm::value_ptr(transform));
     shad->setVector("projection", glm::value_ptr(projection));

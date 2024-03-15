@@ -209,6 +209,9 @@ class settings {
     public:
     static int previousscore;
     static int maxscore;
+    static int lastlines;
+    static int lastlevel;
+    static int lasttime;
     //...updates the high score
     //@param prev the Previous score
     static void updateHighScore(int prev); 
@@ -244,6 +247,11 @@ namespace utils {
     double rad(double i);
 
 };
+class gameplay { //i *sighs the worlds deepest sigh of human history* love background.h
+    public:
+        static int Pieces[7][4][16];
+};
+
 //File full of a bunch of really simple and easy things to free up memory
 namespace memory {
     void freeSprites();

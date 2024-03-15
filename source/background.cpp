@@ -487,7 +487,7 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
     actions.push_back({0,LINEAR,TRANSFORMANIMATION,defaultPos,effect}); //TODO: Let the user chose the looping effect animation type
     for (rapidxml::xml_node<char>* chlds = animationPath->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
         int frame = atoi(chlds->first_attribute("frame")->value());
-        std::cout << "FRAME NUMBER!!! " << frame << "\n";
+        // std::cout << "FRAME NUMBER!!! " << frame << "\n";
         interpolation inter = animConverters::interpolationmap.at(chlds->first_attribute("interpolation")->value());
         std::vector<glm::vec3> dataToSet;
         std::vector<modifiertype> effectedParameters;
@@ -497,9 +497,9 @@ flatlayer::flatlayer(std::string vert,std::string frag, std::vector<texture*> te
             for (rapidxml::xml_node<char>* child = chlds->first_node()->first_node(); child != NULL; child = child->next_sibling()) {
                 effectedParameters.push_back(animConverters::modifiermap.at(child->name()));                        
                 
-                float x = atoi(child->first_node("x")->value());
-                float y = atoi(child->first_node("y")->value());
-                float z = atoi(child->first_node("z")->value());
+                float x = atof(child->first_node("x")->value());
+                float y = atof(child->first_node("y")->value());
+                float z = atof(child->first_node("z")->value());
 
                 dataToSet.push_back({x,y,z});
 
@@ -522,7 +522,11 @@ void flatlayer::render() {
     matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));  
 	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));  
 	matTrans = glm::rotate(matTrans, glm::radians(trans.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));  
+    
     matTrans = glm::scale(matTrans, trans.scale);
+
+    matTrans = glm::translate(matTrans,trans.shader);
+
 
 
 
@@ -534,11 +538,7 @@ void flatlayer::render() {
         i++; //forgot to increment this... wtf is wrong with me
     }
     shad->setFloat("time",(float)SDL_GetTicks()/(float)1000);
-    std::cout << (float)SDL_GetTicks()/(float)1000 << "\n";
-
-    shad->setFloat("parameter1",trans.shader.x);
-    shad->setFloat("parameter2",trans.shader.y);
-    shad->setFloat("parameter3",trans.shader.z);
+    // std::cout << (float)SDL_GetTicks()/(float)1000 << "\n";
 
     shad->setVector("model", glm::value_ptr(matTrans));
     shad->setVector("projection", glm::value_ptr(projection));
@@ -560,10 +560,16 @@ bg::bg(std::string path, bool folder) {
     postprocess = false;
     buffer = new buffermanager(640,480);
 
-    std::string filePath = pth "backgrounds/" + path + "/theme.xml";
+    std::string filePath = path + "/theme.xml";
     std::cout << filePath <<"\n";
+    std::string correctPath = path;
     if(folder) {
         filePath = path + "/theme.xml";
+    }
+    else {
+        filePath = pth "backgrounds/" + path + "/theme.xml";
+
+        correctPath = pth "backgrounds/" + path;
     }
 
     rapidxml::file<> xmlFile(filePath.c_str());
@@ -596,7 +602,7 @@ bg::bg(std::string path, bool folder) {
                             break;
                         }
                         case headerdata::FILENAME: {
-                            std::string musicpath = pth "backgrounds/" + path + "/" + muskid->value();
+                            std::string musicpath = correctPath + "/" + muskid->value();
 #ifdef CLIENT
                             music = Mix_LoadMUS(musicpath.c_str());
                             if (!music) {
@@ -623,7 +629,7 @@ bg::bg(std::string path, bool folder) {
     }
     rapidxml::xml_node<char>* lyrs = doc.first_node("background")->first_node("layers");
     if(lyrs == nullptr) {
-        std::cout << "Failed to load layers for " << path << ".\n";
+        std::cout << "Failed to load layers for " << correctPath << ".\n";
         return;
     }
 
@@ -636,22 +642,22 @@ bg::bg(std::string path, bool folder) {
                 case layertype::BACKGROUND: {
                     rapidxml::xml_node<char>* tmppath = child->first_node("filename");
                     if(tmppath == nullptr) {
-                        std::cout << "Failed to load texture for " << path << ".\n";
+                        std::cout << "Failed to load texture for " << correctPath << ".\n";
                         return;
                     }   
-                    std::string layerpath = pth "backgrounds/" + path + "/" + tmppath->value();
+                    std::string layerpath = correctPath + "/" + tmppath->value();
                     l =new staticlayer(layerpath);
                 }break;
                 case layertype::LEGACY: {
                     rapidxml::xml_node<char>* tmppath = child->first_node("filename");
                     if(tmppath == nullptr) {
-                        std::cout << "Failed to load texture for " << path << ".\n";
+                        std::cout << "Failed to load texture for " << correctPath << ".\n";
                         return;
                     }   
-                    std::string layerpath = pth "backgrounds/" + path + "/" + tmppath->value();
+                    std::string layerpath = correctPath + "/" + tmppath->value();
                     rapidxml::xml_node<char>* movement = child->first_node("movement");
                     if(tmppath == nullptr) {
-                        std::cout << "Failed to load movement for " << path << ".\n";
+                        std::cout << "Failed to load movement for " << correctPath << ".\n";
                         return;
                     }   
                     rapidxml::xml_node<char>* x = movement->first_node("x");
@@ -673,70 +679,70 @@ bg::bg(std::string path, bool folder) {
                 case layertype::SHADER: {
                     rapidxml::xml_node<char>* shaderpath = child->first_node("shader");
                     if(shaderpath == nullptr) {
-                        std::cout << "Failed to load shader for " << path << ".\n";
+                        std::cout << "Failed to load shader for " << correctPath << ".\n";
                         return;
                     }   
                     std::vector<texture*> textures;
                     rapidxml::xml_node<char>* texturesPath = child->first_node("textures");
                     if(texturesPath == nullptr) {
-                        std::cout << "Failed to load texture for " << path << ".\n";
+                        std::cout << "Failed to load texture for " << correctPath << ".\n";
                         return;
                     }  
                     for (rapidxml::xml_node<char>* chlds = child->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
-                        texture* tmp = new texture(pth "backgrounds/" + path + "/" +chlds->first_node("path")->value());
+                        texture* tmp = new texture(path + "/" +chlds->first_node("path")->value());
                         if(tmp != nullptr) {
                             textures.push_back(tmp);
                         }
                     }
-                    std::string vertpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("vertex")->value();
-                    std::string fragpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("fragment")->value();
+                    std::string vertpath = correctPath + "/" +shaderpath->first_node("vertex")->value();
+                    std::string fragpath = correctPath + "/" +shaderpath->first_node("fragment")->value();
                     l = new shaderlayer(vertpath,fragpath,textures);
                     
                 }break;
                 case layertype::BG2D: {
                     rapidxml::xml_node<char>* shaderpath = child->first_node("shader");
                     if(shaderpath == nullptr) {
-                        std::cout << "Failed to load shader for " << path << ".\n";
+                        std::cout << "Failed to load shader for " << correctPath << ".\n";
                         return;
                     }   
                     std::vector<texture*> textures;
                     rapidxml::xml_node<char>* texturesPath = child->first_node("textures");
                     if(texturesPath == nullptr) {
-                        std::cout << "Failed to load texture for " << path << ".\n";
+                        std::cout << "Failed to load texture for " << correctPath << ".\n";
                         return;
                     }  
                     rapidxml::xml_node<char>* transformPath = child->first_node("transform");
                     if(transformPath == nullptr) {
-                        std::cout << "Failed to load transform for " << path << ".\n";
+                        std::cout << "Failed to load transform for " << correctPath << ".\n";
                         return;
                     }  
                     rapidxml::xml_node<char>* animationPath = child->first_node("animation");
                     if(animationPath == nullptr) {
-                        std::cout << "Failed to load animation for " << path << ".\n";
+                        std::cout << "Failed to load animation for " << correctPath << ".\n";
                         return;
                     }  
 
                     for (rapidxml::xml_node<char>* chlds = child->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
-                        texture* tmp = new texture(pth "backgrounds/" + path + "/" +chlds->first_node("path")->value());
+                        texture* tmp = new texture(path + "/" +chlds->first_node("path")->value());
                         if(tmp != nullptr) {
                             textures.push_back(tmp);
                         }
                     }
-                    std::string vertpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("vertex")->value();
-                    std::string fragpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("fragment")->value();
+                    std::string vertpath = correctPath + "/" +shaderpath->first_node("vertex")->value();
+                    std::string fragpath = correctPath + "/" +shaderpath->first_node("fragment")->value();
                     transform t;
-                    t.position.x = atoi(transformPath->first_node("position")->first_node("x")->value());
-                    t.position.y = atoi(transformPath->first_node("position")->first_node("y")->value());
-                    t.position.z = atoi(transformPath->first_node("position")->first_node("z")->value());
-                    t.rotation.x = atoi(transformPath->first_node("rotation")->first_node("x")->value());
-                    t.rotation.y = atoi(transformPath->first_node("rotation")->first_node("y")->value());
-                    t.rotation.z = atoi(transformPath->first_node("rotation")->first_node("z")->value());
-                    t.scale.x = atoi(transformPath->first_node("scale")->first_node("x")->value());
-                    t.scale.y = atoi(transformPath->first_node("scale")->first_node("y")->value());
-                    t.scale.z = atoi(transformPath->first_node("scale")->first_node("z")->value());
-                    t.shader.x = atoi(transformPath->first_node("shader")->first_node("x")->value());
-                    t.shader.y = atoi(transformPath->first_node("shader")->first_node("y")->value());
-                    t.shader.z = atoi(transformPath->first_node("shader")->first_node("z")->value());
+                    t.position.x = atof(transformPath->first_node("position")->first_node("x")->value());
+                    t.position.y = atof(transformPath->first_node("position")->first_node("y")->value());
+                    t.position.z = atof(transformPath->first_node("position")->first_node("z")->value());
+                    t.rotation.x = atof(transformPath->first_node("rotation")->first_node("x")->value());
+                    t.rotation.y = atof(transformPath->first_node("rotation")->first_node("y")->value());
+                    t.rotation.z = atof(transformPath->first_node("rotation")->first_node("z")->value());
+                    t.scale.x = atof(transformPath->first_node("scale")->first_node("x")->value());
+                    t.scale.y = atof(transformPath->first_node("scale")->first_node("y")->value());
+                    t.scale.z = atof(transformPath->first_node("scale")->first_node("z")->value());
+                    t.shader.x = atof(transformPath->first_node("selfpos")->first_node("x")->value());
+                    t.shader.y = atof(transformPath->first_node("selfpos")->first_node("y")->value());
+                    t.shader.z = atof(transformPath->first_node("selfpos")->first_node("z")->value());
 
                     l = new flatlayer(vertpath,fragpath,textures,t,animationPath);
                     
@@ -760,26 +766,53 @@ bg::bg(std::string path, bool folder) {
     if(framebuffer != nullptr) {
         rapidxml::xml_node<char>* shaderpath = framebuffer->first_node("shader");
         if(shaderpath == nullptr) {
-            std::cout << "Failed to load shader for " << path << ".\n";
+            std::cout << "Failed to load shader for " << correctPath << ".\n";
             return;
         }   
         std::vector<texture*> shaderlayertextures;
         rapidxml::xml_node<char>* texturesPath = framebuffer->first_node("textures");
         if(texturesPath == nullptr) {
-            std::cout << "Failed to load texture for " << path << ".\n";
+            std::cout << "Failed to load texture for " << correctPath << ".\n";
             return;
         }  
         shaderlayertextures.push_back(&buffer->renderTexture);
         for (rapidxml::xml_node<char>* chlds = framebuffer->first_node("textures")->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
-            texture* tmp = new texture(pth "backgrounds/" + path + "/" +chlds->first_node("path")->value());
+            texture* tmp = new texture(path + "/" +chlds->first_node("path")->value());
             if(tmp != nullptr) {
                 shaderlayertextures.push_back(tmp);
             }
         }
-        std::string vertpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("vertex")->value();
-        std::string fragpath = pth "backgrounds/" + path + "/" +shaderpath->first_node("fragment")->value();
+        std::string vertpath = correctPath + "/" +shaderpath->first_node("vertex")->value();
+        std::string fragpath = correctPath + "/" +shaderpath->first_node("fragment")->value();
         postproc = new shaderlayer(vertpath,fragpath,shaderlayertextures);
         postprocess = true;
+
+    }
+    rapidxml::xml_node<char>* packOBlock = doc.first_node("background")->first_node("blockpack");
+    if(packOBlock != nullptr) {
+        rapidxml::xml_node<char>* currentblock = packOBlock->first_node();
+
+        for (int i = 0; i< 7; i++) {
+            texture* tmp = new texture(path + "/" +currentblock->value());
+            if(tmp != nullptr) {
+                blockpack[i] = tmp;
+            }
+            currentblock = currentblock->next_sibling();
+        }
+
+    }
+    rapidxml::xml_node<char>* lyrix = doc.first_node("background")->first_node("lyrics");
+    if(lyrix != nullptr) {
+        for (rapidxml::xml_node<char>* chlds = lyrix->first_node(); chlds != NULL; chlds = chlds->next_sibling()) {
+            std::string text = (chlds->first_node("text")->value());
+            float x = atof(chlds->first_node("x")->value());
+            float y = atof(chlds->first_node("y")->value());
+            float scale = atof(chlds->first_node("scale")->value());
+            int start = atoi(chlds->first_node("duration")->first_node("start")->value());
+            int end = atoi(chlds->first_node("duration")->first_node("end")->value());
+            lyrics[start] = {x,y,scale,text,true,end};
+
+        }
 
     }
 
@@ -809,5 +842,13 @@ void bg::logic(double deltatime)
     }
     
 }
-
+void bg::renderLyrics() {
+    int currentTick = SDL_GetTicks() - backgroundAge;
+    std::map<int,lyric>::iterator it = lyrics.lower_bound(currentTick);
+    if(it != lyrics.end()) {
+        lyric currentLyric = (*it).second;
+        std::cout << (currentLyric.words) << "\n";
+    }
+    
+}
 #endif

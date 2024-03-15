@@ -43,7 +43,6 @@ float rotate,glm::vec4 color,bool outline, float thickness, glm::vec4 borderColo
     shad->setFloat("border_width",(thickness));
     float aspect = (secondcoord.y-firstcoord.y)/(secondcoord.x-firstcoord.x);
     shad->setFloat("aspect",aspect);
-    printf("aspect: %f, thickness: %f\n",aspect,thickness);
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);

@@ -89,6 +89,14 @@ class layer {
         virtual void logic(double deltatime){};
         int depth;
 };
+struct lyric {
+    int x;
+    int y;
+    float scale;
+    std::string words;
+    bool center;
+    int ending;
+};
 class staticlayer : public layer { //a flat, static image. Rendered very quickly because it doesn't need much.
     public:
         staticlayer(std::string path);
@@ -205,6 +213,7 @@ class bg
         std::string path;
         std::string creator;
         std::string vers;
+        texture* blockpack[7] = {NULL,NULL,NULL,NULL,NULL,NULL,NULL};
         layer* postproc; //kinda like postcroc but cooler
         bool postprocess;
         buffermanager* buffer;
@@ -213,9 +222,11 @@ class bg
 #endif
         std::string songname;
         std::string artist;
+        int backgroundAge; //this is when the background is initialized by the system
         void render();
         std::vector<layer*> layers;
-
+        std::map<int,lyric> lyrics;
+        void renderLyrics();
         bg(std::string path, bool folder);
         bg();  
 };

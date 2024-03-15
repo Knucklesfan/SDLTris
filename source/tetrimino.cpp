@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <cstring>
-
+#include "utils/defs.h"
 tetrimino::tetrimino() {
     x = 0;
     y = 0;
@@ -115,7 +115,7 @@ bool tetrimino::collides(int colx, int coly, int colrot) {
     }
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
-        if ((Pieces[piece][colrot][i] > 0)) {
+        if ((gameplay::Pieces[piece][colrot][i] > 0)) {
             if ((ycalc + (coly * width) >= height * width)) {
                 return false;
             }
@@ -157,7 +157,7 @@ void tetrimino::removeolddraw() {
     for (int i = 0; i < 16; i++) {
         //std::cout << "Pieces[" << piece << "][" <<lastrot << "][" << i << "] > 0\n";
         int ycalc = (i / 4) * width;
-        if (Pieces[piece][lastrot][i] > 0) {
+        if (gameplay::Pieces[piece][lastrot][i] > 0) {
             array[lastx + (lasty * width) + i % 4 + ycalc] = 0;
         }
     }
@@ -167,8 +167,8 @@ void tetrimino::removeolddraw() {
 void tetrimino::redraw() {
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
-        if (Pieces[piece][rot][i] > 0) {
-            array[x + (y * width) + i % 4 + ycalc] = Pieces[piece][rot][i];
+        if (gameplay::Pieces[piece][rot][i] > 0) {
+            array[x + (y * width) + i % 4 + ycalc] = gameplay::Pieces[piece][rot][i];
         }
 
     }

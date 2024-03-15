@@ -1,6 +1,6 @@
 #include "ghostblock.h"
 #include <stdio.h>
-
+#include "utils/defs.h"
 ghostblock::ghostblock() {
     x = 0;
     y = 0;
@@ -86,7 +86,7 @@ bool ghostblock::collides(int colx, int coly, int colrot) {
     }
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
-        if ((Pieces[piece][colrot][i] > 0)) {
+        if ((gameplay::Pieces[piece][colrot][i] > 0)) {
             if ((ycalc + (coly * width) >= height * width)) {
                 return false;
             }
@@ -114,7 +114,7 @@ void ghostblock::draw() {
 void ghostblock::removeolddraw() {
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
-        if (Pieces[piece][lastrot][i] > 0) {
+        if (gameplay::Pieces[piece][lastrot][i] > 0) {
             outsidearray[lastx + (lasty * width) + i % 4 + ycalc] = 0;
         }
     }
@@ -124,8 +124,8 @@ void ghostblock::removeolddraw() {
 void ghostblock::redraw() {
     for (int i = 0; i < 16; i++) {
         int ycalc = (i / 4) * width;
-        if (Pieces[piece][rot][i] > 0) {
-            outsidearray[x + (y * width) + i % 4 + ycalc] = Pieces[piece][rot][i];
+        if (gameplay::Pieces[piece][rot][i] > 0) {
+            outsidearray[x + (y * width) + i % 4 + ycalc] = gameplay::Pieces[piece][rot][i];
         }
 
     }

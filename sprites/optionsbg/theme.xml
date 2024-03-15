@@ -1,14 +1,22 @@
-<name>Options BG</name>
-<creator>Knuxfan</creator>
-<vers>1.0</vers>
-
-<layers>1</layers>
-
-<layer0>-10</layer0>
-<layer0y>-10</layer0y>
-
-
-
-<music>song.it</music>
-<musicname>Jump To My Beat</musicname>
-<musicartist>BabyDee / eFFect</musicartist>
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Options</title>
+      <version>1.0</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Chill Da Beach Funk</title>
+         <creator>???</creator>
+         <filename>song.it</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="legacy">
+         <filename>00.png</filename>
+         <movement>
+            <x>0</x>
+            <y>5</y>
+         </movement>
+      </layer>
+   </layers>
+</background>

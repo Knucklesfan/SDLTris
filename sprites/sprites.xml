@@ -43,7 +43,19 @@
 	    <name>rblock</name>
 	    <path>./sprites/rblock.png</path>
 	</sprite>
-	
+	<sprite>
+	    <name>tblock</name>
+	    <path>./sprites/tblock.png</path>
+	</sprite>
+	<sprite>
+	    <name>yblock</name>
+	    <path>./sprites/yblock.png</path>
+	</sprite>
+	<sprite>
+	    <name>gblock</name>
+	    <path>./sprites/gblock.png</path>
+	</sprite>
+
 	<sprite>
 	    <name>ring</name>
 	    <path>./sprites/ring.png</path>

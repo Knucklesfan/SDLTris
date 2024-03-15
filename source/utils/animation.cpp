@@ -15,7 +15,7 @@ std::map<std::string, modifiertype> animConverters::modifiermap = {
     {"position", modifiertype::POSITION},
     {"rotation",modifiertype::ROTATION},
     {"scale",modifiertype::SCALE},
-    {"shader",modifiertype::SHADEREFFECT}
+    {"selfpos",modifiertype::SHADEREFFECT}
 };
 
 animation::animation(std::vector<action> actions, transform t) {
@@ -60,9 +60,6 @@ void animation::tick(double deltatime, transform* t) {
     }
 
     currentTick += deltatime/100; //convert to deciseconds
-    std::cout << currentAction+1 << " <--- retry\n";
-    std::cout << "current tick: " << currentTick << " current action: " << currentAction << " current framenumber: " << CURRENT.framenumber << " next framenumber: " << NEXT.framenumber << "\n";
-    std::cout << "size: " << CURRENT.effectedParameters.size() << " current action: " << currentAction << " actions: " << actions.size() << " \n";
     switch(NEXT.interpolate) {
         case CUBIC:{
             for(int i= 0; i < NEXT.effectedParameters.size();i++) {

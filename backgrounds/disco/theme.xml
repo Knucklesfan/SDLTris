@@ -26,4 +26,392 @@
          </movement>
       </layer>
    </layers>
+   <lyrics> <!--This feature came to me in a dream-->
+      <lyric>
+         <text>When we first got together</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>46680</start>
+            <end>50751</end>
+         </duration>
+      </lyric>
+      <lyric>
+      <text>Everything felt so right</text>
+      <x>320</x>
+      <y>240</y>
+      <scale>1</scale>
+      <center>true</center>
+      <duration>
+         <start>50784</start>
+         <end>53720</end>
+      </duration>
+      </lyric>
+
+      <lyric>
+         <text>You said you wanted to be with me</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>53754</start>
+            <end>56790</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Said you wanted to hold me tight</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>57991</start>
+            <end>61602</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>but after all is said and done</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>62002</start>
+            <end>65205</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>where do i go from here?</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>66206</start>
+            <end>69209</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>I thought my life had just begun</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>69543</start>
+            <end>72279</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>But now that you have gone</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>72312</start>
+            <end>74147</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>How could I be so wrong?</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>74181</start>
+            <end>76483</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>when im dreaming of you</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>76783</start>
+            <end>78619</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>is there nothing I can do baby</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>78652</start>
+            <end>81622</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>to make</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>82422</start>
+            <end>82856</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>YOU</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>82890</start>
+            <end>83323</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>LOVE</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>2</scale>
+         <center>true</center>
+         <duration>
+            <start>83357</start>
+            <end>84258</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>ME?</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>4</scale>
+         <center>true</center>
+         <duration>
+            <start>84291</start>
+            <end>86126</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>i dont wanna be alone</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>86159</start>
+            <end>88629</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>i just want you for my own</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>88662</start>
+            <end>88962</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>is it too good to be true?</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>88996</start>
+            <end>89396</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>why don't you come back to me?</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>89429</start>
+            <end>90297</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>and together we can be?</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>90330</start>
+            <end>91765</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Am I only dreaming?</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>91798</start>
+            <end>93667</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>93700</start>
+            <end>96470</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>96503</start>
+            <end>99306</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>99339</start>
+            <end>101174</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>101208</start>
+            <end>103377</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>103410</start>
+            <end>103977</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>104011</start>
+            <end>107447</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>107481</start>
+            <end>121768</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>121802</start>
+            <end>121869</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>121902</start>
+            <end>125606</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>125639</start>
+            <end>126006</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>126039</start>
+            <end>129142</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>129176</start>
+            <end>133780</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>133814</start>
+            <end>137084</end>
+         </duration>
+      </lyric>
+      <lyric>
+         <text>Insert text here...</text>
+         <x>320</x>
+         <y>240</y>
+         <scale>1</scale>
+         <center>true</center>
+         <duration>
+            <start>137117</start>
+            <end>220374</end>
+         </duration>
+</lyric>
+   </lyrics>
 </background>

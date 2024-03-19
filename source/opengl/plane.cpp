@@ -28,12 +28,13 @@ plane::plane(glm::vec3 pos, glm::vec3 scale, glm::vec3 rotation) {
 void plane::render(shader* shad, texture* t, glm::mat4 projection, glm::mat4 view) {
 
     transform = glm::mat4(1.0f); //the actual transform of the model itself
-
+	transform = glm::translate(transform,position);
+    
     transform = glm::rotate(transform, glm::radians(rotation[0]), glm::vec3(1.0f, 0.0f, 0.0f));  
 	transform = glm::rotate(transform, glm::radians(rotation[1]), glm::vec3(0.0f, 1.0f, 0.0f));  
 	transform = glm::rotate(transform, glm::radians(rotation[2]), glm::vec3(0.0f, 0.0f, 1.0f));  
+
 	transform = glm::scale(transform, scale);
-	transform = glm::translate(transform,position);
 
     t->activate(0);
 	shad->activate();

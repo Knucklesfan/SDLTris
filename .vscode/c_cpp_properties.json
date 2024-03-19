@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include",
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/include",
+                "/usr/include/freetype2"
             ],
             "defines": [
                 "CLIENT"

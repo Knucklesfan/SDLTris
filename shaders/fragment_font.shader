@@ -4,17 +4,10 @@ out vec4 color;
 
 uniform sampler2D image;
 uniform vec3 spriteColor;
-uniform vec4 sineinfo;
-uniform vec2 texinfo;
 
 void main()
 {    
-    int width = 1;
-    int height = 1; //make this a vec2
-    int scanlinesize = 64;
 
-    float scanline = floor((TexCoords.y*(texinfo.y))/sineinfo.z)*sineinfo.z;
-    float sinex = (sin((sineinfo.w+scanline)*sineinfo.y/2)*sineinfo.x/texinfo.x);
     vec4 tempcolor = texture(image, vec2(TexCoords.x+0, -TexCoords.y));
     color = vec4(tempcolor.x*spriteColor.x,tempcolor.y*spriteColor.y,tempcolor.z*spriteColor.z,tempcolor.w);
 }  

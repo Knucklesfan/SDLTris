@@ -113,7 +113,7 @@ void cube::render(shader* shad, texture* t, glm::mat4 projection, glm::mat4 view
     glm::mat4 transform = glm::mat4(0.5f); //the actual transform of the model itself
 
     transform = glm::translate(transform,position);
-    
+
     transform = glm::rotate(transform, glm::radians(rotation[0]), glm::vec3(0.5f, 0.0f, 0.0f));
     transform = glm::rotate(transform, glm::radians(rotation[1]), glm::vec3(0.0f, 0.5f, 0.0f));
     transform = glm::rotate(transform, glm::radians(rotation[2]), glm::vec3(0.0f, 0.0f, 0.5f));

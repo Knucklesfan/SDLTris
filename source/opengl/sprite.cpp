@@ -19,9 +19,12 @@ spriteRenderer::spriteRenderer() {
     glBindVertexArray(0);
 
 }
-
 void spriteRenderer::render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
 float rotate, glm::vec2 texcoord, glm::vec2 texsize) {
+    render(shad,t,position,size,{0,0,rotate},texcoord,texsize);
+}
+void spriteRenderer::render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
+glm::vec3 rotation, glm::vec2 texcoord, glm::vec2 texsize) {
 	/*
     glm::mat4 model = glm::mat4(1.0f);
 
@@ -38,9 +41,10 @@ float rotate, glm::vec2 texcoord, glm::vec2 texsize) {
 */
     // prepare transformations
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(COORDINATE_WIDTH), 
-    static_cast<float>(COORDINATE_HEIGHT), 0.0f, -1.0f, 1.0f);
+    static_cast<float>(COORDINATE_HEIGHT), 0.0f, -100.0f, 100.0f);
 	glm::vec2 texOffset = glm::vec2(texcoord[0]/t->w,texcoord[1]/t->h);
 	glm::vec2 texScale = glm::vec2(texsize[0]/t->w,texsize[1]/t->h);
+	t->activate(0);
 
     shad->activate();
 	shad->setVector("projection",glm::value_ptr(projection));
@@ -48,7 +52,9 @@ float rotate, glm::vec2 texcoord, glm::vec2 texsize) {
     model = glm::translate(model, glm::vec3(position, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
 
     model = glm::translate(model, glm::vec3(0.5f * size.x, 0.5f * size.y, 0.0f)); // move origin of rotation to center of quad
-    model = glm::rotate(model, glm::radians(rotate), glm::vec3(0.0f, 0.0f, 1.0f)); // then rotate
+    model = glm::rotate(model, glm::radians(rotation[0]), glm::vec3(0.5f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation[1]), glm::vec3(0.0f, 0.5f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation[2]), glm::vec3(0.0f, 0.0f, 0.5f));
     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
 
     model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
@@ -56,7 +62,7 @@ float rotate, glm::vec2 texcoord, glm::vec2 texsize) {
     shad->setVector("model", glm::value_ptr(model));
 	shad->setVec2("texOffset",glm::value_ptr(texOffset));
 	shad->setVec2("scale",glm::value_ptr(texScale));
-	t->activate(0);
+    shad->setInt("image",0);
     glBindVertexArray(this->quadVAO);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);

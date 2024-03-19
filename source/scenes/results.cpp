@@ -19,7 +19,7 @@ results::results() {
     background = bg("./sprites/resultsbg", true);
 }
 
-void results::keyPressed(SDL_Keycode key) {
+void results::input(SDL_Keycode key) {
     switch(key) {
         case SDLK_ESCAPE:
         case SDLK_z: {
@@ -63,13 +63,14 @@ void results::render() {
     // SDL_Texture* temp = SDL_GetRenderTarget(renderer);
     // SDL_SetRenderTarget(renderer, rendertext);
     // SDL_RenderClear(renderer);
-
-    drawCubes(tpiece, abs(sin(leftangle / 25)), -4.45, 0, 6, 3, true,{0,(SDL_GetTicks()/-200.0f),0});
+    for(int i = 0; i < 14; i++) {
+        drawCubes(gameplay::Pieces[i%7][0], 0.5+abs(sin(leftangle / 25))/2, -20.0f+fmod(SDL_GetTicks()/1000.0f,28.0f)+(-20+i*4), 0, 16, 4, true,{0,(SDL_GetTicks()/-25.0f),0});
+    }
     // SDL_SetRenderTarget(renderer, temp);
     // drawTexture(rendertext, 50, 200, leftangle / 2.5, 1.0, false);
     // SDL_SetRenderTarget(renderer, rendertext);
     // SDL_RenderClear(renderer);
-    drawCubes(lpiece, abs(cos(leftangle / 25)), 4.45, 0, 6, 3, true,{0,(SDL_GetTicks()/200.0f),0});
+    // drawCubes(gameplay::Pieces[2][0], 0.5+abs(cos(leftangle / 25))/2, 4.45, 0, 16, 4, true,{0,(SDL_GetTicks()/25.0f),0});
     // SDL_SetRenderTarget(renderer, temp);
     // drawTexture(rendertext, 462, 200, leftangle / -2.5, 1.0, false);
 
@@ -105,7 +106,7 @@ void results::logic(double deltatime)
     leftangle += deltatime/25;
 }
 
-Transition results::endlogic()
+Transition results::endLogic()
 {
     if (loadgame) {
         return {
@@ -119,7 +120,7 @@ Transition results::endlogic()
     }
     return {
             0.001,
-            3,
+            1,
             320,
             240,
             FADETYPE::BLOCKS,

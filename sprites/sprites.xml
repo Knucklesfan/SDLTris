@@ -91,4 +91,21 @@
 		<name>homophobicdog</name>
 		<path>./sprites/homophobicdog.jpg</path>
 	</sprite>
+	<sprite>
+		<name>knuxfans</name>
+		<path>./sprites/knuxfans.png</path>
+	</sprite>
+	<sprite>
+		<name>tetriminos</name>
+		<path>./sprites/tetriminos.png</path>
+	</sprite>
+	<sprite>
+	<name>knfnbanner</name>
+		<path>./sprites/knfnbanner.png</path>
+	</sprite>
+	<sprite>
+		<name>checkerboard</name>
+		<path>./sprites/checkerboard.png</path>
+	</sprite>
+
 </sprites>

@@ -51,7 +51,7 @@ void knuxfanscreen::render() {
     #endif
 
 }
-void knuxfanscreen::keyPressed(SDL_Keycode key) {
+void knuxfanscreen::input(SDL_Keycode key) {
     active = false;
 }
 void knuxfanscreen::logic(double deltatime) {

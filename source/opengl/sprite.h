@@ -15,6 +15,9 @@ class spriteRenderer {
         spriteRenderer();
         void render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
 float rotate, glm::vec2 texcoord, glm::vec2 texsize);
+        void render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
+glm::vec3 rotate, glm::vec2 texcoord, glm::vec2 texsize);
+
     private:
         unsigned int quadVAO;
         float vertices[24] = { 

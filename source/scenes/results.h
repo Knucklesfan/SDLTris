@@ -24,10 +24,10 @@ class results : public Gamemode {
 	std::vector<SDL_Texture*> texture;
 	double leftangle = 0.0;
 	results();
-	void keyPressed(SDL_Keycode key);
+	void input(SDL_Keycode key);
 	void render();
 	void logic(double deltatime);
-	Transition endlogic();
+	Transition endLogic();
 	void reset();
 	const int tpiece[6] = {
 		 0,2,0,

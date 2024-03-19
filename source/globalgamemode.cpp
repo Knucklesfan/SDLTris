@@ -147,7 +147,15 @@ void GlobalGamemode::render() {
                         480};
                     SDL_RenderFillRect(graphics::render, &splashbox);
                     #else
-                    graphics::rect->render(graphics::shaders.at(1),{0,-480+(1-math::easeOutBounce(1-alpha))*480},{640,480},0,{0,0,0,1},false,-1,{0,0,0,0});
+                    graphics::rect->render(graphics::shaders.at(1),{
+                        0,
+                        0
+                    },{
+                        640,
+                        (1-math::easeOutBounce(1-alpha))*480
+                        },0,{0,0,0,1},false,-1,{0,0,0,0}
+                    );
+                    // graphics::rect->render(graphics::shaders.at(1),{0,-480+(1-math::easeOutBounce(1-alpha))*480},{640,480},0,{0,0,0,1},false,-1,{0,0,0,0});
                     #endif
 
                 }

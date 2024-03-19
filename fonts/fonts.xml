@@ -11,4 +11,8 @@
 		<type>pixfont</type>
 		<path>small8x8font</path>
 	</font>
+	<font>
+		<type>ttffont</type>
+		<path>freesans</path>
+	</font>
 </fonts>

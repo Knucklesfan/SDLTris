@@ -357,7 +357,7 @@ int graphics::generatefonts() {
         std::string type = child->first_node("type")->value();
         Font* f;
         if (type == "ttffont") {
-            f = new ttffont(child->first_node("path")->value(), atoi(child->first_node("size")->value()));
+            f = new ttffont(child->first_node("path")->value());
         }
         else {
             f = new pixfont(child->first_node("path")->value());

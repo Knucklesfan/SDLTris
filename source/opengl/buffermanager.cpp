@@ -6,7 +6,8 @@ buffermanager::buffermanager(int w, int h,bool alpha):width(w),height(h) {
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer); //handles running the game at the set resolution
 
 	glGenTextures(1, &renderTexture.id); //generates a texture to render to
-
+	renderTexture.w = w;
+	renderTexture.h = h;
 	// "Bind" the newly created texture : all future texture functions will modify this texture
 	glBindTexture(GL_TEXTURE_2D, renderTexture.id);
 

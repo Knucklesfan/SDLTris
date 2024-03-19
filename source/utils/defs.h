@@ -228,8 +228,6 @@ namespace utils {
     #else
     #endif
     std::string loadFile(std::string filename);
-    static unsigned int renderFB;
-    static unsigned int renderTexture;
     bool checkNode(rapidxml::xml_node<char>* node);
 
     int sign(int);

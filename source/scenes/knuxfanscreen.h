@@ -16,7 +16,7 @@ public:
 	int backnum;
 	knuxfanscreen();
 	void render();
-	void keyPressed(SDL_Keycode key);
+	void input(SDL_Keycode key);
 	void logic(double deltatime);
 	Transition endLogic();
 	void reset();

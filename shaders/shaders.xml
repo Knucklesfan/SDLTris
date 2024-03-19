@@ -26,9 +26,13 @@
 		<vertex>./shaders/vertex_sprite.shader</vertex>
 		<fragment>./shaders/fragment_sprite.shader</fragment>
 	</shader>
-	<shader>
+	<shader> <!--Used for Bitmap fonts-->
 		<vertex>./shaders/vertex_sprite.shader</vertex>
 		<fragment>./shaders/fragment_font.shader</fragment>
+	</shader>
+	<shader> <!--Used for TTF Fonts-->
+		<vertex>./shaders/vertex_font.shader</vertex> 
+		<fragment>./shaders/fragment_ttf.shader</fragment>
 	</shader>
 	<!-- ANYTHING BELOW THIS POINT IS OKAY TO MODIFY OR USE IN SCRIPTS! -->
 	<!-- Anything than is beyond this point is not hardcoded by the game and can be modified, or used by backgrounds, sprites or fonts. -->

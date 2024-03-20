@@ -46,20 +46,22 @@ class game: public Gamemode
 		int pauseselection = 0;
 		double warningalpha = 0.0;
 		double alphalifetime = 0;
-		bool goup;
-		bool godown;
+		Uint32 gameStart = 0;
+		bool goup = false;
+		bool godown = false;
 		bool warningflag = false;
-		std::string choices[5] = {
+		std::string choices[6] = {
 			"RESUME",
 			"EXIT",
 			"RECORD DEMO",
+			"PLAY DEMO",
 			"SAVE STATE",
 			"LOAD STATE"
 		};
 		double rotval = 0.0;
-		int optionsize = 5;
-		bool gameactive;
-		bool paused;
+		int optionsize = 6;
+		bool gameactive = true;
+		bool paused = false;
 		// std::vector<SDL_Texture*> textures;
     	#ifdef __LEGACY_RENDER
 			SDL_Texture* texture;
@@ -71,11 +73,19 @@ class game: public Gamemode
 		game();
 		void input(SDL_Keycode key);
 		void inputKey(SDL_Keycode key);
-		bool demoPlayback;
-		char* demo;
+		bool demoPlayback = false; //playing back a demo?
+		bool demoRecord = false; //recording a demo?
+		bool demoReturn = false;
+		std::ofstream demofile;
+		char * demo;
+		size_t demoOffset = 0;
+		Uint32 demotick = 0;
+		SDL_Keycode demokey = 0;
 
 		void render();
 		void logic(double deltatime);
+		int demoEndLogic();
+		void setupDemo(std::string demofile);
 		Transition endLogic();
 		void reset();
 		uint time = 0;
@@ -110,9 +120,11 @@ class game: public Gamemode
 		};
 		int volume;
 	private:
-		void loadDemo();
+		void loadDemo(std::string demo);
 		void saveState(); //temporary, debug class to save a level's state
 		void loadState(); //loads the current level's state.
+		void startRecord();
+		void stopRecord();
 		void changemusic();
 		void shiftarray(int(array)[], int size, int shift);
 		void checkLines(int(blocks)[240]);

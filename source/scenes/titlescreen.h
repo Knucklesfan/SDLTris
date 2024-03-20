@@ -11,6 +11,8 @@
 #include "../font.h"
 #include "../gamemode.h"
 #include "../opengl/plane.h"
+#include "../globalgamemode.h"
+#include "game.h"
 
 class titlescreen : public Gamemode
 {
@@ -21,7 +23,10 @@ public:
 	int bgnum = 0;
 	int rotationx = 0;
 	bool active = true;
+	bool refreshActive = false;
+	game* frontGame;
 	titlescreen();
+	GlobalGamemode* gg;
 	buffermanager* buff;
 	plane* p;
 	void input(SDL_Keycode key);

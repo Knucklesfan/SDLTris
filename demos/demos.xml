@@ -1,0 +1,5 @@
+<demos>
+    <demo>./demos/demo1.knfn</demo>
+    <demo>./demos/demo2.knfn</demo>
+    <demo>./demos/demo3.knfn</demo>
+</demos>

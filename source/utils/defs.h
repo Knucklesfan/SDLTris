@@ -215,8 +215,9 @@ class settings {
     //...updates the high score
     //@param prev the Previous score
     static void updateHighScore(int prev); 
-
+    static std::vector<std::string> demos;
     static void loadSettings();
+    static void loadDemos();
 	static std::array<std::array<int, 12>, 5> defaults;
 
 	static std::array<std::array<int, 12>, 5> activations;

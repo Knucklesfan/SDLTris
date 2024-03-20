@@ -214,6 +214,7 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
 
     spriteRenderer* graphics::sprite = NULL;
     std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
+    std::vector<std::string> settings::demos = std::vector<std::string>();
 
     std::map<std::string,texture*> graphics::sprites = std::map<std::string,texture*>();
     std::vector<shader *> graphics::shaders = std::vector<shader *>();
@@ -366,6 +367,18 @@ int graphics::generatefonts() {
     }
     return 0;
 
+}
+void settings::loadDemos() {
+    rapidxml::file<> bgFile((filepath"demos/demos.xml"));
+    rapidxml::xml_document<> bgDoc;
+    bgDoc.parse<0>(bgFile.data());
+    rapidxml::xml_node<char>* parent = bgDoc.first_node("demos");
+    for (rapidxml::xml_node<char>* child = parent->first_node(); child != nullptr; child = child->next_sibling()) {
+
+        std::cout << "loading demo " << child->value() << "\n";
+        //std::cout << "HELP ME:" << p.path().filename() << "\n";
+        demos.push_back(child->value());
+    }
 }
 void graphics::screenshot() {
     SDL_Surface * temp = SDL_CreateRGBSurface(SDL_SWSURFACE, 640, 480, 24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);

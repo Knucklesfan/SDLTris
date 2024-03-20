@@ -31,6 +31,9 @@ titlescreen::titlescreen()
     bgnum = std::rand() % graphics::backgrounds->size();
     buff = new buffermanager(640,480,false);
     p = new plane({0,0,-2.5},{4.0/3.0,1,1},{0,0,0});
+    gg = new GlobalGamemode();
+    frontGame=  new game();
+    
     
 }
 void titlescreen::reset()
@@ -38,6 +41,7 @@ void titlescreen::reset()
     Mix_PlayMusic( audio::music->at(0), -1 );
     time = 0;
     active = true;
+    currentscreen = 0;
     bgnum = std::rand() % graphics::backgrounds->size();
 
     //audio::playMusic(0); //plays the first song in the list
@@ -53,6 +57,11 @@ void titlescreen::input(SDL_Keycode key)
             else {
                 active = false;
             }
+            break;
+        }
+        case(SDLK_x): {
+            time = 40000;
+            break;
         }
     }
     // switch (currentscreen) {
@@ -222,9 +231,9 @@ void titlescreen::render()
     graphics::backgrounds->at(bgnum).render();
 
     buff->enable();
+    gg->startRender();
 
-    switch (currentscreen) {
-        case 0: {
+    if(currentscreen == 0 ){
             if(time > 700) {
                 graphics::fonts->at(3)->render("MEET THE GAME: ",16,480-48,false,255,255,255,0,false,0,0,0,1.0);
             }
@@ -249,18 +258,17 @@ void titlescreen::render()
             if(time > 14000) {
                 graphics::fonts->at(3)->render("THAT HAS CRITICS GOING CRAZY",16,480-48-48-48-48-48-48-48-48-48,false,255,255,255,0,false,0,0,0,1.0);
             }
-            if(time > 19000) {
-                // currentscreen++;
-            }
-        }break;
-        case 1: {
-
-        }break;
+            // if(time > 400000) {
+            //     currentscreen++;
+            // }
     }
+    else {
+        frontGame->render();
+    }
+    gg->render();
     buff->disable(640,480,true);
 
-
-    if(time > 18250.0f) {
+    if(time > 18250.0f && currentscreen == 0) {
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
         glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
@@ -300,17 +308,38 @@ void titlescreen::render()
     if(time > 19000 && time < 19150) {
         graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{1,1,1,1},false,1,glm::vec4(1,1,1,1));
     }
-    if(time > 19150) {
+    if(time > 40000) {
+        float knfnscale = (640-((time)-40000)>320?640-((time)-40000):320)/320;
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{(time)-40000,148},{640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnbanner"],{((time)-40000),0},{640,480},0,{time/10.0,0},{640,480});
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnlogo"],
+        {
+            0,
+            easeOutBounce((time-40000.0f)/(40000.0f-42000.0f))
+            *((480))
+        },
+        {
+        640,
+        480
+        },
+        {0,0,0},{0,0},{640,480});
 
+        // graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{time-40000,148},{640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
+
+    }
+    if(time > 19150) {
+        if(time < 40000) {
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{0,148},{640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnbanner"],{0,0},{640,480},0,{time/10.0,0},{640,480});
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnlogo"],
-    {0,0},{640,480},{0,0,0},{0,0},{640,480});
+    {0,0},{640,480},{0,0,0},{0,0},{640,480});   
+        }
         if(fmod(time,1000)<500) {
             graphics::fonts->at(0)->render(320,320,"PRESS START:ENTER",true);
         }
 
     }
+
     
 // #ifdef __LEGACY_RENDER
 //     SDL_RenderClear(graphics::render);
@@ -469,10 +498,36 @@ void titlescreen::render()
 void titlescreen::logic(double deltatime)
 {
     graphics::backgrounds->at(bgnum).logic(deltatime);
+    if(gg->logic(deltatime)) {
+        currentscreen=gg->currentTransition.gamemode;
+        if(currentscreen != 0) {
+            frontGame->setupDemo(settings::demos.at(currentscreen-1));
+        }
+    };
+    if(currentscreen != 0) {
+        frontGame->logic(deltatime);
+        if(frontGame->demoEndLogic()) {
+            Transition t;
+            t.transition = true;
+            t.fade = FADETYPE::BARS;
+            t.gamemode = (currentscreen+1)%4;
+            gg->setFade({
+                t
+            });
+        }
+    }
     // background[bgnum].logic(deltatime);
     if(time > 18250.0f && p->rotation.x > -450.0f) {
         p->rotation = {p->rotation.x-=deltatime*0.04,p->rotation.y,p->rotation.z-=deltatime*0.05};
         p->position = {p->position.x,p->position.y-=deltatime*0.0005,p->position.z-=deltatime*0.01};
+    }
+    if(time > 40000.0f && currentscreen == 0) {
+        Transition t;
+        t.transition = true;
+        t.gamemode = 1;
+        gg->setFade({
+            t
+        });
     }
     time += deltatime;
 }
@@ -480,9 +535,12 @@ void titlescreen::logic(double deltatime)
 Transition titlescreen::endLogic()
 {
     Transition t = Transition();
-    t.fade = FADETYPE::BARS;
+    t.fade = FADETYPE::BLOCKS;
     t.gamemode = 2;
     t.transition = !active;
+    if(currentscreen != 0) {
+        frontGame->endLogic();
+    }
     return t;
 }
 

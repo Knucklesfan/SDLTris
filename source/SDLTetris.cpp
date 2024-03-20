@@ -203,7 +203,7 @@ int main() {
     audio::generatemusic();
     audio::generatesound();
     settings::loadSettings();
-
+    settings::loadDemos();
     GlobalGamemode* global = new GlobalGamemode();
     #ifdef __LEGACY_RENDER
     SDL_Texture* rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640,480);

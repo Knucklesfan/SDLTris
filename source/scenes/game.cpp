@@ -1,6 +1,7 @@
 #include "game.h"
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <array>
 #include <cstring>
@@ -28,6 +29,7 @@
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
 game::game() {
+
     //srand((unsigned)time(0)); 
     #ifdef __LEGACY_RENDER
     texture = SDL_CreateTexture(graphics::render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
@@ -53,11 +55,11 @@ game::game() {
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
-    double ticks = 0;
-    int realtick = 0;
+    ticks = 0;
+    realtick = 0;
     //int nextblocks[16];
     nextblocks = std::rand() % 7;
-    int holdblock = -1;
+    holdblock = -1;
     // music = musicVec;
     // sound = soundVec;
     // backgrounds = backg;
@@ -68,9 +70,34 @@ game::game() {
     header = graphics::fonts->at(1);
     msg = new ingamemessagebox("null","null", 0);
     gameactive = true;
+    std::streampos size;
+    char * memblock;
+    Uint32 stream = 0x4829CADE;
+    std::ofstream fs("example.bin", std::ios::out | std::ios::binary);
+    fs.write((char *) &stream, sizeof stream);
+    fs.close();
+    std::ifstream file ("example.bin", std::ios::in|std::ios::binary|std::ios::ate);
+    if (file.is_open())
+    {
+        size = file.tellg();
+        memblock = new char [size];
+        file.seekg (0, std::ios::beg);
+        file.read (memblock, size);
+        file.close();
+
+        std::cout << "the entire file content is in memory";
+
+        Uint32 result;
+        memcpy(&result, memblock, sizeof(Uint32));
+        std::cout << result << "\n";
+
+    }
 
 }
 void game::logic(double deltatime) {
+    if(demoPlayback) {
+        
+    }
     // graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).renderLyrics();
     if (gameactive && !paused) {
         if (fmod(realtick, getspeed()) == 0) {
@@ -358,7 +385,12 @@ Transition game::endLogic() {
 }
 void game::input(SDL_Keycode key)
 {
-    if (gameactive && !paused) {
+    if(!demoPlayback) {
+        inputKey(key);
+    }
+}
+void game::inputKey(SDL_Keycode key) {
+        if (gameactive && !paused) {
         t.draw();
         switch (key) {
         case SDLK_UP: {
@@ -483,6 +515,7 @@ void game::input(SDL_Keycode key)
         }
         paused = !paused;
     }
+
 }
 void game::shiftarray(int(array)[], int size, int shift) {
     for (int i = 0; i < abs(shift); i++) {
@@ -775,4 +808,8 @@ double game::getspeed() {
         returndb = 12;
     }
     return returndb * 6;
+}
+
+void game::saveState() { //saves the game's state. this is a debug function im coding quickly to test replays. Might stick around, though...
+
 }

@@ -20,6 +20,7 @@ public:
 	int currentscreen = 0;
 	int bgnum = 0;
 	int rotationx = 0;
+	bool active = true;
 	titlescreen();
 	buffermanager* buff;
 	plane* p;

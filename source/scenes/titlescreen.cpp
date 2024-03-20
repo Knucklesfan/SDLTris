@@ -36,11 +36,25 @@ titlescreen::titlescreen()
 void titlescreen::reset()
 {
     Mix_PlayMusic( audio::music->at(0), -1 );
+    time = 0;
+    active = true;
+    bgnum = std::rand() % graphics::backgrounds->size();
+
     //audio::playMusic(0); //plays the first song in the list
 }
 
 void titlescreen::input(SDL_Keycode key)
 {
+    switch(key) {
+        case(SDLK_z): {
+            if(time < 20000) {
+                time = 20000;
+            }
+            else {
+                active = false;
+            }
+        }
+    }
     // switch (currentscreen) {
 
     // case 0: {
@@ -258,18 +272,18 @@ void titlescreen::render()
     &buff->renderTexture, {0,0},{640,480},{0,0,0},{0,0},{640,480});
     }
 
-    if(time > 16000) {
+    if(time > 15000 && time < 19150) {
         graphics::sprite->render(graphics::shaders.at(4),
         graphics::sprites["tetriminos"],
         glm::vec2(320-graphics::sprites["tetriminos"]->w/2, 
-        time<18000.0f?(-200+
-            easeOutBounce((time-16000.0f)/(18000.0f-16000.0f))
+        time<17000.0f?(-200+
+            easeOutBounce((time-15000.0f)/(17000.0f-15000.0f))
             *((440)-graphics::sprites["tetriminos"]->h/2)):240-graphics::sprites["tetriminos"]->h/2
         ),
          glm::vec2(graphics::sprites["tetriminos"]->w,graphics::sprites["tetriminos"]->h)
          , 0, glm::vec2(0,0), glm::vec2(graphics::sprites["tetriminos"]->w,graphics::sprites["tetriminos"]->h));
     }
-    if(time > 18000) {
+    if(time > 18000 && time < 19150) {
         graphics::sprite->render(graphics::shaders.at(4),
         graphics::sprites["knuxfans"],
         glm::vec2(
@@ -287,8 +301,15 @@ void titlescreen::render()
         graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{1,1,1,1},false,1,glm::vec4(1,1,1,1));
     }
     if(time > 19150) {
-        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{0,148},{0,345-148},0,{time/10.0,0},{640,345-148});
+
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{0,148},{640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnbanner"],{0,0},{640,480},0,{time/10.0,0},{640,480});
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnlogo"],
+    {0,0},{640,480},{0,0,0},{0,0},{640,480});
+        if(fmod(time,1000)<500) {
+            graphics::fonts->at(0)->render(320,320,"PRESS START:ENTER",true);
+        }
+
     }
     
 // #ifdef __LEGACY_RENDER
@@ -459,6 +480,9 @@ void titlescreen::logic(double deltatime)
 Transition titlescreen::endLogic()
 {
     Transition t = Transition();
+    t.fade = FADETYPE::BARS;
+    t.gamemode = 2;
+    t.transition = !active;
     return t;
 }
 

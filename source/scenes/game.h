@@ -34,7 +34,7 @@ class game: public Gamemode
 		double visibility = 1.0;
 		double visiblelifetime = 0;
 		double ticks = 0.0;
-		int realtick = 0;
+		Uint32 realtick = 0;
 		int nextblocks = 0;
 		int holdblock = 0;
 		Uint32 score = 000000000;
@@ -48,12 +48,13 @@ class game: public Gamemode
 		bool goup;
 		bool godown;
 		bool warningflag = false;
-		std::string choices[2] = {
+		std::string choices[3] = {
 			"RESUME",
-			"EXIT"
+			"EXIT",
+			"RECORD DEMO",
 		};
 		double rotval = 0.0;
-		int optionsize = 2;
+		int optionsize = 3;
 		bool gameactive;
 		bool paused;
 		// std::vector<SDL_Texture*> textures;
@@ -67,6 +68,10 @@ class game: public Gamemode
 		game();
 		double layerpos[10];
 		void input(SDL_Keycode key);
+		void inputKey(SDL_Keycode key);
+		bool demoPlayback;
+		char* demo;
+
 		void render();
 		void logic(double deltatime);
 		Transition endLogic();
@@ -103,6 +108,9 @@ class game: public Gamemode
 		};
 		int volume;
 	private:
+		void loadDemo();
+		void saveState(); //temporary, debug class to save a level's state
+		void loadState(); //loads the current level's state.
 		void changemusic();
 		void shiftarray(int(array)[], int size, int shift);
 		void checkLines(int(blocks)[240]);

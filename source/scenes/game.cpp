@@ -30,7 +30,6 @@
 //TODO: take a shower
 game::game() {
 
-    //srand((unsigned)time(0)); 
     #ifdef __LEGACY_RENDER
     texture = SDL_CreateTexture(graphics::render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
@@ -43,9 +42,11 @@ game::game() {
     // memcpy(activations, active, sizeof activations);
     //volume = Mix_VolumeMusic(-1);
     time = std::time(nullptr);
-    std::fill_n(testblocks, 1024, 0);
-    std::fill_n(ghostblocks, 1024, 0);
-    std::fill_n(previousblocks, 1024, 0);
+    srand((unsigned)time); 
+
+    std::fill_n(testblocks, 480, 0);
+    std::fill_n(ghostblocks, 480, 0);
+    std::fill_n(previousblocks, 480, 0);
     // renderer = renderman;
     // textures = textureb;
     std::cout << "bigger? " << settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD] << "\n";
@@ -58,7 +59,10 @@ game::game() {
     ticks = 0;
     realtick = 0;
     //int nextblocks[16];
+    std::srand(time+randomIters);
     nextblocks = std::rand() % 7;
+
+    randomIters++;
     holdblock = -1;
     // music = musicVec;
     // sound = soundVec;
@@ -70,29 +74,6 @@ game::game() {
     header = graphics::fonts->at(1);
     msg = new ingamemessagebox("null","null", 0);
     gameactive = true;
-    std::streampos size;
-    char * memblock;
-    Uint32 stream = 0x4829CADE;
-    std::ofstream fs("example.bin", std::ios::out | std::ios::binary);
-    fs.write((char *) &stream, sizeof stream);
-    fs.close();
-    std::ifstream file ("example.bin", std::ios::in|std::ios::binary|std::ios::ate);
-    if (file.is_open())
-    {
-        size = file.tellg();
-        memblock = new char [size];
-        file.seekg (0, std::ios::beg);
-        file.read (memblock, size);
-        file.close();
-
-        std::cout << "the entire file content is in memory";
-
-        Uint32 result;
-        memcpy(&result, memblock, sizeof(Uint32));
-        std::cout << result << "\n";
-
-    }
-
 }
 void game::logic(double deltatime) {
     if(demoPlayback) {
@@ -329,7 +310,6 @@ Transition game::endLogic() {
     if (!t.alive && gameactive && !paused) {
         //std::cout << "block not alive!!!";
         Mix_PlayChannel(-1, audio::sfx->at(5), 0);
-
         ticks = 0;
         realtick = 0;
         //Mix_VolumeMusic(volume);
@@ -354,8 +334,10 @@ Transition game::endLogic() {
             };
         }
         g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
-        std::fill_n(ghostblocks, 1024, 0);
+        std::fill_n(ghostblocks, 480, 0);
+        std::srand(time+randomIters);
         nextblocks = rand() % 7;
+        randomIters++;
     }
     if(!gameactive) {
         warningflag = false;
@@ -436,10 +418,13 @@ void game::inputKey(SDL_Keycode key) {
                 }
                 else {
                     t.rebirth(BLOCKX, BLOCKY, nextblocks);
+                    std::srand(time+randomIters);
                     nextblocks = rand() % 7;
+                    randomIters++;
+
                 }
                 g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
-                std::fill_n(ghostblocks, 1024, 0);
+                std::fill_n(ghostblocks, 480, 0);
                 ticks = 0;
                 realtick = 0;
             }
@@ -484,17 +469,33 @@ void game::inputKey(SDL_Keycode key) {
                             //Resume the music
                             Mix_ResumeMusic();
                         }
-                        //If the music is playing
-                        else
-                        {
-                            //Pause the music
-                            Mix_PauseMusic();
-                        }
                         paused = false;
                         break;
                     }
                     case 1: {
                         gameactive = false;
+                    }break;
+                    case 3: {
+                        saveState();
+                        std::cout << "SAVED!" << "\n";
+                        if (Mix_PausedMusic() == 1)
+                        {
+                            //Resume the music
+                            Mix_ResumeMusic();
+                        }
+
+                        paused = false;
+                    }break;
+                    case 4: {
+                        loadState();
+                        std::cout << "LOADED!" << "\n";
+                        if (Mix_PausedMusic() == 1)
+                        {
+                            //Resume the music
+                            Mix_ResumeMusic();
+                        }
+                        paused = false;
+
                     }
                 }
             }
@@ -537,7 +538,7 @@ void game::shiftarray(int(array)[], int size, int shift) {
     }
 }
 
-void game::checkLines(int(blocks)[1024]) {
+void game::checkLines(int(blocks)[480]) {
     int times = 0;
     for (int i = 0; i < boardheight; i++) {
         int* temp = new int[boardwidth];
@@ -589,16 +590,16 @@ bool game::checkRow(int* (blocks)) {
     return true;
 }
 
-void game::clearRow(int(blocks)[1024], int y) {
-    int newarray[1024];
-    std::fill_n(newarray, 1024, 0);
+void game::clearRow(int(blocks)[480], int y) {
+    int newarray[480];
+    std::fill_n(newarray, 480, 0);
     for (int j = 0; j < boardwidth; j++) {
         blocks[(y * boardwidth) + j] = 0;
     }
     for (int j = 0; j < (y * boardwidth); j++) {
         newarray[j + boardwidth] = blocks[j];
     }
-    for (int j = (y * boardwidth) + boardwidth; j < 1024; j++) {
+    for (int j = (y * boardwidth) + boardwidth; j < 480; j++) {
         newarray[j] = blocks[j];
     }
     memcpy(blocks, newarray, sizeof newarray);
@@ -639,13 +640,12 @@ void game::changemusic() {
 
 }
 void game::reset() {
-    time = std::time(nullptr);
     currentsong = -1;
     bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     changemusic();
-    std::fill_n(testblocks, 1024, 0);
-    std::fill_n(ghostblocks, 1024, 0);
-    std::fill_n(previousblocks, 1024, 0);
+    std::fill_n(testblocks, 480, 0);
+    std::fill_n(ghostblocks, 480, 0);
+    std::fill_n(previousblocks, 480, 0);
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
@@ -655,8 +655,10 @@ void game::reset() {
     lines = LINES;
     level = LEVEL;
     paused = false;
+    srand((unsigned)time); 
     nextblocks = std::rand() % 7;
-    //srand((unsigned)time(0)); 
+    randomIters++;
+    time = std::time(nullptr);
     gameactive = true;
     warningflag = false;
 
@@ -811,5 +813,77 @@ double game::getspeed() {
 }
 
 void game::saveState() { //saves the game's state. this is a debug function im coding quickly to test replays. Might stick around, though...
+    t.removeolddraw();
+    g.removeolddraw();
+    std::ofstream fs("example.bin", std::ios::out | std::ios::binary);
+    fs.write((char *) &time, sizeof(uint));
+    fs.write((char *) &randomIters, sizeof(uint));
+    fs.write((char *) &t.piece, sizeof(int));
+    fs.write((char *) &t.x, sizeof(int));
+    fs.write((char *) &t.y, sizeof(int));
+    fs.write((char *) &t.rot, sizeof(int));
+
+    fs.write((char *) &nextblocks, sizeof(int));
+    fs.write((char *) &holdblock, sizeof(int));
+    fs.write((char *) &level, sizeof(int));
+    fs.write((char *) &lines, sizeof(int));
+
+    fs.write((char *) &testblocks, sizeof(int[480]));
+    
+
+    fs.close();
+
+}
+void game::loadState() {
+    t.removeolddraw();
+    g.removeolddraw();
+    
+    std::streampos size;
+    char * memblock;
+    std::ifstream file ("example.bin", std::ios::in|std::ios::binary|std::ios::ate);
+    if (file.is_open())
+    {
+        size = file.tellg();
+        memblock = new char [size];
+        file.seekg (0, std::ios::beg);
+        file.read (memblock, size);
+        file.close();
+
+        std::cout << "the entire file content is in memory";
+        size_t offset = 0;
+        memcpy(&time, memblock+offset, sizeof(uint)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(uint);
+        memcpy(&randomIters, memblock+offset, sizeof(uint)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(uint);
+        memcpy(&t.piece, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&g.piece, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+        memcpy(&t.x, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+        memcpy(&t.y, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+        memcpy(&t.rot, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+
+        memcpy(&nextblocks, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+        memcpy(&holdblock, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+
+        memcpy(&level, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+        memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+
+        memcpy(&testblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&previousblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
+
+        offset += sizeof(int[480]);
+        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
+            bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
+        }
+        changemusic();
+        delete memblock;
+    }
 
 }

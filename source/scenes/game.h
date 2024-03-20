@@ -27,7 +27,7 @@ class game: public Gamemode
 		int boardheight = 24;
 		Font* bodyfont;
 		Font* header;
-		int testblocks[1024], ghostblocks[1024],  previousblocks[1024];
+		int testblocks[480], ghostblocks[480],  previousblocks[480];
 		// int (activations)[5][6];
 		tetrimino t;
 		ghostblock g;
@@ -37,6 +37,7 @@ class game: public Gamemode
 		Uint32 realtick = 0;
 		int nextblocks = 0;
 		int holdblock = 0;
+		uint randomIters = 0; // number of times the rand() call has been made
 		Uint32 score = 000000000;
 		int lines = 0;
 		int level = 1;
@@ -48,13 +49,15 @@ class game: public Gamemode
 		bool goup;
 		bool godown;
 		bool warningflag = false;
-		std::string choices[3] = {
+		std::string choices[5] = {
 			"RESUME",
 			"EXIT",
 			"RECORD DEMO",
+			"SAVE STATE",
+			"LOAD STATE"
 		};
 		double rotval = 0.0;
-		int optionsize = 3;
+		int optionsize = 5;
 		bool gameactive;
 		bool paused;
 		// std::vector<SDL_Texture*> textures;
@@ -66,7 +69,6 @@ class game: public Gamemode
 		#endif
 		// std::vector<bg>  backgrounds;
 		game();
-		double layerpos[10];
 		void input(SDL_Keycode key);
 		void inputKey(SDL_Keycode key);
 		bool demoPlayback;
@@ -76,7 +78,7 @@ class game: public Gamemode
 		void logic(double deltatime);
 		Transition endLogic();
 		void reset();
-		unsigned int time = 0;
+		uint time = 0;
 		ingamemessagebox* msg;
 		double getspeed();
 		double lineclears[25] = {

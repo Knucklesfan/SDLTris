@@ -12,10 +12,7 @@ public:
     int* outsidearray;
     bool alive;
     ghostblock(int, int, int(barray)[], int bwidth, int bheight, int block, int(outsidearray)[]);
-
-private:
     void removeolddraw();
     void redraw();
-
 };
 

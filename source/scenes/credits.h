@@ -7,7 +7,7 @@
 #include "../sine.h"
 #include <math.h>
 #include "../background.h"
-#include "../cube.h"
+#include "../wireframecube.h"
 
 class credits : public Gamemode
 {
@@ -22,9 +22,9 @@ class credits : public Gamemode
     // Font* headerfont;
     // Font* textfont;
     bg* backg;
-    cube* cub;
+    wireframecube* cub;
+    buffermanager* buff;
     bool loadgame;
-    SDL_Texture* rendertext;
     double time = 0.0;
     double speed = 25;
     // std::vector<SDL_Texture*>* textures;
@@ -35,7 +35,7 @@ class credits : public Gamemode
         "CODE",
         "KNUXFAN",
         "ART",
-        "KNUXFAN, KRIS0520",
+        "KNUXFAN",
         "MUSIC PROVIDED BY THE FOLLOWING",
         "arachno:coolphat",
         "DROZERiX",
@@ -128,6 +128,5 @@ class credits : public Gamemode
         bool goup = false;
         bool godown = false;
         int gamemode = 0;
-        void drawTexture(SDL_Renderer* render, SDL_Texture*, int, int, double, double, bool);
         void drawCubes(const int position[], int x, int y, int size, int width, double angle, double scale, int texture);
 };

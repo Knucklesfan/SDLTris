@@ -1,11 +1,11 @@
 #pragma once
-#include <SDL2/SDL.h>
 #include <string>
 #include <iostream>
 #include <vector>
 #include <array>
 #include <algorithm>    // std::sort
 #include <cstring>
+#include "opengl/buffermanager.h"
 
 class wireframecube
 {
@@ -13,12 +13,12 @@ public:
     double width = 320;
     double height = 240;
     void logic(double deltatime);
-    void render(SDL_Renderer* renderer, int r, int g, int b);
-    wireframecube(SDL_Renderer* render, int x, int y, int width, int height);
+    void render(int r, int g, int b);
+    wireframecube(int x, int y, int width, int height);
+    buffermanager* buff;
     int x = width/2;
     int y = height/2;
     double rotation = 0.0;
-    SDL_Texture* texture;
 
     int edges[12][2] = {
     {0, 1}, {1, 3}, {3, 2}, {2, 0},

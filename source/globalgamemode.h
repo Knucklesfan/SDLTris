@@ -19,9 +19,10 @@ class GlobalGamemode {
         buffermanager buffer= buffermanager(640,480);
         cube* outer;
         cube* inner;
+        bool active = false;
+
     private:
         bool fade = false;
-        bool active = false;
         double fadespeed = 0;
         double alpha = 0.0;
 };

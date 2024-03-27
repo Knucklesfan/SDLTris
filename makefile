@@ -1,5 +1,4 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o highscore.o replay.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o
-SOURCE	= source/SDLTetris.cpp source/tetrimino.cpp source/ghostblock.cpp source/titlescreen.cpp source/game.cpp source/background.cpp source/ingamemessagebox.cpp source/knuxfanscreen.cpp source/server.cpp source/highscore.cpp source/replay.cpp source/results.cpp source/font.cpp source/options.cpp source/cube.cpp source/credits.cpp source/sine.cpp source/animation.cpp source/opengl/line.cpp source/scenes/game.cpp source/scenes/results.cpp
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
@@ -40,12 +39,6 @@ knuxfanscreen.o: source/scenes/knuxfanscreen.cpp
 # server.o: source/server.cpp
 # 	$(CC) $(FLAGS) source/server.cpp -std=c++17
 
-highscore.o: source/highscore.cpp
-	$(CC) $(FLAGS) source/highscore.cpp -std=c++17
-
-replay.o: source/replay.cpp
-	$(CC) $(FLAGS) source/replay.cpp -std=c++17
-
 results.o: source/scenes/results.cpp
 	$(CC) $(FLAGS) source/scenes/results.cpp -std=c++17
 
@@ -54,14 +47,20 @@ pixfont.o: source/pixfont.cpp
 ttffont.o: source/ttffont.cpp
 	$(CC) $(FLAGS) source/ttffont.cpp 
 
+wireframecube.o: source/wireframecube.cpp
+	$(CC) $(FLAGS) source/wireframecube.cpp -std=c++17
+
 # options.o: source/scenes/options.cpp
 # 	$(CC) $(FLAGS) source/scenes/options.cpp -std=c++17
 
 cube.o: source/opengl/cube.cpp
 	$(CC) $(FLAGS) source/opengl/cube.cpp -std=c++17
 	
-# credits.o: source/scenes/credits.cpp
-# 	$(CC) $(FLAGS) source/scenes/credits.cpp -std=c++17
+credits.o: source/scenes/credits.cpp
+	$(CC) $(FLAGS) source/scenes/credits.cpp -std=c++17
+
+debugscene.o: source/scenes/debugscene.cpp
+	$(CC) $(FLAGS) source/scenes/debugscene.cpp -std=c++17
 
 sine.o: source/sine.cpp
 	$(CC) $(FLAGS) source/sine.cpp -std=c++17

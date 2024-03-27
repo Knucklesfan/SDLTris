@@ -228,10 +228,11 @@ void titlescreen::input(SDL_Keycode key)
 
 void titlescreen::render()
 {
+    gg->startRender();
+
     graphics::backgrounds->at(bgnum).render();
 
     buff->enable();
-    gg->startRender();
 
     if(currentscreen == 0 ){
             if(time > 700) {
@@ -265,7 +266,6 @@ void titlescreen::render()
     else {
         frontGame->render();
     }
-    gg->render();
     buff->disable(640,480,true);
 
     if(time > 18250.0f && currentscreen == 0) {
@@ -279,6 +279,7 @@ void titlescreen::render()
         graphics::sprite->render(graphics::shaders.at(4),
     &buff->renderTexture, {0,0},{640,480},{0,0,0},{0,0},{640,480});
     }
+    gg->render();
 
     if(time > 15000 && time < 19150) {
         graphics::sprite->render(graphics::shaders.at(4),
@@ -310,19 +311,20 @@ void titlescreen::render()
     }
     if(time > 40000) {
         float knfnscale = (640-((time)-40000)>320?640-((time)-40000):320)/320;
-        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{(time)-40000,148},{640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
-        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnbanner"],{((time)-40000),0},{640,480},0,{time/10.0,0},{640,480});
-        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnlogo"],
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{
+            0,
+            148+easeOutBounce((time-40000.0f)/(40000.0f-42000.0f))
+            *((480))
+        },
+        {640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnbanner"],
         {
             0,
             easeOutBounce((time-40000.0f)/(40000.0f-42000.0f))
             *((480))
         },
-        {
-        640,
-        480
-        },
-        {0,0,0},{0,0},{640,480});
+
+        {640,480},0,{time/10.0,0},{640,480});
 
         // graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{time-40000,148},{640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
 
@@ -331,9 +333,10 @@ void titlescreen::render()
         if(time < 40000) {
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["checkerboard"],{0,148},{640,345-148},0,{-time/10.0,time/10.0},{640,345-148});
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnbanner"],{0,0},{640,480},0,{time/10.0,0},{640,480});
+        }
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnlogo"],
     {0,0},{640,480},{0,0,0},{0,0},{640,480});   
-        }
+
         if(fmod(time,1000)<500) {
             graphics::fonts->at(0)->render(320,320,"PRESS START:ENTER",true);
         }
@@ -500,8 +503,11 @@ void titlescreen::logic(double deltatime)
     graphics::backgrounds->at(bgnum).logic(deltatime);
     if(gg->logic(deltatime)) {
         currentscreen=gg->currentTransition.gamemode;
-        if(currentscreen != 0) {
+        if(currentscreen > 0) {
             frontGame->setupDemo(settings::demos.at(currentscreen-1));
+        }
+        else {
+            time = 18000;
         }
     };
     if(currentscreen != 0) {
@@ -509,8 +515,8 @@ void titlescreen::logic(double deltatime)
         if(frontGame->demoEndLogic()) {
             Transition t;
             t.transition = true;
-            t.fade = FADETYPE::BARS;
-            t.gamemode = (currentscreen+1)%4;
+            t.fade = FADETYPE::BLOCKS;
+            t.gamemode = (currentscreen+1)%(settings::demos.size()+1);
             gg->setFade({
                 t
             });
@@ -521,10 +527,12 @@ void titlescreen::logic(double deltatime)
         p->rotation = {p->rotation.x-=deltatime*0.04,p->rotation.y,p->rotation.z-=deltatime*0.05};
         p->position = {p->position.x,p->position.y-=deltatime*0.0005,p->position.z-=deltatime*0.01};
     }
-    if(time > 40000.0f && currentscreen == 0) {
+    if(time > 40000.0f && !gg->active && currentscreen == 0) {
         Transition t;
         t.transition = true;
         t.gamemode = 1;
+        t.speed = 0.001;
+        t.fade = FADETYPE::FADE;
         gg->setFade({
             t
         });

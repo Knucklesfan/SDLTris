@@ -5,13 +5,13 @@ credits::credits() {
     // headerfont = fonts[0];
     // textfont = fonts[1];
     // textures = texts;
-    cub = new cube(graphics::render, 320, 240, 640, 480);
-    sineWave = new sine(graphics::render, 0, 120, 320, 240);
-    backg = new bg("./sprites/resultsbg",true,graphics::render);
+    cub = new wireframecube(320, 240, 640, 480);
+    sineWave = new sine(0, 120, 320, 240);
+    backg = new bg("./sprites/resultsbg",true);
     loadgame = false;
-    rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 128);
-    SDL_SetTextureBlendMode(rendertext, SDL_BLENDMODE_ADD);
-
+    // rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 128);
+    // SDL_SetTextureBlendMode(rendertext, SDL_BLENDMODE_ADD);
+    buff= new buffermanager(128,128,true);
 }
 void credits::input(SDL_Keycode key) {
     if(key == SDLK_z) {
@@ -105,12 +105,12 @@ void credits::reset() {
 void credits::render() {
     switch(gamemode) {
         case 0: {
-            backg->render(graphics::render, false);
-            sineWave->render(graphics::render,255,255,255,255,0);
-            sineWave->render(graphics::render,255,0,0,128,2);
-            sineWave->render(graphics::render,0,0,255,128,-2);
-            cub->render(graphics::render, 255, 0, 0);
-            drawTexture(graphics::render, cub->texture, 0, 0, 0, 1.0, false);
+            backg->render();
+            sineWave->render(255,255,255,255,0);
+            sineWave->render(255,0,0,128,2);
+            sineWave->render(0,0,255,128,-2);
+            cub->render(255, 0, 0);
+            graphics::sprite->render(graphics::shaders.at(4),&cub->buff->renderTexture,{0,0},{640,480},{0,0,0},{0,0},{640,480});
             drawRotatedBlock(16,16,lpiece,time / 15, 1);
             drawRotatedBlock(496,16,tpiece,time / -15, 2);
             drawRotatedBlock(496,336,lpiece,time / 15, 1);
@@ -149,47 +149,29 @@ void credits::render() {
                     layers+=wordspacing[i];
                 }
             }
-            SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255*alpha);
-            SDL_Rect splashbox = { 0, 0, 640, 480 };
-            SDL_RenderFillRect(graphics::render, &splashbox);
+            graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,255*alpha},false,1,glm::vec4(1,1,1,1));
             break;
         }
         case 1: {
-            SDL_RenderCopy(graphics::render, graphics::sprites["thxforplaying"], NULL, NULL);
-            SDL_Rect splashbox = { 0, 0, 640, 480 };
-            SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255*alpha);
-            SDL_RenderFillRect(graphics::render, &splashbox);
+            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["thxforplaying"],
+    {0,0},{640,480},{0,0,0},{0,0},{640,480});   
+            graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,255*alpha},false,1,glm::vec4(1,1,1,1));
+            // SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255*alpha);
+            // SDL_RenderFillRect(graphics::render, &splashbox);
             break;
         }
     }
 
 }
 
-void credits::drawTexture(SDL_Renderer* render, SDL_Texture* texture, int x, int y, double angle, double scale, bool center) {
-    SDL_Rect sprite;
-    SDL_QueryTexture(texture, NULL, NULL, &sprite.w, &sprite.h);
-    int oldwidth = sprite.w;
-    int oldheight = sprite.h;
-    sprite.w = sprite.w * scale;
-    sprite.h = sprite.h * scale;
-    if (center) {
-        sprite.x = x - oldwidth / 2;
-        sprite.y = y - oldheight / 2;
-    }
-    else {
-        sprite.x = x + oldwidth / 2 - sprite.w / 2;
-        sprite.y = y + oldheight / 2 - sprite.h / 2;
-    }
-    SDL_RenderCopyEx(render, texture, NULL, &sprite, angle, NULL, SDL_FLIP_NONE);
-}
 
 void credits::drawRotatedBlock(int x, int y, const int position[], double angle, int texture) {
-    SDL_Texture* temp = SDL_GetRenderTarget(graphics::render);
-    SDL_SetRenderTarget(graphics::render, rendertext);
-    SDL_RenderClear(graphics::render);
+    buff->enable();
     drawCubes(position, 16, 32, 6, 3, 0, abs(sin(time / 500)) + 0.85, texture);
-    SDL_SetRenderTarget(graphics::render, temp);
-    drawTexture(graphics::render, rendertext, x, y, angle, 1.0, false);
+    buff->disable(640,480,true);
+    graphics::sprite->render(graphics::shaders.at(4),graphics::blocks->at(texture),{x,y},{128,128},{angle,0,0},{0,0},{128,128});
+
+    // drawTexture(graphics::render, rendertext, x, y, angle, 1.0, false);
 
 }
 
@@ -197,7 +179,8 @@ void credits::drawCubes(const int position[], int x, int y, int size, int width,
 
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
-            graphics::drawTexture(graphics::blocks->at(texture), x + (i % width) * 32, y + (i / width) * 32, angle, scale, false);
+            graphics::sprite->render(graphics::shaders.at(4),graphics::blocks->at(texture),{x + (i % width) * 32, y + (i / width) * 32},{16*scale,16*scale},{angle,0,0},{0,0},{16,16});
+            // graphics::drawTexture(graphics::blocks->at(texture), x + (i % width) * 32, y + (i / width) * 32, angle, scale, false);
         }
     }
 }

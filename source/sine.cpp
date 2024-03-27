@@ -1,9 +1,8 @@
 #include "sine.h"
+#include "utils/defs.h"
 
-
-sine::sine(SDL_Renderer* render, int vx, int vy, int wid, int high) {
-    texture = SDL_CreateTexture(render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, wid,high);
-    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_ADD);
+sine::sine(int vx, int vy, int wid, int high) {
+    buff = new buffermanager(wid,high,true);
     width = wid;
     height = high;
     x = vx;
@@ -13,20 +12,23 @@ void sine::logic(double deltaTime) {
     rotation += deltaTime/100;
     
 }
-void sine::render(SDL_Renderer* renderer, int r, int g, int b, int a, int offset) {
-    SDL_Texture* temp = SDL_GetRenderTarget(renderer);
-    SDL_SetRenderDrawColor(renderer, 0,0,0,255);
-    SDL_SetRenderTarget(renderer, texture);
-    SDL_RenderClear(renderer);
+void sine::render(int r, int g, int b, int a, int offset) {
+    // SDL_Texture* temp = SDL_GetRenderTarget(renderer);
+    // SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+    // SDL_SetRenderTarget(renderer, texture);
+    // SDL_RenderClear(renderer);
+    buff->enable();
     double last = sin((rotation))*(50+offset)+y;
     for(int i = 0; i < width; i++) {
-        SDL_SetRenderDrawColor(renderer, r,g,b,a);
+        // SDL_SetRenderDrawColor(renderer, r,g,b,a);
         double drawpoint = sin((rotation+i/20))*(50+offset)+y;
-        SDL_RenderDrawLine(renderer, i-1, last, i, drawpoint);
+        graphics::line->render(graphics::shaders.at(1),{i-1,last},{i,drawpoint},1,{r,g,b,a});
         last = drawpoint;
     }
-    SDL_SetRenderDrawColor(renderer, 0,0,0,255);
-    SDL_SetRenderTarget(renderer,temp);
-    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    buff->disable(640,480,true);
+    buff->render(graphics::shaders.at(4),640,480,false);
+    // SDL_SetRenderDrawColor(renderer, 0,0,0,255);
+    // SDL_SetRenderTarget(renderer,temp);
+    // SDL_RenderCopy(renderer, texture, NULL, NULL);
 
 }

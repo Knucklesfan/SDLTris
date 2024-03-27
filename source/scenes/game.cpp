@@ -81,6 +81,9 @@ void game::logic(double deltatime) {
     if(demoPlayback) {
         if(demotick != 0 && demotick != UINT32_MAX && demokey != SDLK_ESCAPE) {
             if(SDL_GetTicks()-gameStart >= demotick) {
+                if(demokey == SDLK_DELETE) { //if it set to delete, then we can start fading
+                    demoReturn = true;
+                }
                 inputKey(demokey);
                 memcpy(&demotick, demo+demoOffset, sizeof(Uint32)); //very memory unsafe, please do not supply bad savestates...
                 demoOffset += sizeof(Uint32);
@@ -326,6 +329,9 @@ void game::render() {
             }
             if(demoRecord) {
                 bodyfont->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
+                if(demoReturn) {
+                    bodyfont->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
+                }
             }
 
         #endif
@@ -401,6 +407,9 @@ void game::input(SDL_Keycode key)
             Uint32 tick = SDL_GetTicks()-gameStart;
             demofile.write((char *) &tick, sizeof(Uint32));
             demofile.write((char *) &key, sizeof(SDL_Keycode));
+            if(key == SDLK_DELETE) {
+                demoReturn = true; //sets this just to display on screen that the demo is transitioning
+            }
         }
     }
 }
@@ -701,7 +710,6 @@ void game::changemusic() {
 
 }
 void game::reset() {
-            std::cout << "reset\n";
 
     currentsong = -1;
     bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
@@ -734,7 +742,6 @@ void game::reset() {
 
 }
 int game::demoEndLogic() {
-            std::cout << "endlogic demo\n";
 
     if(demoReturn) {
         demoReturn = false;

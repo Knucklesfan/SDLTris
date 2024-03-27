@@ -19,10 +19,12 @@
 #include "scenes/game.h"
 #include "scenes/results.h"
 // #include "scenes/options.h"
+#include "scenes/debugscene.h"
 #ifndef __LEGACY_RENDER
 #include "opengl/buffermanager.h"
 #endif
 #include "scenes/white.h"
+#include "scenes/credits.h"
 
 #ifdef _NETCODE
 #include "server.h"
@@ -32,7 +34,6 @@
 #ifdef _WIN32
     #include "rpcimplement.h"
 #endif
-#include "highscore.h"
 //TODO: ALL NETCODE HAS BEEN DISABLED
 
 //i did this for a number of reasons:
@@ -230,13 +231,15 @@ int main() {
     long long recordticks = 0;
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
+        new debugscene(),
         // new white(),
         new knuxfanscreen(),
         new titlescreen(), //1
         new game(), //2
         new results(), //3
-        // new options(), //4
-        // new credits() //5
+        new credits() //4
+        // new options(), //5
+
     };
     int gamemode = 0;
 

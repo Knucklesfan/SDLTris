@@ -6,7 +6,9 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/include",
-                "/usr/include/freetype2"
+                "/usr/include/freetype2",
+                "/usr/include/qt/QtWidgets",
+                "${workspaceFolder}/include"
             ],
             "defines": [
                 "CLIENT"

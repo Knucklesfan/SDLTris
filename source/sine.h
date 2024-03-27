@@ -7,6 +7,7 @@
 #include <algorithm>    // std::sort
 #include <cstring>
 #include <math.h>
+#include "opengl/buffermanager.h"
 
 class sine
 {
@@ -15,12 +16,13 @@ public:
     double width = 320;
     double height = 240;
     void logic(double deltatime);
-    void render(SDL_Renderer* renderer, int r, int g, int b, int a, int offset);
-    sine(SDL_Renderer* render, int x, int y, int width, int height);
+    void render(int r, int g, int b, int a, int offset);
+    sine(int x, int y, int width, int height);
     int x = width/2;
     int y = height/2;
     double rotation = 0.0;
-    SDL_Texture* texture;
+    buffermanager* buff;
+    
 private:
     double rad(double deg);
     double fact(double in);

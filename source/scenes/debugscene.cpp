@@ -12,9 +12,6 @@ void debugscene::render()
             graphics::backgrounds->at(background-1).render();
         }
         else {
-            glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         }
         graphics::fonts->at(1)->render(320,100,"WELCOME TO KNUXFANS TETRIMINOS",true,((int)(SDL_GetTicks()/100.0)%3==0)*255,((int)(SDL_GetTicks()/100.0)%3==1)*255,((int)(SDL_GetTicks()/100.0)%3==2)*255,-1,true,SDL_GetTicks()/1000.0,10,10);
         for(int i = 0; i<MENUSIZE; i++) {
@@ -22,7 +19,7 @@ void debugscene::render()
             if(endings[i] != nullptr) {
                 text.append(std::to_string(*(endings[i])));
             }
-            graphics::fonts->at(0)->render(320,148+(i*24),text,true);
+            graphics::fonts->at(1)->render(320,0+(i*24),text,true);
         }
 
         #endif

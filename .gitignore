@@ -33,3 +33,7 @@ include/SDL2/**
 include/tremor/**
 include/vorbis/**
 include/wavpack/**
+callgrind.**
+gmon.**
+vgcore.**
+*.bmp

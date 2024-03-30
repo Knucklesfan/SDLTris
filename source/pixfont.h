@@ -10,9 +10,11 @@
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
 #include <map>
+#include <unordered_map>
 #include <utility>      // std::pair, std::make_pair
 #include "utils/defs.h"
 #include "font.h"
+#define MAXSTRING 256 //this is the max size that a string can be, increase if needed more!
 //so, why am I doing this?
 //several reasons, actually.
 //Mostly, I just hate SDL_TTF with an undying passion, (this is untrue)
@@ -51,7 +53,8 @@ class pixfont : public Font
         double layerposy[10];
         double angle = 0.0;
         double rotation;
-        
+        glm::vec2 translations[MAXSTRING];
+        glm::vec2 texcoords[MAXSTRING];
 	    void logic(double deltatime) {};
         int size = 0;
         int width = 8;
@@ -61,7 +64,7 @@ class pixfont : public Font
         int specialpos = 36;
         std::string name;
         std::string path;
-        std::map<char, letter> mapping;
+        std::unordered_map<char, letter> mapping;
         void render(std::string words, int x, int y, bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
         void render(int x, int y,std::string words, bool center, 
@@ -88,4 +91,20 @@ class pixfont : public Font
         std::vector<std::string> split(const std::string& input, char delimiter);
         std::string wrap(std::string str, int pixels);
         color tintColor(const color& baseColor, const color& tintColor);
+        glm::mat4 projection;
+        unsigned int quadVAO;
+        unsigned int instanceVBO;
+
+        float vertices[24] = { 
+            // pos      // tex
+            0.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 0.0f, 0.0f, 
+
+            0.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, 1.0f, 1.0f, 1.0f,
+            1.0f, 0.0f, 1.0f, 0.0f
+        };
+        
+
 };

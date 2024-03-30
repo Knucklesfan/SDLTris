@@ -157,7 +157,7 @@ int main() {
 	}
 
 	//Use Vsync
-	if (SDL_GL_SetSwapInterval(1) < 0)
+	if (SDL_GL_SetSwapInterval(-1) < 0)
 	{
 		printf("Warning: Unable to set VSync! SDL Error: %s\n", SDL_GetError());
 	}
@@ -321,7 +321,6 @@ int main() {
         buffer.render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
         // preciseSleep(floor(1000.0f/60.0f - deltaTime)/1000.0f);
         SDL_GL_SwapWindow(window);
-
         #endif
 
 }

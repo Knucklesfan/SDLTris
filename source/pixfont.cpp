@@ -33,6 +33,7 @@ pixfont::pixfont() {
 //I sWeAr I'm A gOoD cOdEr gUyS
 
 pixfont::pixfont(std::string path) {
+    
     std::string p = "./fonts/" + path;
     generateSurfaces(p); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
 
@@ -63,21 +64,35 @@ pixfont::pixfont(std::string path) {
         mapping[let.character] = let;
     }
 
+    //handle opengl stuff now
+    projection = glm::ortho(0.0f, static_cast<float>(COORDINATE_WIDTH), 
+    static_cast<float>(COORDINATE_HEIGHT), 0.0f, -100.0f, 100.0f);
 
+    unsigned int VBO;
 
-    //DEBUG ONLY STUFF, YKNOW HOW IT IS
-    // thanks to geeks4geeks for being a great code source, i might or might not have copied this to save time but whatever it's literally just a debug function so who cares
-    
-    
-    std::map<char, letter>::iterator itr;
-    std::cout << "\nThe map is : \n";
-    std::cout << "\tKEY\tELEMENT\n";
-    for (itr = mapping.begin(); itr != mapping.end(); ++itr) {
-        std::cout << '\t' << itr->first
-             << '\t' << itr->second.character << '\t' << itr->second.width << '\t' << itr->second.x << '\t' << itr->second.y << '\n';
-    }
-    std::cout << "\n";
-    
+    glGenVertexArrays(1, &this->quadVAO);
+    glGenBuffers(1, &VBO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindVertexArray(this->quadVAO);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+        // also set instance data
+    unsigned int instanceVBO;
+    glGenBuffers(1, &instanceVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * MAXSTRING, &translations[0], GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO); // this attribute comes from a different vertex buffer
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribDivisor(1, 1); // tell OpenGL this is an instanced vertex attribute.
     doc.clear();
 }
 
@@ -88,17 +103,22 @@ render(words, x, y, center, red, blue, green, wordwrap, sine, pos, multiplyin, m
 void pixfont::render(int x, int y, std::string strg, bool center) {
 render(strg, x, y, center, 255, 255, 255, 0, false, 0, 0, 0, 1);
 }
-void pixfont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
+void pixfont::render(std::string word, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
+	txt->activate(0);
+
+    shad->activate();
+	shad->setVector("projection",glm::value_ptr(projection));
+    glBindVertexArray(this->quadVAO);
 
     int finalwidth = 0;
     int drawcolor = 0;
     if(center) {
-        if (wordwrap > 0 && words.length()*wordsize > wordwrap) {
-            finalwidth = wordwrap;
-        }
-        else {
-            finalwidth = words.length() * wordsize;
-        }
+        // if (wordwrap > 0 && words.length()*wordsize > wordwrap) {
+            // finalwidth = wordwrap;
+        // }
+        // else {
+            finalwidth = word.length() * wordsize;
+        // }
     }
     glm::vec3 color = {0,0,0};
     //coloring yet to be supported by ogl renderer
@@ -108,13 +128,13 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         color.b = blue/255.0;
     }
     // std::cout << words << "\n";
-    if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
-        words = wrap(words, wordwrap/ wordsize);
+    // if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
+    //     words = wrap(words, wordwrap/ wordsize);
 
-    } //sorry, not yet
-    std::vector<std::string> wordVector = split(words,'\n');
+    // } //sorry, not yet
+    // std::vector<std::string> wordVector = split(words,'\n');
     double tmpy = y;
-    for(std::string word : wordVector) {
+    // for(std::string word : wordVector) {
     int i = 0;
     int tmpx = center?(x-(word.length() * wordsize)/2):x;
     for(char& c : word) {
@@ -130,7 +150,6 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             SDL_SetTextureColorMod(texture, red, green, blue);
         }
         #else
-        shad->activate();
         shad->setVec3("spriteColor",glm::value_ptr(color));
 
         #endif
@@ -146,12 +165,26 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         #ifdef __LEGACY_RENDER
             drawTexture(txt, tmpx, drawy, 0, scale, false, mapping.at(a).x * width, mapping.at(a).y * height, mapping.at(a).width, height);
         #else
-            graphics::sprite->render(shad, txt,
-            glm::vec2(tmpx,drawy), //position to draw at
-            glm::vec2(mapping.at(a).width, height), //width and height to draw
-            0, //rotation
-            glm::vec2(mapping.at(a).x * width,mapping.at(a).y * height), //where in texture to grab from
-            glm::vec2(mapping.at(a).width, height)); //width and height to grab
+            // graphics::sprite->render(shad, txt,
+            // glm::vec2(tmpx,drawy), //position to draw at
+            // glm::vec2(mapping.at(a).width, height), //width and height to draw
+            // 0, //rotation
+            // glm::vec2(mapping.at(a).x * width,mapping.at(a).y * height), //where in texture to grab from
+            // glm::vec2(mapping.at(a).width, height)); //width and height to grab
+
+            glm::vec2 texOffset = glm::vec2((float)(mapping.at(a).x * width)/txt->w,(float)(mapping.at(a).y * height)/txt->h);
+            glm::vec2 texScale = glm::vec2((float)(mapping.at(a).width)/txt->w,(float)(height)/txt->h);
+
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(tmpx,drawy, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
+            model = glm::scale(model, glm::vec3(mapping.at(a).width,height, 1.0f)); // last scale
+            shad->setVector("model", glm::value_ptr(model));
+            shad->setVec2("texOffset",glm::value_ptr(texOffset));
+            shad->setVec2("scale",glm::value_ptr(texScale));
+            shad->setInt("image",0);
+            
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+
 
         #endif
             tmpx += (mapping.at(a).width);
@@ -174,11 +207,14 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         }
         i++;
     }
+
     tmpy += wordsize;
     #ifdef __LEGACY_RENDER
     SDL_SetTextureColorMod(txt, 255,255,255);
     #endif
-    }
+    // }
+    glBindVertexArray(0);
+
 
 }
 //uses the modern drawtexture from background.h, hopefully there's no bugs?

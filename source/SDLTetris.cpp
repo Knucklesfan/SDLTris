@@ -15,6 +15,8 @@
 #include "gamemode.h"
 #include "scenes/knuxfanscreen.h"
 #include "scenes/titlescreen.h"
+#include "scenes/gameplaymenu.h"
+
 // #include "scenes/credits.h"
 #include "scenes/game.h"
 #include "scenes/results.h"
@@ -235,6 +237,7 @@ int main() {
         // new white(),
         new knuxfanscreen(),
         new titlescreen(), //1
+        new gameplaymenu(),
         new game(), //2
         new results(), //3
         new credits() //4

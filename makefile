@@ -1,4 +1,4 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o gameplaymenu.o
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
@@ -35,6 +35,9 @@ ingamemessagebox.o: source/ingamemessagebox.cpp
 
 knuxfanscreen.o: source/scenes/knuxfanscreen.cpp
 	$(CC) $(FLAGS) source/scenes/knuxfanscreen.cpp -std=c++17
+
+gameplaymenu.o: source/scenes/gameplaymenu.cpp
+	$(CC) $(FLAGS) source/scenes/gameplaymenu.cpp -std=c++17
 
 # server.o: source/server.cpp
 # 	$(CC) $(FLAGS) source/server.cpp -std=c++17

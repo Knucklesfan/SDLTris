@@ -107,5 +107,45 @@
 		<name>checkerboard</name>
 		<path>./sprites/checkerboard.png</path>
 	</sprite>
+	<sprite>
+		<name>cdrom</name>
+		<path>./sprites/cdrom.png</path>
+	</sprite>
+	<sprite>
+		<name>cdrom-reflectionmap</name>
+		<path>./sprites/cdrom-reflectionmap.png</path>
+	</sprite>
+	<sprite>
+		<name>menubackground</name>
+		<path>./sprites/firstmenubackground.png</path>
+	</sprite>
+	<sprite>
+		<name>beachgridwords</name>
+		<path>./sprites/beachgridwords.png</path>
+	</sprite>
+	<sprite>
+		<name>storymenubutton</name>
+		<path>./sprites/storymenubutton.png</path>
+	</sprite>
+	<sprite>
+		<name>classicmenubutton</name>
+		<path>./sprites/classicmenubutton.png</path>
+	</sprite>
+	<sprite>
+		<name>optionsmenubutton</name>
+		<path>./sprites/optionsmenubutton.png</path>
+	</sprite>
+	<sprite>
+		<name>creditsmenubutton</name>
+		<path>./sprites/creditsmenubutton.png</path>
+	</sprite>
+	<sprite>
+		<name>exitmenubutton</name>
+		<path>./sprites/exitmenubutton.png</path>
+	</sprite>
+	<sprite>
+		<name>highscoremenubutton</name>
+		<path>./sprites/highscoremenubutton.png</path>
+	</sprite>
 
 </sprites>

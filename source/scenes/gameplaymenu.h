@@ -2,20 +2,25 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <vector>
-#include "font.h"
+#include "../pixfont.h"
 #include <array>
-#include "sine.h"
+#include "../sine.h"
 #include <math.h>
-#include "background.h"
-#include "cube.h"
+#include "../background.h"
+#include "../gamemode.h"
+#include "../opengl/plane.h"
 
 
-class gameplaymenu {
+class gameplaymenu : public Gamemode { //the main menu of the game
     public:
+    plane* cd;
+    glm::vec3 cdPos;
+    int buttonx = 0;
+    Uint32 startTime;
     gameplaymenu();
-    void render(SDL_Renderer* renderer, std::vector<Font*> fonts, bg* background, std::vector<SDL_Texture*>* text);
+    void render();
     void logic(double deltatime);
-    void keyPressed(SDL_Keycode);
-    int endlogic();
+    void input(SDL_Keycode);
+    Transition endLogic();
     void reset();
 };

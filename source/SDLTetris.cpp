@@ -231,7 +231,7 @@ int main() {
     long long recordticks = 0;
     std::cout << "Finished initializing!\n";
     Gamemode* gamemodes[] = {
-        new debugscene(),
+        // new debugscene(),
         // new white(),
         new knuxfanscreen(),
         new titlescreen(), //1

@@ -7,4 +7,4 @@ sudo dnf install cmake
 
 #may not be necessary \/ \/
 sudo dnf groupinstall "Development Tools" "Development Libraries"
-./compilermixer.sh
+echo -e "\e[1;32mDone! You can now go ahead and compile the SDL_Mixer_X library with the compilemixer.sh script.\e[0m"

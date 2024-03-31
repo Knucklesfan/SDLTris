@@ -18,10 +18,20 @@ echo -e "\e[1;33m> cd output\e[0m"
 cd output
 echo -e "\e[1;33m> mv lib ../../../\e[0m"
 mv lib ../../../
-echo -e "\e[1;33m> mv include/** ../../../include\e[0m"
-mv include/** ../../../include
+echo -e "\e[1;33m> cd ..\e[0m"
+cd ..
+if test -d ./lib64; then
+    echo -e "\e[1;33m> lib64/* ../../lib\e[0m"
+    mv lib64/* ../../lib
+fi
+if test -d ./external/AudioCodecs/src/AudioCodecs-build/lib64/; then
+    echo -e "\e[1;33m> mv ./external/AudioCodecs/src/AudioCodecs-build/lib64/** ../../lib\e[0m"
+    mv ./external/AudioCodecs/src/AudioCodecs-build/lib64/** ../../lib
+fi
+echo -e "\e[1;33m> mv include/** ../../include\e[0m"
+mv include/** ../../include
 echo -e "\e[1;33m> cd ..\e[0m"
 cd ..
 echo -e "\e[1;33m> rm -rf output\e[0m"
-rm -rf output
+# rm -rf output
 echo -e "\e[1;32mDone! You should be able to compile now.\e[0m"

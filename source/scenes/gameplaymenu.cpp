@@ -8,7 +8,32 @@ gameplaymenu::gameplaymenu() {
     startTime = SDL_GetTicks();
 }
 void gameplaymenu::input(SDL_Keycode keysym) {
-
+    switch(currentscreen) {
+        case 0: {
+            switch(keysym) {
+                case SDLK_LEFT: {
+                    if(selection > 0) {
+                        selection--;
+                    }
+                }break;
+                case SDLK_RIGHT: {
+                    if(selection < NUMBUTTONS) {
+                        selection++;
+                    }
+                }break;
+                case SDLK_UP: {
+                    if(selection >= ROWWIDTH) {
+                        selection-=ROWWIDTH;
+                    }
+                }break;
+                case SDLK_DOWN: {
+                    if(selection < ROWWIDTH) {
+                        selection+=ROWWIDTH;
+                    }
+                }
+            }
+        }break;
+    }
 }
 Transition gameplaymenu::endLogic() {
     Transition t;
@@ -32,7 +57,7 @@ void gameplaymenu::render() {
     Uint32 time = SDL_GetTicks()-startTime;
     if(time > 5000) {
         graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("menubackground"),{0,0},{640,480},0,{SDL_GetTicks()/10.0,SDL_GetTicks()/10.0},{640,480});
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ring"),{-164,-164},{328,328},(SDL_GetTicks()/10)%360,{0,0},{328,328});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ring"),{-164,-164},{328,328},-(SDL_GetTicks()/100.0),{0,0},{328,328});
     }
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
@@ -44,13 +69,13 @@ void gameplaymenu::render() {
     graphics::sprites.at("cdrom-reflectionmap")->activate(2);
     cd->render(graphics::shaders.at(7),graphics::sprites.at("cdrom"),projection,view);
     if(time > 5000) {
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("storymenubutton"),{-300+buttonx,116},{300,128},0,{0,0},{300,128});
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("classicmenubutton"),{640-buttonx,116},{300,128},0,{0,0},{300,128});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("storymenubutton"),{-300+buttonx,116},{300,128},0,{selection==0?300:0,0},{300,128});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("classicmenubutton"),{640-buttonx,116},{300,128},0,{selection==1?300:0,0},{300,128});
         
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("optionsmenubutton"),{52,260},{128,64},0,{0,0},{128,64});
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("creditsmenubutton"),{52+128+8,260},{128,64},0,{0,0},{128,64});
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("exitmenubutton"),{52+128+8+128+8,260},{128,64},0,{0,0},{128,64});
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("highscoremenubutton"),{52+128+8+128+8+128+8,260},{128,64},0,{0,0},{128,64});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("optionsmenubutton"),{52,260},{128,64},0,{selection==2?128:0,0},{128,64});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("highscoremenubutton"),{52+128+8,260},{128,64},0,{selection==3?128:0,0},{128,64});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("creditsmenubutton"),{52+128+8+128+8,260},{128,64},0,{selection==4?128:0,0},{128,64});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("exitmenubutton"),{52+128+8+128+8+128+8,260},{128,64},0,{selection==5?128:0,0},{128,64});
 
     
     }

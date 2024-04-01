@@ -10,12 +10,15 @@
 #include "../gamemode.h"
 #include "../opengl/plane.h"
 
-
+#define NUMBUTTONS 5
+#define ROWWIDTH 2
 class gameplaymenu : public Gamemode { //the main menu of the game
     public:
     plane* cd;
     glm::vec3 cdPos;
     int buttonx = 0;
+    int selection = 0;
+    int currentscreen = 0;
     Uint32 startTime;
     gameplaymenu();
     void render();

@@ -1,4 +1,6 @@
-#version 330 core
+#version 310 es
+precision mediump float;
+
 out vec4 FragColor;
 
 in vec2 TexCoord;
@@ -10,7 +12,7 @@ uniform sampler2D texture1;
 uniform sampler2D reflectionmap;
 uniform sampler2D reflectionmask;
 
-void main()
+void main(void)
 {             
     float ratio = 1.00 / 1.52;
     vec3 I = normalize(Position-cameraPos);

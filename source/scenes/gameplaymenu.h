@@ -19,6 +19,7 @@ class gameplaymenu : public Gamemode { //the main menu of the game
     int buttonx = 0;
     int selection = 0;
     int currentscreen = 0;
+    int currentdialog = 0;
     Uint32 startTime;
     gameplaymenu();
     void render();

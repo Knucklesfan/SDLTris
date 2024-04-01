@@ -25,7 +25,7 @@ buffermanager::buffermanager(int w, int h,bool alpha):width(w),height(h) {
     GLuint depthrenderbuffer;
     glGenRenderbuffers(1, &depthrenderbuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
 
 
@@ -37,7 +37,7 @@ buffermanager::buffermanager(int w, int h,bool alpha):width(w),height(h) {
 
 	// Always check that our framebuffer is ok
 	if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-        throw("buffer error");
+        std::cout << ("buffer error") << glCheckFramebufferStatus(GL_FRAMEBUFFER) << "\n";
     }
 
 	//begin renderplane

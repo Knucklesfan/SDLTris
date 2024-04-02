@@ -14,6 +14,7 @@
 #define ROWWIDTH 2
 class gameplaymenu : public Gamemode { //the main menu of the game
     public:
+    Transition t;
     plane* cd;
     glm::vec3 cdPos;
     int buttonx = 0;

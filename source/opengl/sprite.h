@@ -16,7 +16,7 @@ class spriteRenderer {
         void render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
 float rotate, glm::vec2 texcoord, glm::vec2 texsize);
         void render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
-glm::vec3 rotate, glm::vec2 texcoord, glm::vec2 texsize);
+glm::vec3 rotate, glm::vec2 texcoord, glm::vec2 texsize, glm::vec2 screen={640,480});
 
     private:
         unsigned int quadVAO;

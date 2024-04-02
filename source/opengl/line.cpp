@@ -23,10 +23,9 @@ float distance(int x1, int y1, int x2, int y2) {
     return sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
 }
 
-void lineRenderer::render(shader* shad, glm::vec2 firstcoord, glm::vec2 secondcoord, int thickness,glm::vec4 color) {
-    // prepare transformations
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(COORDINATE_WIDTH), 
-    static_cast<float>(COORDINATE_HEIGHT), 0.0f, -1.0f, 1.0f);
+void lineRenderer::render(shader* shad, glm::vec2 firstcoord, glm::vec2 secondcoord, int thickness,glm::vec4 color, glm::vec2 screensize) {
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(screensize.x), 
+    static_cast<float>(screensize.y), 0.0f, -1.0f, 1.0f);
 
     shad->activate();
 	shad->setVector("projection",glm::value_ptr(projection));

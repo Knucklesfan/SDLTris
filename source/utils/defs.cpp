@@ -8,6 +8,8 @@
 #endif
 #include "../pixfont.h"
 #include "../ttffont.h"
+#include "stb_image.h"
+
 #include <cmath>
 #include <sstream> //std::stringstream
 SDL_Window* graphics::window = nullptr;
@@ -248,6 +250,7 @@ std::vector<bg>* graphics::backgrounds = new std::vector<bg>();
 std::vector<Font*>* graphics::fonts = new std::vector<Font*>();
 std::vector<Mix_Music*>* audio::music = new std::vector<Mix_Music*>();
 std::vector<Mix_Chunk*>* audio::sfx = new std::vector<Mix_Chunk*>();
+std::vector<unsigned int>* graphics::cubemaps = new std::vector<unsigned int>();
 
 std::array<std::array<int, 12>, 5> settings::defaults = {{
 		{ //GAMEPLAY
@@ -396,6 +399,55 @@ void graphics::screenshot() {
     SDL_SaveBMP(temp, filename.c_str());
 
     SDL_FreeSurface(temp);
+}
+void graphics::generatecubemaps() {
+    rapidxml::file<> bgFile((filepath"skyboxes/skyboxes.xml"));
+    rapidxml::xml_document<> bgDoc;
+    bgDoc.parse<0>(bgFile.data());
+    rapidxml::xml_node<char>* parent = bgDoc.first_node("skyboxes");
+    int i = 0;
+    for (rapidxml::xml_node<char>* child = parent->first_node(); child != nullptr; child = child->next_sibling()) {
+
+        std::cout << "loading skybox #" << i << "\n";
+        //std::cout << "HELP ME:" << p.path().filename() << "\n";
+        unsigned int textureID;
+        glGenTextures(1, &textureID);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+        std::string faces[6] = {
+            child->first_node("top")->value(),
+            child->first_node("front")->value(),
+            child->first_node("back")->value(),
+            child->first_node("left")->value(),
+            child->first_node("right")->value(),
+            child->first_node("bottom")->value()
+        };
+        int width, height, nrChannels;
+        for (unsigned int i = 0; i < 6; i++)
+        {
+            unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+            if (data)
+            {
+                glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 
+                            0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+                );
+                stbi_image_free(data);
+            }
+            else
+            {
+                std::cout << "Cubemap tex failed to load at path: " << faces[i] << std::endl;
+                stbi_image_free(data);
+            }
+        }
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+        cubemaps->push_back(textureID);
+        free(faces);
+        i++;
+    }
+
 }
 int graphics::generatebgs() {
    rapidxml::file<> bgFile((filepath"backgrounds/backgrounds.xml"));

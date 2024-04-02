@@ -24,7 +24,7 @@ float rotate, glm::vec2 texcoord, glm::vec2 texsize) {
     render(shad,t,position,size,{0,0,rotate},texcoord,texsize);
 }
 void spriteRenderer::render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
-glm::vec3 rotation, glm::vec2 texcoord, glm::vec2 texsize) {
+glm::vec3 rotation, glm::vec2 texcoord, glm::vec2 texsize, glm::vec2 screen) {
 	/*
     glm::mat4 model = glm::mat4(1.0f);
 
@@ -40,8 +40,8 @@ glm::vec3 rotation, glm::vec2 texcoord, glm::vec2 texsize) {
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 */
     // prepare transformations
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(COORDINATE_WIDTH), 
-    static_cast<float>(COORDINATE_HEIGHT), 0.0f, -100.0f, 100.0f);
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(screen.x), 
+    static_cast<float>(screen.y), 0.0f, -100.0f, 100.0f);
 	glm::vec2 texOffset = glm::vec2(texcoord[0]/t->w,texcoord[1]/t->h);
 	glm::vec2 texScale = glm::vec2(texsize[0]/t->w,texsize[1]/t->h);
 	t->activate(0);

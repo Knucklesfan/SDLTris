@@ -22,11 +22,12 @@ void sine::render(int r, int g, int b, int a, int offset) {
     for(int i = 0; i < width; i++) {
         // SDL_SetRenderDrawColor(renderer, r,g,b,a);
         double drawpoint = sin((rotation+i/20))*(50+offset)+y;
-        graphics::line->render(graphics::shaders.at(1),{i-1,last},{i,drawpoint},1,{r,g,b,a});
+        graphics::line->render(graphics::shaders.at(1),{i-1,last},{i,drawpoint},1,{r,g,b,a},{width,height});
         last = drawpoint;
     }
     buff->disable(640,480,true);
-    buff->render(graphics::shaders.at(4),640,480,false);
+    graphics::sprite->render(graphics::shaders.at(4),
+    &buff->renderTexture, {0,0},{640,480},{0,0,0},{0,0},{320,240});
     // SDL_SetRenderDrawColor(renderer, 0,0,0,255);
     // SDL_SetRenderTarget(renderer,temp);
     // SDL_RenderCopy(renderer, texture, NULL, NULL);

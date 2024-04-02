@@ -182,6 +182,7 @@ class graphics {
         static std::vector<shader*> shaders;
         static std::map<std::string,texture*> sprites;
         static std::vector<texture*>* blocks;
+        static std::vector<unsigned int>* cubemaps;
         static spriteRenderer* sprite;
         static rectRenderer* rect;
         static lineRenderer* line;
@@ -200,6 +201,7 @@ class graphics {
         #ifndef __LEGACY_RENDER
             static int generateshaders();
             static int generatetextures();
+            static void generatecubemaps();
             static void screenshot(); //takes a screenshot and saves it to the running folder
         #endif
 

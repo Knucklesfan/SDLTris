@@ -12,7 +12,7 @@
 class lineRenderer {
     public:
         lineRenderer();
-        void render(shader* shad, glm::vec2 firstcoord, glm::vec2 secondcoord,int thickness,glm::vec4 color);
+        void render(shader* shad, glm::vec2 firstcoord, glm::vec2 secondcoord,int thickness,glm::vec4 color,glm::vec2 screensize = {640,480});
     private:
         unsigned int quadVAO;
         float vertices[24] = { 

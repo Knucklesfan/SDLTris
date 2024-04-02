@@ -149,13 +149,13 @@ void credits::render() {
                     layers+=wordspacing[i];
                 }
             }
-            graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,255*alpha},false,1,glm::vec4(1,1,1,1));
+            graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,alpha},false,1,glm::vec4(1,1,1,1));
             break;
         }
         case 1: {
             graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["thxforplaying"],
     {0,0},{640,480},{0,0,0},{0,0},{640,480});   
-            graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,255*alpha},false,1,glm::vec4(1,1,1,1));
+            graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,alpha},false,1,glm::vec4(1,1,1,1));
             // SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255*alpha);
             // SDL_RenderFillRect(graphics::render, &splashbox);
             break;
@@ -169,7 +169,7 @@ void credits::drawRotatedBlock(int x, int y, const int position[], double angle,
     buff->enable();
     drawCubes(position, 16, 32, 6, 3, 0, abs(sin(time / 500)) + 0.85, texture);
     buff->disable(640,480,true);
-    graphics::sprite->render(graphics::shaders.at(4),graphics::blocks->at(texture),{x,y},{128,128},{angle,0,0},{0,0},{128,128});
+    graphics::sprite->render(graphics::shaders.at(4),&buff->renderTexture,{x,y},{128,128},angle,{0,0},{128,128});
 
     // drawTexture(graphics::render, rendertext, x, y, angle, 1.0, false);
 
@@ -179,7 +179,7 @@ void credits::drawCubes(const int position[], int x, int y, int size, int width,
 
     for (int i = 0; i < size; i++) {
         if (position[i] > 0) {
-            graphics::sprite->render(graphics::shaders.at(4),graphics::blocks->at(texture),{x + (i % width) * 32, y + (i / width) * 32},{16*scale,16*scale},{angle,0,0},{0,0},{16,16});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::blocks->at(texture),{x + (i % width) * 32, y + (i / width) * 32},{16*scale,16*scale},{angle,0,0},{0,0},{16,16},{128,128});
             // graphics::drawTexture(graphics::blocks->at(texture), x + (i % width) * 32, y + (i / width) * 32, angle, scale, false);
         }
     }

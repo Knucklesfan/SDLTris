@@ -34,14 +34,19 @@
 		<vertex>./shaders/vertex_font.shader</vertex> 
 		<fragment>./shaders/fragment_ttf.shader</fragment>
 	</shader>
-	<shader> <!--Used for shiny stuff! 7-->
+	<shader> <!--Used for the CD in the options menu 7-->
 		<vertex>./shaders/vertex_reflective.shader</vertex> 
-		<fragment>./shaders/fragment_reflective.shader</fragment>
+		<fragment>./shaders/fragment_cd.shader</fragment>
 	</shader>
 	<shader> <!--skybox shader 8-->
 		<vertex>./shaders/vertex_skybox.shader</vertex> 
 		<fragment>./shaders/fragment_skybox.shader</fragment>
 	</shader>
+	<shader> <!--Used for shiny stuff! 9-->
+		<vertex>./shaders/vertex_reflective.shader</vertex> 
+		<fragment>./shaders/fragment_reflective.shader</fragment>
+	</shader>
+
 	<!-- ANYTHING BELOW THIS POINT IS OKAY TO MODIFY OR USE IN SCRIPTS! -->
 	<!-- Anything than is beyond this point is not hardcoded by the game and can be modified, or used by backgrounds, sprites or fonts. -->
 </shaders>

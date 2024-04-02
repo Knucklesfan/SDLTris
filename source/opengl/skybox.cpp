@@ -58,9 +58,9 @@ skybox::skybox() {
 void skybox::render(int cubemap) {
     graphics::shaders.at(8)->activate();
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+    projection = glm::perspective(glm::radians(75.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
     glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
-    
+    view = glm::rotate(view,glm::radians(90.0f),glm::vec3(0,1,0));
     graphics::shaders.at(8)->setVector("projection", glm::value_ptr(projection));
     graphics::shaders.at(8)->setVector("view", glm::value_ptr(view));
     // skybox cube

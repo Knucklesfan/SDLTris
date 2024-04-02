@@ -9,12 +9,14 @@
 #include "../background.h"
 #include "../wireframecube.h"
 #include "../opengl/skybox.h"
+#include "../opengl/plane.h"
 
 class credits : public Gamemode
 {
     public:
     credits();
     sine* sineWave;
+    plane* p;
     void render();
     void logic(double deltaTime);
     void input(SDL_Keycode);

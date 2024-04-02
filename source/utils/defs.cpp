@@ -414,12 +414,12 @@ void graphics::generatecubemaps() {
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
         std::string faces[6] = {
+            child->first_node("right")->value(),
+            child->first_node("left")->value(),
+            child->first_node("bottom")->value(),
             child->first_node("top")->value(),
             child->first_node("front")->value(),
-            child->first_node("back")->value(),
-            child->first_node("left")->value(),
-            child->first_node("right")->value(),
-            child->first_node("bottom")->value()
+            child->first_node("back")->value()
         };
         int width, height, nrChannels;
         for (unsigned int i = 0; i < 6; i++)
@@ -444,7 +444,6 @@ void graphics::generatecubemaps() {
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         cubemaps->push_back(textureID);
-        free(faces);
         i++;
     }
 

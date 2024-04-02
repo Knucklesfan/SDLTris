@@ -10,6 +10,7 @@ credits::credits() {
     backg = new bg("./sprites/resultsbg",true);
     loadgame = false;
     sky = new skybox();
+    p = new plane({0,0,0},{1,1,1},{-70,-180,0});
     // rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 128);
     // SDL_SetTextureBlendMode(rendertext, SDL_BLENDMODE_ADD);
     buff= new buffermanager(128,128,true);
@@ -107,6 +108,13 @@ void credits::render() {
     switch(gamemode) {
         case 0: {
             sky->render(0);
+            glm::mat4 projection;
+            projection = glm::perspective(glm::radians(75.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+            glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+            graphics::shaders.at(9)->activate();
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_CUBE_MAP, graphics::cubemaps->at(0));
+            p->render(graphics::shaders.at(9),graphics::sprites.at("homophobicdog"),projection,view);
             sineWave->render(255,255,255,255,0);
             sineWave->render(255,0,0,128,2);
             sineWave->render(0,0,255,128,-2);

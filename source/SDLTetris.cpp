@@ -203,6 +203,7 @@ int main() {
     graphics::generatebgs();
     graphics::generatesprites();
     graphics::generatefonts();
+    graphics::generatecubemaps();
     audio::generatemusic();
     audio::generatesound();
     settings::loadSettings();

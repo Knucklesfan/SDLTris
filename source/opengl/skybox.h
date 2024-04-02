@@ -1,6 +1,5 @@
 #pragma once
-//Not truly a skybox, because that wouldn't really be needed for this project, but rather a sky image!
-//Skyboxes could be implemented here, though....
+//a badass, real-ass skybox baby
 #include "shader.h"
 #include "texture.h"
 #include <SDL2/SDL.h>
@@ -13,7 +12,7 @@
 class skybox {
     public:
         skybox();
-        void render(shader*, texture*);
+        void render(int);
     private:
         unsigned int VBO, VAO, EBO;
 };

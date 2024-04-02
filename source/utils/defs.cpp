@@ -8,7 +8,7 @@
 #endif
 #include "../pixfont.h"
 #include "../ttffont.h"
-#include "stb_image.h"
+#include "../opengl/stb_image.h"
 
 #include <cmath>
 #include <sstream> //std::stringstream

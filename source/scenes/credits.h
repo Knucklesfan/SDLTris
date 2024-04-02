@@ -8,6 +8,7 @@
 #include <math.h>
 #include "../background.h"
 #include "../wireframecube.h"
+#include "../opengl/skybox.h"
 
 class credits : public Gamemode
 {
@@ -22,6 +23,7 @@ class credits : public Gamemode
     // Font* headerfont;
     // Font* textfont;
     bg* backg;
+    skybox* sky;
     wireframecube* cub;
     buffermanager* buff;
     bool loadgame;

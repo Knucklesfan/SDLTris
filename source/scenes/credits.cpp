@@ -9,6 +9,7 @@ credits::credits() {
     sineWave = new sine(0, 120, 320, 240);
     backg = new bg("./sprites/resultsbg",true);
     loadgame = false;
+    sky = new skybox();
     // rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 128);
     // SDL_SetTextureBlendMode(rendertext, SDL_BLENDMODE_ADD);
     buff= new buffermanager(128,128,true);
@@ -105,7 +106,7 @@ void credits::reset() {
 void credits::render() {
     switch(gamemode) {
         case 0: {
-            backg->render();
+            sky->render(0);
             sineWave->render(255,255,255,255,0);
             sineWave->render(255,0,0,128,2);
             sineWave->render(0,0,255,128,-2);

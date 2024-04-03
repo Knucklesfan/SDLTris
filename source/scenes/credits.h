@@ -31,6 +31,8 @@ class credits : public Gamemode
     bool loadgame;
     double time = 0.0;
     double speed = 25;
+    double posx = 0;
+    double posy = 0;
     // std::vector<SDL_Texture*>* textures;
     std::string words[26] = {
         "KNUXFANS TETRIMINOS",

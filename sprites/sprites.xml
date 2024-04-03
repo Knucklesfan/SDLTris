@@ -147,5 +147,8 @@
 		<name>highscoremenubutton</name>
 		<path>./sprites/highscoremenubutton.png</path>
 	</sprite>
-
+	<sprite>
+		<name>normalbrick</name>
+		<path>./sprites/normal_mapping_normal_map.png</path>
+	</sprite>
 </sprites>

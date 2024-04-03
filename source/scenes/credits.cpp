@@ -10,7 +10,8 @@ credits::credits() {
     backg = new bg("./sprites/resultsbg",true);
     loadgame = false;
     sky = new skybox();
-    p = new plane({0,0,0},{1,1,1},{-70,-180,0});
+    
+    p = new plane({0,-2,-50},{100,100,1},{-70,0,0});
     // rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 128);
     // SDL_SetTextureBlendMode(rendertext, SDL_BLENDMODE_ADD);
     buff= new buffermanager(128,128,true);
@@ -23,6 +24,19 @@ void credits::input(SDL_Keycode key) {
     if (key == SDLK_x) {
         speed = 5;
     }
+    if(key == SDLK_UP) {
+        posx+=0.05;
+    }
+    if(key == SDLK_DOWN) {
+        posx-=0.05;
+    }
+    if(key == SDLK_LEFT) {
+        posy+=0.05;
+    }
+    if(key == SDLK_RIGHT) {
+        posy-=0.05;
+    }
+
 }
 void credits::logic(double deltaTime) {
     if(wordsy < -1900 && !goup) {
@@ -43,7 +57,7 @@ void credits::logic(double deltaTime) {
         gamemode = 1;
         godown = true;
     }
-    std::cout << wordsy << "\n";
+    // std::cout << wordsy << "\n";
     if(gamemode == 0) {
         wordsy -= deltaTime/speed;
     }
@@ -109,16 +123,27 @@ void credits::render() {
         case 0: {
             sky->render(0);
             glm::mat4 projection;
-            projection = glm::perspective(glm::radians(75.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+            projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
             glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
             graphics::shaders.at(9)->activate();
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_CUBE_MAP, graphics::cubemaps->at(0));
+            glm::vec3 objColor = glm::vec3(1.0f, 0.5f, 0.31f);
+            glm::vec3 lightcolor = glm::vec3(1.0f, 1.0f, 1.0f);
+            glm::vec3 lightpos = glm::vec3(posx, 0.5, posy);
+            graphics::sprites.at("normalbrick")->activate(1);
+            graphics::shaders.at(9)->setInt("normalMap",1);
+            graphics::shaders.at(9)->setFloat("offset",SDL_GetTicks()/10000.0f);
+
+            graphics::shaders.at(9)->setVec3("objectColor", glm::value_ptr(objColor));
+            graphics::shaders.at(9)->setVec3("lightColor", glm::value_ptr(lightcolor));
+            graphics::shaders.at(9)->setVec3("lightPos", glm::value_ptr(lightpos));
             p->render(graphics::shaders.at(9),graphics::sprites.at("homophobicdog"),projection,view);
             sineWave->render(255,255,255,255,0);
             sineWave->render(255,0,0,128,2);
             sineWave->render(0,0,255,128,-2);
-            cub->render(255, 0, 0);
+            // cub->render(255, 0, 0);
+            std::cout << posx << " " << posy << "\n";
             graphics::sprite->render(graphics::shaders.at(4),&cub->buff->renderTexture,{0,0},{640,480},{0,0,0},{0,0},{640,480});
             drawRotatedBlock(16,16,lpiece,time / 15, 1);
             drawRotatedBlock(496,16,tpiece,time / -15, 2);

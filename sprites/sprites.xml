@@ -151,4 +151,8 @@
 		<name>normalbrick</name>
 		<path>./sprites/normal_mapping_normal_map.png</path>
 	</sprite>
+	<sprite>
+		<name>beachgridskyboxoverlay</name>
+		<path>./sprites/beachgridskyboxoverlay.png</path>
+	</sprite>
 </sprites>

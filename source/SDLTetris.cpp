@@ -236,12 +236,12 @@ int main() {
     Gamemode* gamemodes[] = {
         // new debugscene(),
         // new white(),
-        new credits(), //5
         new knuxfanscreen(),
         new titlescreen(), //1
         new gameplaymenu(), //2
         new game(), //3
         new results(), //4
+        new credits(), //5
         new debugscene() //6
         // new options(), //5
 

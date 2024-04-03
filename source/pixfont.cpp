@@ -103,7 +103,7 @@ render(words, x, y, center, red, blue, green, wordwrap, sine, pos, multiplyin, m
 void pixfont::render(int x, int y, std::string strg, bool center) {
 render(strg, x, y, center, 255, 255, 255, 0, false, 0, 0, 0, 1);
 }
-void pixfont::render(std::string word, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
+void pixfont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
 	txt->activate(0);
 
     shad->activate();
@@ -113,12 +113,12 @@ void pixfont::render(std::string word, int x, int y, bool center, int red, int b
     int finalwidth = 0;
     int drawcolor = 0;
     if(center) {
-        // if (wordwrap > 0 && words.length()*wordsize > wordwrap) {
-            // finalwidth = wordwrap;
-        // }
-        // else {
-            finalwidth = word.length() * wordsize;
-        // }
+        if (wordwrap > 0 && words.length()*wordsize > wordwrap) {
+            finalwidth = wordwrap;
+        }
+        else {
+            finalwidth = words.length() * wordsize;
+        }
     }
     glm::vec3 color = {0,0,0};
     //coloring yet to be supported by ogl renderer
@@ -128,13 +128,13 @@ void pixfont::render(std::string word, int x, int y, bool center, int red, int b
         color.b = blue/255.0;
     }
     // std::cout << words << "\n";
-    // if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
-    //     words = wrap(words, wordwrap/ wordsize);
+    if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
+        words = wrap(words, wordwrap/ wordsize);
 
-    // } //sorry, not yet
-    // std::vector<std::string> wordVector = split(words,'\n');
+    } //sorry, not yet
+    std::vector<std::string> wordVector = split(words,'\n');
     double tmpy = y;
-    // for(std::string word : wordVector) {
+    for(std::string word : wordVector) {
     int i = 0;
     int tmpx = center?(x-(word.length() * wordsize)/2):x;
     for(char& c : word) {
@@ -207,12 +207,13 @@ void pixfont::render(std::string word, int x, int y, bool center, int red, int b
         }
         i++;
     }
+    
 
     tmpy += wordsize;
     #ifdef __LEGACY_RENDER
     SDL_SetTextureColorMod(txt, 255,255,255);
     #endif
-    // }
+    }
     glBindVertexArray(0);
 
 

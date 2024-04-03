@@ -139,6 +139,9 @@ void credits::render() {
             graphics::shaders.at(9)->setVec3("lightColor", glm::value_ptr(lightcolor));
             graphics::shaders.at(9)->setVec3("lightPos", glm::value_ptr(lightpos));
             p->render(graphics::shaders.at(9),graphics::sprites.at("homophobicdog"),projection,view);
+            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["beachgridskyboxoverlay"],
+    {0,0},{640,480},{0,0,0},{0,0},{640,480});   
+
             sineWave->render(255,255,255,255,0);
             sineWave->render(255,0,0,128,2);
             sineWave->render(0,0,255,128,-2);
@@ -162,18 +165,18 @@ void credits::render() {
                 if(y < 512) {
                     switch(wordprops[i]) {
                         case 1: {
-                            graphics::fonts->at(0)->render(320, y, words[i], true,255,255,255, 580,false,0,0,0);
+                            graphics::fonts->at(1)->render(320, y, words[i], true,255,255,255, 580,false,0,0,0);
 
                             layers+=((pixfont*) graphics::fonts->at(0))->height;
                             break;
                         };
                         case 0: {
-                            graphics::fonts->at(1)->render(320, y, words[i], true,255,255,255, 580,false,0,0,0);
+                            graphics::fonts->at(0)->render(320, y, words[i], true,255,255,255, 580,false,0,0,0);
                             layers+=((pixfont*) graphics::fonts->at(1))->height;
                             break;
                         };
                         case 2: {
-                            graphics::fonts->at(0)->render(320, y, words[i], true,255,255,255, 580,true,time/500, 5,20);
+                            graphics::fonts->at(1)->render(320, y, words[i], true,255,0,255, 580,true,time/500, 5,20);
                             // textfont->render(render, words[i],320, y, true,255,0,255,580,true,time/500, 5,20);
                             layers+=((pixfont*) graphics::fonts->at(0))->height;
                             break;

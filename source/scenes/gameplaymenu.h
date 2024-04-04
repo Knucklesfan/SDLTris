@@ -21,6 +21,9 @@ class gameplaymenu : public Gamemode { //the main menu of the game
     int selection = 0;
     int currentscreen = 0;
     Uint32 startTime;
+    Uint32 currentscreenAge;
+    int subselection = 0;
+
     gameplaymenu();
     void render();
     void logic(double deltatime);

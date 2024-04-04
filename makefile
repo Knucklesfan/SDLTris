@@ -1,4 +1,4 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o gameplaymenu.o skybox.o
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o gameplaymenu.o skybox.o model.o
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
@@ -91,6 +91,8 @@ line.o: source/opengl/line.cpp
 	$(CC) $(FLAGS) source/opengl/line.cpp
 skybox.o: source/opengl/skybox.cpp
 	$(CC) $(FLAGS) source/opengl/skybox.cpp
+model.o: source/opengl/model.cpp
+	$(CC) $(FLAGS) source/opengl/model.cpp -std=c++17
 
 clean:
 	rm -f $(OBJS) $(OUT)

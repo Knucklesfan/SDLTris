@@ -12,6 +12,7 @@
 #include "../background.h"
 #include "../gamemode.h"
 #include "../opengl/cube.h"
+#include "../opengl/model.h"
 #include "../ingamemessagebox.h"
 #include <random>
 #include "../font.h"
@@ -50,6 +51,7 @@ class game: public Gamemode
 		bool goup = false;
 		bool godown = false;
 		bool warningflag = false;
+		model* toad;
 		std::string choices[6] = {
 			"RESUME",
 			"EXIT",

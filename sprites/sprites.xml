@@ -155,4 +155,9 @@
 		<name>beachgridskyboxoverlay</name>
 		<path>./sprites/beachgridskyboxoverlay.png</path>
 	</sprite>
+	<sprite>
+		<name>toadtexture</name>
+		<path>./sprites/toadtexture.png</path>
+	</sprite>
+
 </sprites>

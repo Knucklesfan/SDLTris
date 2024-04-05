@@ -179,7 +179,7 @@ void gameplaymenu::render() {
 
             cd->position = {0,-1,-6.5};
             cd->rotation = {-90,0,0};
-            cd->scale = {5,5,1};
+            cd->scale = {6,6,1};
             float y = sin(SDL_GetTicks()/500.0f);
             float z = cos(SDL_GetTicks()/250.0f);
             lamp->rotation = {y*0.0f,-y*10.0f,z*45.0f};
@@ -193,29 +193,31 @@ void gameplaymenu::render() {
             graphics::shaders.at(10)->setFloat("alpha",1);
             ball->scale = {0.5,0.5,0.5};
             ball->rotation = {0,SDL_GetTicks()/1.0f,0};
-            ball->position = {cos(SDL_GetTicks()/1000.0f)*4,-0.70+abs(sin(SDL_GetTicks()/250.0f)),-6.5+sin(SDL_GetTicks()/500.0f)*4};
+            ball->position = {cos(SDL_GetTicks()/1000.0f)*4,-0.70+abs(sin(SDL_GetTicks()/250.0f)),-6.5+sin(SDL_GetTicks()/500.0f)*4}; //fastball
             ball->render(graphics::shaders.at(10),projection,view);
             ball->rotation = {0,SDL_GetTicks()/100.0f,0};
-            ball->position = {sin(SDL_GetTicks()/1000.0f)*4,-0.70+abs(cos(SDL_GetTicks()/250.0f)),-6.5+cos(SDL_GetTicks()/500.0f)*2};
+            ball->position = {sin(SDL_GetTicks()/1000.0f)*4,-0.70+abs(cos(SDL_GetTicks()/250.0f)),-6.5+cos(SDL_GetTicks()/500.0f)*2}; //friendly ball
+            ball->scale = {0.5,
+            0.5,0.5};
             ball->render(graphics::shaders.at(10),projection,view);
             ball->rotation = {0,SDL_GetTicks()/1.0f,0};
-            ball->position = {cos(-1.0*SDL_GetTicks()/1000.0f+M_PI)*4,-0.70+abs(sin(SDL_GetTicks()/300.0f)),-6.5+sin(-1.0*SDL_GetTicks()/500.0f+M_PI)*4};
+            ball->position = {cos(-1.0*SDL_GetTicks()/1000.0f+M_PI)*4,-0.70+abs(sin(SDL_GetTicks()/300.0f)),-6.5+sin(-1.0*SDL_GetTicks()/500.0f+M_PI)*4}; //inverse fastball
             ball->render(graphics::shaders.at(10),projection,view);
             
             ball->rotation = {0,SDL_GetTicks()/1.0f,0};
-            ball->position = {cos(SDL_GetTicks()/1000.0f)*4,-1.50-abs(sin(SDL_GetTicks()/250.0f)),-6.5+sin(SDL_GetTicks()/500.0f)*4};
+            ball->position = {cos(SDL_GetTicks()/1000.0f)*4,-1.50-abs(sin(SDL_GetTicks()/250.0f)),-6.5+sin(SDL_GetTicks()/500.0f)*4}; //mirror fastball
             ball->render(graphics::shaders.at(10),projection,view);
             ball->rotation = {0,SDL_GetTicks()/100.0f,0};
-            ball->position = {sin(SDL_GetTicks()/1000.0f)*4,-1.50-abs(cos(SDL_GetTicks()/250.0f)),-6.5+cos(SDL_GetTicks()/500.0f)*2};
+            ball->position = {sin(SDL_GetTicks()/1000.0f)*4,-1.50-abs(cos(SDL_GetTicks()/250.0f)),-6.5+cos(SDL_GetTicks()/500.0f)*2}; //mirror friendly ball
             ball->render(graphics::shaders.at(10),projection,view);
             ball->rotation = {0,SDL_GetTicks()/1.0f,0};
-            ball->position = {cos(-1.0*SDL_GetTicks()/1000.0f+M_PI)*4,-1.50-abs(sin(SDL_GetTicks()/300.0f)),-6.5+sin(-1.0*SDL_GetTicks()/500.0f+M_PI)*4};
+            ball->position = {cos(-1.0*SDL_GetTicks()/1000.0f+M_PI)*4,-1.50-abs(sin(SDL_GetTicks()/300.0f)),-6.5+sin(-1.0*SDL_GetTicks()/500.0f+M_PI)*4}; //mirror inverse fastball
             ball->render(graphics::shaders.at(10),projection,view);
             graphics::shaders.at(10)->activate();
             lightpos = glm::vec3(z*2, 0.5, -7.5+(-y)*2);
 
             graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
-            graphics::shaders.at(10)->setFloat("alpha",0.9);
+            graphics::shaders.at(10)->setFloat("alpha",0.85);
             cd->render(graphics::shaders.at(10),graphics::sprites.at("checkerboard"),projection,view);
 
             ball->scale = {15,15,15};
@@ -225,6 +227,13 @@ void gameplaymenu::render() {
             graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
 
             ball->render(graphics::shaders.at(10),projection,view);
+
+            ball->scale = {2,2,2};
+            ball->rotation = {0,SDL_GetTicks()/1000.0f,0};
+            ball->position = {20+sin(SDL_GetTicks()/1000.0f)*30,-1,-60+cos(SDL_GetTicks()/1000.0f)*30};
+            lightpos = glm::vec3(20, 60, -60);
+            ball->render(graphics::shaders.at(10),projection,view);
+
             glDisable(GL_DEPTH_TEST);
 
         }break;

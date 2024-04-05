@@ -34,7 +34,7 @@ void main()
     }
     else {
         vec3 result = (ambient) * texture(texture1, TexCoord).xyz;
-        FragColor = vec4(result, alpha);
+        FragColor = vec4(result, alpha+0.05);
     }
 } 
 

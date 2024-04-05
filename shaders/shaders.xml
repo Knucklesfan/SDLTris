@@ -42,9 +42,13 @@
 		<vertex>./shaders/vertex_skybox.shader</vertex> 
 		<fragment>./shaders/fragment_skybox.shader</fragment>
 	</shader>
-	<shader> <!--Used for shiny stuff! 9-->
+	<shader> <!--Used for water stuff! 9-->
 		<vertex>./shaders/vertex_reflective.shader</vertex> 
 		<fragment>./shaders/fragment_reflective.shader</fragment>
+	</shader>
+	<shader> <!--Used for lit stuff! 10-->
+		<vertex>./shaders/vertex_lit.shader</vertex> 
+		<fragment>./shaders/fragment_lit.shader</fragment>
 	</shader>
 
 	<!-- ANYTHING BELOW THIS POINT IS OKAY TO MODIFY OR USE IN SCRIPTS! -->

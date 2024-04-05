@@ -11,6 +11,7 @@ credits::credits() {
     loadgame = false;
     sky = new skybox();
     
+    
     p = new plane({0,-2,-50},{100,100,1},{-70,0,0});
     // rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 128, 128);
     // SDL_SetTextureBlendMode(rendertext, SDL_BLENDMODE_ADD);

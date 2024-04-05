@@ -59,7 +59,7 @@ game::game() {
     ticks = 0;
     realtick = 0;
     //int nextblocks[16];
-    toad = new model("models/amigaball.obj.kmf",{0,-6,-6},{1,1,1},{0,0,0});
+    toad = new model("models/toad.kmf",{0,-6,-6},{1,1,1},{0,0,0});
     std::srand(time+randomIters);
     nextblocks = std::rand() % 7;
 

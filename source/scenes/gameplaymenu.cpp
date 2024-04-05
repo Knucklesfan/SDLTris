@@ -4,6 +4,9 @@ float easeInOutCubic(float x) {
 }
 gameplaymenu::gameplaymenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
+    lamp = new model("models/lamp.kmf",{0,6,-16.5},{1,1,1},{0,0,0});
+    ball = new model("models/amigaball.kmf",{0,6,-16.5},{1,1,1},{0,0,0});
+
     cdPos = {0.75,-0.5,-80.5};
     startTime = SDL_GetTicks();
 }
@@ -131,16 +134,17 @@ void gameplaymenu::logic(double deltatime) {
     }
 }
 void gameplaymenu::render() {
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+    glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+    view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
+
     if(currentscreen < 4) {
         Uint32 time = SDL_GetTicks()-startTime;
         if(time > 5000) {
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("menubackground"),{0,0},{640,480},0,{SDL_GetTicks()/10.0,SDL_GetTicks()/10.0},{640,480});
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ring"),{-164,-164},{328,328},-(SDL_GetTicks()/100.0),{0,0},{328,328});
         }
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
-        glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
-        view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
         cd->position = cdPos;
         cd->rotation = glm::vec3(-70,0,(SDL_GetTicks()/10)%360);
         graphics::sprites.at("beachgridwords")->activate(1);
@@ -169,9 +173,28 @@ void gameplaymenu::render() {
 
 
         }
-        case 2: {
+        case 4: {
+            cd->position = {0,-1,-6.5};
+            cd->rotation = {-90,0,0};
+            cd->scale = {4,4,1};
+            float y = sin(SDL_GetTicks()/500.0f);
+            float z = cos(SDL_GetTicks()/250.0f);
+            graphics::shaders.at(10)->activate();
+            glm::vec3 lightcolor = glm::vec3(1.0f, 1.0f, 1.0f);
+            glm::vec3 lightpos = glm::vec3(z*2, 0.5, -7.5+(-y)*2);
 
-        }
+            graphics::shaders.at(10)->setVec3("lightColor", glm::value_ptr(lightcolor));
+            graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
+
+            cd->render(graphics::shaders.at(10),graphics::sprites.at("checkerboard"),projection,view);
+            glEnable(GL_DEPTH_TEST);
+            lamp->rotation = {y*0.0f,-y*10.0f,z*45.0f};
+            lamp->render(graphics::shaders.at(0),projection,view);
+            ball->rotation = {0,0,0};
+            ball->position = {0,-z*2,-16.5};
+            ball->render(graphics::shaders.at(10),projection,view);
+            glDisable(GL_DEPTH_TEST);
+        }break;
     }
 };
 void gameplaymenu::reset() {

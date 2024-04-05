@@ -126,87 +126,109 @@ model::model(std::string path,glm::vec3 prepos, glm::vec3 scale, glm::vec3 rotat
 
         std::cout << "the entire file content is in memory\n";
         size_t offset = 0;
-        size_t meshNum = 0;
-        memcpy(&meshNum, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(size_t);
-        for(int i = 0; i < meshNum; i++) {
-            size_t size = 0;
-            memcpy(&size, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(size_t);
-            std::vector<vertex> vertices;
-            std::vector<int> indices;
-            std::vector<texture*> textures;
-            Material mat;
-            for(int x = 0; x < size; x++) {
-                    glm::vec3 pos = {0,0,0};
-                    glm::vec3 norm = {0,0,0};
-                    glm::vec2 txcord = {0,0};
-                    memcpy(&pos.x, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+        int versNum = 0;
+        memcpy(&versNum, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(int);
+        switch(versNum) { 
+            case 1: { //version 1, supports verts, normals, texcoords, simple textures, and materials
+                //PROS:
+                //produces smallest file (smaller than an OBJ file, but not by much)
+                //CONS:
+                //supports barely any features (which is fine if you dont need features)
+                //somewhat slow loading time (not sure if it matters enough to improve)
+                size_t meshNum = 0;
+                memcpy(&meshNum, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
+                offset += sizeof(size_t);
+                for(int i = 0; i < meshNum; i++) {
+                    size_t size = 0;
+                    memcpy(&size, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
+                    offset += sizeof(size_t);
+                    std::vector<vertex> vertices;
+                    std::vector<int> indices;
+                    std::vector<texture*> textures;
+                    Material mat;
+                    for(int x = 0; x < size; x++) {
+                            glm::vec3 pos = {0,0,0};
+                            glm::vec3 norm = {0,0,0};
+                            glm::vec2 txcord = {0,0};
+                            memcpy(&pos.x, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            memcpy(&pos.y, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            memcpy(&pos.z, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            memcpy(&norm.x, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            memcpy(&norm.y, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            memcpy(&norm.z, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            memcpy(&txcord.x, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            memcpy(&txcord.y, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(float);
+                            vertices.push_back({pos,norm,txcord});
+                    }
+                    size_t indicesize = 0;
+                    memcpy(&indicesize, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
+                    offset += sizeof(size_t);
+                    for(int x = 0; x < indicesize; x++) {
+                        int indice = 0;
+                        memcpy(&indice, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+                        offset += sizeof(int);
+                        indices.push_back(indice);
+                    }
+                    memcpy(&mat.shininess, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
                     offset += sizeof(float);
-                    memcpy(&pos.y, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(float);
-                    memcpy(&pos.z, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(float);
-                    memcpy(&norm.x, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(float);
-                    memcpy(&norm.y, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(float);
-                    memcpy(&norm.z, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(float);
-                    memcpy(&txcord.x, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(float);
-                    memcpy(&txcord.y, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(float);
-                    vertices.push_back({pos,norm,txcord});
-            }
-            size_t indicesize = 0;
-            memcpy(&indicesize, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(size_t);
-            for(int x = 0; x < indicesize; x++) {
-                int indice = 0;
-                memcpy(&indice, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-                offset += sizeof(int);
-                indices.push_back(indice);
-            }
-            memcpy(&mat.shininess, memblock+offset, sizeof(float)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(float);
-            memcpy(&mat.emissionColor, memblock+offset, sizeof(glm::vec3)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(glm::vec3);
-            memcpy(&mat.diffuseColor, memblock+offset, sizeof(glm::vec3)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(glm::vec3);
-            size_t texsize = 0;
-            memcpy(&texsize, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(size_t);
-            for(int x = 0; x < texsize; x++) {
-                unsigned long sizeofPath = 0;
-                unsigned long sizeofType = 0;
-                std::string path = "";
-                std::string type = "";
-                memcpy(&sizeofPath, memblock+offset, sizeof(unsigned long)); //very memory unsafe, please do not supply bad savestates...
-                offset += sizeof(unsigned long);
-                for(int i = 0; i < sizeofPath; i++) {
-                    char c = 0;
-                    memcpy(&c, memblock+offset, sizeof(char)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(char);
-                    path+=c;
-                } 
-                memcpy(&sizeofType, memblock+offset, sizeof(unsigned long)); //very memory unsafe, please do not supply bad savestates...
-                offset += sizeof(unsigned long);
+                    memcpy(&mat.emissionColor, memblock+offset, sizeof(glm::vec3)); //very memory unsafe, please do not supply bad savestates...
+                    offset += sizeof(glm::vec3);
+                    memcpy(&mat.diffuseColor, memblock+offset, sizeof(glm::vec3)); //very memory unsafe, please do not supply bad savestates...
+                    offset += sizeof(glm::vec3);
+                    size_t texsize = 0;
+                    memcpy(&texsize, memblock+offset, sizeof(size_t)); //very memory unsafe, please do not supply bad savestates...
+                    offset += sizeof(size_t);
+                    for(int x = 0; x < texsize; x++) {
+                        unsigned long sizeofPath = 0;
+                        unsigned long sizeofType = 0;
+                        std::string path = "";
+                        std::string type = "";
+                        memcpy(&sizeofPath, memblock+offset, sizeof(unsigned long)); //very memory unsafe, please do not supply bad savestates...
+                        offset += sizeof(unsigned long);
+                        for(int i = 0; i < sizeofPath; i++) {
+                            char c = 0;
+                            memcpy(&c, memblock+offset, sizeof(char)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(char);
+                            path+=c;
+                        } 
+                        memcpy(&sizeofType, memblock+offset, sizeof(unsigned long)); //very memory unsafe, please do not supply bad savestates...
+                        offset += sizeof(unsigned long);
 
-                for(int i = 0; i < sizeofType; i++) {
-                    char c = 0;
-                    memcpy(&c, memblock+offset, sizeof(char)); //very memory unsafe, please do not supply bad savestates...
-                    offset += sizeof(char);
-                    type+=c;
-                } 
-                std::vector<std::string> pathDelim = split(path,'/');
-                std::string texturepath = "./models/textures/" + pathDelim.at(pathDelim.size()-1);
-                texture* t = new texture(texturepath);
-                t->type = type;
-                textures.push_back(t);
-            }
-            meshes.push_back(mesh(vertices,indices,textures,mat));
+                        for(int i = 0; i < sizeofType; i++) {
+                            char c = 0;
+                            memcpy(&c, memblock+offset, sizeof(char)); //very memory unsafe, please do not supply bad savestates...
+                            offset += sizeof(char);
+                            type+=c;
+                        } 
+                        std::vector<std::string> pathDelim = split(path,'/');
+                        std::string texturepath = "./models/textures/" + pathDelim.at(pathDelim.size()-1);
+                        texture* t = new texture(texturepath);
+                        t->type = type;
+                        textures.push_back(t);
+                    }
+                    meshes.push_back(mesh(vertices,indices,textures,mat));
 
+                }
+
+            }break;
+            case 2: { //Supports bones and animations
+            //PROS:
+            //Supports more features
+            //CONS:
+            //Stores more data (larger)
+            //Slower to load (animations take a while to load)
+            //Slower to render (animations take a while to render)
+
+            }
         }
         delete memblock;
     }

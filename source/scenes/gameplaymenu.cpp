@@ -5,7 +5,7 @@ float easeInOutCubic(float x) {
 gameplaymenu::gameplaymenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
     lamp = new model("models/lamp.kmf",{0,6,-16.5},{1,1,1},{0,0,0});
-    ball = new model("models/amigaball.kmf",{0,6,-16.5},{1,1,1},{0,0,0});
+    ball = new model("models/amigaball.kmf",{0,6,-16.5},{0.5,0.5,0.5},{0,0,0});
 
     cdPos = {0.75,-0.5,-80.5};
     startTime = SDL_GetTicks();
@@ -137,7 +137,7 @@ void gameplaymenu::render() {
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
     glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
-    view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
+    // view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
 
     if(currentscreen < 4) {
         Uint32 time = SDL_GetTicks()-startTime;
@@ -174,25 +174,50 @@ void gameplaymenu::render() {
 
         }
         case 4: {
+            glEnable(GL_DEPTH_TEST);
+            glDepthFunc(GL_LESS); 
+
             cd->position = {0,-1,-6.5};
             cd->rotation = {-90,0,0};
-            cd->scale = {4,4,1};
+            cd->scale = {5,5,1};
             float y = sin(SDL_GetTicks()/500.0f);
             float z = cos(SDL_GetTicks()/250.0f);
-            graphics::shaders.at(10)->activate();
-            glm::vec3 lightcolor = glm::vec3(1.0f, 1.0f, 1.0f);
-            glm::vec3 lightpos = glm::vec3(z*2, 0.5, -7.5+(-y)*2);
-
-            graphics::shaders.at(10)->setVec3("lightColor", glm::value_ptr(lightcolor));
-            graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
-
-            cd->render(graphics::shaders.at(10),graphics::sprites.at("checkerboard"),projection,view);
-            glEnable(GL_DEPTH_TEST);
             lamp->rotation = {y*0.0f,-y*10.0f,z*45.0f};
             lamp->render(graphics::shaders.at(0),projection,view);
-            ball->rotation = {0,0,0};
-            ball->position = {0,-z*2,-16.5};
+            glm::vec3 lightcolor = glm::vec3(1.0f, 1.0f, 1.0f);
+
+            graphics::shaders.at(10)->activate();
+            glm::vec3 lightpos = glm::vec3(z*2, 5.75, -7.5+(-y)*2);
+            graphics::shaders.at(10)->setVec3("lightColor", glm::value_ptr(lightcolor));
+            graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
+            graphics::shaders.at(10)->setFloat("alpha",1);
+
+            ball->rotation = {0,SDL_GetTicks()/1.0f,0};
+            ball->position = {cos(SDL_GetTicks()/1000.0f)*4,-0.70+abs(sin(SDL_GetTicks()/250.0f)),-6.5+sin(SDL_GetTicks()/500.0f)*4};
             ball->render(graphics::shaders.at(10),projection,view);
+            ball->rotation = {0,SDL_GetTicks()/100.0f,0};
+            ball->position = {sin(SDL_GetTicks()/1000.0f)*4,-0.70+abs(cos(SDL_GetTicks()/250.0f)),-6.5+cos(SDL_GetTicks()/500.0f)*2};
+            ball->render(graphics::shaders.at(10),projection,view);
+            ball->rotation = {0,SDL_GetTicks()/1.0f,0};
+            ball->position = {cos(-1.0*SDL_GetTicks()/1000.0f+M_PI)*4,-0.70+abs(sin(SDL_GetTicks()/300.0f)),-6.5+sin(-1.0*SDL_GetTicks()/500.0f+M_PI)*4};
+            ball->render(graphics::shaders.at(10),projection,view);
+            
+            ball->rotation = {0,SDL_GetTicks()/1.0f,0};
+            ball->position = {cos(SDL_GetTicks()/1000.0f)*4,-1.50-abs(sin(SDL_GetTicks()/250.0f)),-6.5+sin(SDL_GetTicks()/500.0f)*4};
+            ball->render(graphics::shaders.at(10),projection,view);
+            ball->rotation = {0,SDL_GetTicks()/100.0f,0};
+            ball->position = {sin(SDL_GetTicks()/1000.0f)*4,-1.50-abs(cos(SDL_GetTicks()/250.0f)),-6.5+cos(SDL_GetTicks()/500.0f)*2};
+            ball->render(graphics::shaders.at(10),projection,view);
+            ball->rotation = {0,SDL_GetTicks()/1.0f,0};
+            ball->position = {cos(-1.0*SDL_GetTicks()/1000.0f+M_PI)*4,-1.50-abs(sin(SDL_GetTicks()/300.0f)),-6.5+sin(-1.0*SDL_GetTicks()/500.0f+M_PI)*4};
+            ball->render(graphics::shaders.at(10),projection,view);
+            graphics::shaders.at(10)->activate();
+            lightpos = glm::vec3(z*2, 0.5, -7.5+(-y)*2);
+
+            graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
+            graphics::shaders.at(10)->setFloat("alpha",0.9);
+            cd->render(graphics::shaders.at(10),graphics::sprites.at("checkerboard"),projection,view);
+
             glDisable(GL_DEPTH_TEST);
         }break;
     }

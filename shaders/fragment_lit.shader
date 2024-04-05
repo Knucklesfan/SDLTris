@@ -12,11 +12,12 @@ uniform vec3 lightColor;
 uniform vec3 objectColor;
 // texture sampler
 uniform sampler2D texture1;
+uniform float alpha;
 
 void main()
 {
     // ambient
-    float ambientStrength = 0.1;
+    float ambientStrength = 0.2;
     vec3 ambient = ambientStrength * lightColor;
   	
     // diffuse 
@@ -27,13 +28,13 @@ void main()
     if(theta > 0.59779827917) {
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
-            
+    
     vec3 result = (ambient + diffuse) * texture(texture1, TexCoord).xyz;
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result, alpha);
     }
     else {
         vec3 result = (ambient) * texture(texture1, TexCoord).xyz;
-        FragColor = vec4(result, 1.0);
+        FragColor = vec4(result, alpha);
     }
 } 
 

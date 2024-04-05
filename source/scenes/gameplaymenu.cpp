@@ -191,7 +191,7 @@ void gameplaymenu::render() {
             graphics::shaders.at(10)->setVec3("lightColor", glm::value_ptr(lightcolor));
             graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
             graphics::shaders.at(10)->setFloat("alpha",1);
-
+            ball->scale = {0.5,0.5,0.5};
             ball->rotation = {0,SDL_GetTicks()/1.0f,0};
             ball->position = {cos(SDL_GetTicks()/1000.0f)*4,-0.70+abs(sin(SDL_GetTicks()/250.0f)),-6.5+sin(SDL_GetTicks()/500.0f)*4};
             ball->render(graphics::shaders.at(10),projection,view);
@@ -218,7 +218,15 @@ void gameplaymenu::render() {
             graphics::shaders.at(10)->setFloat("alpha",0.9);
             cd->render(graphics::shaders.at(10),graphics::sprites.at("checkerboard"),projection,view);
 
+            ball->scale = {15,15,15};
+            ball->rotation = {0,SDL_GetTicks()/100.0f,0};
+            ball->position = {20,-1,-60};
+            lightpos = glm::vec3(20, 60, -60);
+            graphics::shaders.at(10)->setVec3("lightPos", glm::value_ptr(lightpos));
+
+            ball->render(graphics::shaders.at(10),projection,view);
             glDisable(GL_DEPTH_TEST);
+
         }break;
     }
 };

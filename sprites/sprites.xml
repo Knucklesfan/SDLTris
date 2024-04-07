@@ -156,8 +156,16 @@
 		<path>./sprites/beachgridskyboxoverlay.png</path>
 	</sprite>
 	<sprite>
-		<name>toadtexture</name>
-		<path>./sprites/toadtexture.png</path>
+		<name>storymodemore</name>
+		<path>./sprites/storymodemore.png</path>
+	</sprite>
+	<sprite>
+		<name>storymode1</name>
+		<path>./sprites/storymode1.png</path>
+	</sprite>
+	<sprite>
+		<name>storymode2</name>
+		<path>./sprites/storymode2.png</path>
 	</sprite>
 
 </sprites>

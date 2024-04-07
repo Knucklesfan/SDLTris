@@ -24,10 +24,12 @@ class gameplaymenu : public Gamemode { //the main menu of the game
     int selection = 0;
     int currentscreen = 0;
     float transition = 0.0;
-    bool doTransition = false;
+    bool doDownTransition = false;
+    bool doDownReturnTransition = false;
     Uint32 startTime;
     Uint32 currentscreenAge;
     int subselection = 0;
+    int subbuttons = 0;
 
     gameplaymenu();
     void render();

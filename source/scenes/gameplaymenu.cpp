@@ -24,8 +24,8 @@ void gameplaymenu::input(SDL_Keycode keysym) {
     else {
             switch(keysym) {
                 case SDLK_LEFT: {
-                    if(currentscreen == 1) {
-                        if(subselection) {
+                    if(currentscreen != 0) {
+                        if(subselection > 0) {
                             subselection--;
                             Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
                         }
@@ -38,8 +38,8 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                     }
                 }break;
                 case SDLK_RIGHT: {
-                    if(currentscreen == 1) {
-                        if(!subselection) {
+                    if(currentscreen != 0) {
+                        if(subselection < subbuttons) {
                             subselection++;
                             Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
                         }
@@ -71,7 +71,7 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                         case 0: {
                         switch(selection) {
                             case 0: {
-                                doTransition = true;
+                                doDownTransition = true;
                                 Mix_CrossFadeMusicStream(audio::music->at(1),audio::music->at(2),-1,1000,0);
                             }break;
                             case 1: {
@@ -90,6 +90,8 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                             }break;
                             case 5: {
                                 currentscreen = 1;
+                                subbuttons = 1;
+
                                 currentscreenAge = SDL_GetTicks();
                             }break;
                         }
@@ -112,6 +114,10 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                             currentscreen = 0;
                             subselection = 0;
                         }break;
+                        case 4: {
+                            doDownReturnTransition = 1;
+                            
+                        }break;
                     }
                 }break;
             }
@@ -127,7 +133,7 @@ void gameplaymenu::logic(double deltatime) {
     }
     else {
         cdPos = {0.75,-0.5+(transition*2),-1.5};
-
+        std::cout << cdPos.x << " " << cdPos.y << " " << cdPos.z << "\n";
         if(buttonx < 312) {
             buttonx = utils::lerp(buttonx,340,deltatime*0.005);
         }
@@ -135,11 +141,12 @@ void gameplaymenu::logic(double deltatime) {
             buttonx = 312;
         }
     }
-    if(doTransition) {
-        std::cout << transition << "\n";
+    if(doDownTransition) {
         if(transition > 1 && currentscreen != 4) {
             currentscreen =  4;
             currentscreenAge = SDL_GetTicks();
+            subbuttons = 2;
+            subselection = 1;
         }
         else if(transition < 1 && currentscreen != 4){
             transition += deltatime/2500.0f;
@@ -149,7 +156,25 @@ void gameplaymenu::logic(double deltatime) {
         }
         else {
             transition = 0;
-            doTransition = false;
+            doDownTransition = false;
+        }
+    }
+    if(doDownReturnTransition) {
+        if(transition > 1 && currentscreen != 0) {
+            currentscreen =  0;
+            currentscreenAge = SDL_GetTicks();
+            Mix_CrossFadeMusicStream(audio::music->at(2),audio::music->at(1),-1,1000,0);
+
+        }
+        else if(transition < 1 && currentscreen != 0){
+            transition += deltatime/2500.0f;
+        }
+        else if(transition > 0 && currentscreen == 0){
+            transition-= deltatime/2500.0f;
+        }
+        else {
+            transition = 0;
+            doDownReturnTransition = false;
         }
     }
 }
@@ -170,6 +195,7 @@ void gameplaymenu::render() {
         }
         cd->position = cdPos;
         cd->rotation = glm::vec3(-70,0,(SDL_GetTicks()/10)%360);
+        cd->scale = {1,1,1};
         graphics::sprites.at("beachgridwords")->activate(1);
         graphics::sprites.at("cdrom-reflectionmap")->activate(2);
         cd->render(graphics::shaders.at(7),graphics::sprites.at("cdrom"),projection,view);
@@ -195,7 +221,7 @@ void gameplaymenu::render() {
             graphics::fonts->at(0)->render((192+0), 180+120-32, "No", true,255,subselection?255:0,255,-1,false,0,0,0);
 
 
-        }
+        }break;
         case 4: {
             view = glm::translate(view, glm::vec3(0.0, 0-(easeOutQuint(transition)*60), 0.0)); 
 
@@ -260,6 +286,20 @@ void gameplaymenu::render() {
             ball->render(graphics::shaders.at(10),projection,view);
 
             glDisable(GL_DEPTH_TEST);
+            if(transition < 0.15) {
+                graphics::shaders.at(5)->activate();
+                glm::vec4 backgroundShade = {1,1,1,(subselection==0?1.0:0.25)-(transition*(1/0.15))};
+                graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(backgroundShade));
+                graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("storymode2"),{57,40},{163,400},0,{0,0},{163,400});
+                backgroundShade = {1,1,1,(subselection==1?1.0:0.25)-(transition*(1/0.15))};
+                graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(backgroundShade));
+                graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("storymode1"),{236+2,40},{163,400},0,{0,0},{163,400});
+                backgroundShade = {1,1,1,(subselection==2?1.0:0.25)-(transition*(1/0.15))};
+                graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(backgroundShade));
+
+                graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("storymodemore"),{415+2,40},{163,400},0,{0,0},{163,400});
+
+            }
 
         }break;
     }

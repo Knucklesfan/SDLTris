@@ -92,7 +92,7 @@ void credits::reset() {
     if (Mix_PlayingMusic() == 0)
     {
         //Play the music
-        Mix_PlayMusic(audio::music->at(2), -1);
+        Mix_PlayMusic(audio::music->at(3), -1);
     }
     //If music is being played
     else

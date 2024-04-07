@@ -1,4 +1,7 @@
 #include "gameplaymenu.h"
+float easeOutQuint(float x) {
+    return x * x * x * x * x;
+}
 float easeInOutCubic(float x) {
     return -std::pow((2*x)-1, 2)+1;
 }
@@ -68,8 +71,8 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                         case 0: {
                         switch(selection) {
                             case 0: {
-                                currentscreen = 4;
-                                currentscreenAge = SDL_GetTicks();
+                                doTransition = true;
+                                Mix_CrossFadeMusicStream(audio::music->at(1),audio::music->at(2),-1,1000,0);
                             }break;
                             case 1: {
 
@@ -123,13 +126,30 @@ void gameplaymenu::logic(double deltatime) {
         cdPos = glm::vec3(0.75-11.5*easeInOutCubic(time/5000.0), -0.5, utils::lerp(-80.5,-1.5,time/5000.0));
     }
     else {
-        cdPos = {0.75,-0.5,-1.5};
+        cdPos = {0.75,-0.5+(transition*2),-1.5};
 
         if(buttonx < 312) {
             buttonx = utils::lerp(buttonx,340,deltatime*0.005);
         }
         else {
             buttonx = 312;
+        }
+    }
+    if(doTransition) {
+        std::cout << transition << "\n";
+        if(transition > 1 && currentscreen != 4) {
+            currentscreen =  4;
+            currentscreenAge = SDL_GetTicks();
+        }
+        else if(transition < 1 && currentscreen != 4){
+            transition += deltatime/2500.0f;
+        }
+        else if(transition > 0 && currentscreen == 4){
+            transition-= deltatime/2500.0f;
+        }
+        else {
+            transition = 0;
+            doTransition = false;
         }
     }
 }
@@ -142,8 +162,11 @@ void gameplaymenu::render() {
     if(currentscreen < 4) {
         Uint32 time = SDL_GetTicks()-startTime;
         if(time > 5000) {
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("menubackground"),{0,0},{640,480},0,{SDL_GetTicks()/10.0,SDL_GetTicks()/10.0},{640,480});
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ring"),{-164,-164},{328,328},-(SDL_GetTicks()/100.0),{0,0},{328,328});
+            glm::vec4 backgroundShade = {1,1,1,1-transition};
+            graphics::shaders.at(5)->activate();
+            graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(backgroundShade));
+            graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("menubackground"),{0,0},{640,480},0,{SDL_GetTicks()/10.0,SDL_GetTicks()/10.0},{640,480});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ring"),{-164,-164-transition*1000},{328,328},-(SDL_GetTicks()/100.0),{0,0},{328,328});
         }
         cd->position = cdPos;
         cd->rotation = glm::vec3(-70,0,(SDL_GetTicks()/10)%360);
@@ -151,13 +174,13 @@ void gameplaymenu::render() {
         graphics::sprites.at("cdrom-reflectionmap")->activate(2);
         cd->render(graphics::shaders.at(7),graphics::sprites.at("cdrom"),projection,view);
         if(time > 5000) {
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("storymenubutton"),{-300+buttonx+(selection==0?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==0?116+sin(SDL_GetTicks()/500.0f)*8:116},{300+(selection==0?((sin(SDL_GetTicks()/100.0f)))*16:0),128},{0,0,0},{selection==0?300:0,0},{300,128});
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("classicmenubutton"),{640-buttonx+(selection==1?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==1?116+sin(SDL_GetTicks()/500.0f)*8:116},{300+(selection==1?((sin(SDL_GetTicks()/100.0f)))*16:0),128},0,{selection==1?300:0,0},{300,128});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("storymenubutton"),{-300+buttonx+(selection==0?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==0?116+sin(SDL_GetTicks()/500.0f)*8-transition*1000:116-transition*1000},{300+(selection==0?((sin(SDL_GetTicks()/100.0f)))*16:0),128},{0,0,0},{selection==0?300:0,0},{300,128});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("classicmenubutton"),{640-buttonx+(selection==1?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==1?116+sin(SDL_GetTicks()/500.0f)*8-transition*1000:116-transition*1000},{300+(selection==1?((sin(SDL_GetTicks()/100.0f)))*16:0),128},0,{selection==1?300:0,0},{300,128});
             
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("optionsmenubutton"),{52+(selection==2?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==2?260+sin(SDL_GetTicks()/500.0f)*8:260},{128+(selection==2?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==2?128:0,0},{128,64});
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("highscoremenubutton"),{52+128+8+(selection==3?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==3?260+sin(SDL_GetTicks()/500.0f)*8:260},{128+(selection==3?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==3?128:0,0},{128,64});
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("creditsmenubutton"),{52+128+8+128+8+(selection==4?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==4?260+sin(SDL_GetTicks()/500.0f)*8:260},{128+(selection==4?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==4?128:0,0},{128,64});
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("exitmenubutton"),{52+128+8+128+8+128+8+(selection==5?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==5?260+sin(SDL_GetTicks()/500.0f)*8:260},{128+(selection==5?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==5?128:0,0},{128,64});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("optionsmenubutton"),{52+(selection==2?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==2?260+sin(SDL_GetTicks()/500.0f)*8-transition*1000:260-transition*1000},{128+(selection==2?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==2?128:0,0},{128,64});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("highscoremenubutton"),{52+128+8+(selection==3?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==3?260+sin(SDL_GetTicks()/500.0f)*8-transition*1000:260-transition*1000},{128+(selection==3?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==3?128:0,0},{128,64});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("creditsmenubutton"),{52+128+8+128+8+(selection==4?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==4?260+sin(SDL_GetTicks()/500.0f)*8-transition*1000:260-transition*1000},{128+(selection==4?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==4?128:0,0},{128,64});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("exitmenubutton"),{52+128+8+128+8+128+8+(selection==5?((sin(SDL_GetTicks()/100.0f+M_PIf64)))*8:0),selection==5?260+sin(SDL_GetTicks()/500.0f)*8-transition*1000:260-transition*1000},{128+(selection==5?((sin(SDL_GetTicks()/100.0f)))*16:0),64},0,{selection==5?128:0,0},{128,64});
         }
     }
     switch(currentscreen) {
@@ -174,6 +197,8 @@ void gameplaymenu::render() {
 
         }
         case 4: {
+            view = glm::translate(view, glm::vec3(0.0, 0-(easeOutQuint(transition)*60), 0.0)); 
+
             glEnable(GL_DEPTH_TEST);
             glDepthFunc(GL_LESS); 
 

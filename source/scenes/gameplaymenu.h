@@ -23,6 +23,8 @@ class gameplaymenu : public Gamemode { //the main menu of the game
     int buttonx = 0;
     int selection = 0;
     int currentscreen = 0;
+    float transition = 0.0;
+    bool doTransition = false;
     Uint32 startTime;
     Uint32 currentscreenAge;
     int subselection = 0;

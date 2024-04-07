@@ -120,12 +120,13 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             finalwidth = words.length() * wordsize;
         }
     }
-    glm::vec3 color = {0,0,0};
+    glm::vec4 color = {0,0,0,1};
     //coloring yet to be supported by ogl renderer
     if(red > 0 || blue > 0 || green > 0) {
         color.r = red/255.0;
         color.g = green/255.0;
         color.b = blue/255.0;
+        color.w = 1;
     }
     // std::cout << words << "\n";
     if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
@@ -150,7 +151,7 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             SDL_SetTextureColorMod(texture, red, green, blue);
         }
         #else
-        shad->setVec3("spriteColor",glm::value_ptr(color));
+        shad->setVec4("spriteColor",glm::value_ptr(color));
 
         #endif
         char a = c;

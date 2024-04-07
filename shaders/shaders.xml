@@ -6,31 +6,31 @@
 	<!-- For developers, shaders and whatnot in these xml files handle the slots that these are loaded into when the game parses them -->
 	<!-- For example, vertex_unlit.shader is in slot 0, and so forth. -->
 
-	<shader> <!-- Flat shader for 3d objects, not sure where im gonna use this yet, might be swappable (BUT NOT REMOVABLE!)-->
+	<shader> <!-- Flat shader for 3d objects, not sure where im gonna use this yet, might be swappable (BUT NOT REMOVABLE!) 0-->
 		<vertex>./shaders/vertex_unlit.shader</vertex>
 		<fragment>./shaders/fragment_unlit.shader</fragment>
 	</shader>
-	<shader> <!-- Shader used to draw primatives to the screen with a color. Has nothing else -->
+	<shader> <!-- Shader used to draw primatives to the screen with a color. Has nothing else  1-->
 		<vertex>./shaders/vertex_rainbow.shader</vertex>
 		<fragment>./shaders/fragment_rainbow.shader</fragment>
 	</shader>
-	<shader> <!-- Used to handle the simple backgrounds that do not move. Very fast for rendering just textures to the screen. -->
+	<shader> <!-- Used to handle the simple backgrounds that do not move. Very fast for rendering just textures to the screen. 2-->
 		<vertex>./shaders/vertex_background.shader</vertex>
 		<fragment>./shaders/fragment_background.shader</fragment>
 	</shader>
-	<shader> <!-- Used to adjust the framebuffer's size while maintaining its aspect ratio. -->
+	<shader> <!-- Used to adjust the framebuffer's size while maintaining its aspect ratio. 3-->
 		<vertex>./shaders/vertex_aspect.shader</vertex>
 		<fragment>./shaders/fragment_aspect.shader</fragment>
 	</shader>
-	<shader> <!-- Current and rapidly expanding shader for rendering sprites to the screen. -->
+	<shader> <!-- Current and rapidly expanding shader for rendering sprites to the screen. 4-->
 		<vertex>./shaders/vertex_sprite.shader</vertex>
 		<fragment>./shaders/fragment_sprite.shader</fragment>
 	</shader>
-	<shader> <!--Used for Bitmap fonts-->
+	<shader> <!--Used for Bitmap fonts 5-->
 		<vertex>./shaders/vertex_sprite.shader</vertex>
 		<fragment>./shaders/fragment_font.shader</fragment>
 	</shader>
-	<shader> <!--Used for TTF Fonts-->
+	<shader> <!--Used for TTF Fonts 6-->
 		<vertex>./shaders/vertex_font.shader</vertex> 
 		<fragment>./shaders/fragment_ttf.shader</fragment>
 	</shader>

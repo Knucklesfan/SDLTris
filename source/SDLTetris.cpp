@@ -195,7 +195,7 @@ int main() {
 	// glEnable(GL_DEPTH_TEST);  
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
-	buffermanager buffer = buffermanager(INTERNAL_WIDTH,INTERNAL_HEIGHT);
+	graphics::globalbuffer = new buffermanager(INTERNAL_WIDTH,INTERNAL_HEIGHT);
     graphics::generateshaders();
 
 #endif
@@ -296,7 +296,7 @@ int main() {
         #else
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            buffer.enable();
+            graphics::globalbuffer->enable();
             global->startRender();
         #endif
         gamemodes[gamemode]->logic(graphics::deltaTime);
@@ -322,8 +322,8 @@ int main() {
 
         graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
 
-        buffer.disable(WINDOW_WIDTH,WINDOW_HEIGHT);
-        buffer.render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
+        graphics::globalbuffer->disable(WINDOW_WIDTH,WINDOW_HEIGHT);
+        graphics::globalbuffer->render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
         // preciseSleep(floor(1000.0f/60.0f - deltaTime)/1000.0f);
         SDL_GL_SwapWindow(window);
         #endif

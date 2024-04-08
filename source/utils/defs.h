@@ -186,6 +186,7 @@ class graphics {
         static spriteRenderer* sprite;
         static rectRenderer* rect;
         static lineRenderer* line;
+        static buffermanager* globalbuffer;
     #endif
         static std::vector<bg>* backgrounds;
         static std::vector<Font*>* fonts;

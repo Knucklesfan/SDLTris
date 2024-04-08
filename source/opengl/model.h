@@ -1,3 +1,4 @@
+#pragma once
 #include "../utils/defs.h"
 //i wrote a lot of this code a long time ago
 //so im just gonna copy the header from that...

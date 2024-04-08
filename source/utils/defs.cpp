@@ -213,7 +213,7 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
 #else
     rectRenderer* graphics::rect = NULL;
     lineRenderer* graphics::line = NULL;
-
+    buffermanager* graphics::globalbuffer = NULL;
     spriteRenderer* graphics::sprite = NULL;
     std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
     std::vector<std::string> settings::demos = std::vector<std::string>();
@@ -386,12 +386,12 @@ void settings::loadDemos() {
 void graphics::screenshot() {
     SDL_Surface * temp = SDL_CreateRGBSurface(SDL_SWSURFACE, 640, 480, 24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
 
-    char * pixels = new char [3 * 640 * 480];
+    char * pixels = new char [4 * 640 * 480];
 
-    glReadPixels(0, 0, 640, 480, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+    glGetTexImage(globalbuffer->renderTexture.id, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
     for (int i = 0 ; i < 480 ; i++)
-        std::memcpy( ((char *) temp->pixels) + temp->pitch * i, pixels + 3 * 640 * (480-i - 1), 640*3 );
+        std::memcpy( ((char *) temp->pixels) + temp->pitch * i, pixels + 4 * 640 * (480-i - 1), 640*4 );
 
     delete [] pixels;
     printf("Screenshot taken!\n");

@@ -1,0 +1,122 @@
+<story>
+    <meta>
+        <name>CD-Interactive</name>
+        <author>Knucklesfan</author>
+        <version>1</version>
+        <desc>A ground-up rebirth of the Philips CD-I Classic: Tetris! With original, and new artwork</desc>
+        <image>placeholder.bmp</image>
+    </meta>
+    <scenes> <!--Stories are made up of scenes. Scenes can either be defined in their own xml and lua files, or be defined inline for simple scenes. The game comes built-in with baseline scenes and input mechanics for easy access of scenes. CD-I demos these scenes, but for futher context, please see The Context for a good example of every scene used to its max potential!-->
+        <fmv> <!--Video playback is possible with the FMV tag. This is usually intended to be used for simple videos, but can be used in a multitude of situations. Requires ffmpeg on compiled system. If FFMpeg is not available on a released system, then bundled alongside will be the hypothetical KMV format of compressed video my way (not that its gonna be compressed that great lmao)-->
+            <scenenum>0</scenenum> <!-- Specifying a scene number is important!  -->
+            <video>teststory/videos/test.mp4</video>
+            <onexit>
+                <transition> <!-- Every scene has an endlogic, and that endlogic throws an onexit once exited. This is NOT interpreted as lua. Transitions happen by the engine to ensure that nothing can transition to an unready state (if thats even possible to be made with such a limited lua engine) -->
+                    <speed>0.001</speed> <!-- double -->
+                    <result>1</result> <!-- scene to transition to -->
+                    <originX>320</originX> <!-- Area to circle into for transitions that use this -->
+                    <originY>240</originY> <!-- see above -->
+                    <fadetype>BLOCKS</fadetype> <!--Transition to use-->
+                </transition>
+            </onexit>
+        </fmv>
+        <menu> <!-- Menus are defined as designable interactive areas the player can interact with. These menus show buttons, text, etc and each button has its own calls with that. Usually you would want to do this with lua, but if you dont want to write code, then you can easily use these menus to get a lot of stuff done with it. -->
+            <object type="text">
+                <x>320</x>
+                <y>240</y>
+                <text>
+                    Hello World!
+                </text>
+                <color> <!-- Texts support anything that the base text function in the game supports **within reason** (you still will need to load separate fonts in and get their pointers if you want that. We live by the font table in this household) -->
+                    <r>255</r> <!-- Math to calculate this down to opengl is x/255.0f -->
+                    <g>0</g>
+                    <b>0</b>
+                </color>
+                <center>
+            </object>
+            <object type="button"> <!-- buttons have two things going for them: they can be navigated to by the player with the arrow keys, and activated with the z key. thats all they do in scenes. They can either be labeled by images, or text. If it's text, then they turn yellow. If it's an image, then they move over exactly by the width of the image. -->
+                <label type="text">
+                    <object type="text">
+                        <text>Yes</text>
+                        <x>275</x>
+                        <y>320</y>
+                    </object>
+                </label>
+                <navigation> <!-- Location relative to the player's inputs as to where the button is. I.e: x = 2, y = 1 means pressing right twice and down once. Cursor always begins life at 0,0 -->
+                    <x>0</x>
+                    <y>0</y>
+                </navigation>
+                <onexit> <!-- Some other neat features of onexit are about to be displayed. -->
+                    <setvar> <!-- The storage format gives the user 128 ints to use, and 16 strings. You can pick any of these with this language. -->
+                        <!-- Indices are what are used to categorize the vars themselves. The first 128 indexes are made up of these ints that you can do whatever you want with. I gave you a lot so that if there's any ideas you have you can do them with the ints. Store anything within those 128 64bit ints, you can use them for anything and interface with them in both lua and scene script -->
+                        <index>0</index> <!-- 0-127 are ints, 128-144 are strings -->
+                        <value>10</value> <!-- The int data is stored as binary in the save, but the string data is stored as strings (obviously) so technically if space isnt a concern, i suppose you could just use the strings as dynamic memory in case you need more, but man why would you need more than 128 ints. You can make some seriously cool game logic with just ints -->
+                    </setvar>
+                    <!-- This is to be seen as a pseudo-6502 assembly to be done in scenes! Of course, its not as cool as 6502 assembly and has far too few opcodes to ever be used as it, but it should be turing complete at least! -->
+                    <incvar>
+                        <index>0</index>
+                        <value>1</value> <!--Adds a number to another number-->
+                    </incvar>
+                    <lda> <!--loads a value in the accumulator, a special index that stores a number in it to be used later. Any changes made in the accumulator are not saved until you manually save it-->
+                        <value>5</value> <!-- Loads the number 1 -->
+                    </lda>
+                    <incvar>
+                        <index>0</index>
+                        <value>A</value> <!--incvar also works with the accumulator! if so, it adds the accumulator's number to the index specified-->
+                    </incvar>
+                    <inc>
+                        <value>2</value> <!--You can also add directly to the accumulator!-->
+                    </inc>
+                    <sub>
+                        <value>1</value> <!-- Subtract from the accumulator too -->
+                    </sub>
+                    <ldb> <!--loads into b, the bcumulator-->
+                        <!--You cant really do much with the bcumulator, its really only designed to be used as a secondary source to a-->
+                        <!--would also be used for indexing if we had indexing-->
+                        <value>$1</value> <!-- if a value starts with a $, then that means that said value is to load from an index. You can also use A or B in this case as well.-->
+                    </ldb>
+                    <swp>
+                        <!--Swaps between the accumulator and the bcumulator-->
+                    </swp>
+                    <inc>
+                        <value>5</value>
+                    </inc>
+                    <!--Since you really only have 128 memory addresses, im not really gonna implement indexing or anything... If you want that, then I guess I'll add it, but other than that, yeah nope. -->
+                    <cmp> <!-- You can also compare values: compares what is in A to whats in the value or using cmpindex, what's in the specified index. -->
+                        <!-- You can also use cmp to compare to what's in b (the bcumulator)-->
+                        <value>B</value>
+                    </cmp>
+                    <beq> <!-- if we are equal to zero, then branch to a label. -->
+                        <label>stringless</label>
+                    </beq>
+
+                    <!-- Lets play around with strings next! Strings have opcodes that easily do stuff for them so you dont gotta worry bout any complicated string math or anything. I hate strings myself. -->
+                    <setstring> <!-- sets a string to supplied value -->
+                        <index>0</index>
+                        <value>asdf</value>
+                    </setstring>
+                    <setchar>
+                        <index>0</index>
+                        <charindex>0</charindex>
+                        <value>A</value> <!-- key thing of note... If you want a character readable as a literal, include a backslash! -->
+                    </setchar>
+                    <appendchar>
+                        <index>0</index>
+                        <charindex></charindex>
+                        <value></value> <!-- adds a character at a certain index in the string, or -1 for the end of the string -->
+                    </appendchar>
+                    <charat> <!-- gets the character at a certain index and loads it into A-->
+                        <index>0</index>
+                        <value>3</value>
+                    </charat>
+                    <!--If I think of any more, they will be added. We'll see if I think of any more during implementation/usage-->
+                    <label> <!-- the label to branch to! -->
+                        <id>stringless</id>
+                    </label>
+                </onexit>
+            </object>
+        </menu>
+
+    </scenes>
+
+</story>

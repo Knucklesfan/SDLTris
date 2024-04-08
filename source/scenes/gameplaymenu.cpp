@@ -71,8 +71,10 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                         case 0: {
                         switch(selection) {
                             case 0: {
-                                doDownTransition = true;
-                                Mix_CrossFadeMusicStream(audio::music->at(1),audio::music->at(2),-1,1000,0);
+                                if(!doDownReturnTransition && !doDownTransition) {
+                                    doDownTransition = true;
+                                    Mix_CrossFadeMusicStream(audio::music->at(1),audio::music->at(2),-1,1000,0);
+                                }
                             }break;
                             case 1: {
 
@@ -115,7 +117,9 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                             subselection = 0;
                         }break;
                         case 4: {
-                            doDownReturnTransition = 1;
+                            if(!doDownReturnTransition && !doDownTransition) {
+                                doDownReturnTransition = 1;
+                            }
                             
                         }break;
                     }

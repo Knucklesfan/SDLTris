@@ -2,6 +2,7 @@
 <width>8</width>
 <height>16</height>
 <shader>5</shader>
+<filename>font.bmp</filename>
 
 <!--this is kinda a hack.
 the font code was designed with multiple rows in mind, but in order to ensure somewhat compatibility with the old font

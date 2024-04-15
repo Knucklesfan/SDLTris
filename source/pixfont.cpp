@@ -48,7 +48,6 @@ pixfont::pixfont(std::string path) {
     height = atoi(doc.first_node("height")->value());
     shad = graphics::shaders.at(atoi(doc.first_node("shader")->value())); //specifies the shader slot number to pick from the shaders
 
-    size = atoi(doc.first_node("row")->value()); 
     if (doc.first_node("spwidth") != NULL) {
         wordsize = atoi(doc.first_node("spwidth")->value());
     }

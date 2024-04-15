@@ -56,7 +56,6 @@ class pixfont : public Font
         glm::vec2 translations[MAXSTRING];
         glm::vec2 texcoords[MAXSTRING];
 	    void logic(double deltatime) {};
-        int size = 0;
         int width = 8;
         int height = 8;
         int numberpos = 0;

@@ -111,7 +111,7 @@ Transition results::endLogic()
     if (loadgame) {
         return {
             0.001,
-            1,
+            2,
             320,
             240,
             FADETYPE::BLOCKS,
@@ -120,7 +120,7 @@ Transition results::endLogic()
     }
     return {
             0.001,
-            1,
+            2,
             320,
             240,
             FADETYPE::BLOCKS,

@@ -339,25 +339,6 @@ void game::render() {
         projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
         glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
         view = glm::translate(view, glm::vec3(0.0, 0, -14.0)); 
-        glEnable(GL_DEPTH_TEST);  
-        toad->position = glm::vec3(-10,-6,-40);
-        toad->rotation = glm::vec3(SDL_GetTicks()/100.0f,SDL_GetTicks()/100.0f,0);
-        toad->render(graphics::shaders.at(0),projection,view);
-        toad->position = glm::vec3(0,-6,-10);
-        toad->rotation = glm::vec3(0,SDL_GetTicks()/100.0f,0);
-        toad->render(graphics::shaders.at(0),projection,view);
-        toad->position = glm::vec3(10,-2,-60);
-        toad->rotation = glm::vec3(-(SDL_GetTicks()/100.0f),-(SDL_GetTicks()/100.0f),0);
-        toad->render(graphics::shaders.at(0),projection,view);
-        toad->position = glm::vec3(25,-2,-50);
-        toad->rotation = glm::vec3((SDL_GetTicks()/100.0f),-(SDL_GetTicks()/100.0f),0);
-        toad->render(graphics::shaders.at(0),projection,view);
-        toad->position = glm::vec3(-35,-2,-70);
-        toad->rotation = glm::vec3(-(SDL_GetTicks()/100.0f),(SDL_GetTicks()/100.0f),0);
-        toad->render(graphics::shaders.at(0),projection,view);
-
-        glDisable(GL_DEPTH_TEST);  
-
         //SDL_RenderPresent(renderer);
     //}
 }
@@ -404,7 +385,7 @@ Transition game::endLogic() {
         settings::previousscore = score;
         return {
             0.001,
-            3,
+            4,
             320,
             240,
             FADETYPE::BLOCKS,
@@ -414,7 +395,7 @@ Transition game::endLogic() {
     }
     return {
                 0.001,
-                3,
+                4,
                 320,
                 240,
                 FADETYPE::BLOCKS,

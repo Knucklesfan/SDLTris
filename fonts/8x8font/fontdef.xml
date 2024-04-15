@@ -1,5 +1,7 @@
 <name>16x16 font</name>
 <width>16</width>
+<filename>font.bmp</filename>
+
 <height>16</height>
 <shader>5</shader>
 <!--this is kinda a hack.

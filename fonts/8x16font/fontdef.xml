@@ -1,4 +1,6 @@
 <name>Small 8x16 font</name>
+<filename>font.bmp</filename>
+
 <width>16</width>
 <height>32</height>
 <shader>5</shader>

@@ -35,13 +35,15 @@ pixfont::pixfont() {
 pixfont::pixfont(std::string path) {
     
     std::string p = "./fonts/" + path;
-    generateSurfaces(p); //DOES THIS CODE EVEN WORK??? WHOOOO KNOWWWSSS?!?!?!?!
 
     std::string pth = filepath "fonts/" + path + "/fontdef.xml";
 
     rapidxml::file<> xmlFile(pth.c_str());
     rapidxml::xml_document<> doc;
     doc.parse<0>(xmlFile.data());
+    std::string texturepath = (doc.first_node("filename")->value());
+    txt = new texture(texturepath);
+
     width = atoi(doc.first_node("width")->value());
     height = atoi(doc.first_node("height")->value());
     shad = graphics::shaders.at(atoi(doc.first_node("shader")->value())); //specifies the shader slot number to pick from the shaders
@@ -276,7 +278,6 @@ void  pixfont::generateSurfaces(std::string path) {
     txt = SDL_CreateTextureFromSurface(graphics::render, tmpsurf);
     SDL_FreeSurface(tmpsurf);
     #else
-    txt = new texture(tmppth);
     #endif
 }
 color pixfont::tintColor(const color& baseColor, const color& tintColor) {

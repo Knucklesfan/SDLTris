@@ -15,4 +15,13 @@
 		<type>ttffont</type>
 		<path>freesans</path>
 	</font>
+	<font>
+		<type>pixfont</type>
+		<path>knfnfont32</path>
+	</font>
+	<font>
+		<type>pixfont</type>
+		<path>scorefont</path>
+	</font>
+
 </fonts>

@@ -49,7 +49,6 @@ game::game() {
     std::fill_n(previousblocks, 480, 0);
     // renderer = renderman;
     // textures = textureb;
-    std::cout << "bigger? " << settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD] << "\n";
     if(settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD]) {
         boardwidth = 20;
     }
@@ -77,7 +76,6 @@ game::game() {
     gameactive = true;
 }
 void game::logic(double deltatime) {
-    std::cout << "logic\n";
 
     if(demoPlayback) {
         if(demotick != 0 && demotick != UINT32_MAX && demokey != SDLK_ESCAPE) {
@@ -127,7 +125,6 @@ void game::logic(double deltatime) {
         graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).logic(deltatime);
     }
     
-    //std::cout << bglevel << "\n";
     if (warningflag) {
         //Mix_VolumeMusic(volume/5);
         alphalifetime += deltatime / 5;
@@ -187,7 +184,6 @@ void game::logic(double deltatime) {
 
 }
 void game::render() {
-    std::cout << "render\n";
 
     //if (gameactive) {
         #ifdef __LEGACY_RENDER
@@ -343,7 +339,6 @@ void game::render() {
     //}
 }
 Transition game::endLogic() {
-    std::cout << "endlogic\n";
 
     if (!t.alive && gameactive && !paused) {
         //std::cout << "block not alive!!!";
@@ -548,7 +543,6 @@ void game::inputKey(SDL_Keycode key) {
                     }break;
                     case 4: {
                         saveState();
-                        std::cout << "SAVED!" << "\n";
                         if (Mix_PausedMusic() == 1)
                         {
                             //Resume the music
@@ -559,7 +553,6 @@ void game::inputKey(SDL_Keycode key) {
                     }break;
                     case 5: {
                         loadState();
-                        std::cout << "LOADED!" << "\n";
                         if (Mix_PausedMusic() == 1)
                         {
                             //Resume the music

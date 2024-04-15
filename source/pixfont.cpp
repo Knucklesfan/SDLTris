@@ -41,7 +41,7 @@ pixfont::pixfont(std::string path) {
     rapidxml::file<> xmlFile(pth.c_str());
     rapidxml::xml_document<> doc;
     doc.parse<0>(xmlFile.data());
-    std::string texturepath = (doc.first_node("filename")->value());
+    std::string texturepath = (p+"/"+doc.first_node("filename")->value());
     txt = new texture(texturepath);
 
     width = atoi(doc.first_node("width")->value());

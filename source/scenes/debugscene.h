@@ -1,7 +1,7 @@
 #pragma once
 #include "../gamemode.h"
 #include "../utils/defs.h"
-#define MENUSIZE 26
+#define MENUSIZE 6
 class debugscene : public Gamemode { //literally just renders a white screen to test transitions
     int r = 128 + rand() % (256 - 128);
     int g = 128 + rand() % (256 - 128);
@@ -17,46 +17,15 @@ class debugscene : public Gamemode { //literally just renders a white screen to 
         &gamemode,
         nullptr,
         nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-        nullptr,
-
+        nullptr
     };
     std::string menu[MENUSIZE] = {
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-        "loremipsumdisitamorasdfasdfasdfasdfasdfasdfasdfasdf",
-
+        "Transition to Transition #",
+        "Current Background #",
+        "Goto Gamemode #",
+        "Hide this menu",
+        "Load game normally",
+        "Close game"
     };
     std::string transitions[4] = {
         "FADE",

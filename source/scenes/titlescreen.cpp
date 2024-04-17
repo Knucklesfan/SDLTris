@@ -544,7 +544,7 @@ Transition titlescreen::endLogic()
 {
     Transition t = Transition();
     t.fade = FADETYPE::BLOCKS;
-    t.gamemode = 2;
+    t.gamemode = gameplay::gamemode+1;
     t.transition = !active;
     if(currentscreen != 0) {
         frontGame->endLogic();

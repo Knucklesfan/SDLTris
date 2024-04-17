@@ -17,9 +17,7 @@ class classicmenu : public Gamemode { //the main menu of the game
     public:
     Transition t;
     plane* cd;
-    model* gear;
-    model* ball;
-    glm::vec3 cdPos;
+    bg* background;
     int buttonx = 0;
     int selection = 0;
     int currentscreen = 0;
@@ -28,7 +26,7 @@ class classicmenu : public Gamemode { //the main menu of the game
     int subselection = 0;
     int subbuttons = 0;
 
-    gameplaymenu();
+    classicmenu();
     void render();
     void logic(double deltatime);
     void input(SDL_Keycode);

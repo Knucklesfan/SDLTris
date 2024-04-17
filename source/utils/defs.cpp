@@ -9,10 +9,23 @@
 #include "../pixfont.h"
 #include "../ttffont.h"
 #include "../opengl/stb_image.h"
+#include "../scenes/knuxfanscreen.h"
+#include "../scenes/titlescreen.h"
+#include "../scenes/gameplaymenu.h"
+#include "../scenes/white.h"
+#include "../scenes/credits.h"
+
+// #include "scenes/credits.h"
+#include "../scenes/game.h"
+#include "../scenes/results.h"
+#include "../scenes/debugscene.h"
+#include "../scenes/classicmenu.h"
 
 #include <cmath>
 #include <sstream> //std::stringstream
 SDL_Window* graphics::window = nullptr;
+std::vector<Gamemode*> gameplay::gamemodes = std::vector<Gamemode*>();
+int gameplay::gamemode = 0;
 int gameplay::Pieces[7][4][16] = {
             //S PIECE 
             {
@@ -385,7 +398,7 @@ void settings::loadDemos() {
 }
 void graphics::screenshot() {
     SDL_Surface * temp = SDL_CreateRGBSurface(SDL_SWSURFACE, 640, 480, 24, 0x000000FF, 0x0000FF00, 0x00FF0000, 0);
-    
+
     char * pixels = new char [3 * 640 * 480];
 
     glReadPixels(0, 0, 640, 480, GL_RGB, GL_UNSIGNED_BYTE, pixels);
@@ -919,4 +932,66 @@ void memory::freeShaders() {
 }
 void memory::freeSprites() {
 
+}
+void gameplay::loadGamemodes() {
+    rapidxml::file<> bgFile((filepath"scenes/scenes.xml"));
+    rapidxml::xml_document<> bgDoc;
+    bgDoc.parse<0>(bgFile.data());
+    rapidxml::xml_node<char>* parent = bgDoc.first_node("scenes");
+    for (rapidxml::xml_node<char>* child = parent->first_node(); child != NULL; child = child->next_sibling()) {
+
+        std::cout << "loading gamemode " << child->first_node("name")->value() << "\n";
+        std::string type = child->first_node("type")->value();
+        std::string name = child->first_node("name")->value();
+
+        if(type == "knuxfanscreen") {
+            knuxfanscreen* tmp = new knuxfanscreen();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+        }
+        else if(type == "titlescreen") {
+            titlescreen* tmp = new titlescreen();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+
+        }
+        else if(type == "gameplaymenu") {
+            gameplaymenu* tmp = new gameplaymenu();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+
+        }
+        else if(type == "game") {
+            game* tmp = new game();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+
+        }
+        else if(type == "results") {
+            results* tmp = new results();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+
+        }
+        else if(type == "credits") {
+            credits* tmp = new credits();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+
+        }
+        else if(type == "classicmenu") {
+            classicmenu* tmp = new classicmenu();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+
+        }
+        else if(type == "scene") {
+                        // gamemodes.push_back(new titlescreen());
+        }
+        else {
+            std::cout << "Scene type not found \""<<type<<"\", crashing...\n";
+            exit(1);
+        }
+
+    }
 }

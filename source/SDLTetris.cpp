@@ -13,20 +13,11 @@
 #include "utils/defs.h"
 #include "globalgamemode.h"
 #include "gamemode.h"
-#include "scenes/knuxfanscreen.h"
-#include "scenes/titlescreen.h"
-#include "scenes/gameplaymenu.h"
-
-// #include "scenes/credits.h"
-#include "scenes/game.h"
-#include "scenes/results.h"
-// #include "scenes/options.h"
 #include "scenes/debugscene.h"
+// #include "scenes/options.h"
 #ifndef __LEGACY_RENDER
 #include "opengl/buffermanager.h"
 #endif
-#include "scenes/white.h"
-#include "scenes/credits.h"
 
 #ifdef _NETCODE
 #include "server.h"
@@ -95,7 +86,7 @@ bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
 int WINDOW_WIDTH = INTERNAL_WIDTH;
 int WINDOW_HEIGHT = INTERNAL_HEIGHT;
-int main() {
+int main(int argc, char **argv) {
 #ifdef __SWITCH__
     consoleInit(NULL);
 #endif // __SWITCH__
@@ -209,6 +200,7 @@ int main() {
     settings::loadSettings();
     settings::loadDemos();
     GlobalGamemode* global = new GlobalGamemode();
+    gameplay::loadGamemodes();
     #ifdef __LEGACY_RENDER
     SDL_Texture* rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640,480);
     
@@ -232,21 +224,16 @@ int main() {
     double time = 0; //time of current frame
     double oldTime = SDL_GetTicks(); //time of previous framea
     long long recordticks = 0;
-    std::cout << "Finished initializing!\n";
-    Gamemode* gamemodes[] = {
-        // new debugscene(),
-        // new white(),
-        new knuxfanscreen(),
-        new titlescreen(), //1
-        new gameplaymenu(), //2
-        new game(), //3
-        new results(), //4
-        new credits(), //5
-        new debugscene() //6
-        // new options(), //5
+    std::string argument = "";
+    if(argc > 1) {
+        argument = argv[1];
+    }
+    if(argument == "--debug") {
+        gameplay::gamemodes.push_back(new debugscene());
+        gameplay::gamemode = gameplay::gamemodes.size()-1;
+    }
 
-    };
-    int gamemode = 0;
+    std::cout << "Finished initializing!\n";
 
     int titlebg = std::rand() % graphics::backgrounds->size();
     int knxfnbg = std::rand() % graphics::backgrounds->size();
@@ -254,7 +241,9 @@ int main() {
         knxfnbg = std::rand() % graphics::backgrounds->size(); //WHY TF AM I DOING THIS
     }
     next_time = SDL_GetTicks() + TICK_INTERVAL;
-
+    for(int i = 0; i<gameplay::gamemodes.size(); i++) {
+        std::cout << gameplay::gamemodes[i]->name << "\n";
+    }
     //rpcimplement rpc();
 #ifdef _WIN32
     rpcimplement* rpc = new rpcimplement();
@@ -271,7 +260,7 @@ int main() {
                 if(event.key.keysym.sym == SDLK_F12) {
                     graphics::screenshot();
                 }
-                gamemode[gamemodes]->input(event.key.keysym.sym);
+                gameplay::gamemodes[gameplay::gamemode]->input(event.key.keysym.sym);
             }
             if(event.type == SDL_WINDOWEVENT) {
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
@@ -299,16 +288,16 @@ int main() {
             graphics::globalbuffer->enable();
             global->startRender();
         #endif
-        gamemodes[gamemode]->logic(graphics::deltaTime);
-        gamemodes[gamemode]->render();
-        Transition endlogic = gamemodes[gamemode]->endLogic();
+        gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
+        gameplay::gamemodes[gameplay::gamemode]->render();
+        Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
         if(endlogic.transition) {
             global->setFade(endlogic);
         };
         
         if(global->logic(graphics::deltaTime)) {
-            gamemode=global->currentTransition.gamemode;
-            gamemodes[gamemode]->reset();
+            gameplay::gamemode=global->currentTransition.gamemode;
+            gameplay::gamemodes[gameplay::gamemode]->reset();
         }
         global->render();
         #ifdef __LEGACY_RENDER

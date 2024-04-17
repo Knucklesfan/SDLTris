@@ -14,7 +14,7 @@
 #else
     #define filepath  "./"
 #endif
-
+#define NUMGAMEMODES 8
 #define JOY_A     0
 #define JOY_B     1
 #define JOY_X     2
@@ -40,6 +40,7 @@
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
 #include "../background.h"
+#include "../gamemode.h"
 #ifndef __LEGACY_RENDER
     #include "../opengl/shader.h"
     #include "../opengl/texture.h"
@@ -251,6 +252,9 @@ namespace utils {
 };
 class gameplay { //i *sighs the worlds deepest sigh of human history* love background.h
     public:
+        static int gamemode;
+        static std::vector<Gamemode*> gamemodes;
+        static void loadGamemodes();
         static int Pieces[7][4][16];
 };
 

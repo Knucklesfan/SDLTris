@@ -13,13 +13,13 @@ void debugscene::render()
         }
         else {
         }
-        graphics::fonts->at(1)->render(320,100,"WELCOME TO KNUXFANS TETRIMINOS",true,((int)(SDL_GetTicks()/100.0)%3==0)*255,((int)(SDL_GetTicks()/100.0)%3==1)*255,((int)(SDL_GetTicks()/100.0)%3==2)*255,-1,true,SDL_GetTicks()/1000.0,10,10);
+        graphics::fonts->at(4)->render(320,100,"WELCOME TO\n\nKNUXFANS TETRIMINOS",true,((int)(SDL_GetTicks()/100.0)%3==0)*255,((int)(SDL_GetTicks()/100.0)%3==1)*255,((int)(SDL_GetTicks()/100.0)%3==2)*255,-1,true,SDL_GetTicks()/1000.0,10,10);
         for(int i = 0; i<MENUSIZE; i++) {
             std::string text = menu[i];
             if(endings[i] != nullptr) {
                 text.append(std::to_string(*(endings[i])));
             }
-            graphics::fonts->at(1)->render(320,0+(i*24),text,true);
+            graphics::fonts->at(0)->render(320,200+(i*24),text,true);
         }
 
         #endif
@@ -30,8 +30,24 @@ void debugscene::input(SDL_Keycode keysym)
 {
     switch(keysym) {
         case SDLK_RIGHT: {
-            if(transition < 3) {
-                transition++;
+            switch(selection) {
+                case 0: {
+                    if(transition < 3) {
+                        transition++;
+                    }
+
+                }break;
+                case 1: {
+                    if(background < graphics::backgrounds->size()) {
+                        background++;
+                    }
+                }break;
+                case 2: {
+                    if(gamemode < gameplay::gamemodes.size()) {
+                        gamemode++;
+                    }
+                }break;
+
             }
             break;
         }

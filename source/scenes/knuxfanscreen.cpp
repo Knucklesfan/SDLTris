@@ -125,7 +125,7 @@ void knuxfanscreen::reset() {
 Transition knuxfanscreen::endLogic() {
     Transition t = Transition();
     if (!active) {
-        t.gamemode = 1;
+        t.gamemode = gameplay::gamemode+1;
         t.transition = true;
     }
     

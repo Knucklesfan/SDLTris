@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <string>
 #pragma once
 
 enum FADETYPE {
@@ -23,6 +24,7 @@ class Gamemode {
     virtual void input(SDL_Keycode keysym) {};
     virtual void render() {};
     virtual void reset() {};
+    std::string name;
 
 };
 

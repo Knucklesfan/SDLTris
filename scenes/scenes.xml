@@ -1,0 +1,33 @@
+ 
+<scenes>
+    <scene>
+        <name>Knuxfan Screen</name>
+        <type>knuxfanscreen</type>
+    </scene>
+    <scene>
+        <name>Titlescreen</name>
+        <type>titlescreen</type>
+    </scene>
+    <scene>
+        <name>Gameplay Menu</name>
+        <type>gameplaymenu</type>
+    </scene>
+    <scene>
+        <name>Classic Menu</name>
+        <type>classicmenu</type>
+    </scene>
+    <scene>
+        <name>Game</name>
+        <type>game</type>
+    </scene>
+    <scene>
+        <name>Results</name>
+        <type>results</type>
+    </scene>
+    <scene>
+        <name>Credits</name>
+        <type>credits</type>
+    </scene>
+
+
+</scenes>

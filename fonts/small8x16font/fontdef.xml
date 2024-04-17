@@ -10,9 +10,6 @@ characters that i generated for SDLTetris meant doing dumb things like this. Not
 <row>100</row>
 
 <letters>
-
-
-
    <letter>
         <posx>0</posx>
         <posy>0</posy>

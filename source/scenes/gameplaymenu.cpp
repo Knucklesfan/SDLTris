@@ -73,7 +73,7 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                             case 0: {
                                 if(!doDownReturnTransition && !doDownTransition) {
                                     doDownTransition = true;
-                                    Mix_CrossFadeMusicStream(audio::music->at(1),audio::music->at(2),-1,1000,0);
+                                    Mix_FadeOutMusic(1000);
                                 }
                             }break;
                             case 1: {
@@ -88,7 +88,7 @@ void gameplaymenu::input(SDL_Keycode keysym) {
 
                             }break;
                             case 4: {
-                                t.gamemode = 5;
+                                t.gamemode = 6;
                                 t.transition = true;
                                 Mix_FadeOutMusic(1000);
                             }break;
@@ -139,7 +139,6 @@ void gameplaymenu::logic(double deltatime) {
     }
     else {
         cdPos = {0.75,-0.5+(transition*2),-1.5};
-        std::cout << cdPos.x << " " << cdPos.y << " " << cdPos.z << "\n";
         if(buttonx < 312) {
             buttonx = utils::lerp(buttonx,340,deltatime*0.005);
         }
@@ -311,6 +310,9 @@ void gameplaymenu::render() {
     }
 };
 void gameplaymenu::reset() {
+    Mix_HaltMusic();
+    Mix_HaltChannel(-1);
+
     Mix_PlayMusic( audio::music->at(1), -1 );
     startTime = SDL_GetTicks();
     t = Transition();

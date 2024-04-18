@@ -47,7 +47,7 @@
 			</transform>
 			
 			<animation> <!--First, start by declaring the layer's animation-->
-				<action frame="500" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
+				<action frame="200" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
 					<transform>
 					<selfpos>
 						<x>0</x>
@@ -95,7 +95,7 @@
 			</transform>
 			
 			<animation> <!--First, start by declaring the layer's animation-->
-				<action frame="500" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
+				<action frame="200" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
 					<transform>
 					<selfpos>
 						<x>0</x>

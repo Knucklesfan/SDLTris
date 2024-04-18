@@ -73,13 +73,19 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                             case 0: {
                                 if(!doDownReturnTransition && !doDownTransition) {
                                     doDownTransition = true;
-                                    Mix_FadeOutMusic(1000);
+                                    Mix_FadeOutMusic(500);
+                                    Mix_HookMusicFinished([](){ //very cool lambda function to replace crossfademusicstream
+                                        Mix_FadeInMusic(audio::music->at(2),-1,500); //dear C++, please explain: how does this work?
+                                        Mix_HookMusicFinished(NULL); //THIS IS INSANITY!
+                                    });
+                                    // Mix_CrossFadeMusicStream(audio::music->at(1),audio::music->at(2),-1,1000,0);
                                 }
                             }break;
                             case 1: {
                                 t.gamemode = 3;
                                 t.transition = true;
-                                Mix_FadeOutMusic(1000);
+                                Mix_HaltMusic();
+                                Mix_PlayMusic(audio::music->at(3),-1);
                             }break;
                             case 2: {
 
@@ -168,7 +174,11 @@ void gameplaymenu::logic(double deltatime) {
         if(transition > 1 && currentscreen != 0) {
             currentscreen =  0;
             currentscreenAge = SDL_GetTicks();
-            Mix_CrossFadeMusicStream(audio::music->at(2),audio::music->at(1),-1,1000,0);
+            Mix_FadeOutMusic(500);
+            Mix_HookMusicFinished([](){ //very cool lambda function to replace crossfademusicstream
+                Mix_FadeInMusic(audio::music->at(1),-1,500); //dear C++, please explain: how does this work?
+                Mix_HookMusicFinished(NULL); //THIS IS INSANITY!
+            });
 
         }
         else if(transition < 1 && currentscreen != 0){

@@ -10,7 +10,11 @@ void classicmenu::input(SDL_Keycode keysym) {
         case 0: {
             switch(keysym) {
                 case SDLK_x: {
-                    Mix_CrossFadeMusicStream(audio::music->at(3),audio::music->at(1),-1,1000,0);
+                    Mix_FadeOutMusic(500);
+                    Mix_HookMusicFinished([](){ //very cool lambda function to replace crossfademusicstream
+                        Mix_FadeInMusic(audio::music->at(1),-1,500); //dear C++, please explain: how does this work?
+                        Mix_HookMusicFinished(NULL); //THIS IS INSANITY!
+                    });
                     t.gamemode = gameplay::gamemode-1;
                     t.transition = 1;
                     t.fade = BARS;

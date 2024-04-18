@@ -57,15 +57,19 @@
         "cstring": "cpp",
         "numbers": "cpp",
         "fstream": "cpp"
-    }
+    },
     "emeraldwalk.runonsave": {
 	"commands": [
 		{
 			"match": ".*",
 			"isAsync": true,
-			"cmd": "echo 'I run for all files.'"
+			"cmd": "make -j12"
 		}
 	]
-   }
-
+   },
+   "search.exclude": {
+    "**/.git": true,
+    "**/include": true,
+    "**/SDL-Mixer-X": true,
+    },
 }

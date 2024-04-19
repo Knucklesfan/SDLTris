@@ -167,5 +167,8 @@
 		<name>storymode2</name>
 		<path>./sprites/storymode2.png</path>
 	</sprite>
-
+	<sprite>
+		<name>savefile</name>
+		<path>./sprites/savefile.png</path>
+	</sprite>
 </sprites>

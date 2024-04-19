@@ -75,7 +75,7 @@ void credits::logic(double deltaTime) {
     }
 
     time += deltaTime;
-    cub->logic(deltaTime);
+    // cub->logic(deltaTime);
 
 }
 Transition credits::endLogic() {
@@ -148,7 +148,7 @@ void credits::render() {
             sineWave->render(0,0,255,128,-2);
             // cub->render(255, 0, 0);
             std::cout << posx << " " << posy << "\n";
-            graphics::sprite->render(graphics::shaders.at(4),&cub->buff->renderTexture,{0,0},{640,480},{0,0,0},{0,0},{640,480});
+            // graphics::sprite->render(graphics::shaders.at(4),&cub->buff->renderTexture,{0,0},{640,480},{0,0,0},{0,0},{640,480});
             drawRotatedBlock(16,16,lpiece,time / 15, 1);
             drawRotatedBlock(496,16,tpiece,time / -15, 2);
             drawRotatedBlock(496,336,lpiece,time / 15, 1);

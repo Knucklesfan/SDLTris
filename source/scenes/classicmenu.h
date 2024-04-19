@@ -10,6 +10,7 @@
 #include "../gamemode.h"
 #include "../opengl/plane.h"
 #include "../opengl/model.h"
+#include "../wireframecube.h"
 
 #define NUMBUTTONS 5
 #define ROWWIDTH 2
@@ -18,6 +19,7 @@ class classicmenu : public Gamemode { //the main menu of the game
     Transition t;
     plane* cd;
     bg* background;
+    wireframecube* cube;
     int buttonx = 0;
     int selection = 0;
     int currentscreen = 0;
@@ -25,7 +27,10 @@ class classicmenu : public Gamemode { //the main menu of the game
     Uint32 currentscreenAge;
     int subselection = 0;
     int subbuttons = 0;
-
+    int savenum = 6;
+    int level = 0;
+    int lines = 0;
+    int savedatatest[480]; //testing code
     classicmenu();
     void render();
     void logic(double deltatime);

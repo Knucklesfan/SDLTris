@@ -1,30 +1,30 @@
  
 <scenes>
-    <scene>
+    <scene> <!--0-->
         <name>Knuxfan Screen</name>
         <type>knuxfanscreen</type>
     </scene>
-    <scene>
+    <scene> <!--1-->
         <name>Titlescreen</name>
         <type>titlescreen</type>
     </scene>
-    <scene>
+    <scene> <!--2-->
         <name>Gameplay Menu</name>
         <type>gameplaymenu</type>
     </scene>
-    <scene>
+    <scene> <!--3-->
         <name>Classic Menu</name>
         <type>classicmenu</type>
     </scene>
-    <scene>
+    <scene> <!--4-->
         <name>Game</name>
         <type>game</type>
     </scene>
-    <scene>
+    <scene> <!--5-->
         <name>Results</name>
         <type>results</type>
     </scene>
-    <scene>
+    <scene> <!--6-->
         <name>Credits</name>
         <type>credits</type>
     </scene>

@@ -47,6 +47,10 @@ game::game() {
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
+    std::fill_n(keyboardname, 8, ' ');
+    currentChar = 0;
+    selectedkey = 0;
+
     // renderer = renderman;
     // textures = textureb;
     if(settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD]) {
@@ -324,6 +328,22 @@ void game::render() {
 
                 header->render(320, 240, "GAME PAUSED", true);
             }
+            if(keyboard) {
+                graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
+                header->render(320,48, "Please name your save.",true);
+                for(int i = 0; i < 8; i++) {
+                    std::string str(1,keyboardname[i]);
+
+                    // header->render(320-(16*4)+i*16,80, str,true);
+                    header->render(320-(16*4)+i*16,80,str,true,255,currentChar==i?0:255,255,-1,false,0,0,0);
+
+                }
+                for(int i = 0; i < 40; i++) {
+                    std::string str(1,keyboardKeys[i]);
+                    graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?0:255,255,-1,false,0,0,0);
+                }
+
+            }
             if(demoRecord) {
                 bodyfont->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
                 if(demoReturn) {
@@ -359,7 +379,7 @@ Transition game::endLogic() {
             gameactive = false;
             return {
                 0.001,
-                3,
+                gameplay::gamemode+1,
                 320,
                 240,
                 FADETYPE::BLOCKS,
@@ -380,7 +400,7 @@ Transition game::endLogic() {
         settings::previousscore = score;
         return {
             0.001,
-            4,
+            gameplay::gamemode+1,
             320,
             240,
             FADETYPE::BLOCKS,
@@ -390,7 +410,7 @@ Transition game::endLogic() {
     }
     return {
                 0.001,
-                4,
+                gameplay::gamemode+1,
                 320,
                 240,
                 FADETYPE::BLOCKS,
@@ -487,81 +507,132 @@ void game::inputKey(SDL_Keycode key) {
         }
     }
     else {
-        switch (key) {
-            case(SDLK_UP): {
-                if (pauseselection > 0) {
-                    pauseselection = (pauseselection - 1);
-                }
-                Mix_PlayChannel(-1, audio::sfx->at(1), 0);
-                break;
-            }
-            case(SDLK_DOWN): {
-                if (pauseselection < optionsize - 1) {
-                    pauseselection = (pauseselection + 1);
-                }
-                Mix_PlayChannel(-1, audio::sfx->at(1), 0);
-                break;
-            }
-            case(SDLK_z): {
-                switch(pauseselection) {
-                    case 0: {
-                        if (Mix_PausedMusic() == 1)
-                        {
-                            //Resume the music
-                            Mix_ResumeMusic();
-                        }
-                        paused = false;
-                        break;
+        if(paused && !keyboard) {
+            switch (key) {
+                case(SDLK_UP): {
+                    if (pauseselection > 0) {
+                        pauseselection = (pauseselection - 1);
                     }
-                    case 1: {
-                        gameactive = false;
-                    }break;
-                    case 2: {
-                        if(demoRecord) {
-                            stopRecord();
+                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
+                    break;
+                }
+                case(SDLK_DOWN): {
+                    if (pauseselection < optionsize - 1) {
+                        pauseselection = (pauseselection + 1);
+                    }
+                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
+                    break;
+                }
+                case(SDLK_z): {
+                    switch(pauseselection) {
+                        case 0: {
+                            if (Mix_PausedMusic() == 1)
+                            {
+                                //Resume the music
+                                Mix_ResumeMusic();
+                            }
+                            paused = false;
+                            break;
                         }
-                        else {
-                            startRecord();
-                        }
-                        if (Mix_PausedMusic() == 1)
-                        {
-                            //Resume the music
-                            Mix_ResumeMusic();
-                        }
-                        paused = false;
-                    }break;
-                    case 3: {
-                        if(!demoRecord && !demoPlayback) {
-                            loadDemo("demo.bin");
-                        }
-                        if (Mix_PausedMusic() == 1)
-                        {
-                            //Resume the music
-                            Mix_ResumeMusic();
-                        }
-                        paused = false;
-                    }break;
-                    case 4: {
-                        saveState();
-                        if (Mix_PausedMusic() == 1)
-                        {
-                            //Resume the music
-                            Mix_ResumeMusic();
-                        }
+                        case 1: {
+                            gameactive = false;
+                        }break;
+                        case 2: {
+                            if(demoRecord) {
+                                stopRecord();
+                            }
+                            else {
+                                startRecord();
+                            }
+                            if (Mix_PausedMusic() == 1)
+                            {
+                                //Resume the music
+                                Mix_ResumeMusic();
+                            }
+                            paused = false;
+                        }break;
+                        case 3: {
+                            if(!demoRecord && !demoPlayback) {
+                                loadDemo("demo.bin");
+                            }
+                            if (Mix_PausedMusic() == 1)
+                            {
+                                //Resume the music
+                                Mix_ResumeMusic();
+                            }
+                            paused = false;
+                        }break;
+                        case 4: {
+                            saveState();
+                            if (Mix_PausedMusic() == 1)
+                            {
+                                //Resume the music
+                                Mix_ResumeMusic();
+                            }
 
-                        paused = false;
-                    }break;
-                    case 5: {
-                        loadState();
-                        if (Mix_PausedMusic() == 1)
-                        {
-                            //Resume the music
-                            Mix_ResumeMusic();
-                        }
-                        paused = false;
-
+                            paused = false;
+                        }break;
+                        case 5: {
+                            keyboard = true;
+                        }break;
                     }
                 }
+            }
+        } else
+        if(keyboard) {
+            switch(key) {
+                case(SDLK_UP): {
+                    if (selectedkey >= 10) {
+                        selectedkey-=10;
+                    }
+                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
+                    break;
+                }
+                case(SDLK_DOWN): {
+                    if (selectedkey <= 30) {
+                        selectedkey+=10;
+                    }
+                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
+                    break;
+                }
+                case(SDLK_LEFT): {
+                    if (selectedkey > 0) {
+                        selectedkey--;
+                    }
+                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
+                    break;
+                }
+                case(SDLK_RIGHT): {
+                    if (selectedkey < 40) {
+                        selectedkey++;
+                    }
+                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
+                    break;
+                }
+                case(SDLK_z): {
+                    if(selectedkey < 37) { //if we arent the two move keys, then we're fine to keep going
+                        if(currentChar < 8) {
+                            keyboardname[currentChar] = keyboardKeys[selectedkey];
+                            currentChar++;
+                        }
+                    }
+                    else { //otherwise, we gotta actually handle those...
+                        if(selectedkey == 37) { //go back one key
+                            if(currentChar > 0) {
+                                currentChar--;
+                            }
+                        }
+                        else if(selectedkey == 38) { //go forward
+                            if(currentChar < 8) {
+                                currentChar++;
+                            }
+                        }
+                        else if(selectedkey == 39) {
+                            //INSERT SUBMISSION CODE HERE
+                        }
+                    }
+                }
+
             }
         }
 
@@ -716,6 +787,10 @@ void game::reset() {
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
+    std::fill_n(keyboardname, 8, ' ');
+    currentChar = 0;
+    selectedkey = 0;
+
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
@@ -1048,6 +1123,8 @@ void game::loadState() {
         offset += sizeof(int);
         memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
         offset += sizeof(int);
+        memcpy(&gameStart, memblock+offset, sizeof(Uint32)); //very memory unsafe, please do not supply bad savestates...
+        offset += sizeof(Uint32);
 
         memcpy(&testblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
         memcpy(&previousblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...

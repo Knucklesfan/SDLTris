@@ -21,7 +21,12 @@ class game: public Gamemode
 {
 	public:
 
-
+		char keyboardKeys[40] = {
+			'1','2','3','4','5','6','7','8','9','0',
+			'Q','W','E','R','T','Y','U','I','O','P',
+			'A','S','D','F','G','H','J','K','L','-',
+			'Z','X','C','V','B','N','M','<','>','$'
+		};
 
 
 		int boardwidth = 10;
@@ -64,6 +69,7 @@ class game: public Gamemode
 		int optionsize = 6;
 		bool gameactive = true;
 		bool paused = false;
+		bool keyboard = false;
 		// std::vector<SDL_Texture*> textures;
     	#ifdef __LEGACY_RENDER
 			SDL_Texture* texture;
@@ -80,6 +86,9 @@ class game: public Gamemode
 		bool demoReturn = false;
 		std::ofstream demofile;
 		char * demo;
+		int selectedkey = 0; //keyboard's current key
+		char keyboardname[8]; //the keyboard's current message
+		int currentChar = 0;
 		size_t demoOffset = 0;
 		Uint32 demotick = 0;
 		SDL_Keycode demokey = 0;

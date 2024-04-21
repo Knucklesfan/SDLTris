@@ -11,7 +11,13 @@
 #include "../opengl/plane.h"
 #include "../opengl/model.h"
 #include "../wireframecube.h"
-
+struct save {
+    std::string name;
+    std::string filename;
+    int level;
+    int lines;
+    int blocks[480];
+};
 #define NUMBUTTONS 5
 #define ROWWIDTH 2
 class classicmenu : public Gamemode { //the main menu of the game
@@ -23,6 +29,9 @@ class classicmenu : public Gamemode { //the main menu of the game
     int buttonx = 0;
     int selection = 0;
     int currentscreen = 0;
+    float transition = 0.0f;
+    bool godown = false;
+    bool goup = false;
     Uint32 startTime;
     Uint32 currentscreenAge;
     int subselection = 0;

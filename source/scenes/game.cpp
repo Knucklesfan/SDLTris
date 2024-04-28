@@ -47,7 +47,7 @@ game::game() {
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
-    std::fill_n(keyboardname, 8, ' ');
+    std::fill_n(keyboardname, 8, 0);
     currentChar = 0;
     selectedkey = 0;
 
@@ -331,16 +331,16 @@ void game::render() {
             if(keyboard) {
                 graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
                 header->render(320,48, "Please name your save.",true);
-                for(int i = 0; i < 8; i++) {
+                for(int i = 0; i < FILENAME_LENGTH; i++) {
                     std::string str(1,keyboardname[i]);
 
                     // header->render(320-(16*4)+i*16,80, str,true);
-                    header->render(320-(16*4)+i*16,80,str,true,255,currentChar==i?0:255,255,-1,false,0,0,0);
+                    header->render(320-(16*(FILENAME_LENGTH/2))+i*16,80,str,true,255,currentChar==i?0:255,255,-1,false,0,0,0);
 
                 }
                 for(int i = 0; i < 40; i++) {
                     std::string str(1,keyboardKeys[i]);
-                    graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?0:255,255,-1,false,0,0,0);
+                    graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?0:255*sin(SDL_GetTicks()/1000.0f),255,-1,false,0,0,0);
                 }
 
             }
@@ -538,42 +538,13 @@ void game::inputKey(SDL_Keycode key) {
                             gameactive = false;
                         }break;
                         case 2: {
-                            if(demoRecord) {
-                                stopRecord();
-                            }
-                            else {
-                                startRecord();
-                            }
-                            if (Mix_PausedMusic() == 1)
-                            {
-                                //Resume the music
-                                Mix_ResumeMusic();
-                            }
-                            paused = false;
+                            keyboard = true;
                         }break;
                         case 3: {
-                            if(!demoRecord && !demoPlayback) {
-                                loadDemo("demo.bin");
-                            }
-                            if (Mix_PausedMusic() == 1)
-                            {
-                                //Resume the music
-                                Mix_ResumeMusic();
-                            }
-                            paused = false;
                         }break;
                         case 4: {
-                            saveState();
-                            if (Mix_PausedMusic() == 1)
-                            {
-                                //Resume the music
-                                Mix_ResumeMusic();
-                            }
-
-                            paused = false;
                         }break;
                         case 5: {
-                            keyboard = true;
                         }break;
                     }
                 }
@@ -628,6 +599,11 @@ void game::inputKey(SDL_Keycode key) {
                             }
                         }
                         else if(selectedkey == 39) {
+                            saveState();
+                            std::fill_n(keyboardname, 8, 0);
+                            keyboard = false;
+                            paused = false;
+                            gameactive = false;
                             //INSERT SUBMISSION CODE HERE
                         }
                     }
@@ -1062,7 +1038,18 @@ void game::loadDemo(std::string filename) {
 void game::saveState() { //saves the game's state. this is a debug function im coding quickly to test replays. Might stick around, though...
     t.removeolddraw();
     g.removeolddraw();
-    std::ofstream fs("example.bin", std::ios::out | std::ios::binary);
+    std::string name(keyboardname);
+    int last = 8 - 1;
+    while (last >= 0 && name[last] == 32)
+        --last;
+    name =  name.substr(0, last + 1);
+    for(int i = 0; i < name.length(); i++) {
+        std::cout << (int)name[i] << " ";
+    }
+    std::cout << "END\n";
+    std::ofstream fs(name+".knfs", std::ios::out | std::ios::binary);
+    Uint32 version = SAVE_VERSION; //the version of the current save type, in case i update this
+    fs.write((char *) &version, sizeof(Uint32));
     fs.write((char *) &time, sizeof(uint));
     fs.write((char *) &randomIters, sizeof(uint));
     fs.write((char *) &t.piece, sizeof(int));

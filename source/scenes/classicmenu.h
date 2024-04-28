@@ -11,13 +11,6 @@
 #include "../opengl/plane.h"
 #include "../opengl/model.h"
 #include "../wireframecube.h"
-struct save {
-    std::string name;
-    std::string filename;
-    int level;
-    int lines;
-    int blocks[480];
-};
 #define NUMBUTTONS 5
 #define ROWWIDTH 2
 class classicmenu : public Gamemode { //the main menu of the game

@@ -209,6 +209,14 @@ class graphics {
 
     //uhhh put other static stuff here.
 };
+struct save {
+    std::string name;
+    std::string filename;
+    int level;
+    int lines;
+    texture* renderTex;
+};
+
 class settings {
     public:
     static int previousscore;
@@ -222,11 +230,15 @@ class settings {
     static std::vector<std::string> demos;
     static void loadSettings();
     static void loadDemos();
+    static void loadSaveData();
+    
+    static std::vector<save> saveCache;
 	static std::array<std::array<int, 12>, 5> defaults;
 
 	static std::array<std::array<int, 12>, 5> activations;
 };
 namespace utils {
+    std::string getenv( const std::string & var );
 	double lerp(double a, double b, double t);
 	#ifdef __LEGACY_RENDER
     SDL_Texture* getSDLTexture(std::string path, SDL_Renderer* renderer);

@@ -23,6 +23,9 @@
 
 #include <cmath>
 #include <sstream> //std::stringstream
+#include <sys/stat.h>
+#include <sys/types.h>
+
 SDL_Window* graphics::window = nullptr;
 std::vector<Gamemode*> gameplay::gamemodes = std::vector<Gamemode*>();
 int gameplay::gamemode = 0;
@@ -383,6 +386,38 @@ int graphics::generatefonts() {
     }
     return 0;
 
+}
+std::string utils::getenv( const std::string & var ) {
+     const char * val = std::getenv( var.c_str() );
+     if ( val == nullptr ) { // invalid to assign nullptr to std::string
+         return "";
+     }
+     else {
+         return val;
+     }
+}
+void settings::loadSaveData() {
+    #ifdef _LINUX
+        //since we are on linux, the other platforms are only 
+        //gonna get implemented when needed
+        std::string home = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino/saves";
+        struct stat info;
+        if( stat( home.c_str(), &info ) != 0 ) {
+            printf("No saves to be loaded.\n");
+            return;
+        }
+        else if( info.st_mode & S_IFDIR ) {
+            printf( "%s is a directory\n", home );
+            
+        }
+
+    #elif _WIN32
+
+    #elif _OSX
+
+    #elif _MOBILE
+
+    #endif
 }
 void settings::loadDemos() {
     rapidxml::file<> bgFile((filepath"demos/demos.xml"));

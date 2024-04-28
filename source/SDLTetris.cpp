@@ -27,6 +27,8 @@
 #ifdef _WIN32
     #include "rpcimplement.h"
 #endif
+#include <sys/stat.h>
+#include <sys/types.h>
 //TODO: ALL NETCODE HAS BEEN DISABLED
 
 //i did this for a number of reasons:
@@ -87,6 +89,31 @@ bool compareFunction (std::string a, std::string b) {return a<b;}
 int WINDOW_WIDTH = INTERNAL_WIDTH;
 int WINDOW_HEIGHT = INTERNAL_HEIGHT;
 int main(int argc, char **argv) {
+    //if we dont have a config dir, then we gotta set that up STAT
+    #ifdef _LINUX
+        //since we are on linux, the other platforms are only 
+        //gonna get implemented when needed
+        //this code ensures that we got at least a config dir to work with upon boot
+        //otherwise, stuff is gonna expect that it has a config dir, and it doesnt!
+        //please for the love of god dont delete the config dir mid-gameplay...
+        std::string home = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino";
+        struct stat info;
+        if( stat( home.c_str(), &info ) != 0 ) {
+            mkdir(home.c_str(),0555);
+        }
+        else if( info.st_mode & S_IFDIR )  // S_ISDIR() doesn't exist on my windows 
+            printf( "%s is a directory\n", home );
+        else
+            mkdir(home.c_str(),0555);
+
+    #elif _WIN32
+
+    #elif _OSX
+
+    #elif _MOBILE
+
+    #endif
+
 #ifdef __SWITCH__
     consoleInit(NULL);
 #endif // __SWITCH__

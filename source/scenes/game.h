@@ -16,16 +16,25 @@
 #include "../ingamemessagebox.h"
 #include <random>
 #include "../font.h"
+#define SAVE_VERSION 1
+#define FILENAME_LENGTH 8
+//specifies the specific version of the saving algorithm this uses. Good for futureproofing in case that certain versions do get implemented.
 //TODO: clean all of this nonsense up
 class game: public Gamemode
 {
 	public:
 
-		char keyboardKeys[40] = {
+		char displayKeys[40] = { //the keys to render to the screen
 			'1','2','3','4','5','6','7','8','9','0',
 			'Q','W','E','R','T','Y','U','I','O','P',
 			'A','S','D','F','G','H','J','K','L','-',
 			'Z','X','C','V','B','N','M','<','>','$'
+		};
+		char keyboardKeys[40] = { //the actual keys that are added to the string
+			'1','2','3','4','5','6','7','8','9','0',
+			'Q','W','E','R','T','Y','U','I','O','P',
+			'A','S','D','F','G','H','J','K','L',32,
+			'Z','X','C','V','B','N','M',0,0,0
 		};
 
 
@@ -57,16 +66,13 @@ class game: public Gamemode
 		bool godown = false;
 		bool warningflag = false;
 		model* toad;
-		std::string choices[6] = {
+		std::string choices[3] = {
 			"RESUME",
-			"EXIT",
-			"RECORD DEMO",
-			"PLAY DEMO",
-			"SAVE STATE",
-			"LOAD STATE"
+			"EXIT WITHOUT SAVING",
+			"SAVE AND EXIT",
 		};
 		double rotval = 0.0;
-		int optionsize = 6;
+		int optionsize = 3;
 		bool gameactive = true;
 		bool paused = false;
 		bool keyboard = false;

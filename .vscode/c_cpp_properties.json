@@ -11,7 +11,8 @@
                 "${workspaceFolder}/include"
             ],
             "defines": [
-                "CLIENT"
+                "CLIENT",
+                "_LINUX"
             ],
             "compilerPath": "/usr/bin/gcc",
             "intelliSenseMode": "linux-gcc-x64",

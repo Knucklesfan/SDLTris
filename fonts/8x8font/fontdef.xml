@@ -1,9 +1,9 @@
-<name>16x16 font</name>
+<name>8x8 font</name>
 <width>16</width>
-<filename>font.bmp</filename>
-
 <height>16</height>
 <shader>5</shader>
+<filename>font.bmp</filename>
+
 <!--this is kinda a hack.
 the font code was designed with multiple rows in mind, but in order to ensure somewhat compatibility with the old font
 characters that i generated for SDLTetris meant doing dumb things like this. Not to say it isn't gonna work, though.-->
@@ -268,66 +268,67 @@ characters that i generated for SDLTetris meant doing dumb things like this. Not
         <char>.</char>
         <charwid>16</charwid>
     </letter>
-   <letter>
+    <letter>
         <posx>37</posx>
         <posy>0</posy>
         <char>,</char>
         <charwid>16</charwid>
     </letter>
-   <letter>
+    <letter>
         <posx>38</posx>
         <posy>0</posy>
         <char>*</char>
         <charwid>16</charwid>
     </letter>
-   <letter>
+    <letter>
         <posx>39</posx>
         <posy>0</posy>
         <char>_</char>
         <charwid>16</charwid>
     </letter>
-   <letter>
-        <posx>39</posx>
-        <posy>0</posy>
-        <char>_</char>
-        <charwid>16</charwid>
-    </letter>
-   <letter>
+    <letter>
         <posx>40</posx>
         <posy>0</posy>
         <char>-</char>
         <charwid>16</charwid>
     </letter>
-   <letter>
+    <letter>
         <posx>41</posx>
         <posy>0</posy>
         <char>!</char>
         <charwid>16</charwid>
     </letter>
-   <letter>
+    <letter>
         <posx>42</posx>
         <posy>0</posy>
         <char>$</char>
         <charwid>16</charwid>
-    </letter>
-   <letter>
+    </letter> 
+    <letter>
         <posx>43</posx>
         <posy>0</posy>
-        <char>%</char>
+        <char>:</char>
         <charwid>16</charwid>
-    </letter>
-   <letter>
+    </letter> 
+    <letter>
         <posx>44</posx>
         <posy>0</posy>
         <char>=</char>
         <charwid>16</charwid>
     </letter>
-   <letter>
+
+    <letter>
         <posx>45</posx>
         <posy>0</posy>
-        <char>:</char>
+        <char>'</char>
         <charwid>16</charwid>
-    </letter>
+    </letter> 
+    <letter>
+        <posx>46</posx>
+        <posy>0</posy>
+        <char>+</char>
+        <charwid>16</charwid>
+    </letter> 
     <letter>
         <posx>47</posx>
         <posy>0</posy>

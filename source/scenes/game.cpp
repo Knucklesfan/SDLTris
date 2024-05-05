@@ -339,8 +339,8 @@ void game::render() {
 
                 }
                 for(int i = 0; i < 40; i++) {
-                    std::string str(1,keyboardKeys[i]);
-                    graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?0:255*sin(SDL_GetTicks()/1000.0f),255,-1,false,0,0,0);
+                    std::string str(1,displayKeys[i]);
+                    graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?96-64*sin(SDL_GetTicks()/500.0f):255,255,-1,false,0,0,0);
                 }
 
             }

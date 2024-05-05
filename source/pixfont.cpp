@@ -63,6 +63,7 @@ pixfont::pixfont(std::string path) {
         let.width = atoi(child->first_node("charwid")->value());
         let.character = child->first_node("char")->value()[0];
         mapping[let.character] = let;
+        std::cout << let.character << " " << let.x << "\n";
     }
 
     //handle opengl stuff now

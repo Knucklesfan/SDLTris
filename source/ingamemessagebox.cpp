@@ -37,15 +37,16 @@ void ingamemessagebox::render()
 	//letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
 	graphics::fonts->at(2)->render(x, y + 20,content, false, 255, 255, 255,250,false,0,0,0);
 	#else
-	graphics::rect->render(graphics::shaders.at(1),{ (int)x-2, (int)y},{(int)x-2+252, (int)y+100 },0,{0,0,0,0.5},true,1,glm::vec4(1,1,1,1));
-	
-	int tmpx = (int) (uptime / 2.5) % 378;
-	graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("visualizer"), {x-2,y+44},{252,38},0,{tmpx,0},{252,38});
-	
-	graphics::fonts->at(2)->render(x, y + 4,name, false, 255, 0, 255, 250, true, uptime / 20, 1, 5);
-	//letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
-	graphics::fonts->at(2)->render(x, y + 20,content, false, 255, 255, 255,250,false,0,0,0);
-
+	if(active) {
+		graphics::rect->render(graphics::shaders.at(1),{ (int)x-2, (int)y},{(int)x-2+252, (int)y+100 },0,{0,0,0,0.5},true,1,glm::vec4(1,1,1,1));
+		
+		int tmpx = (int) (uptime / 2.5) % 378;
+		graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("visualizer"), {x-2,y+44},{252,38},0,{tmpx,0},{252,38});
+		
+		graphics::fonts->at(2)->render(x, y + 4,name, false, 255, 0, 255, 250, true, uptime / 20, 1, 5);
+		//letterfont->render(renderer, name, x, y + 4, false, 255, 0, 255,250);
+		graphics::fonts->at(2)->render(x, y + 20,content, false, 255, 255, 255,250,false,0,0,0);
+	}
 	#endif
 }	
 

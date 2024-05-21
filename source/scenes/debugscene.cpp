@@ -66,14 +66,14 @@ void debugscene::input(SDL_Keycode keysym)
         case SDLK_RIGHT: {
             switch(selection) {
                 case 0: {
-                    if(transition < 3) {
-                        transition++;
+                    if(background < graphics::backgrounds->size()) {
+                        background++;
                     }
 
                 }break;
                 case 1: {
-                    if(background < graphics::backgrounds->size()) {
-                        background++;
+                    if(transition < 3) {
+                        transition++;
                     }
                 }break;
                 case 2: {
@@ -88,14 +88,14 @@ void debugscene::input(SDL_Keycode keysym)
         case SDLK_LEFT: {
             switch(selection) {
                 case 0: {
-                    if(transition > 0) {
-                        transition--;
+                    if(background > 0) {
+                        background--;
                     }
 
                 }break;
                 case 1: {
-                    if(background > 0) {
-                        background--;
+                    if(transition > 0) {
+                        transition--;
                     }
                 }break;
                 case 2: {

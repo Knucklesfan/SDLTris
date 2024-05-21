@@ -24,7 +24,7 @@ float rotate, glm::vec2 texcoord, glm::vec2 texsize) {
     render(shad,t,position,size,{0,0,rotate},texcoord,texsize);
 }
 void spriteRenderer::render(shader* shad, texture* t, glm::vec2 position, glm::vec2 size,
-glm::vec3 rotation, glm::vec2 texcoord, glm::vec2 texsize, glm::vec2 screen) {
+glm::vec3 rotation, glm::vec2 texcoord, glm::vec2 texsize, glm::vec2 screen, float z) {
 	/*
     glm::mat4 model = glm::mat4(1.0f);
 
@@ -56,6 +56,7 @@ glm::vec3 rotation, glm::vec2 texcoord, glm::vec2 texsize, glm::vec2 screen) {
     model = glm::rotate(model, glm::radians(rotation[1]), glm::vec3(0.0f, 0.5f, 0.0f));
     model = glm::rotate(model, glm::radians(rotation[2]), glm::vec3(0.0f, 0.0f, 0.5f));
     model = glm::translate(model, glm::vec3(-0.5f * size.x, -0.5f * size.y, 0.0f)); // move origin back
+    model = glm::translate(model, glm::vec3(0.0f, 0.0f, z)); // go ahead and move in depth as well
 
     model = glm::scale(model, glm::vec3(size, 1.0f)); // last scale
 

@@ -159,6 +159,9 @@ void classicmenu::render() {
                 );
             }
         }
+        if((SDL_GetTicks()/500)%2 ==0)
+        graphics::fonts->at(4)->render(320,64,"LOAD SAVE",true);
+
     }
 
 };

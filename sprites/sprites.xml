@@ -171,4 +171,8 @@
 		<name>savefile</name>
 		<path>./sprites/savefile.png</path>
 	</sprite>
+	<sprite>
+		<name>cheatercroc</name>
+		<path>./sprites/CHEATER_kekcroc.png</path>
+	</sprite>
 </sprites>

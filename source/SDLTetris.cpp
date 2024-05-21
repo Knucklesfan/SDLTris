@@ -242,6 +242,7 @@ int main(int argc, char **argv) {
 
 
     SDL_Event event;
+    bool globalDebug = false;
     bool quit = false;
     float NOW = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
     float LAST = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
@@ -258,6 +259,7 @@ int main(int argc, char **argv) {
     if(argument == "--debug") {
         gameplay::gamemodes.push_back(new debugscene());
         gameplay::gamemode = gameplay::gamemodes.size()-1;
+        globalDebug = true;
     }
 
     std::cout << "Finished initializing!\n";
@@ -286,6 +288,12 @@ int main(int argc, char **argv) {
             if (event.type == SDL_KEYDOWN) {
                 if(event.key.keysym.sym == SDLK_F12) {
                     graphics::screenshot();
+                    break;
+                }
+                if(event.key.keysym.sym == SDLK_F1 && globalDebug) {
+                    gameplay::gamemode = gameplay::gamemodes.size()-1;
+                    gameplay::gamemodes.at(gameplay::gamemode)->reset();
+                    break;
                 }
                 gameplay::gamemodes[gameplay::gamemode]->input(event.key.keysym.sym);
             }

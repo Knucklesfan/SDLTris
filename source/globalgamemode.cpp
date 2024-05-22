@@ -164,7 +164,6 @@ void GlobalGamemode::render() {
             case BARS: {
 
                 glEnable(GL_DEPTH_TEST);  
-                std::cout << "bars\n";
                 glm::mat4 projection;
                 projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
                 glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective

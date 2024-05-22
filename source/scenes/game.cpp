@@ -78,6 +78,8 @@ game::game() {
     header = graphics::fonts->at(1);
     msg = new ingamemessagebox("null","null", 0);
     gameactive = true;
+    invisScore = 0;
+
 }
 void game::logic(double deltatime) {
 
@@ -110,7 +112,7 @@ void game::logic(double deltatime) {
     // graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).renderLyrics();
     if (gameactive && !paused) {
         if (fmod(realtick, getspeed()) == 0) {
-            score++;
+            invisScore++; //increment the drop score, but dont add it yet
 
             t.movedown();
             
@@ -445,14 +447,14 @@ void game::inputKey(SDL_Keycode key) {
         case SDLK_UP: {
             Mix_PlayChannel(-1, audio::sfx->at(3), 0);
             if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP] == 1) {
-                score += t.forcedrop();
+                invisScore += t.forcedrop();
             }
             break;
         }
         case SDLK_DOWN: {
             Mix_PlayChannel(-1, audio::sfx->at(2), 0);
             t.movedown();
-            score++;
+            invisScore++;
 
             break;
         }
@@ -495,6 +497,7 @@ void game::inputKey(SDL_Keycode key) {
                 std::fill_n(ghostblocks, 480, 0);
                 ticks = 0;
                 realtick = 0;
+                invisScore = 0;
             }
             break;
         }
@@ -701,6 +704,8 @@ void game::checkLines(int(blocks)[480]) {
     if (times > 0) {
         level = (lines / settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::LEVELLENGTH]) + 1;
     }
+    score+= invisScore;
+    invisScore = 0;
     if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
         bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
     }
@@ -784,13 +789,13 @@ void game::reset() {
     std::fill_n(keyboardname, 8, ' ');
     currentChar = 0;
     selectedkey = 0;
-
+    score = 0;
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
-    double ticks = 0;
-    int realtick = 0;
-    int holdblock = -1;
+    ticks = 0;
+    realtick = 0;
+    holdblock = -1;
     demoOffset = 0;
     demotick = 0;
     demokey = 0;
@@ -805,6 +810,7 @@ void game::reset() {
     gameactive = true;
     warningflag = false;
     gameStart = SDL_GetTicks();
+    invisScore = 0;
 
 
 }

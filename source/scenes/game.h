@@ -54,6 +54,7 @@ class game: public Gamemode
 		int holdblock = 0;
 		uint randomIters = 0; // number of times the rand() call has been made
 		Uint32 score = 000000000;
+		Uint32 invisScore = 0; //score that is hidden and reset on holdblock, and is only added once falling is done.
 		int lines = 0;
 		int level = 1;
 		int startTime = 0;

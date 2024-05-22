@@ -97,16 +97,25 @@ int main(int argc, char **argv) {
         //this code ensures that we got at least a config dir to work with upon boot
         //otherwise, stuff is gonna expect that it has a config dir, and it doesnt!
         //please for the love of god dont delete the config dir mid-gameplay...
-        std::string home = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino";
+        settings::configDir = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino";
         struct stat info;
-        if( stat( home.c_str(), &info ) != 0 ) {
-            mkdir(home.c_str(),0555);
+        if( stat( settings::configDir.c_str(), &info ) != 0 ) {
+            mkdir(settings::configDir.c_str(),0777);
         }
         else if( info.st_mode & S_IFDIR )  // S_ISDIR() doesn't exist on my windows 
-            printf( "%s is a directory\n", home );
+            std::cout << settings::configDir << " is a directory, setting as config path\n";
         else
-            mkdir(home.c_str(),0555);
+            mkdir(settings::configDir.c_str(),0777);
 
+        settings::saveDir = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino/saves";
+        if( stat( settings::saveDir.c_str(), &info ) != 0 ) {
+            mkdir(settings::saveDir.c_str(),0777);
+        }
+        else if( info.st_mode & S_IFDIR )  // S_ISDIR() doesn't exist on my windows 
+            std::cout << settings::saveDir << " is a directory, setting as save path\n";
+        else
+            mkdir(settings::saveDir.c_str(),0777);
+    settings::loadSaveData();
     #elif _WIN32
 
     #elif _OSX
@@ -243,7 +252,6 @@ int main(int argc, char **argv) {
 
 
     SDL_Event event;
-    bool globalDebug = false;
     bool quit = false;
     float NOW = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
     float LAST = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
@@ -260,7 +268,7 @@ int main(int argc, char **argv) {
     if(argument == "--debug") {
         gameplay::gamemodes.push_back(new debugscene());
         gameplay::gamemode = gameplay::gamemodes.size()-1;
-        globalDebug = true;
+        settings::globalDebug = true;
     }
 
     std::cout << "Finished initializing!\n";
@@ -290,7 +298,7 @@ int main(int argc, char **argv) {
                     graphics::screenshot();
                     break;
                 }
-                if(event.key.keysym.sym == SDLK_F1 && globalDebug) {
+                if(event.key.keysym.sym == SDLK_F1 && settings::globalDebug) {
                     gameplay::gamemode = gameplay::gamemodes.size()-1;
                     gameplay::gamemodes.at(gameplay::gamemode)->reset();
                     break;

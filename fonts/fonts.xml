@@ -23,5 +23,9 @@
 		<type>pixfont</type>
 		<path>scorefont</path>
 	</font>
+	<font>
+		<type>pixfont</type>
+		<path>dialoguefont</path>
+	</font>
 
 </fonts>

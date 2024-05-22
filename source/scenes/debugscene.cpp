@@ -55,6 +55,12 @@ void debugscene::render()
             }
             graphics::fonts->at(0)->render(320,200+(i*24),text,true,255,selection==i?0:255,255,-1,false,0,0,0);
         }
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("kekcrochurryup"),{16,432},{16,32},0,{(SDL_GetTicks()/1000)%2==1?0:16,0},{16,32});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("mariospin"),{16,400},{16,32},0,{((SDL_GetTicks()/250)%4)*16,0},{16,32});
+
+        if(SDL_GetTicks()-messagelife > 1000 && currentmessage < 42) {
+            graphics::fonts->at(6)->render(32,432-(messageSenders[currentmessage]*32),kekcrocMessages[currentmessage],false);
+        }
 
         #endif
 
@@ -139,13 +145,17 @@ Transition debugscene::endLogic()
     };
 };
 void debugscene::logic(double deltatime) {
+    if(SDL_GetTicks()-messagelife > 5000) {
+        messagelife = SDL_GetTicks();
+        currentmessage++;
+    }
     if(background > 0) {
         graphics::backgrounds->at(background-1).logic(deltatime);
     }
 }
 void debugscene::reset() {
     advance = false;
-    Mix_HaltMusic();
+    Mix_PlayMusic( audio::music->at(5), -1 );
 
     r = 128 + rand() % (256 - 128);
     g = 128 + rand() % (256 - 128);

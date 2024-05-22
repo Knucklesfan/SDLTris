@@ -29,7 +29,7 @@ void rpcimplement::logic() {
     }
 }
 
-void rpcimplement::update(std::string state, std::string score, std::string icon, discord::Timestamp time) {
+void rpcimplement::update(std::string score, std::string state, std::string icon, discord::Timestamp time) {
     if (result == discord::Result::Ok) {
         discord::Activity activity{};
         activity.SetState(state.c_str());

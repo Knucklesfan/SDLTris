@@ -502,14 +502,20 @@ void game::inputKey(SDL_Keycode key) {
             break;
         }
         case SDLK_y: {
-            if (settings::activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
-                level++;
+            if (settings::globalDebug) {
+                level--;
             }
             break;
         }
         case SDLK_u: {
-            if (settings::activations[OPTIONTYPE::DEBUG][DEBUGOPTIONS::DEBUGENABLED]) {
-                level--;
+            if (settings::globalDebug) {
+                level++;
+            }
+            break;
+        }
+        case SDLK_m: {
+            if (settings::globalDebug) {
+                loadState();
             }
             break;
         }
@@ -1071,8 +1077,11 @@ void game::saveState() { //saves the game's state. this is a debug function im c
     for(int i = 0; i < name.length(); i++) {
         std::cout << (int)name[i] << " ";
     }
+
     std::cout << "END\n";
-    std::ofstream fs(name+".knfs", std::ios::out | std::ios::binary);
+    std::string filename = settings::saveDir+"/"+name+".knfs";
+    std::cout << "Saving to file " << filename <<"\n";
+    std::ofstream fs(filename, std::ios::out | std::ios::binary);
     Uint32 version = SAVE_VERSION; //the version of the current save type, in case i update this
     fs.write((char *) &version, sizeof(Uint32));
     fs.write((char *) &time, sizeof(uint));
@@ -1101,7 +1110,7 @@ void game::loadState() {
     
     std::streampos size;
     char * memblock;
-    std::ifstream file ("example.bin", std::ios::in|std::ios::binary|std::ios::ate);
+    std::ifstream file ("/home/knucklesfan/.config/KNFNTetromino/saves/WALL.knfs", std::ios::in|std::ios::binary|std::ios::ate);
     if (file.is_open())
     {
         size = file.tellg();

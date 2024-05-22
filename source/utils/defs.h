@@ -231,7 +231,11 @@ class settings {
     static void loadSettings();
     static void loadDemos();
     static void loadSaveData();
-    
+    static std::string configDir;
+    static std::string saveDir;
+    static bool globalDebug;
+
+
     static std::vector<save> saveCache;
 	static std::array<std::array<int, 12>, 5> defaults;
 

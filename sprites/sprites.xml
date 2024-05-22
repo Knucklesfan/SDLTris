@@ -175,4 +175,13 @@
 		<name>cheatercroc</name>
 		<path>./sprites/CHEATER_kekcroc.png</path>
 	</sprite>
+	<sprite>
+		<name>kekcrochurryup</name>
+		<path>./sprites/kekcrochurryup.png</path>
+	</sprite>
+	<sprite>
+		<name>mariospin</name>
+		<path>./sprites/mariospin.png</path>
+	</sprite>
+
 </sprites>

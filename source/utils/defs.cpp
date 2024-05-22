@@ -25,6 +25,7 @@
 #include <sstream> //std::stringstream
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <filesystem>
 
 SDL_Window* graphics::window = nullptr;
 std::vector<Gamemode*> gameplay::gamemodes = std::vector<Gamemode*>();
@@ -230,6 +231,7 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
     rectRenderer* graphics::rect = NULL;
     lineRenderer* graphics::line = NULL;
     buffermanager* graphics::globalbuffer = NULL;
+    bool settings::globalDebug = false;
     spriteRenderer* graphics::sprite = NULL;
     std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
     std::vector<std::string> settings::demos = std::vector<std::string>();
@@ -263,6 +265,9 @@ int settings::previousscore = 0;
 int settings::lastlevel = 0;
 int settings::lastlines = 0;
 int settings::lasttime = 0;
+std::string settings::configDir = "";
+std::string settings::saveDir = "";
+
 std::vector<bg>* graphics::backgrounds = new std::vector<bg>();
 // std::vector<ObjectTemplate>* graphics::objects = new std::vector<ObjectTemplate>();
 std::vector<Font*>* graphics::fonts = new std::vector<Font*>();
@@ -402,17 +407,8 @@ void settings::loadSaveData() {
     #ifdef _LINUX
         //since we are on linux, the other platforms are only 
         //gonna get implemented when needed
-        std::string home = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino/saves";
-        struct stat info;
-        if( stat( home.c_str(), &info ) != 0 ) {
-            printf("No saves to be loaded.\n");
-            return;
-        }
-        else if( info.st_mode & S_IFDIR ) {
-            printf( "%s is a directory\n", home );
-            
-        }
-
+        for (const auto & entry : std::filesystem::directory_iterator(saveDir))
+            std::cout << entry.path() << std::endl;
     #elif _WIN32
 
     #elif _OSX

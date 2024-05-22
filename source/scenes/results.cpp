@@ -55,6 +55,7 @@ void results::reset()
             Mix_PauseMusic();
         }
     }
+    networking::globalRPC->update("Viewing the results.", "Last game's score: " + std::to_string(settings::previousscore), "icon4", std::time(nullptr));
 
 }
 void results::render() {

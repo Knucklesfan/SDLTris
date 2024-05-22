@@ -111,7 +111,9 @@ void game::logic(double deltatime) {
     if (gameactive && !paused) {
         if (fmod(realtick, getspeed()) == 0) {
             score++;
+
             t.movedown();
+            
         }
         ticks += deltatime;
         if (ticks >= 1) {
@@ -124,6 +126,10 @@ void game::logic(double deltatime) {
         if(settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::ROTATEBOARD]) {
             rotval = visiblelifetime/25;
         }
+        if(!demoPlayback) {
+            networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
+        }
+
     }
     if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
         graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).logic(deltatime);
@@ -447,6 +453,7 @@ void game::inputKey(SDL_Keycode key) {
             Mix_PlayChannel(-1, audio::sfx->at(2), 0);
             t.movedown();
             score++;
+
             break;
         }
         case SDLK_LEFT: {
@@ -698,6 +705,10 @@ void game::checkLines(int(blocks)[480]) {
         bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
     }
     changemusic();
+    if(!demoPlayback) {
+        networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
+    }
+
 }
 bool game::checkRow(int* (blocks)) {
     for (int i = 0; i < boardwidth; i++) {
@@ -763,6 +774,9 @@ void game::reset() {
     bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     if(!demoPlayback) {
         changemusic();
+        startTime = std::time(nullptr);
+        networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
+
     }
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
@@ -787,6 +801,7 @@ void game::reset() {
     nextblocks = std::rand() % 7;
     randomIters++;
     time = std::time(nullptr);
+    startTime = time;
     gameactive = true;
     warningflag = false;
     gameStart = SDL_GetTicks();

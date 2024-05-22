@@ -1,4 +1,3 @@
-#ifdef _WIN32
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -14,7 +13,7 @@ namespace discord {
 
 class RelationshipEvents final {
 public:
-    static void OnRefresh(void* callbackData)
+    static void DISCORD_CALLBACK OnRefresh(void* callbackData)
     {
         auto* core = reinterpret_cast<Core*>(callbackData);
         if (!core) {
@@ -25,7 +24,8 @@ public:
         module.OnRefresh();
     }
 
-    static void OnRelationshipUpdate(void* callbackData, DiscordRelationship* relationship)
+    static void DISCORD_CALLBACK OnRelationshipUpdate(void* callbackData,
+                                                      DiscordRelationship* relationship)
     {
         auto* core = reinterpret_cast<Core*>(callbackData);
         if (!core) {
@@ -89,4 +89,3 @@ Result RelationshipManager::GetAt(std::uint32_t index, Relationship* relationshi
 }
 
 } // namespace discord
-#endif

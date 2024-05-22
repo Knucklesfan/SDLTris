@@ -45,6 +45,8 @@ void titlescreen::reset()
     bgnum = std::rand() % graphics::backgrounds->size();
 
     //audio::playMusic(0); //plays the first song in the list
+        networking::globalRPC->update("At the Titlescreen.", "Top high score: " + std::to_string(settings::maxscore), "mainicon", std::time(nullptr));
+
 }
 
 void titlescreen::input(SDL_Keycode key)

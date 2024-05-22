@@ -119,6 +119,7 @@ void knuxfanscreen::reset() {
 	 rotate = 0;
     backnum = std::rand() % graphics::backgrounds->size();
     splash = rand() % 35;
+    networking::globalRPC->update("At the Knuxfan Screen.", "Top high score: " + std::to_string(settings::maxscore), "icon1", std::time(nullptr));
 
 
 }

@@ -1,6 +1,8 @@
 #pragma once
-#ifdef _WIN32
 #include "discord/discord.h"
+#include <string>
+#include <iostream>
+#include <chrono>
 
 class rpcimplement {
 public:
@@ -10,4 +12,3 @@ public:
     void update(std::string state, std::string score, std::string icon, discord::Timestamp time);
     void logic();
 };
-#endif

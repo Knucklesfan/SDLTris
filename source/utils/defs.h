@@ -31,7 +31,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
 #include <string>
 #include <vector>
 #include <memory>
@@ -51,6 +50,7 @@
 #endif
 //#include "Object.h"
 #include "../font.h"
+#include "../rpcimplement.h"
 
 #include <map>
 struct letter {
@@ -262,14 +262,17 @@ namespace utils {
     double rad(double i);
 
 };
-class gameplay { //i *sighs the worlds deepest sigh of human history* love background.h
+class gameplay { //class that contains stuff that globally is used for managing gamemodes
     public:
         static int gamemode;
         static std::vector<Gamemode*> gamemodes;
         static void loadGamemodes();
         static int Pieces[7][4][16];
 };
-
+class networking { //class that contains global network objects, such as server and rpc connections
+    public:
+        static rpcimplement* globalRPC;
+};
 //File full of a bunch of really simple and easy things to free up memory
 namespace memory {
     void freeSprites();

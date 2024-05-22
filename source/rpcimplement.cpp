@@ -1,9 +1,4 @@
-#ifdef _WIN32
 #include "rpcimplement.h"
-#include "discord/discord.h"
-
-#include <iostream>
-#include <chrono>
 
 
 rpcimplement::rpcimplement()
@@ -48,4 +43,3 @@ void rpcimplement::update(std::string state, std::string score, std::string icon
     }
 
 }
-#endif

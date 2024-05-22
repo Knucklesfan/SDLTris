@@ -116,6 +116,7 @@ void credits::reset() {
     goup = false;
     godown = false;
     gamemode = 0;
+    networking::globalRPC->update("Watching the credits.", "Top high score: " + std::to_string(settings::maxscore), "icon2", std::time(nullptr));
 
 
 }

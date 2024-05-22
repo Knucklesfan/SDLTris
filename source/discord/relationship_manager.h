@@ -1,5 +1,4 @@
 #pragma once
-#ifdef _WIN32
 
 #include "types.h"
 
@@ -31,4 +30,3 @@ private:
 };
 
 } // namespace discord
-#endif

@@ -236,6 +236,8 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
 
     std::map<std::string,texture*> graphics::sprites = std::map<std::string,texture*>();
     std::vector<shader *> graphics::shaders = std::vector<shader *>();
+    
+    rpcimplement* networking::globalRPC = NULL;
 
     std::map<std::string, layertype> bgconverters::layermap = {
         {"background", layertype::BACKGROUND}, //

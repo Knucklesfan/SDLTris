@@ -14,6 +14,7 @@
 #include "globalgamemode.h"
 #include "gamemode.h"
 #include "scenes/debugscene.h"
+#include "rpcimplement.h"
 // #include "scenes/options.h"
 #ifndef __LEGACY_RENDER
 #include "opengl/buffermanager.h"
@@ -274,12 +275,11 @@ int main(int argc, char **argv) {
         std::cout << gameplay::gamemodes[i]->name << "\n";
     }
     //rpcimplement rpc();
-#ifdef _WIN32
-    rpcimplement* rpc = new rpcimplement();
-    discord::Timestamp time = 0;
-    time = std::time(nullptr);
-    rpc->update("At the Knuxfan Screen.", "Top high score: " + std::to_string(score->maxscore), "icon1", time);
-#endif
+    networking::globalRPC = new rpcimplement();
+    discord::Timestamp discTime = 0;
+    discTime = std::time(nullptr);
+    gameplay::gamemodes[gameplay::gamemode]->reset();
+
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -350,6 +350,8 @@ int main(int argc, char **argv) {
         graphics::globalbuffer->render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
         // preciseSleep(floor(1000.0f/60.0f - deltaTime)/1000.0f);
         SDL_GL_SwapWindow(window);
+        networking::globalRPC->logic();
+
         #endif
 
 }

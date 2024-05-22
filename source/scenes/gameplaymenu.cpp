@@ -320,6 +320,8 @@ void gameplaymenu::render() {
     }
 };
 void gameplaymenu::reset() {
+    networking::globalRPC->update("In the menu.", "Top high score: " + std::to_string(settings::maxscore), "icon6", std::time(nullptr));
+
     Mix_HaltMusic();
     Mix_HaltChannel(-1);
 

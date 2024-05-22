@@ -150,4 +150,6 @@ void debugscene::reset() {
     r = 128 + rand() % (256 - 128);
     g = 128 + rand() % (256 - 128);
     b = 128 + rand() % (256 - 128);
+    networking::globalRPC->update("Debugging the game???", "Play Kekcroc World 3", "nullbg", std::time(nullptr));
+
 }

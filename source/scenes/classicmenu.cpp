@@ -166,6 +166,7 @@ void classicmenu::render() {
 
 };
 void classicmenu::reset() {
+    networking::globalRPC->update("Getting ready to start a classic game...", "Top high score: " + std::to_string(settings::maxscore), "icon1", std::time(nullptr));
     startTime = SDL_GetTicks();
     t = Transition();
 }

@@ -1,5 +1,3 @@
-#ifdef _WIN32
-
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -15,7 +13,7 @@ namespace discord {
 
 class UserEvents final {
 public:
-    static void OnCurrentUserUpdate(void* callbackData)
+    static void DISCORD_CALLBACK OnCurrentUserUpdate(void* callbackData)
     {
         auto* core = reinterpret_cast<Core*>(callbackData);
         if (!core) {
@@ -80,4 +78,3 @@ Result UserManager::CurrentUserHasFlag(UserFlag flag, bool* hasFlag)
 }
 
 } // namespace discord
-#endif

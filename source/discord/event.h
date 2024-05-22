@@ -1,5 +1,4 @@
 #pragma once
-#ifdef _WIN32
 
 #include <functional>
 #include <vector>
@@ -58,4 +57,3 @@ private:
 };
 
 } // namespace discord
-#endif

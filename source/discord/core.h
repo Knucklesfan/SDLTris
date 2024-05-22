@@ -1,5 +1,4 @@
 #pragma once
-#ifdef _WIN32
 
 #include "types.h"
 #include "application_manager.h"
@@ -63,4 +62,3 @@ private:
 };
 
 } // namespace discord
-#endif

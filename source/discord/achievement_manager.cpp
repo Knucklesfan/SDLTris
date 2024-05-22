@@ -1,4 +1,3 @@
-#ifdef _WIN32
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -9,11 +8,13 @@
 
 #include <cstring>
 #include <memory>
+
 namespace discord {
 
 class AchievementEvents final {
 public:
-    static void OnUserAchievementUpdate(void* callbackData, DiscordUserAchievement* userAchievement)
+    static void DISCORD_CALLBACK OnUserAchievementUpdate(void* callbackData,
+                                                         DiscordUserAchievement* userAchievement)
     {
         auto* core = reinterpret_cast<Core*>(callbackData);
         if (!core) {
@@ -96,4 +97,3 @@ Result AchievementManager::GetUserAchievementAt(std::int32_t index,
 }
 
 } // namespace discord
-#endif

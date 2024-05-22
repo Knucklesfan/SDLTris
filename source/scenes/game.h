@@ -56,6 +56,7 @@ class game: public Gamemode
 		Uint32 score = 000000000;
 		int lines = 0;
 		int level = 1;
+		int startTime = 0;
 		int bglevel = 1;
 		int currentsong = 0;
 		int pauseselection = 0;

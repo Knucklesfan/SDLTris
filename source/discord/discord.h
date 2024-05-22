@@ -1,5 +1,4 @@
 #pragma once
-#ifdef _WIN32
 
 #include "types.h"
 #include "core.h"
@@ -15,4 +14,3 @@
 #include "store_manager.h"
 #include "voice_manager.h"
 #include "achievement_manager.h"
-#endif

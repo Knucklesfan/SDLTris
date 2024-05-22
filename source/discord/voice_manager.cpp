@@ -1,4 +1,3 @@
-#ifdef _WIN32
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -14,7 +13,7 @@ namespace discord {
 
 class VoiceEvents final {
 public:
-    static void OnSettingsUpdate(void* callbackData)
+    static void DISCORD_CALLBACK OnSettingsUpdate(void* callbackData)
     {
         auto* core = reinterpret_cast<Core*>(callbackData);
         if (!core) {
@@ -123,4 +122,3 @@ Result VoiceManager::SetLocalVolume(Snowflake userId, std::uint8_t volume)
 }
 
 } // namespace discord
-#endif

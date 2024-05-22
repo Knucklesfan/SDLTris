@@ -1,4 +1,3 @@
-#ifdef _WIN32
 #if !defined(_CRT_SECURE_NO_WARNINGS)
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -56,5 +55,3 @@ Result ImageManager::GetData(ImageHandle handle, std::uint8_t* data, std::uint32
 }
 
 } // namespace discord
-
-#endif

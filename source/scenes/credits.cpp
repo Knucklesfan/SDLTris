@@ -135,7 +135,7 @@ void credits::render() {
             glm::vec3 lightpos = glm::vec3(posx, 0.5, posy);
             graphics::sprites.at("normalbrick")->activate(1);
             graphics::shaders.at(9)->setInt("normalMap",1);
-            graphics::shaders.at(9)->setFloat("offset",SDL_GetTicks()/10000.0f);
+            graphics::shaders.at(9)->setFloat("offset",SDL_GetTicks64()/10000.0f);
 
             graphics::shaders.at(9)->setVec3("objectColor", glm::value_ptr(objColor));
             graphics::shaders.at(9)->setVec3("lightColor", glm::value_ptr(lightcolor));

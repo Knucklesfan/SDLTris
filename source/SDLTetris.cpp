@@ -78,7 +78,7 @@ Uint32 time_left(void)
 {
     Uint32 now;
 
-    now = SDL_GetTicks();
+    now = SDL_GetTicks64();
     if(next_time <= now)
         return 0;
     else
@@ -253,13 +253,13 @@ int main(int argc, char **argv) {
 
     SDL_Event event;
     bool quit = false;
-    float NOW = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
-    float LAST = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+    int NOW = SDL_GetTicks64();
+    int LAST = NOW;
     float deltaTime = 0;
     double ticks = 0;
     int realtick = 0;
     double time = 0; //time of current frame
-    double oldTime = SDL_GetTicks(); //time of previous framea
+    double oldTime = SDL_GetTicks64(); //time of previous framea
     long long recordticks = 0;
     std::string argument = "";
     if(argc > 1) {
@@ -278,7 +278,7 @@ int main(int argc, char **argv) {
     if (titlebg == knxfnbg) {
         knxfnbg = std::rand() % graphics::backgrounds->size(); //WHY TF AM I DOING THIS
     }
-    next_time = SDL_GetTicks() + TICK_INTERVAL;
+    next_time = SDL_GetTicks64() + TICK_INTERVAL;
     for(int i = 0; i<gameplay::gamemodes.size(); i++) {
         std::cout << gameplay::gamemodes[i]->name << "\n";
     }
@@ -287,39 +287,17 @@ int main(int argc, char **argv) {
     discord::Timestamp discTime = 0;
     discTime = std::time(nullptr);
     gameplay::gamemodes[gameplay::gamemode]->reset();
-
+    double accumulator = 0;
     while (!quit) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            }
-            if (event.type == SDL_KEYDOWN) {
-                if(event.key.keysym.sym == SDLK_F12) {
-                    graphics::screenshot();
-                    break;
-                }
-                if(event.key.keysym.sym == SDLK_F1 && settings::globalDebug) {
-                    gameplay::gamemode = gameplay::gamemodes.size()-1;
-                    gameplay::gamemodes.at(gameplay::gamemode)->reset();
-                    break;
-                }
-                gameplay::gamemodes[gameplay::gamemode]->input(event.key.keysym.sym);
-            }
-            if(event.type == SDL_WINDOWEVENT) {
-				if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-					WINDOW_WIDTH =(event.window.data1);
-					WINDOW_HEIGHT = (event.window.data2);
 
-        		}
-			}
-        }
-
-        time = SDL_GetTicks();
-        NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+        time = SDL_GetTicks64();
+        NOW = SDL_GetTicks64();
         graphics::deltaTime = (NOW - LAST); //frameTime is the time this frame has taken, in seconds
         double frameTime = graphics::deltaTime /1000.0;
         double tFps = (1.0 / frameTime);
+        double delta = time-oldTime;
         oldTime = time;
+
         LAST = NOW;
         SDL_PumpEvents();
         #ifdef __LEGACY_RENDER
@@ -331,17 +309,47 @@ int main(int argc, char **argv) {
             graphics::globalbuffer->enable();
             global->startRender();
         #endif
-        gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
-        gameplay::gamemodes[gameplay::gamemode]->render();
-        Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
-        if(endlogic.transition) {
-            global->setFade(endlogic);
-        };
-        
-        if(global->logic(graphics::deltaTime)) {
-            gameplay::gamemode=global->currentTransition.gamemode;
-            gameplay::gamemodes[gameplay::gamemode]->reset();
+        accumulator += graphics::deltaTime/1000.0f;
+        std::cout << accumulator << "\n";
+        while(accumulator > 1.0/60.0){
+            while (SDL_PollEvent(&event)) {
+                if (event.type == SDL_QUIT) {
+                    quit = true;
+                }
+                if (event.type == SDL_KEYDOWN) {
+                    if(event.key.keysym.sym == SDLK_F12) {
+                        graphics::screenshot();
+                        break;
+                    }
+                    if(event.key.keysym.sym == SDLK_F1 && settings::globalDebug) {
+                        gameplay::gamemode = gameplay::gamemodes.size()-1;
+                        gameplay::gamemodes.at(gameplay::gamemode)->reset();
+                        break;
+                    }
+                    gameplay::gamemodes[gameplay::gamemode]->input(event.key.keysym.sym);
+                }
+                if(event.type == SDL_WINDOWEVENT) {
+                    if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
+                        WINDOW_WIDTH =(event.window.data1);
+                        WINDOW_HEIGHT = (event.window.data2);
+
+                    }
+                }
+            }
+
+            gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
+            accumulator -= 1.0/60.0;
+            if(global->logic(graphics::deltaTime)) {
+                gameplay::gamemode=global->currentTransition.gamemode;
+                gameplay::gamemodes[gameplay::gamemode]->reset();
+            }
+            Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
+            if(endlogic.transition) {
+                global->setFade(endlogic);
+            };
         }
+        gameplay::gamemodes[gameplay::gamemode]->render();
+        
         global->render();
         #ifdef __LEGACY_RENDER
 

@@ -45,7 +45,7 @@ void plane::render(shader* shad, texture* t, glm::mat4 projection, glm::mat4 vie
 	shad->setInt("reflectionmap",1);
 	shad->setInt("reflectionmask",2);
 
-	glm::vec3 camerapos = {sin(SDL_GetTicks()/1000.0f),cos(SDL_GetTicks()/1000.0f),cos(SDL_GetTicks()/1000.0f)};
+	glm::vec3 camerapos = {sin(SDL_GetTicks64()/1000.0f),cos(SDL_GetTicks64()/1000.0f),cos(SDL_GetTicks64()/1000.0f)};
     shad->setVector("model", glm::value_ptr(transform));
     shad->setVector("projection", glm::value_ptr(projection));
 	shad->setVector("view", glm::value_ptr(view));

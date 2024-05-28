@@ -441,7 +441,7 @@ void shaderlayer::render() {
         shad->setInt("texture"+std::to_string(i),i);
         i++; //forgot to increment this... wtf is wrong with me
     }
-        shad->setFloat("time",(float)SDL_GetTicks()/(float)1000);
+        shad->setFloat("time",(float)SDL_GetTicks64()/(float)1000);
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -537,8 +537,8 @@ void flatlayer::render() {
         shad->setInt("texture"+std::to_string(i),i);
         i++; //forgot to increment this... wtf is wrong with me
     }
-    shad->setFloat("time",(float)SDL_GetTicks()/(float)1000);
-    // std::cout << (float)SDL_GetTicks()/(float)1000 << "\n";
+    shad->setFloat("time",(float)SDL_GetTicks64()/(float)1000);
+    // std::cout << (float)SDL_GetTicks64()/(float)1000 << "\n";
 
     shad->setVector("model", glm::value_ptr(matTrans));
     shad->setVector("projection", glm::value_ptr(projection));
@@ -843,7 +843,7 @@ void bg::logic(double deltatime)
     
 }
 void bg::renderLyrics() {
-    int currentTick = SDL_GetTicks() - backgroundAge;
+    int currentTick = SDL_GetTicks64() - backgroundAge;
     std::map<int,lyric>::iterator it = lyrics.lower_bound(currentTick);
     if(it != lyrics.end()) {
         lyric currentLyric = (*it).second;

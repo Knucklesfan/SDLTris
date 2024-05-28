@@ -170,7 +170,7 @@ void GlobalGamemode::render() {
                 view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
                 outer->rotation[1] = (alpha * 90.0);
                 inner->rotation[1] = (alpha * 90.0);
-                // cub.rotation[1] = (float)SDL_GetTicks()/10 * glm::radians(50.0f);
+                // cub.rotation[1] = (float)SDL_GetTicks64()/10 * glm::radians(50.0f);
                 inner->render(graphics::shaders[0],graphics::sprites["homophobicdog"],projection,view);
                 outer->render(graphics::shaders[0],&buffer.renderTexture,projection,view);
                 glDisable(GL_DEPTH_TEST);  

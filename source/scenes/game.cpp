@@ -85,7 +85,7 @@ void game::logic(double deltatime) {
 
     if(demoPlayback) {
         if(demotick != 0 && demotick != UINT32_MAX && demokey != SDLK_ESCAPE) {
-            if(SDL_GetTicks()-gameStart >= demotick) {
+            if(SDL_GetTicks64()-gameStart >= demotick) {
                 if(demokey == SDLK_DELETE) { //if it set to delete, then we can start fading
                     demoReturn = true;
                 }
@@ -192,6 +192,9 @@ void game::logic(double deltatime) {
 
         }
     }
+    g.changePos(t.x, t.y, t.rot);
+    g.draw();
+    t.draw();
 
 
 }
@@ -282,9 +285,6 @@ void game::render() {
             else {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("sbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             }
-            g.changePos(t.x, t.y, t.rot);
-            g.draw();
-                        t.draw();
 
             if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
                 drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
@@ -317,10 +317,10 @@ void game::render() {
             graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("hold"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             
             if(nextblocks > -1 && nextblocks < 7) {
-                drawCubes(gameplay::Pieces[nextblocks][0], 1.0, 10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
+                drawCubes(gameplay::Pieces[nextblocks][0], 1.0, 10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks64()/1000.0f)*10,0});
             }
             if (holdblock > -1) {
-                drawCubes(gameplay::Pieces[holdblock][0], 1.0, -10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
+                drawCubes(gameplay::Pieces[holdblock][0], 1.0, -10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks64()/1000.0f)*10,0});
             }
 
             bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true);
@@ -347,7 +347,7 @@ void game::render() {
                     }
                     for(int i = 0; i < 40; i++) {
                         std::string str(1,displayKeys[i]);
-                        graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?96-64*sin(SDL_GetTicks()/500.0f):255,255,-1,false,0,0,0);
+                        graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?96-64*sin(SDL_GetTicks64()/500.0f):255,255,-1,false,0,0,0);
                     }
                 }
 
@@ -359,10 +359,10 @@ void game::render() {
                 }
             }
         #endif
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
-        glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
-        view = glm::translate(view, glm::vec3(0.0, 0, -14.0)); 
+        // glm::mat4 projection;
+        // projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+        // glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+        // view = glm::translate(view, glm::vec3(0.0, 0, -14.0)); 
         //SDL_RenderPresent(renderer);
     //}
 }
@@ -431,7 +431,7 @@ void game::input(SDL_Keycode key)
     if(!demoPlayback) {
         inputKey(key);
         if(demoRecord) {
-            Uint32 tick = SDL_GetTicks()-gameStart;
+            Uint32 tick = SDL_GetTicks64()-gameStart;
             demofile.write((char *) &tick, sizeof(Uint32));
             demofile.write((char *) &key, sizeof(SDL_Keycode));
             if(key == SDLK_DELETE) {
@@ -774,7 +774,7 @@ void game::changemusic() {
         }
         currentsong = (bglevel)%(graphics::backgrounds->size());
         msg->activate("YOU ARE CURRENTLY LISTENING TO:", graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).songname + " by: " + graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).artist);
-        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).backgroundAge = SDL_GetTicks();
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).backgroundAge = SDL_GetTicks64();
 
     }
 
@@ -815,7 +815,7 @@ void game::reset() {
     startTime = time;
     gameactive = true;
     warningflag = false;
-    gameStart = SDL_GetTicks();
+    gameStart = SDL_GetTicks64();
     invisScore = 0;
 
 
@@ -981,7 +981,7 @@ double game::getspeed() {
 void game::startRecord() {
     t.removeolddraw();
     g.removeolddraw();
-    gameStart = SDL_GetTicks();
+    gameStart = SDL_GetTicks64();
     demofile = std::ofstream("demo.bin", std::ios::out | std::ios::binary);
     demofile.write((char *) &time, sizeof(uint));
     demofile.write((char *) &randomIters, sizeof(uint));
@@ -1058,7 +1058,7 @@ void game::loadDemo(std::string filename) {
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
             bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
         }
-        gameStart = SDL_GetTicks();
+        gameStart = SDL_GetTicks64();
         // changemusic();
         demoPlayback = true;
     }

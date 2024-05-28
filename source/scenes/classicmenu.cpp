@@ -5,7 +5,7 @@
 classicmenu::classicmenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
     background = new bg("classicmenu",false);
-    startTime = SDL_GetTicks();
+    startTime = SDL_GetTicks64();
     cube = new wireframecube(320,240,640,480);
     std::fill_n(savedatatest, 480, 0);
 
@@ -159,7 +159,7 @@ void classicmenu::render() {
                 );
             }
         }
-        if((SDL_GetTicks()/500)%2 ==0)
+        if((SDL_GetTicks64()/500)%2 ==0)
         graphics::fonts->at(4)->render(320,64,"LOAD SAVE",true);
 
     }
@@ -167,6 +167,6 @@ void classicmenu::render() {
 };
 void classicmenu::reset() {
     networking::globalRPC->update("Getting ready to start a classic game...", "Top high score: " + std::to_string(settings::maxscore), "icon1", std::time(nullptr));
-    startTime = SDL_GetTicks();
+    startTime = SDL_GetTicks64();
     t = Transition();
 }

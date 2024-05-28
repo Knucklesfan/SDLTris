@@ -44,7 +44,7 @@ void debugscene::render()
         }
 
         graphics::fonts->at(1)->render(320,60,"WELCOME TO",true);
-        graphics::fonts->at(1)->render(320,120,"KNUXFANS TETRIMINOS",true,((int)(SDL_GetTicks()/100.0)%3==0)*255,((int)(SDL_GetTicks()/100.0)%3==1)*255,((int)(SDL_GetTicks()/100.0)%3==2)*255,-1,true,SDL_GetTicks()/1000.0,10,10);
+        graphics::fonts->at(1)->render(320,120,"KNUXFANS TETRIMINOS",true,((int)(SDL_GetTicks64()/100.0)%3==0)*255,((int)(SDL_GetTicks64()/100.0)%3==1)*255,((int)(SDL_GetTicks64()/100.0)%3==2)*255,-1,true,SDL_GetTicks64()/1000.0,10,10);
         for(int i = 0; i<MENUSIZE; i++) {
             std::string text = menu[i];
             if(endings[i] != nullptr) {
@@ -55,10 +55,10 @@ void debugscene::render()
             }
             graphics::fonts->at(0)->render(320,200+(i*24),text,true,255,selection==i?0:255,255,-1,false,0,0,0);
         }
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("kekcrochurryup"),{16,432},{16,32},0,{(SDL_GetTicks()/1000)%2==1?0:16,0},{16,32});
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("mariospin"),{16,400},{16,32},0,{((SDL_GetTicks()/250)%4)*16,0},{16,32});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("kekcrochurryup"),{16,432},{16,32},0,{(SDL_GetTicks64()/1000)%2==1?0:16,0},{16,32});
+        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("mariospin"),{16,400},{16,32},0,{((SDL_GetTicks64()/250)%4)*16,0},{16,32});
 
-        if(SDL_GetTicks()-messagelife > 1000 && currentmessage < 42) {
+        if(SDL_GetTicks64()-messagelife > 1000 && currentmessage < 42) {
             graphics::fonts->at(6)->render(32,432-(messageSenders[currentmessage]*32),kekcrocMessages[currentmessage],false);
         }
 
@@ -145,8 +145,8 @@ Transition debugscene::endLogic()
     };
 };
 void debugscene::logic(double deltatime) {
-    if(SDL_GetTicks()-messagelife > 5000) {
-        messagelife = SDL_GetTicks();
+    if(SDL_GetTicks64()-messagelife > 5000) {
+        messagelife = SDL_GetTicks64();
         currentmessage++;
     }
     if(background > 0) {

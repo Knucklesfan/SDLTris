@@ -66,7 +66,7 @@ Here is a rough list of what works, and what doesn't:
     SDL_GetWindowSurface() and SDL_UpdateWindowSurface()) or via the
     SDL_Renderer APIs
   * threads
-  * timers (via SDL_GetTicks(), SDL_AddTimer(), SDL_GetPerformanceCounter(),
+  * timers (via SDL_GetTicks64(), SDL_AddTimer(), SDL_GetPerformanceCounter(),
     SDL_GetPerformanceFrequency(), etc.)
   * file I/O via SDL_RWops
   * mouse input  (unsupported on Windows Phone)

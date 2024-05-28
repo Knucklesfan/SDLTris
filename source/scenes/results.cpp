@@ -65,13 +65,13 @@ void results::render() {
     // SDL_SetRenderTarget(renderer, rendertext);
     // SDL_RenderClear(renderer);
     for(int i = 0; i < 14; i++) {
-        drawCubes(gameplay::Pieces[i%7][0], 0.5+abs(sin(leftangle / 25))/2, -20.0f+fmod(SDL_GetTicks()/1000.0f,28.0f)+(-20+i*4), 0, 16, 4, true,{0,(SDL_GetTicks()/-25.0f),0});
+        drawCubes(gameplay::Pieces[i%7][0], 0.5+abs(sin(leftangle / 25))/2, -20.0f+fmod(SDL_GetTicks64()/1000.0f,28.0f)+(-20+i*4), 0, 16, 4, true,{0,(SDL_GetTicks64()/-25.0f),0});
     }
     // SDL_SetRenderTarget(renderer, temp);
     // drawTexture(rendertext, 50, 200, leftangle / 2.5, 1.0, false);
     // SDL_SetRenderTarget(renderer, rendertext);
     // SDL_RenderClear(renderer);
-    // drawCubes(gameplay::Pieces[2][0], 0.5+abs(cos(leftangle / 25))/2, 4.45, 0, 16, 4, true,{0,(SDL_GetTicks()/25.0f),0});
+    // drawCubes(gameplay::Pieces[2][0], 0.5+abs(cos(leftangle / 25))/2, 4.45, 0, 16, 4, true,{0,(SDL_GetTicks64()/25.0f),0});
     // SDL_SetRenderTarget(renderer, temp);
     // drawTexture(rendertext, 462, 200, leftangle / -2.5, 1.0, false);
 

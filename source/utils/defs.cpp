@@ -405,10 +405,68 @@ std::string utils::getenv( const std::string & var ) {
 }
 void settings::loadSaveData() {
     #ifdef _LINUX
+        std::cout << "Caching saves...\nFILENAME\tLINES\tLEVELS\n";
         //since we are on linux, the other platforms are only 
         //gonna get implemented when needed
-        for (const auto & entry : std::filesystem::directory_iterator(saveDir))
-            std::cout << entry.path() << std::endl;
+        int testblocks[480];
+        memset(testblocks,0,sizeof(testblocks));
+
+        for (const auto & entry : std::filesystem::directory_iterator(saveDir)) {
+            std::string savename = entry.path().string().substr(saveDir.length()+1);
+            std::streampos size;
+            char * memblock;
+            std::ifstream file ("/home/knucklesfan/.config/KNFNTetromino/saves/WALL.knfs", std::ios::in|std::ios::binary|std::ios::ate);
+            if (file.is_open())
+            {
+                int piece = 0;
+                int hold = 0;
+                int level = 0;
+                int lines = 0;
+                GLuint texture = 0;
+                size = file.tellg();
+                memblock = new char [size];
+                file.seekg (0, std::ios::beg);
+                file.read (memblock, size);
+                file.close();
+
+                std::cout << "the entire file content is in memory";
+                size_t offset = 0;
+                offset += sizeof(uint);
+                offset += sizeof(uint);
+                memcpy(&piece, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+                offset += sizeof(int);
+                offset += sizeof(int);
+                offset += sizeof(int);
+                offset += sizeof(int);
+                offset += sizeof(int);
+                memcpy(&hold, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+                offset += sizeof(int);
+
+                memcpy(&level, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+                offset += sizeof(int);
+                memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+                offset += sizeof(int);
+
+                memcpy(&testblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
+                unsigned char pixels[20*10];
+                memset(pixels,0,sizeof(pixels));
+                for(int i = 0; i < 200; i++) {
+                    pixels[i] = testblocks[i]*50;
+                }
+                glGenTextures(1, &texture);
+                glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
+                glBindTexture(GL_TEXTURE_2D, texture);
+
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 10, 20, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+
+
+                
+            // saveCache.push_back({
+
+            // })
+        }
+    }
+
     #elif _WIN32
 
     #elif _OSX

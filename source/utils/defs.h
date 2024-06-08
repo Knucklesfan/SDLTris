@@ -211,10 +211,11 @@ class graphics {
 };
 struct save {
     std::string name;
-    std::string filename;
     int level;
     int lines;
-    texture* renderTex;
+    int hold;
+    int piece;
+    GLuint renderTex;
 };
 
 class settings {

@@ -3,6 +3,7 @@
 
 rpcimplement::rpcimplement()
 {
+    #ifdef _DISCORD
     std::cout << "attempting to start discord...\n";
     result = discord::Core::Create(906928395521253396, 1, &core);
     if (result == discord::Result::Ok) {
@@ -22,14 +23,19 @@ rpcimplement::rpcimplement()
         std::cout << "DISCORD ERROR!!!!! ERROR CODE: ";
         std::cout << (int)result << "\n";
     }
+    #endif
 }
 void rpcimplement::logic() {
+    #ifdef _DISCORD
     if (result == discord::Result::Ok) {
         core->RunCallbacks();
     }
+    #endif
+
 }
 
-void rpcimplement::update(std::string score, std::string state, std::string icon, discord::Timestamp time) {
+void rpcimplement::update(std::string score, std::string state, std::string icon, int time) {
+    #ifdef _DISCORD
     if (result == discord::Result::Ok) {
         discord::Activity activity{};
         activity.SetState(state.c_str());
@@ -41,5 +47,6 @@ void rpcimplement::update(std::string score, std::string state, std::string icon
         core->ActivityManager().UpdateActivity(activity, [](discord::Result result) {
         });
     }
+    #endif
 
 }

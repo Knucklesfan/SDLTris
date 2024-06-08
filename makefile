@@ -4,12 +4,14 @@ HEADER	=
 OUT	= SDLTetris
 CC	 = g++
 FLAGS	 = $(INC) -g -c -Wall -O0 -D _LINUX -DCLIENT
-LFLAGS	 = -Wl,-Bstatic -lSDL2_mixer_ext -lopusfile -lopus -ltimidity_sdl2 -logg -lwavpack -lmodplug -lEDMIDI -lzlib -lSDL2 -Wl,-Bdynamic -lGL -lpthread -lm -ldl -static-libgcc -lstdc++ -lGLEW -lSDL2_image -lfreetype ./libdiscord_game_sdk.so
+LFLAGS	 = -Wl,-Bstatic -lSDL2_mixer_ext  -ltimidity_sdl2 -logg -lwavpack -lmodplug -lEDMIDI -lzlib -Wl,-Bdynamic -lGL -lpthread -lm -ldl -static-libgcc -lstdc++ -lGLEW  -lSDL2 -lSDL2_image -lfreetype -lopusfile -lopus
+DISCORDFLAGS	= $(LFLAGS) ./libdiscord_game_sdk.so
+
 INC=-I./include/ -I/usr/include/freetype2
 
 LFLAGS += -L./lib/
 all: $(DISCORDOBJS)
-	$(CC) -g $(DISCORDOBJS)  -o $(OUT) $(LFLAGS)
+	$(CC) -g $(DISCORDOBJS)  -o $(OUT) $(DISCORDFLAGS)
 
 nodiscord: $(OBJS)
 	$(CC) -g $(OBJS)  -o $(OUT) $(LFLAGS)

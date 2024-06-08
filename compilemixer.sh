@@ -8,7 +8,7 @@ mkdir build
 echo -e "\e[1;33m> cd build\e[0m"
 cd build
 echo -e "\e[1;32mConfiguring SDL-Mixer-X without LGPL/GPL code... If you want this changed, check this script!\e[0m"
-cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=output -DDOWNLOAD_AUDIO_CODECS_DEPENDENCY=ON -DAUDIO_CODECS_BUILD_LOCAL_SDL2=ON ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=output -DDOWNLOAD_AUDIO_CODECS_DEPENDENCY=ON -DAUDIO_CODECS_BUILD_LOCAL_SDL2=ON -DAUDIOCODECS_BUILD_OPUS=OFF -DAUDIOCODECS_BUILD_MPG123=OFF ..
 echo -e "\e[1;32mCompiling...\e[0m"
 cmake --build . --config Release -- -j12
 echo -e "\e[1;32mGenerating Install Directory...\e[0m"

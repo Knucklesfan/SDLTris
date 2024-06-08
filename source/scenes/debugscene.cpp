@@ -9,7 +9,7 @@ debugscene::debugscene() {
         starX[i] = (rand() % 640) - 320;
         starY[i] = (rand() % 480) - 240;
         starZ[i] = (rand() % 1700) - 100;
-        starBlock[i] = (rand() % graphics::blocks->size()-1);
+        starBlock[i] = (rand() % 7);
 
     }
 
@@ -29,13 +29,16 @@ void debugscene::render()
         else {
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("cheatercroc"),{0,0},{640,480},0,{0,0},{640,480});
             glEnable(GL_DEPTH_TEST);
-            for(int i = 0; i < 127; i++) {
+            for(int i = 0; i < 255; i++) {
                 float perspective = 300.0 / (300.0 - starZ[i]);
                 int x = 320 + starX[i] * perspective;
                 int y = 240 + starY[i] * perspective;
 
                 starZ[i] += 2;
                 if (starZ[i] > 300) {
+                    starX[i] = (rand() % 640) - 320;
+                    starY[i] = (rand() % 480) - 240;
+
                     starZ[i] -= 600;
                 }
                 graphics::sprite->render(graphics::shaders.at(4),graphics::blocks->at(starBlock[i]),{x,y},{16*(perspective / 2),16*(perspective / 2)},{0,0,starZ[i]*4},{0,0},{16,16},{640,480},(perspective / 2));            

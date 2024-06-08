@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
         //i have no idea.
         //Anyways, manually storing in the config folder is fine, since the spec does say thats a good fallback
         //🤷
-        settings::configDir = utils::getenv("HOME") + ".config/KNFNTetromino";
+        settings::configDir = utils::getenv("HOME") + "/.config/KNFNTetromino";
         struct stat info;
         if( stat( settings::configDir.c_str(), &info ) != 0 ) {
             mkdir(settings::configDir.c_str(),0777);
@@ -116,7 +116,7 @@ int main(int argc, char **argv) {
         else
             mkdir(settings::configDir.c_str(),0777);
         std::cout << settings::configDir << "\n";
-        settings::saveDir = utils::getenv("HOME") + ".config/KNFNTetromino/saves";
+        settings::saveDir = utils::getenv("HOME") + "/.config/KNFNTetromino/saves";
         if( stat( settings::saveDir.c_str(), &info ) != 0 ) {
             mkdir(settings::saveDir.c_str(),0777);
         }

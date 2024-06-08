@@ -97,7 +97,16 @@ int main(int argc, char **argv) {
         //this code ensures that we got at least a config dir to work with upon boot
         //otherwise, stuff is gonna expect that it has a config dir, and it doesnt!
         //please for the love of god dont delete the config dir mid-gameplay...
-        settings::configDir = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino";
+
+        //future me here, complaining once more.
+        //wrote this for fedora 40, right?
+        //get onto asahi linux fedora 40
+        //suddenly, XDG_CONFIG_HOME isnt a thing
+        //what is the difference???
+        //i have no idea.
+        //Anyways, manually storing in the config folder is fine, since the spec does say thats a good fallback
+        //🤷
+        settings::configDir = utils::getenv("HOME") + ".config/KNFNTetromino";
         struct stat info;
         if( stat( settings::configDir.c_str(), &info ) != 0 ) {
             mkdir(settings::configDir.c_str(),0777);
@@ -106,8 +115,8 @@ int main(int argc, char **argv) {
             std::cout << settings::configDir << " is a directory, setting as config path\n";
         else
             mkdir(settings::configDir.c_str(),0777);
-
-        settings::saveDir = utils::getenv("XDG_CONFIG_HOME") + "/KNFNTetromino/saves";
+        std::cout << settings::configDir << "\n";
+        settings::saveDir = utils::getenv("HOME") + ".config/KNFNTetromino/saves";
         if( stat( settings::saveDir.c_str(), &info ) != 0 ) {
             mkdir(settings::saveDir.c_str(),0777);
         }
@@ -284,7 +293,7 @@ int main(int argc, char **argv) {
     }
     //rpcimplement rpc();
     networking::globalRPC = new rpcimplement();
-    discord::Timestamp discTime = 0;
+    int discTime = 0;
     discTime = std::time(nullptr);
     gameplay::gamemodes[gameplay::gamemode]->reset();
 

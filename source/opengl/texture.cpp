@@ -45,6 +45,11 @@ texture::texture(std::string path) {
         std::cout << "sprite width: " << w << " sprite height: " << h << "\n";
         glBindTexture(GL_TEXTURE_2D,0);
 }
+texture::texture(GLuint glID,int w, int h) {
+    id = glID;
+    this->w = w;
+    this->h = h;
+}
 texture::~texture() {
     //glDeleteTextures(1, &this->id);
 }

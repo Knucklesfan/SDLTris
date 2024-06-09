@@ -215,7 +215,7 @@ struct save {
     int lines;
     int hold;
     int piece;
-    GLuint renderTex;
+    texture* t;
 };
 
 class settings {
@@ -241,6 +241,7 @@ class settings {
 	static std::array<std::array<int, 12>, 5> defaults;
 
 	static std::array<std::array<int, 12>, 5> activations;
+
 };
 namespace utils {
     std::string getenv( const std::string & var );

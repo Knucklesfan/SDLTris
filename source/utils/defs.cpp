@@ -235,6 +235,7 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
     spriteRenderer* graphics::sprite = NULL;
     std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
     std::vector<std::string> settings::demos = std::vector<std::string>();
+    std::vector<save> settings::saveCache = std::vector<save>();
 
     std::map<std::string,texture*> graphics::sprites = std::map<std::string,texture*>();
     std::vector<shader *> graphics::shaders = std::vector<shader *>();
@@ -405,6 +406,16 @@ std::string utils::getenv( const std::string & var ) {
 }
 void settings::loadSaveData() {
     #ifdef _LINUX
+        GLuint framebuffer;
+    	glGenFramebuffers(1, &framebuffer);
+	    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer); //handles running the game at the set resolution
+        GLuint depthrenderbuffer;
+        glGenRenderbuffers(1, &depthrenderbuffer);
+        glBindRenderbuffer(GL_RENDERBUFFER, depthrenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 40, 96);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+        
+
         std::cout << "Caching saves...\nFILENAME\tLINES\tLEVELS\n";
         //since we are on linux, the other platforms are only 
         //gonna get implemented when needed
@@ -415,14 +426,40 @@ void settings::loadSaveData() {
             std::string savename = entry.path().string().substr(saveDir.length()+1);
             std::streampos size;
             char * memblock;
-            std::ifstream file ("/home/knucklesfan/.config/KNFNTetromino/saves/WALL.knfs", std::ios::in|std::ios::binary|std::ios::ate);
+            std::ifstream file (entry.path().string(), std::ios::in|std::ios::binary|std::ios::ate);
             if (file.is_open())
             {
                 int piece = 0;
                 int hold = 0;
                 int level = 0;
                 int lines = 0;
-                GLuint texture = 0;
+                texture* t = new texture();
+                t->w = 40;
+                t->h = 96;
+                GLint previousFB = 0;
+                glGenTextures(1, &t->id); //generates a texture to render to
+	            glBindTexture(GL_TEXTURE_2D, t->id);
+		        glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 40, 96, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                
+                glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, t->id, 0);
+                GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+                glDrawBuffers(1, DrawBuffers); // "1" is the size of DrawBuffers
+                if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+                    throw("buffer error");
+                }
+
+                
+                glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFB); //store previous framebuffer
+                glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+                glViewport(0,0,40,96); // Activate and render at texture size.
+                glColorMask(1, 1, 1, 1);
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                glClearDepth(1.0);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                GLuint texture_id = 0;
                 size = file.tellg();
                 memblock = new char [size];
                 file.seekg (0, std::ios::beg);
@@ -431,8 +468,10 @@ void settings::loadSaveData() {
 
                 std::cout << "the entire file content is in memory";
                 size_t offset = 0;
+                offset += sizeof(Uint32);
                 offset += sizeof(uint);
                 offset += sizeof(uint);
+
                 memcpy(&piece, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
                 offset += sizeof(int);
                 offset += sizeof(int);
@@ -446,18 +485,42 @@ void settings::loadSaveData() {
                 offset += sizeof(int);
                 memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
                 offset += sizeof(int);
+                offset += sizeof(Uint32);
 
                 memcpy(&testblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
-                unsigned char pixels[20*10];
-                memset(pixels,0,sizeof(pixels));
-                for(int i = 0; i < 200; i++) {
-                    pixels[i] = testblocks[i]*50;
-                }
-                glGenTextures(1, &texture);
-                glActiveTexture(GL_TEXTURE0); // activate the texture unit first before binding texture
-                glBindTexture(GL_TEXTURE_2D, texture);
 
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 10, 20, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels);
+                for(int j = 0; j < 240; j++) {
+                    if(testblocks[j] > 0 && testblocks[j]-1 < graphics::blocks->size()) {
+                        graphics::shaders.at(4)->activate();
+                        graphics::sprite->render(
+                            graphics::shaders.at(4),
+                            graphics::blocks->at(testblocks[j]-1),
+                            {
+                                (j%10)*4,
+                                (j/10)*4
+                            },
+                            {
+                                4,
+                                4
+                            },
+                            {0,0,0},
+                            {0,0},
+                            {4,4},
+                            glm::vec2(40,96),
+                            0.0f
+                        );
+                    }
+                }
+                glBindFramebuffer(GL_FRAMEBUFFER, previousFB); //restore previous framebuffer
+
+                saveCache.push_back({
+                    savename,
+                    level,
+                    lines,
+                    hold,
+                    piece,
+                    t
+                });
 
 
                 

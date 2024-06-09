@@ -124,7 +124,6 @@ int main(int argc, char **argv) {
             std::cout << settings::saveDir << " is a directory, setting as save path\n";
         else
             mkdir(settings::saveDir.c_str(),0777);
-    settings::loadSaveData();
     #elif _WIN32
 
     #elif _OSX
@@ -244,6 +243,7 @@ int main(int argc, char **argv) {
     audio::generatemusic();
     audio::generatesound();
     settings::loadSettings();
+    settings::loadSaveData();
     settings::loadDemos();
     GlobalGamemode* global = new GlobalGamemode();
     gameplay::loadGamemodes();

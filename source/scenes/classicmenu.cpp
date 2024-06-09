@@ -10,48 +10,48 @@ classicmenu::classicmenu() {
     std::fill_n(savedatatest, 480, 0);
 
 
-    { //this is temp code that will eventually be placed in utils to load save files and unload them.
-        std::streampos size;
-        char * memblock;
-        std::ifstream file ("example.bin", std::ios::in|std::ios::binary|std::ios::ate);
-        if (file.is_open())
-        {
-            size = file.tellg();
-            memblock = new char [size];
-            file.seekg (0, std::ios::beg);
-            file.read (memblock, size);
-            file.close();
+    // { //this is temp code that will eventually be placed in utils to load save files and unload them.
+    //     std::streampos size;
+    //     char * memblock;
+    //     std::ifstream file ("example.bin", std::ios::in|std::ios::binary|std::ios::ate);
+    //     if (file.is_open())
+    //     {
+    //         size = file.tellg();
+    //         memblock = new char [size];
+    //         file.seekg (0, std::ios::beg);
+    //         file.read (memblock, size);
+    //         file.close();
 
-            std::cout << "the entire file content is in memory";
-            size_t offset = 0;
-            offset += sizeof(uint);
-            offset += sizeof(uint);
-            offset += sizeof(int);
-            offset += sizeof(int);
-            offset += sizeof(int);
-            offset += sizeof(int);
+    //         std::cout << "the entire file content is in memory";
+    //         size_t offset = 0;
+    //         offset += sizeof(uint);
+    //         offset += sizeof(uint);
+    //         offset += sizeof(int);
+    //         offset += sizeof(int);
+    //         offset += sizeof(int);
+    //         offset += sizeof(int);
 
-            offset += sizeof(int);
-            offset += sizeof(int);
-            offset += sizeof(Uint32);
+    //         offset += sizeof(int);
+    //         offset += sizeof(int);
+    //         offset += sizeof(Uint32);
 
-            memcpy(&level, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(int);
-            memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-            offset += sizeof(int);
+    //         memcpy(&level, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+    //         offset += sizeof(int);
+    //         memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+    //         offset += sizeof(int);
 
-            memcpy(&savedatatest, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
+    //         memcpy(&savedatatest, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
 
-            offset += sizeof(int[480]);
-            delete memblock;
-        }
-        for(int i = 0; i < 240; i++) {
-            std::cout << savedatatest[i];
-            if(i%10 == 0) {
-                std::cout << "\n";
-            }
-        }
-    }
+    //         offset += sizeof(int[480]);
+    //         delete memblock;
+    //     }
+    //     for(int i = 0; i < 240; i++) {
+    //         std::cout << savedatatest[i];
+    //         if(i%10 == 0) {
+    //             std::cout << "\n";
+    //         }
+    //     }
+    // }
 }
 void classicmenu::input(SDL_Keycode keysym) {
     switch(currentscreen) {
@@ -122,7 +122,7 @@ void classicmenu::render() {
     background->render();
     cube->render(0,0,255);
     graphics::sprite->render(graphics::shaders.at(4),&cube->buff->renderTexture,{0,0},{640,480},{0,0,0},{0,0},{640,480});
-    for(int i = 0; i < savenum; i++) {
+    for(int i = 0; i < settings::saveCache.size(); i++) {
         graphics::shaders.at(5)->activate();
         glm::vec4 othershade = {1,1,0,1};
         glm::vec4 baseshade = {1,1,1,1};
@@ -139,28 +139,10 @@ void classicmenu::render() {
         200+i*116-(selection*116)+(116*transition)
         },
         {250,100},0,{0,0},{250,100});
-        for(int j = 0; j < 240; j++) {
-            if(savedatatest[j] > 0 && savedatatest[j]-1 < graphics::blocks->size()) {
-                graphics::shaders.at(4)->activate();
-                graphics::sprite->render(
-                    graphics::shaders.at(4),
-                    graphics::blocks->at(savedatatest[j]-1),
-                    {
-                        34+198+(j%10)*4,
-                        200+(i*116)+(j/10)*4-(selection*116)+(116*transition)
-                    },
-                    {
-                        4,
-                        4
-                    },
-                    0,
-                    {0,0},
-                    {4,4}
-                );
-            }
-        }
-        if((SDL_GetTicks()/500)%2 ==0)
-        graphics::fonts->at(4)->render(320,64,"LOAD SAVE",true);
+        graphics::fonts->at(0)->render(34,200+i*116-(selection*116)+(116*transition),settings::saveCache.at(i).name, false);
+        graphics::sprite->render(graphics::shaders.at(4),settings::saveCache.at(i).t,{230,200+i*116-(selection*116)+(116*transition)},{40,96},0,{0,0},{40,96});
+
+        if((SDL_GetTicks()/500)%2 ==0) graphics::fonts->at(4)->render(320,64,"LOAD SAVE",true);
 
     }
 

@@ -15,7 +15,7 @@ public:
     std::string path;
     std::string name;
     std::string type;
-    texture(GLuint,int w, int h);
+    texture(unsigned int,int w, int h);
 	texture() {}
 	texture(std::string path);
     texture(std::string path,bool type, bool fliph, bool flipv);

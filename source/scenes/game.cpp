@@ -131,7 +131,9 @@ void game::logic(double deltatime) {
         if(!demoPlayback) {
             networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
         }
-
+        g.changePos(t.x, t.y, t.rot);
+        g.draw();
+        t.draw();
     }
     if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
         graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).logic(deltatime);
@@ -282,9 +284,6 @@ void game::render() {
             else {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("sbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             }
-            g.changePos(t.x, t.y, t.rot);
-            g.draw();
-                        t.draw();
 
             if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
                 drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);

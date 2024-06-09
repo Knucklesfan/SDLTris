@@ -78,7 +78,7 @@ Uint32 time_left(void)
 {
     Uint32 now;
 
-    now = SDL_GetTicks();
+    now = SDL_GetTicks64();
     if(next_time <= now)
         return 0;
     else
@@ -268,7 +268,10 @@ int main(int argc, char **argv) {
     double ticks = 0;
     int realtick = 0;
     double time = 0; //time of current frame
-    double oldTime = SDL_GetTicks(); //time of previous framea
+    double oldTime = SDL_GetTicks64(); //time of previous framea
+    double totalMS = 0;
+    int lastTime = 0;
+
     long long recordticks = 0;
     std::string argument = "";
     if(argc > 1) {
@@ -287,7 +290,7 @@ int main(int argc, char **argv) {
     if (titlebg == knxfnbg) {
         knxfnbg = std::rand() % graphics::backgrounds->size(); //WHY TF AM I DOING THIS
     }
-    next_time = SDL_GetTicks() + TICK_INTERVAL;
+    next_time = SDL_GetTicks64() + TICK_INTERVAL;
     for(int i = 0; i<gameplay::gamemodes.size(); i++) {
         std::cout << gameplay::gamemodes[i]->name << "\n";
     }
@@ -295,8 +298,9 @@ int main(int argc, char **argv) {
     networking::globalRPC = new rpcimplement();
     int discTime = 0;
     discTime = std::time(nullptr);
-    gameplay::gamemodes[gameplay::gamemode]->reset();
 
+    gameplay::gamemodes[gameplay::gamemode]->reset();
+    double tFps = 0;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -323,13 +327,6 @@ int main(int argc, char **argv) {
 			}
         }
 
-        time = SDL_GetTicks();
-        NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
-        graphics::deltaTime = (NOW - LAST); //frameTime is the time this frame has taken, in seconds
-        double frameTime = graphics::deltaTime /1000.0;
-        double tFps = (1.0 / frameTime);
-        oldTime = time;
-        LAST = NOW;
         SDL_PumpEvents();
         #ifdef __LEGACY_RENDER
         SDL_RenderClear(graphics::render);
@@ -340,17 +337,30 @@ int main(int argc, char **argv) {
             graphics::globalbuffer->enable();
             global->startRender();
         #endif
-        gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
-        gameplay::gamemodes[gameplay::gamemode]->render();
-        Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
-        if(endlogic.transition) {
-            global->setFade(endlogic);
-        };
-        
-        if(global->logic(graphics::deltaTime)) {
-            gameplay::gamemode=global->currentTransition.gamemode;
-            gameplay::gamemodes[gameplay::gamemode]->reset();
+        totalMS += SDL_GetTicks64() - lastTime;
+        if (totalMS > 1000.0/60.0) {
+            totalMS -= 1000.0/60.0;
+            graphics::deltaTime = 1000.0/60.0;
+            gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
+            Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
+            if(endlogic.transition) {
+                global->setFade(endlogic);
+            };
+            
+            if(global->logic(graphics::deltaTime)) {
+                gameplay::gamemode=global->currentTransition.gamemode;
+                gameplay::gamemodes[gameplay::gamemode]->reset();
+            }
+            NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+            double frameTime = (NOW - LAST) /1000.0;
+            tFps = (1.0 / frameTime);
+            LAST = NOW;
+            std::cout << graphics::deltaTime << "\n";
+
         }
+        lastTime = SDL_GetTicks64();
+
+        gameplay::gamemodes[gameplay::gamemode]->render();
         global->render();
         #ifdef __LEGACY_RENDER
 

@@ -19,6 +19,7 @@ class titlescreen : public Gamemode
 public:
 	
 	double time = 0;
+	int startTime = 0;
 	int currentscreen = 0;
 	int bgnum = 0;
 	int rotationx = 0;

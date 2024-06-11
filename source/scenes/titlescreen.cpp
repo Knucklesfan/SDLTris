@@ -43,7 +43,7 @@ void titlescreen::reset()
     active = true;
     currentscreen = 0;
     bgnum = std::rand() % graphics::backgrounds->size();
-
+    startTime = SDL_GetTicks64();
     //audio::playMusic(0); //plays the first song in the list
         networking::globalRPC->update("At the Titlescreen.", "Top high score: " + std::to_string(settings::maxscore), "mainicon", std::time(nullptr));
 
@@ -539,7 +539,7 @@ void titlescreen::logic(double deltatime)
             t
         });
     }
-    time += deltatime;
+    time = SDL_GetTicks64()-startTime;
 }
 
 Transition titlescreen::endLogic()

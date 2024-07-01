@@ -15,6 +15,7 @@
 #include "gamemode.h"
 #include "scenes/debugscene.h"
 #include "rpcimplement.h"
+#include "opengl/sota.h"
 // #include "scenes/options.h"
 #ifndef __LEGACY_RENDER
 #include "opengl/buffermanager.h"
@@ -270,7 +271,7 @@ int main(int argc, char **argv) {
     double time = 0; //time of current frame
     double oldTime = SDL_GetTicks64(); //time of previous framea
     double totalMS = 0;
-    int lastTime = 0;
+    int lastTime = SDL_GetTicks64();
 
     long long recordticks = 0;
     std::string argument = "";
@@ -355,7 +356,6 @@ int main(int argc, char **argv) {
             double frameTime = (NOW - LAST) /1000.0;
             tFps = (1.0 / frameTime);
             LAST = NOW;
-            std::cout << graphics::deltaTime << "\n";
 
         }
         lastTime = SDL_GetTicks64();

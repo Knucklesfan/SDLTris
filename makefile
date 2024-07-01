@@ -1,10 +1,10 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o gameplaymenu.o skybox.o model.o classicmenu.o rpcimplement.o 
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o gameplaymenu.o skybox.o model.o classicmenu.o rpcimplement.o sota.o tpp_assert.o tpp_impl.o
 DISCORDOBJS = achievement_manager.o activity_manager.o application_manager.o core.o image_manager.o lobby_manager.o network_manager.o overlay_manager.o relationship_manager.o storage_manager.o store_manager.o types.o user_manager.o voice_manager.o $(OBJS)
 HEADER	= 
 OUT	= SDLTetris
 CC	 = g++
 FLAGS	 = $(INC) -g -c -Wall -O0 -D _LINUX -DCLIENT
-LFLAGS	 = -Wl,-Bstatic -lSDL2_mixer_ext  -ltimidity_sdl2 -logg -lwavpack -lmodplug -lEDMIDI -lzlib -Wl,-Bdynamic -lGL -lpthread -lm -ldl -static-libgcc -lstdc++ -lGLEW  -lSDL2 -lSDL2_image -lfreetype -lopusfile -lopus
+LFLAGS	 = -Wl,-Bstatic -lSDL2_mixer_ext  -lopusfile -lopus -ltimidity_sdl2 -logg -lwavpack -lmodplug -lEDMIDI -lzlib -Wl,-Bdynamic -lGL -lpthread -lm -ldl -static-libgcc -lstdc++ -lGLEW  -lSDL2 -lSDL2_image -lfreetype
 DISCORDFLAGS	= $(LFLAGS) ./libdiscord_game_sdk.so
 
 INC=-I./include/ -I/usr/include/freetype2
@@ -132,6 +132,14 @@ user_manager.o: source/discord/user_manager.cpp
 	$(CC) $(FLAGS) source/discord/user_manager.cpp
 voice_manager.o: source/discord/voice_manager.cpp
 	$(CC) $(FLAGS) source/discord/voice_manager.cpp
+
+tpp_impl.o: source/opengl/triangle/tpp_impl.cpp
+	$(CC) $(FLAGS) source/opengl/triangle/tpp_impl.cpp
+	
+tpp_assert.o: source/opengl/triangle/tpp_assert.cpp
+	$(CC) $(FLAGS) source/opengl/triangle/tpp_assert.cpp
+sota.o: source/opengl/sota.cpp
+	$(CC) $(FLAGS) source/opengl/sota.cpp
 
 clean:
 	rm -f $(OBJS) $(OUT)

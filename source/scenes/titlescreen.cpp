@@ -54,7 +54,7 @@ void titlescreen::input(SDL_Keycode key)
     switch(key) {
         case(SDLK_z): {
             if(time < 20000) {
-                time = 20000;
+                startTime -= 20000;
             }
             else {
                 active = false;

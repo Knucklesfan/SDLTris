@@ -25,6 +25,7 @@ public:
 	bool goup = false;
 	bool active = false;
 	double lifetime = 0.0;
+	int startTime = 0;
 
 	double knuxfanx = 76;
 	double knuxfany = 0.0;

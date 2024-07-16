@@ -50,6 +50,10 @@
 		<vertex>./shaders/vertex_lit.shader</vertex> 
 		<fragment>./shaders/fragment_lit.shader</fragment>
 	</shader>
+	<shader> <!--A flat color renderer, using the font rendering method. Used for SOTA stuff. 11-->
+		<vertex>./shaders/vertex_font.shader</vertex> 
+		<fragment>./shaders/fragment_rainbow.shader</fragment>
+	</shader>
 
 	<!-- ANYTHING BELOW THIS POINT IS OKAY TO MODIFY OR USE IN SCRIPTS! -->
 	<!-- Anything than is beyond this point is not hardcoded by the game and can be modified, or used by backgrounds, sprites or fonts. -->

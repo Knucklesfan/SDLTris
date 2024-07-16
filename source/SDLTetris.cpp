@@ -248,6 +248,7 @@ int main(int argc, char **argv) {
     settings::loadDemos();
     GlobalGamemode* global = new GlobalGamemode();
     gameplay::loadGamemodes();
+    sotaRenderer sota = sotaRenderer("./sota/dancegirl.ksta");
     #ifdef __LEGACY_RENDER
     SDL_Texture* rendertext = SDL_CreateTexture(graphics::render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 640,480);
     
@@ -308,6 +309,9 @@ int main(int argc, char **argv) {
                 quit = true;
             }
             if (event.type == SDL_KEYDOWN) {
+                if(event.key.keysym.sym == SDLK_0) {
+                    sota.indexnum++;
+                }
                 if(event.key.keysym.sym == SDLK_F12) {
                     graphics::screenshot();
                     break;
@@ -359,8 +363,9 @@ int main(int argc, char **argv) {
 
         }
         lastTime = SDL_GetTicks64();
-
+        
         gameplay::gamemodes[gameplay::gamemode]->render();
+        sota.render();
         global->render();
         #ifdef __LEGACY_RENDER
 

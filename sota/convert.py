@@ -2,8 +2,8 @@
 # but may contain more if I decide to expand this format 
 # (i.e, turning all the values into working with 640x480
 #  instead of interpolating)
-
-with open("09e1b8_anim.bin",'rb') as f:
+import sys
+with open(sys.argv[1],'rb') as f:
     content = bytearray(f.read())
 numberofvalues = content[1]
 
@@ -15,5 +15,5 @@ for i in range(1,numberofvalues+1):
     temp = content[i*2]
     content[i*2] = content[i*2+1]
     content[i*2+1] = temp
-with open("09e1b8_anim.ksta",'wb') as f:
+with open(sys.argv[1]+".ksta",'wb') as f:
     f.write(content)

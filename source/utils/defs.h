@@ -33,9 +33,7 @@
 #include <SDL2/SDL_image.h>
 #include <string>
 #include <vector>
-#include <memory>
 #include <string>
-#include <stdexcept>
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
 #include "../background.h"
@@ -225,6 +223,7 @@ class settings {
     static int lastlines;
     static int lastlevel;
     static int lasttime;
+    static bool usePreciseTiming; //if enabled, this will make the user use well... precise timing (aka every frame is 60fps, rather than dynamic deltatime)
     //...updates the high score
     //@param prev the Previous score
     static void updateHighScore(int prev); 

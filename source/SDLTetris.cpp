@@ -4,8 +4,6 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <array>
-#include <algorithm>    // std::sort
 #include <cstring>
 #include <ctime>
 #include <chrono>
@@ -31,6 +29,9 @@
 #endif
 #include <sys/stat.h>
 #include <sys/types.h>
+int WINDOW_WIDTH = INTERNAL_WIDTH;
+int WINDOW_HEIGHT = INTERNAL_HEIGHT;
+float tFPS = 0;
 //TODO: ALL NETCODE HAS BEEN DISABLED
 
 //i did this for a number of reasons:
@@ -49,6 +50,8 @@ unfinished but soon to be finished!
 
 */
 #undef main
+
+GlobalGamemode* global; //making this a global variable because... well, it's a global gamemode that runs constantly.
 
 void preciseSleep(double seconds) {
     static double estimate = 5e-3;
@@ -85,11 +88,47 @@ Uint32 time_left(void)
     else
         return next_time - now;
 }
+void doGameLogic() {
+    gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
+    Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
+    if(endlogic.transition) {
+        global->setFade(endlogic);
+    };
+    
+    if(global->logic(graphics::deltaTime)) {
+        gameplay::gamemode=global->currentTransition.gamemode;
+        gameplay::gamemodes[gameplay::gamemode]->reset();
+    }
+    networking::globalRPC->logic();
 
+}
+void doGameRender() {
+    graphics::globalbuffer->enable();
+    global->startRender();
+    gameplay::gamemodes[gameplay::gamemode]->render();
+    global->render();
+    #ifdef __LEGACY_RENDER
+
+    SDL_SetRenderTarget(graphics::render,NULL);
+    SDL_RenderCopy(graphics::render,rendertext,NULL,NULL);
+    std::cout << tFps << "\n";
+    SDL_RenderPresent(graphics::render);
+
+    #else
+
+    graphics::fonts->at(2)->render(16, 16, std::to_string(tFPS), false);
+
+    graphics::globalbuffer->disable(WINDOW_WIDTH,WINDOW_HEIGHT);
+    graphics::globalbuffer->render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
+    // preciseSleep(floor(1000.0f/60.0f - deltaTime)/1000.0f);
+    SDL_GL_SwapWindow(graphics::window);
+
+    #endif
+
+
+}
 bool hasEnding(std::string const& fullString, std::string const& ending);
 bool compareFunction (std::string a, std::string b) {return a<b;} 
-int WINDOW_WIDTH = INTERNAL_WIDTH;
-int WINDOW_HEIGHT = INTERNAL_HEIGHT;
 int main(int argc, char **argv) {
     //if we dont have a config dir, then we gotta set that up STAT
     #ifdef _LINUX
@@ -171,8 +210,8 @@ int main(int argc, char **argv) {
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	// Create an SDL window
-	SDL_Window*  window = SDL_CreateWindow("SDLTetris Rewritten", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    if (!window) {
+	graphics::window = SDL_CreateWindow("SDLTetris Rewritten", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    if (!graphics::window) {
 		// we'll print an error message and exit
 		std::cerr << "Error failed to create window!\n";
 		return 1;
@@ -180,7 +219,7 @@ int main(int argc, char **argv) {
 
 
 	// Create an OpenGL context (so we can use OpenGL functions)
-	SDL_GLContext context = SDL_GL_CreateContext(window);
+	SDL_GLContext context = SDL_GL_CreateContext(graphics::window);
 
 	// if we failed to create a context
 	if (!context) {
@@ -215,7 +254,6 @@ int main(int argc, char **argv) {
     }
     //Mix_VolumeMusic(0);
 
-    SDL_Joystick* joystick;
 
     SDL_Joystick* gGameController = SDL_JoystickOpen(0);
 #ifdef __LEGACY_RENDER
@@ -246,7 +284,7 @@ int main(int argc, char **argv) {
     settings::loadSettings();
     settings::loadSaveData();
     settings::loadDemos();
-    GlobalGamemode* global = new GlobalGamemode();
+    global = new GlobalGamemode();
     gameplay::loadGamemodes();
     sotaRenderer sota = sotaRenderer("./sota/dancegirl.ksta");
     #ifdef __LEGACY_RENDER
@@ -266,15 +304,9 @@ int main(int argc, char **argv) {
     bool quit = false;
     float NOW = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
     float LAST = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
-    float deltaTime = 0;
-    double ticks = 0;
-    int realtick = 0;
-    double time = 0; //time of current frame
-    double oldTime = SDL_GetTicks64(); //time of previous framea
     double totalMS = 0;
     int lastTime = SDL_GetTicks64();
 
-    long long recordticks = 0;
     std::string argument = "";
     if(argc > 1) {
         argument = argv[1];
@@ -298,11 +330,8 @@ int main(int argc, char **argv) {
     }
     //rpcimplement rpc();
     networking::globalRPC = new rpcimplement();
-    int discTime = 0;
-    discTime = std::time(nullptr);
 
     gameplay::gamemodes[gameplay::gamemode]->reset();
-    double tFps = 0;
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -339,58 +368,40 @@ int main(int argc, char **argv) {
         #else
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            graphics::globalbuffer->enable();
-            global->startRender();
         #endif
-        totalMS += SDL_GetTicks64() - lastTime;
-        if (totalMS > 1000.0/60.0) {
-            totalMS -= 1000.0/60.0;
-            graphics::deltaTime = 1000.0/60.0;
-            gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
-            Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
-            if(endlogic.transition) {
-                global->setFade(endlogic);
-            };
-            
-            if(global->logic(graphics::deltaTime)) {
-                gameplay::gamemode=global->currentTransition.gamemode;
-                gameplay::gamemodes[gameplay::gamemode]->reset();
+        if(settings::usePreciseTiming) { //if we should use the precise timing, then we can go ahead and use the new algorithm
+            totalMS += SDL_GetTicks64() - lastTime;
+            if (totalMS > 1000.0/60.0) {
+                totalMS -= 1000.0/60.0;
+                graphics::deltaTime = 1000.0/60.0;
+                doGameLogic();
+                NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+                double frameTime = (NOW - LAST) /1000.0;
+                tFPS = (1.0 / frameTime);
+                LAST = NOW;
+                doGameRender();
+
+
             }
+            lastTime = SDL_GetTicks64();
+        }
+        else { //otherwise, if it aint broke dont fix it
             NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
-            double frameTime = (NOW - LAST) /1000.0;
-            tFps = (1.0 / frameTime);
+            graphics::deltaTime = (NOW - LAST); //frameTime is the time this frame has taken, in seconds
+            double frameTime = graphics::deltaTime /1000.0;
+            tFPS = (1.0 / frameTime);
             LAST = NOW;
 
+            doGameLogic();
+            doGameRender();
+
         }
-        lastTime = SDL_GetTicks64();
-        
-        gameplay::gamemodes[gameplay::gamemode]->render();
-        sota.render();
-        global->render();
-        #ifdef __LEGACY_RENDER
-
-        SDL_SetRenderTarget(graphics::render,NULL);
-        SDL_RenderCopy(graphics::render,rendertext,NULL,NULL);
-        std::cout << tFps << "\n";
-        SDL_RenderPresent(graphics::render);
-
-        #else
-
-        graphics::fonts->at(2)->render(16, 16, std::to_string(tFps), false);
-
-        graphics::globalbuffer->disable(WINDOW_WIDTH,WINDOW_HEIGHT);
-        graphics::globalbuffer->render(graphics::shaders[3],WINDOW_WIDTH,WINDOW_HEIGHT,true);
-        // preciseSleep(floor(1000.0f/60.0f - deltaTime)/1000.0f);
-        SDL_GL_SwapWindow(window);
-        networking::globalRPC->logic();
-
-        #endif
 
 }
 	SDL_GL_DeleteContext(context);
 
 	// Destroy the window
-	SDL_DestroyWindow(window);
+	SDL_DestroyWindow(graphics::window);
 
 	// And quit SDL
 	SDL_Quit();

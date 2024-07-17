@@ -232,6 +232,7 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
     lineRenderer* graphics::line = NULL;
     buffermanager* graphics::globalbuffer = NULL;
     bool settings::globalDebug = false;
+    bool settings::usePreciseTiming = false;
     spriteRenderer* graphics::sprite = NULL;
     std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
     std::vector<std::string> settings::demos = std::vector<std::string>();

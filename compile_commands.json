@@ -1,0 +1,853 @@
+[
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/achievement_manager.cpp"
+  ],
+  "file": "source/discord/achievement_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/activity_manager.cpp"
+  ],
+  "file": "source/discord/activity_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/application_manager.cpp"
+  ],
+  "file": "source/discord/application_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/core.cpp"
+  ],
+  "file": "source/discord/core.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/image_manager.cpp"
+  ],
+  "file": "source/discord/image_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/lobby_manager.cpp"
+  ],
+  "file": "source/discord/lobby_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/network_manager.cpp"
+  ],
+  "file": "source/discord/network_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/overlay_manager.cpp"
+  ],
+  "file": "source/discord/overlay_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/relationship_manager.cpp"
+  ],
+  "file": "source/discord/relationship_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/storage_manager.cpp"
+  ],
+  "file": "source/discord/storage_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/store_manager.cpp"
+  ],
+  "file": "source/discord/store_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/types.cpp"
+  ],
+  "file": "source/discord/types.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/user_manager.cpp"
+  ],
+  "file": "source/discord/user_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/discord/voice_manager.cpp"
+  ],
+  "file": "source/discord/voice_manager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/SDLTetris.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/SDLTetris.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/tetrimino.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/tetrimino.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/ghostblock.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/ghostblock.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/titlescreen.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/titlescreen.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/background.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/background.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/ingamemessagebox.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/ingamemessagebox.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/knuxfanscreen.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/knuxfanscreen.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/cube.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/opengl/cube.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/sine.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/sine.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/globalgamemode.cpp"
+  ],
+  "file": "source/globalgamemode.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/utils/defs.cpp"
+  ],
+  "file": "source/utils/defs.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/pixfont.cpp"
+  ],
+  "file": "source/pixfont.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/ttffont.cpp"
+  ],
+  "file": "source/ttffont.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/texture.cpp"
+  ],
+  "file": "source/opengl/texture.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/shader.cpp"
+  ],
+  "file": "source/opengl/shader.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/plane.cpp"
+  ],
+  "file": "source/opengl/plane.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/rect.cpp"
+  ],
+  "file": "source/opengl/rect.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/buffermanager.cpp"
+  ],
+  "file": "source/opengl/buffermanager.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/sprite.cpp"
+  ],
+  "file": "source/opengl/sprite.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/stbi_image.c"
+  ],
+  "file": "source/opengl/stbi_image.c"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/utils/animation.cpp"
+  ],
+  "file": "source/utils/animation.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/line.cpp"
+  ],
+  "file": "source/opengl/line.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/game.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/game.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/results.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/results.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/credits.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/credits.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/wireframecube.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/wireframecube.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/debugscene.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/debugscene.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/gameplaymenu.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/gameplaymenu.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/skybox.cpp"
+  ],
+  "file": "source/opengl/skybox.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/model.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/opengl/model.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/scenes/classicmenu.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/scenes/classicmenu.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/rpcimplement.cpp",
+   "-std=c++17"
+  ],
+  "file": "source/rpcimplement.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/sota.cpp"
+  ],
+  "file": "source/opengl/sota.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/triangle/tpp_assert.cpp"
+  ],
+  "file": "source/opengl/triangle/tpp_assert.cpp"
+ },
+ {
+  "directory": "/home/knucklesfan/Documents/GitHub/SDLTris",
+  "arguments": [
+   "g++",
+   "-I./include/",
+   "-I/usr/include/freetype2",
+   "-g",
+   "-c",
+   "-Wall",
+   "-O0",
+   "-D",
+   "_LINUX",
+   "-DCLIENT",
+   "source/opengl/triangle/tpp_impl.cpp"
+  ],
+  "file": "source/opengl/triangle/tpp_impl.cpp"
+ }
+]

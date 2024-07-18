@@ -122,17 +122,11 @@ void classicmenu::render() {
     graphics::sprite->render(graphics::shaders.at(4),&cube->buff->renderTexture,{0,0},{640,480},{0,0,0},{0,0},{640,480});
     for(int i = 0; i < settings::saveCache.size()+1; i++) {
         graphics::shaders.at(5)->activate();
-        glm::vec4 newgameshade = {0,1,1,1}; //its got that new game smell!
         glm::vec4 othershade = {1,1,0,1};
-        glm::vec4 baseshade = {1,1,1,1};
+        glm::vec4 baseshade = {0,0.5,1,1};
 
         if(i == selection) {
-            if(i == 0) {
-                graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(newgameshade));
-            }
-            else {
-                graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(othershade));
-            }
+            graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(othershade));
         }
         else {
             graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(baseshade));

@@ -1,13 +1,14 @@
 {
     "configurations": [
         {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
+            "type": "gdb",
             "request": "launch",
-            "program": "${workspaceFolder}/SDLTetris",
+            "name": "(gdb) Launch",
+            "preLaunchTask": "make",
+            "target": "${workspaceFolder}/SDLTetris",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "echotest", // The name of the task defined above
-            // ...
-        }
+            "valuesFormatting": "parseText"
+        },
+        
     ]   
 }

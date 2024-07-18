@@ -1,9 +1,9 @@
 {
     "version": "2.0.0",
     "tasks": [{
-        "label": "echotest",
+        "label": "make",
         "command": "make", // Could be any other shell command
-        "args": ["-j4"],
+        "args": ["-j`nproc`"],
         "type": "shell",
         "options": {
             "cwd": "${workspaceFolder}"

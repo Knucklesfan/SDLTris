@@ -405,6 +405,13 @@ std::string utils::getenv( const std::string & var ) {
          return val;
      }
 }
+void settings::clearSaveData() {
+    for(int i = 0; i < settings::saveCache.size(); i++) {
+        glDeleteTextures(1, &settings::saveCache.at(i).t->id); //free up that texture
+        delete(settings::saveCache.at(i).t); //go ahead and kill that texture in mem then
+        std::vector<save>().swap(settings::saveCache); //kill up all them elements
+    }
+}
 void settings::loadSaveData() {
     #ifdef _LINUX
         GLuint framebuffer;
@@ -417,7 +424,7 @@ void settings::loadSaveData() {
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
         
 
-        std::cout << "Caching saves...\nFILENAME\tLINES\tLEVELS\n";
+        std::cout << "Caching save\nFILENAME\tLINES\tLEVELS\n";
         //since we are on linux, the other platforms are only 
         //gonna get implemented when needed
         int testblocks[480];
@@ -487,6 +494,7 @@ void settings::loadSaveData() {
                 memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
                 offset += sizeof(int);
                 offset += sizeof(Uint32);
+                std::cout << savename << "\t" << level << "\t" << lines << "\n";
 
                 memcpy(&testblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
 

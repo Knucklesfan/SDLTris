@@ -1,6 +1,4 @@
 #include "classicmenu.h"
-#include <iostream>
-#include <fstream>
 
 classicmenu::classicmenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
@@ -77,7 +75,7 @@ void classicmenu::input(SDL_Keycode keysym) {
 
                 }break;
                 case SDLK_DOWN: {
-                    if(selection < savenum) {
+                    if(selection < settings::saveCache.size()) {
                         transition += 1.0f;
                         selection++;
                     }
@@ -122,13 +120,19 @@ void classicmenu::render() {
     background->render();
     cube->render(0,0,255);
     graphics::sprite->render(graphics::shaders.at(4),&cube->buff->renderTexture,{0,0},{640,480},{0,0,0},{0,0},{640,480});
-    for(int i = 0; i < settings::saveCache.size(); i++) {
+    for(int i = 0; i < settings::saveCache.size()+1; i++) {
         graphics::shaders.at(5)->activate();
+        glm::vec4 newgameshade = {0,1,1,1}; //its got that new game smell!
         glm::vec4 othershade = {1,1,0,1};
         glm::vec4 baseshade = {1,1,1,1};
 
         if(i == selection) {
-            graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(othershade));
+            if(i == 0) {
+                graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(newgameshade));
+            }
+            else {
+                graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(othershade));
+            }
         }
         else {
             graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(baseshade));
@@ -139,8 +143,13 @@ void classicmenu::render() {
         200+i*116-(selection*116)+(116*transition)
         },
         {250,100},0,{0,0},{250,100});
-        graphics::fonts->at(0)->render(34,200+i*116-(selection*116)+(116*transition),settings::saveCache.at(i).name, false);
-        graphics::sprite->render(graphics::shaders.at(4),settings::saveCache.at(i).t,{230,200+i*116-(selection*116)+(116*transition)},{40,96},0,{0,0},{40,96});
+        if(i > 0) { //if we're rendering a normal, game save, then lets go ahead and do that
+            graphics::fonts->at(0)->render(34,200+i*116-(selection*116)+(116*transition),settings::saveCache.at(i-1).name, false);
+            graphics::sprite->render(graphics::shaders.at(4),settings::saveCache.at(i-1).t,{230,200+i*116-(selection*116)+(116*transition)},{40,96},0,{0,0},{40,96});
+        }
+        else {
+            graphics::fonts->at(4)->render(34,200+i*116-(selection*116)+(116*transition),"NEW GAME", false);
+        }
 
         if((SDL_GetTicks()/500)%2 ==0) graphics::fonts->at(4)->render(320,64,"LOAD SAVE",true);
 
@@ -151,4 +160,6 @@ void classicmenu::reset() {
     networking::globalRPC->update("Getting ready to start a classic game...", "Top high score: " + std::to_string(settings::maxscore), "icon1", std::time(nullptr));
     startTime = SDL_GetTicks();
     t = Transition();
+    settings::clearSaveData();
+    settings::loadSaveData();
 }

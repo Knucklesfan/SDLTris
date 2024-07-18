@@ -231,6 +231,8 @@ class settings {
     static void loadSettings();
     static void loadDemos();
     static void loadSaveData();
+    static void clearSaveData();
+
     static std::string configDir;
     static std::string saveDir;
     static bool globalDebug;

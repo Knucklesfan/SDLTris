@@ -155,6 +155,7 @@ void game::logic(double deltatime) {
         }
         if (warningalpha > 0 && goup) {
             warningalpha -= deltatime / 750;
+            
         }
         else if (warningalpha <= 0 && goup) {
             warningalpha = 0;

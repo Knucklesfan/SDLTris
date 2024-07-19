@@ -1,4 +1,5 @@
 #include "defs.h"
+#include "SDL2/SDL_stdinc.h"
 #ifdef __SWITCH__
     #define filepath  "/"
     #include <switch.h>
@@ -236,6 +237,7 @@ std::vector<SDL_Texture*>* graphics::blocks = new std::vector<SDL_Texture*>();
     spriteRenderer* graphics::sprite = NULL;
     std::vector<texture*>* graphics::blocks = new std::vector<texture*>();
     std::vector<std::string> settings::demos = std::vector<std::string>();
+    std::string settings::saveload = "";
     std::vector<save> settings::saveCache = std::vector<save>();
 
     std::map<std::string,texture*> graphics::sprites = std::map<std::string,texture*>();
@@ -441,6 +443,7 @@ void settings::loadSaveData() {
                 int hold = 0;
                 int level = 0;
                 int lines = 0;
+                Uint32 score = 0;
                 texture* t = new texture();
                 t->w = 40;
                 t->h = 96;
@@ -467,37 +470,67 @@ void settings::loadSaveData() {
                 glClearDepth(1.0);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-                GLuint texture_id = 0;
                 size = file.tellg();
                 memblock = new char [size];
                 file.seekg (0, std::ios::beg);
                 file.read (memblock, size);
                 file.close();
 
-                std::cout << "the entire file content is in memory";
+                Uint32 version = 0; //the version of the current save type, in case i update this
+
                 size_t offset = 0;
+                memcpy(&version, memblock+offset, sizeof(uint)); //loads the version number first, so we know what we're working with here
                 offset += sizeof(Uint32);
-                offset += sizeof(uint);
-                offset += sizeof(uint);
+                std::cout << "-----\nVersion: "<< version << "\n";
+                switch(version) {
+                    case 1: {//early alpha save, doesnt record player save
+                        offset += sizeof(uint); //time
+                        offset += sizeof(uint); //randomiters
 
-                memcpy(&piece, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-                offset += sizeof(int);
-                offset += sizeof(int);
-                offset += sizeof(int);
-                offset += sizeof(int);
-                offset += sizeof(int);
-                memcpy(&hold, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-                offset += sizeof(int);
+                        memcpy(&piece, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //piece
+                        offset += sizeof(int); //x
+                        offset += sizeof(int); //y
+                        offset += sizeof(int); //rot
+                        offset += sizeof(int); //next block
+                        memcpy(&hold, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //hold block
 
-                memcpy(&level, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-                offset += sizeof(int);
-                memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-                offset += sizeof(int);
-                offset += sizeof(Uint32);
-                std::cout << savename << "\t" << level << "\t" << lines << "\n";
+                        memcpy(&level, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //level num
+                        memcpy(&lines, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //lines number
+                        offset += sizeof(Uint32); //gamestart
+                        std::cout << savename << "\t" << level << "\t" << lines << "\n";
 
-                memcpy(&testblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
+                        memcpy(&testblocks, memblock+offset, sizeof(int[480])); 
+                    }break;
+                    case 2: { //we're still in alpha, but has score saving now
+                        offset += sizeof(uint); //time
+                        offset += sizeof(uint); //randomiters
 
+                        memcpy(&piece, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //piece
+                        offset += sizeof(int); //x
+                        offset += sizeof(int); //y
+                        offset += sizeof(int); //rot
+                        offset += sizeof(int); //next block
+                        memcpy(&hold, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //hold block
+
+                        memcpy(&level, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //level num
+                        memcpy(&lines, memblock+offset, sizeof(int)); 
+                        offset += sizeof(int); //lines number
+                        memcpy(&score, memblock+offset, sizeof(Uint32)); 
+                        offset += sizeof(Uint32); //score
+                        offset += sizeof(Uint32); //gamestart
+                        std::cout << savename << "\t" << level << "\t" << lines << "\n";
+
+                        memcpy(&testblocks, memblock+offset, sizeof(int[480])); 
+
+                    }break;
+                }
                 for(int j = 0; j < 240; j++) {
                     if(testblocks[j] > 0 && testblocks[j]-1 < graphics::blocks->size()) {
                         graphics::shaders.at(4)->activate();
@@ -528,6 +561,7 @@ void settings::loadSaveData() {
                     lines,
                     hold,
                     piece,
+                    score,
                     t
                 });
 
@@ -1022,7 +1056,7 @@ std::vector<std::string> utils::seperateWords(std::string string, char sep, int 
 
         std::string word = string.substr(startindex, index - startindex-x);
         char nextchar = string.substr(index, 1).at(0);
-        if (nextchar = sep) { //WHY
+        if (nextchar == sep) { //WHY
 
             parts.push_back(word);
             parts.push_back(std::string(1, nextchar));
@@ -1036,44 +1070,49 @@ double utils::rad(double i) {
 double utils::deg(double i) {
     return i*180/M_PI;
 }
-vect utils::rotate_to_point(vect object_position, vect point) {
-    // Calculate direction vector
-    float direction[3];
-    direction[0] = point.x - object_position.x;
-    direction[1] = point.y - object_position.y;
-    direction[2] = point.z - object_position.z;
 
-    // Calculate magnitude of direction vector
-    float magnitude = sqrt(direction[0]*direction[0] + direction[1]*direction[1] + direction[2]*direction[2]);
+//I have NO idea what this code does, so uncommenting for now...
+// \/\/\/\/
 
-    // Normalize direction vector
-    direction[0] /= magnitude;
-    direction[1] /= magnitude;
-    direction[2] /= magnitude;
+// vect utils::rotate_to_point(vect object_position, vect point) {
+//     // Calculate direction vector
+//     float direction[3];
+//     direction[0] = point.x - object_position.x;
+//     direction[1] = point.y - object_position.y;
+//     direction[2] = point.z - object_position.z;
 
-    // Calculate rotation angle using dot product
-    float reference[3] = {0.0f, 0.0f, 1.0f}; // use a fixed reference vector
-    float dotProduct = direction[0]*reference[0] + direction[1]*reference[1] + direction[2]*reference[2];
-    float rotationAngle = acos(dotProduct);
+//     // Calculate magnitude of direction vector
+//     float magnitude = sqrt(direction[0]*direction[0] + direction[1]*direction[1] + direction[2]*direction[2]);
 
-    // Calculate rotation axis using cross product
-    float rotationAxis[3];
-    rotationAxis[0] = direction[1]*reference[2] - direction[2]*reference[1];
-    rotationAxis[1] = direction[2]*reference[0] - direction[0]*reference[2];
-    rotationAxis[2] = direction[0]*reference[1] - direction[1]*reference[0];
+//     // Normalize direction vector
+//     direction[0] /= magnitude;
+//     direction[1] /= magnitude;
+//     direction[2] /= magnitude;
 
-    // Normalize rotation axis
-    float axisMagnitude = sqrt(rotationAxis[0]*rotationAxis[0] + rotationAxis[1]*rotationAxis[1] + rotationAxis[2]*rotationAxis[2]);
-    rotationAxis[0] /= axisMagnitude;
-    rotationAxis[1] /= axisMagnitude;
-    rotationAxis[2] /= axisMagnitude;
+//     // Calculate rotation angle using dot product
+//     float reference[3] = {0.0f, 0.0f, 1.0f}; // use a fixed reference vector
+//     float dotProduct = direction[0]*reference[0] + direction[1]*reference[1] + direction[2]*reference[2];
+//     float rotationAngle = acos(dotProduct);
 
-    // Set rotation vector
-    vect rotation(0,0,0);
-    rotation.x = deg(rotationAxis[0] * rotationAngle);
-    rotation.y = deg(rotationAxis[1] * rotationAngle);
-    rotation.z = deg(rotationAxis[2] * rotationAngle);
-}
+//     // Calculate rotation axis using cross product
+//     float rotationAxis[3];
+//     rotationAxis[0] = direction[1]*reference[2] - direction[2]*reference[1];
+//     rotationAxis[1] = direction[2]*reference[0] - direction[0]*reference[2];
+//     rotationAxis[2] = direction[0]*reference[1] - direction[1]*reference[0];
+
+//     // Normalize rotation axis
+//     float axisMagnitude = sqrt(rotationAxis[0]*rotationAxis[0] + rotationAxis[1]*rotationAxis[1] + rotationAxis[2]*rotationAxis[2]);
+//     rotationAxis[0] /= axisMagnitude;
+//     rotationAxis[1] /= axisMagnitude;
+//     rotationAxis[2] /= axisMagnitude;
+
+//     // Set rotation vector
+//     vect rotation(0,0,0);
+//     rotation.x = deg(rotationAxis[0] * rotationAngle);
+//     rotation.y = deg(rotationAxis[1] * rotationAngle);
+//     rotation.z = deg(rotationAxis[2] * rotationAngle);
+
+// }
 std::string utils::loadFile(std::string filename)
 {
     std::ifstream inFile;
@@ -1157,4 +1196,19 @@ void gameplay::loadGamemodes() {
         }
 
     }
+}
+double math::easeOutBounce(double x) {
+    double n1 = 7.5625;
+    double d1 = 2.75;
+
+    if (x < 1 / d1) {
+        return n1 * x * x;
+    } else if (x < 2 / d1) {
+        return n1 * (x -= 1.5 / d1) * x + 0.75;
+    } else if (x < 2.5 / d1) {
+        return n1 * (x -= 2.25 / d1) * x + 0.9375;
+    } else {
+        return n1 * (x -= 2.625 / d1) * x + 0.984375;
+    }
+
 }

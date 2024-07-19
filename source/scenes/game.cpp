@@ -7,10 +7,9 @@
 #include <cstring>
 #include <SDL2/SDL.h>
 #include <cmath>
-
-#include <random>
 #include <ctime>
 #include "../utils/defs.h"
+#include "SDL2/SDL_stdinc.h"
 
 #define LINES 0
 #define LEVEL 1
@@ -90,9 +89,9 @@ void game::logic(double deltatime) {
                     demoReturn = true;
                 }
                 inputKey(demokey);
-                memcpy(&demotick, demo+demoOffset, sizeof(Uint32)); //very memory unsafe, please do not supply bad savestates...
+                memcpy(&demotick, demo+demoOffset, sizeof(Uint32)); 
                 demoOffset += sizeof(Uint32);
-                memcpy(&demokey, demo+demoOffset, sizeof(SDL_Keycode)); //very memory unsafe, please do not supply bad savestates...
+                memcpy(&demokey, demo+demoOffset, sizeof(SDL_Keycode)); 
                 demoOffset += sizeof(SDL_Keycode);
             }
         }
@@ -101,9 +100,9 @@ void game::logic(double deltatime) {
                 demoPlayback = false;
             }
             else {
-                memcpy(&demotick, demo+demoOffset, sizeof(Uint32)); //very memory unsafe, please do not supply bad savestates...
+                memcpy(&demotick, demo+demoOffset, sizeof(Uint32)); 
                 demoOffset += sizeof(Uint32);
-                memcpy(&demokey, demo+demoOffset, sizeof(SDL_Keycode)); //very memory unsafe, please do not supply bad savestates...
+                memcpy(&demokey, demo+demoOffset, sizeof(SDL_Keycode)); 
                 demoOffset += sizeof(SDL_Keycode);
             }
         }
@@ -441,7 +440,7 @@ void game::input(SDL_Keycode key)
     }
 }
 void game::inputKey(SDL_Keycode key) {
-        if (gameactive && !paused) {
+    if (gameactive && !paused) {
         t.draw();
         switch (key) {
         case SDLK_UP: {
@@ -515,7 +514,7 @@ void game::inputKey(SDL_Keycode key) {
         }
         case SDLK_m: {
             if (settings::globalDebug) {
-                loadState();
+                loadState(settings::saveload);
             }
             break;
         }
@@ -787,8 +786,8 @@ void game::reset() {
         changemusic();
         startTime = std::time(nullptr);
         networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
-
     }
+    
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
@@ -817,6 +816,10 @@ void game::reset() {
     warningflag = false;
     gameStart = SDL_GetTicks();
     invisScore = 0;
+    if(settings::saveload != "") { //if we got a save to load
+        loadState(settings::saveload); //go ahead and load our save
+        settings::saveload = ""; //clear out saveload so we dont accidentally load again
+    }
 
 
 }
@@ -848,7 +851,7 @@ void game::drawCubes(int position[], float scale, float x, float y, int size, in
                     graphics::blocks->at(position[i]-1),
                     {
                     (x + (i % width) * 16)+(16-(16*scale))/2,
-                    (y + (i / width) * 16)+(16-(16*scale))/2
+                    (y + (int)(i / width) * 16)+(16-(16*scale))/2
                     },
                     {16*scale,16*scale}, 0,{0,0},{16,16});
                 }
@@ -857,7 +860,7 @@ void game::drawCubes(int position[], float scale, float x, float y, int size, in
                     graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).blockpack[(position[i]-1)],
                     {
                     (x + (i % width) * 16)+(16-(16*scale))/2,
-                    (y + (i / width) * 16)+(16-(16*scale))/2
+                    (y + (int)(i / width) * 16)+(16-(16*scale))/2
                     },
                     {16*scale,16*scale}, 0,{0,0},{16,16});
 
@@ -868,7 +871,7 @@ void game::drawCubes(int position[], float scale, float x, float y, int size, in
 
                 cubeRenderer->postposition = {
                     -width/2.0f+(i % width),
-                    -(size/width)/2.0f+(i/width),
+                    -(int)(size/width)/2.0f+(int)(i/width),
                     0
                     };
                 cubeRenderer->rotation = rotation;
@@ -1027,32 +1030,32 @@ void game::loadDemo(std::string filename) {
         file.close();
         std::cout << "file opened demo\n";
 
-        memcpy(&time, demo+demoOffset, sizeof(uint)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&time, demo+demoOffset, sizeof(uint)); 
         demoOffset += sizeof(uint);
-        memcpy(&randomIters, demo+demoOffset, sizeof(uint)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&randomIters, demo+demoOffset, sizeof(uint)); 
         demoOffset += sizeof(uint);
-        memcpy(&t.piece, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        memcpy(&g.piece, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&t.piece, demo+demoOffset, sizeof(int)); 
+        memcpy(&g.piece, demo+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&t.x, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&t.x, demo+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&t.y, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&t.y, demo+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&t.rot, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        demoOffset += sizeof(int);
-
-        memcpy(&nextblocks, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        demoOffset += sizeof(int);
-        memcpy(&holdblock, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&t.rot, demo+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
 
-        memcpy(&level, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&nextblocks, demo+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&lines, demo+demoOffset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&holdblock, demo+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
 
-        memcpy(&testblocks, demo+demoOffset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
-        memcpy(&previousblocks, demo+demoOffset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&level, demo+demoOffset, sizeof(int)); 
+        demoOffset += sizeof(int);
+        memcpy(&lines, demo+demoOffset, sizeof(int)); 
+        demoOffset += sizeof(int);
+
+        memcpy(&testblocks, demo+demoOffset, sizeof(int[480])); 
+        memcpy(&previousblocks, demo+demoOffset, sizeof(int[480])); 
 
         demoOffset += sizeof(int[480]);
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
@@ -1095,6 +1098,8 @@ void game::saveState() { //saves the game's state. this is a debug function im c
     fs.write((char *) &holdblock, sizeof(int));
     fs.write((char *) &level, sizeof(int));
     fs.write((char *) &lines, sizeof(int));
+    fs.write((char *) &score, sizeof(Uint32)); //added in version 2
+
     fs.write((char *) &gameStart, sizeof(Uint32));
 
     fs.write((char *) &testblocks, sizeof(int[480]));
@@ -1104,13 +1109,13 @@ void game::saveState() { //saves the game's state. this is a debug function im c
     
 
 }
-void game::loadState() {
+void game::loadState(std::string path) {
     t.removeolddraw();
     g.removeolddraw();
     
     std::streampos size;
     char * memblock;
-    std::ifstream file ("/home/knucklesfan/.config/KNFNTetromino/saves/WALL.knfs", std::ios::in|std::ios::binary|std::ios::ate);
+    std::ifstream file (path, std::ios::in|std::ios::binary|std::ios::ate);
     if (file.is_open())
     {
         size = file.tellg();
@@ -1120,36 +1125,82 @@ void game::loadState() {
         file.close();
 
         std::cout << "the entire file content is in memory";
+        Uint32 version = 0; //the version of the current save type, in case i update this
+
         size_t offset = 0;
-        memcpy(&time, memblock+offset, sizeof(uint)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(uint);
-        memcpy(&randomIters, memblock+offset, sizeof(uint)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(uint);
-        memcpy(&t.piece, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        memcpy(&g.piece, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-        memcpy(&t.x, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-        memcpy(&t.y, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-        memcpy(&t.rot, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-
-        memcpy(&nextblocks, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-        memcpy(&holdblock, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-
-        memcpy(&level, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-        memcpy(&lines, memblock+offset, sizeof(int)); //very memory unsafe, please do not supply bad savestates...
-        offset += sizeof(int);
-        memcpy(&gameStart, memblock+offset, sizeof(Uint32)); //very memory unsafe, please do not supply bad savestates...
+        memcpy(&version, memblock+offset, sizeof(uint)); //loads the version number first, so we know what we're working with here
         offset += sizeof(Uint32);
+        std::cout << "VERSION " << version << "\n";
+        switch(version) {
+            case 1: { //early alpha save files, doesn't record the player's score
+                memcpy(&time, memblock+offset, sizeof(uint)); 
+                offset += sizeof(uint); //game's current time variable
+                memcpy(&randomIters, memblock+offset, sizeof(uint)); 
+                offset += sizeof(uint); //the number of times the random seed has been iterated
+                memcpy(&t.piece, memblock+offset, sizeof(int)); 
+                memcpy(&g.piece, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current piece, also stored to the ghost pieces as well
+                memcpy(&t.x, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current x coordinate of a piece
+                memcpy(&t.y, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current y coordinate of a piece
+                memcpy(&t.rot, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current rotation of a piece
 
-        memcpy(&testblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
-        memcpy(&previousblocks, memblock+offset, sizeof(int[480])); //very memory unsafe, please do not supply bad savestates...
+                memcpy(&nextblocks, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the next block up
+                memcpy(&holdblock, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the currently held block
 
+                memcpy(&level, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the level the player was at
+                memcpy(&lines, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //lines of the player
+
+                memcpy(&gameStart, memblock+offset, sizeof(Uint32)); 
+                offset += sizeof(Uint32); 
+
+                memcpy(&testblocks, memblock+offset, sizeof(int[480])); 
+                memcpy(&previousblocks, memblock+offset, sizeof(int[480])); 
+
+
+            }break;
+            case 2: { //version 2 adds score to be saved
+                
+                memcpy(&time, memblock+offset, sizeof(uint)); 
+                offset += sizeof(uint); //game's current time variable
+                memcpy(&randomIters, memblock+offset, sizeof(uint)); 
+                offset += sizeof(uint); //the number of times the random seed has been iterated
+                memcpy(&t.piece, memblock+offset, sizeof(int)); 
+                memcpy(&g.piece, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current piece, also stored to the ghost pieces as well
+                memcpy(&t.x, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current x coordinate of a piece
+                memcpy(&t.y, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current y coordinate of a piece
+                memcpy(&t.rot, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the current rotation of a piece
+
+                memcpy(&nextblocks, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the next block up
+                memcpy(&holdblock, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the currently held block
+
+                memcpy(&level, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //the level the player was at
+                memcpy(&lines, memblock+offset, sizeof(int)); 
+                offset += sizeof(int); //lines of the player
+                memcpy(&score, memblock+offset, sizeof(Uint32)); 
+                offset += sizeof(Uint32); //score of the player
+
+                memcpy(&gameStart, memblock+offset, sizeof(Uint32)); 
+                offset += sizeof(Uint32); 
+
+                memcpy(&testblocks, memblock+offset, sizeof(int[480])); 
+                memcpy(&previousblocks, memblock+offset, sizeof(int[480])); 
+
+            }
+        }
         offset += sizeof(int[480]);
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
             bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;

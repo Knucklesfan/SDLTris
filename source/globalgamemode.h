@@ -26,7 +26,3 @@ class GlobalGamemode {
         double fadespeed = 0;
         double alpha = 0.0;
 };
-class math {
-    public:
-    static double easeOutBounce(double x);
-};

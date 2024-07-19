@@ -13,6 +13,10 @@
 #include "../wireframecube.h"
 #define NUMBUTTONS 5
 #define ROWWIDTH 2
+#define NEWGAMELENGTH 250.0
+#define FALLTIME_OTHERS 100.0
+#define FALLTIME_OTHERS_INTERVAL 50.0
+#define TRANSITION_LENGTH 2000.0
 class classicmenu : public Gamemode { //the main menu of the game
     public:
     Transition t;
@@ -25,8 +29,10 @@ class classicmenu : public Gamemode { //the main menu of the game
     float transition = 0.0f;
     bool godown = false;
     bool goup = false;
-    Uint32 startTime;
-    Uint32 currentscreenAge;
+    int screenmode = 0;
+    Uint32 startTime = 0;
+    Uint32 transitionTime = 0;
+    Uint32 currentscreenAge = 0;
     int subselection = 0;
     int subbuttons = 0;
     int savenum = 6;

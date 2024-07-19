@@ -2,21 +2,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer_ext.h>
 #include <string>
-#include <iostream>
-#include <vector>
-#include <array>
 #include <cstring>
-// #include "options.h"
 #include "../tetriminos.h"
 #include "../ghostblock.h"
-#include "../background.h"
 #include "../gamemode.h"
 #include "../opengl/cube.h"
 #include "../opengl/model.h"
 #include "../ingamemessagebox.h"
-#include <random>
 #include "../font.h"
-#define SAVE_VERSION 1
+#define SAVE_VERSION 2
 #define FILENAME_LENGTH 8
 //specifies the specific version of the saving algorithm this uses. Good for futureproofing in case that certain versions do get implemented.
 //TODO: clean all of this nonsense up
@@ -140,15 +134,15 @@ class game: public Gamemode
 		int volume;
 	private:
 		void loadDemo(std::string demo);
-		void saveState(); //temporary, debug class to save a level's state
-		void loadState(); //loads the current level's state.
+		void saveState(); //temporary, debug method to save a level's state
+		void loadState(std::string); //loads the current level's state.
 		void startRecord();
 		void stopRecord();
 		void changemusic();
 		void shiftarray(int(array)[], int size, int shift);
-		void checkLines(int(blocks)[240]);
+		void checkLines(int(blocks)[480]);
 		bool checkRow(int(blocks)[10]);
-		void clearRow(int(blocks)[240], int y);
+		void clearRow(int(blocks)[480], int y);
 		void drawCubes(int position[],float scale, float x, float y, int size, int width,bool threed=false, glm::vec3 rotation={0,0,0});
 };
 

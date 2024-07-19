@@ -213,6 +213,7 @@ struct save {
     int lines;
     int hold;
     int piece;
+    Uint32 score;
     texture* t;
 };
 
@@ -232,7 +233,7 @@ class settings {
     static void loadDemos();
     static void loadSaveData();
     static void clearSaveData();
-
+    static std::string saveload;
     static std::string configDir;
     static std::string saveDir;
     static bool globalDebug;
@@ -265,7 +266,7 @@ namespace utils {
     std::string wrap(std::string str, int pixels);
     std::vector<std::string> seperateWords(std::string string, char sep);
     std::vector<std::string> seperateWords(std::string string, char sep, int);
-    vect rotate_to_point(vect object_position, vect point);
+    // vect rotate_to_point(vect object_position, vect point);
     double rad(double i);
 
 };
@@ -287,3 +288,7 @@ namespace memory {
     void freeBackgrounds();
     void freeFonts();
 }
+class math {
+    public:
+    static double easeOutBounce(double x);
+};

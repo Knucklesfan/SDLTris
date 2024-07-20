@@ -176,6 +176,11 @@
 		<path>./sprites/newgame.png</path>
 	</sprite>
 	<sprite>
+		<name>newgamebanner</name>
+		<path>./sprites/newgamebanner.png</path>
+	</sprite>
+
+	<sprite>
 		<name>cheatercroc</name>
 		<path>./sprites/CHEATER_kekcroc.png</path>
 	</sprite>

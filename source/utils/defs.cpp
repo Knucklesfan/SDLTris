@@ -1,5 +1,6 @@
 #include "defs.h"
 #include "SDL2/SDL_stdinc.h"
+#include <string>
 #ifdef __SWITCH__
     #define filepath  "/"
     #include <switch.h>
@@ -13,13 +14,11 @@
 #include "../scenes/knuxfanscreen.h"
 #include "../scenes/titlescreen.h"
 #include "../scenes/gameplaymenu.h"
-#include "../scenes/white.h"
 #include "../scenes/credits.h"
 
 // #include "scenes/credits.h"
 #include "../scenes/game.h"
 #include "../scenes/results.h"
-#include "../scenes/debugscene.h"
 #include "../scenes/classicmenu.h"
 
 #include <cmath>
@@ -29,6 +28,7 @@
 #include <filesystem>
 
 SDL_Window* graphics::window = nullptr;
+std::vector<modifier> gameplay::modifiers = std::vector<modifier>();
 std::vector<Gamemode*> gameplay::gamemodes = std::vector<Gamemode*>();
 int gameplay::gamemode = 0;
 int gameplay::Pieces[7][4][16] = {
@@ -667,7 +667,7 @@ int graphics::generatebgs() {
 
        std::cout << "loading background " << child->value() << "\n";
        //std::cout << "HELP ME:" << p.path().filename() << "\n";
-       if(child->value() != "") {
+       if(std::string(child->value()) != "") {
         #ifdef __LEGACY_RENDER
            bg backg(child->value(), false, render);
         #else
@@ -695,7 +695,7 @@ int graphics::generatebgs() {
 //     return 0;
 
 // }
-int audio::playMusic(int index) {
+void audio::playMusic(int index) {
     Mix_HaltMusic();
     if( Mix_PlayingMusic() == 0 )
     {
@@ -720,7 +720,7 @@ int audio::playMusic(int index) {
     }
 
 }
-int audio::playSound(int index) {
+void audio::playSound(int index) {
     Mix_PlayChannel( -1, sfx->at(index), 0 );
 }
 void audio::generatemusic() {
@@ -1196,6 +1196,33 @@ void gameplay::loadGamemodes() {
         }
 
     }
+}
+void gameplay::loadModifiers() {
+    rapidxml::file<> bgFile((filepath"modifiers/modifiers.xml"));
+    rapidxml::xml_document<> bgDoc;
+    bgDoc.parse<0>(bgFile.data());
+    rapidxml::xml_node<char>* parent = bgDoc.first_node("modifiers");
+    for (rapidxml::xml_node<char>* child = parent->first_node(); child != NULL; child = child->next_sibling()) {
+        std::string path = child->value();
+        rapidxml::file<> modFile((filepath"modifiers/"+path+"/modifier.xml").c_str());
+        rapidxml::xml_document<> modDoc;
+        modDoc.parse<0>(modFile.data());
+        rapidxml::xml_node<char>* modParent = modDoc.first_node("modifier");
+        std::string modName = modParent->first_node("meta")->first_node("name")->value();
+        std::string modDesc = modParent->first_node("meta")->first_node("description")->value();
+        Uint32 modPrice = atoi(modParent->first_node("meta")->first_node("price")->value());
+        texture* modTex = new texture(filepath"modifiers/"+path+"/"+modParent->first_node("meta")->first_node("sprite")->value());
+        bool modSale = std::string(modParent->first_node("meta")->first_node("forsale")->value()) == "true";
+        std::vector<modifierTag> modTags;
+        modifierTag tag;
+
+        modifierMeta meta = {modName,modDesc,modPrice,modSale,modTex,modTags};
+        //TODO: add actual parsing of effects and make mods do stuff
+    
+        //add to modifier array
+        modifiers.push_back({meta});
+    }
+
 }
 double math::easeOutBounce(double x) {
     double n1 = 7.5625;

@@ -192,5 +192,9 @@
 		<name>mariospin</name>
 		<path>./sprites/mariospin.png</path>
 	</sprite>
+	<sprite>
+		<name>new</name>
+		<path>./sprites/new.png</path>
+	</sprite>
 
 </sprites>

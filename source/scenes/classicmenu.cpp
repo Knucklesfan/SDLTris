@@ -214,11 +214,11 @@ void classicmenu::render() {
             //time to start adapating concept to creation!
             bluebackground->render();
             
-            graphics::rect->render(graphics::shaders.at(1),{30,0},{605,480},0,{0,0.1,0.50,0.85},true,4,{0,0,0,1});
+            graphics::rect->render(graphics::shaders.at(1),{30,0},{605,480},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
             graphics::line->render(graphics::shaders.at(1), {192,0}, {192,480}, 4, {0,0,0,1});
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("newgamebanner"),
             {0,0},{640,480},0,{(SDL_GetTicks64()/10.0),0},{640,480});
-            graphics::fonts->at(1)->render(30+8,32+4,"NEW GAME",false);
+            graphics::fonts->at(1)->render(30+8+8,32+4,"NEW GAME",false);
             graphics::line->render(graphics::shaders.at(1), {30,36+48}, {192,36+48}, 4, {0,0,0,1});
 
             graphics::fonts->at(0)->render(38,32+4+70,"GAMEMODE",false,255,255,255,-1,true,SDL_GetTicks64()/500.0,4,4);
@@ -227,7 +227,7 @@ void classicmenu::render() {
                 graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),gamemodes[i],false);
                 offset++;
             }
-            graphics::line->render(graphics::shaders.at(1), {30,32+4+70+20+(offset*12)+20}, {192,32+4+70+20+(offset*12)+20}, 4, {0,0,0,1});
+            graphics::line->render(graphics::shaders.at(1), {30,32+4+70+20+(offset*12)+20}, {605,32+4+70+20+(offset*12)+20}, 4, {0,0,0,1});
             offset+=3;
 
             graphics::fonts->at(0)->render(38,32+4+70+24+(offset*12),"SETTINGS",false,255,255,255,-1,true,SDL_GetTicks64()/500.0,4,4);
@@ -242,6 +242,26 @@ void classicmenu::render() {
                     visiblesettings++;
                 }
             }
+            offset = 0; //reset the offset, we doing the other side now
+            //OTHER SIDE START!
+
+            graphics::fonts->at(0)->render(192+5,32+8,"MODIFIERS",false,255,255,255,-1,true,SDL_GetTicks64()/500.0,4,4);
+            
+            graphics::rect->render(graphics::shaders.at(1),{192+8-3,32+8+32},{600-3,32+8+32+96},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
+            for(int i = 0; i < 16; i++) {
+                graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{48,48},0,{0,0},{48,48});
+                //THE EQUATION TO SOLVE THE NEW LOCATION:
+                //n = some binary number, i = slot to check
+                //n>>i&1
+                if(newModifiers>>i&1) {
+                    graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{48,48},0,{0,0},{48,48});
+                }
+
+
+            }
+
+            graphics::fonts->at(2)->render(192+12-3, 32+8+32+96-8,"0/6",false);
+
             graphics::rect->render(
                 graphics::shaders.at(1),
                  {0,0}, {640,480},

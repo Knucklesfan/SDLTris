@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SDL2/SDL_stdinc.h"
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define INTERNAL_WIDTH 640
@@ -166,8 +167,8 @@ class audio {
 
         static std::vector<Mix_Music*>* music;
         static std::vector<Mix_Chunk*>* sfx;
-        static int playSound(int index); //returns 1 if sound played, otherwise returns 0
-        static int playMusic(int index); //returns 1 if music played, otherwise returns 0
+        static void playSound(int index); //returns 1 if sound played, otherwise returns 0
+        static void playMusic(int index); //returns 1 if music played, otherwise returns 0
 };
 class graphics {
     public:
@@ -270,12 +271,33 @@ namespace utils {
     double rad(double i);
 
 };
+enum TagQuality {
+    GOOD,BAD
+};
+struct modifierTag {
+    std::string tag;
+    TagQuality quality;
+};
+struct modifierMeta {
+    std::string name;
+    std::string desc;
+    Uint32 price;
+    bool forSale;
+    texture* tex;
+    std::vector<modifierTag> tags;
+};
+struct modifier {
+    modifierMeta metadata;
+};
 class gameplay { //class that contains stuff that globally is used for managing gamemodes
     public:
         static int gamemode;
         static std::vector<Gamemode*> gamemodes;
         static void loadGamemodes();
+        static void loadModifiers();
+        static std::vector<modifier> modifiers;
         static int Pieces[7][4][16];
+
 };
 class networking { //class that contains global network objects, such as server and rpc connections
     public:

@@ -340,5 +340,11 @@ characters that i generated for SDLTetris meant doing dumb things like this. Not
         <char>&gt;</char>
         <charwid>8</charwid>
     </letter> 
+    <letter>
+        <posx>50</posx>
+        <posy>0</posy>
+        <char>/</char>
+        <charwid>8</charwid>
+    </letter>
 
 </letters>

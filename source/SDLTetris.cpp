@@ -284,6 +284,7 @@ int main(int argc, char **argv) {
     settings::loadSettings();
     settings::loadSaveData();
     settings::loadDemos();
+    gameplay::loadModifiers();
     global = new GlobalGamemode();
     gameplay::loadGamemodes();
     sotaRenderer sota = sotaRenderer("./sota/dancegirl.ksta");

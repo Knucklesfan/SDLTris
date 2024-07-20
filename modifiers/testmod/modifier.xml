@@ -1,0 +1,33 @@
+<!--Welcome one and all to the modifier stuff-->
+<!--Modifiers are basically just lua scripts (or hardcoded functions) that run every frame (or other situation) that gets triggered when needed-->
+<!--There's a few triggers, but you can also just add value modifiers and those work too!-->
+<!--This is a basic modifier that modifies values, but more complex ones will be in the game later on so...-->
+<modifier>
+    <meta>
+        <name>Blind hand</name>
+        <price>1000</price> <!--This is the price it would cost in the modifier shop.-->
+        <description>Gives you 3 hold slots, mapped to each face button, but removes ghost piece and next piece visibility.</description>
+        <forsale>true</forsale> <!--Should this item show up in the shop?-->
+        <sprite>modifier.png</sprite> <!--Sale sprite to use-->
+        <tags> <!--Tags are what are shown under the bonuses section in the options-->
+            <good>+3 Hold Slot</good>
+            <bad>Removes Ghost Piece</bad>
+            <bad>Removes Preview Block</bad>
+        </tags>
+    </meta>
+    <effects>
+        <trigger type="value">
+            <key>hold_size</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>3</value>
+        </trigger>
+        <trigger type="value">
+            <key>show_ghost</key>
+            <value>0</value>
+        </trigger>
+        <trigger type="value">
+            <key>show_preview</key>
+            <value>0</value>
+        </trigger>
+    </effects>
+
+</modifier>

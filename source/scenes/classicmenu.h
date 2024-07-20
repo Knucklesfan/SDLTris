@@ -37,7 +37,9 @@ class classicmenu : public Gamemode { //the main menu of the game
     Uint32 startTime = 0;
     Uint32 transitionTime = 0;
     Uint32 currentscreenAge = 0;
+    Uint64 newModifiers = 0b0010;
     int subselection = 0;
+    int newMods = 0;
     int gamemodeSelection = 1;
     int subbuttons = 0;
     int savenum = 6;

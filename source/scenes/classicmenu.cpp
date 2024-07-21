@@ -215,7 +215,7 @@ void classicmenu::render() {
             bluebackground->render();
             
             graphics::rect->render(graphics::shaders.at(1),{30,0},{605,480},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
-            graphics::line->render(graphics::shaders.at(1), {192,0}, {192,480}, 4, {0,0,0,1});
+            graphics::line->render(graphics::shaders.at(1), {192,0}, {192,480-(8*8)-16-32}, 4, {0,0,0,1});
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("newgamebanner"),
             {0,0},{640,480},0,{(SDL_GetTicks64()/10.0),0},{640,480});
             graphics::fonts->at(1)->render(30+8+8,32+4,"NEW GAME",false);
@@ -234,7 +234,7 @@ void classicmenu::render() {
             offset++; //just doing it like this cuz its easier to read honestly
             offset++;
 
-            int visiblesettings = 0;
+            visiblesettings = 0;
             for(int i = 0; i < 7; i++) {
                 if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[i]) {
                     graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),defaultsettings[i],false);
@@ -242,10 +242,9 @@ void classicmenu::render() {
                     visiblesettings++;
                 }
             }
-            offset = 0; //reset the offset, we doing the other side now
             //OTHER SIDE START!
 
-            graphics::fonts->at(0)->render(192+5,32+8,"MODIFIERS",false,255,255,255,-1,true,SDL_GetTicks64()/500.0,4,4);
+            graphics::fonts->at(0)->render(196,32+8,"MODIFIERS",false,255,255,255,-1,true,SDL_GetTicks64()/500.0,4,4);
             
             graphics::rect->render(graphics::shaders.at(1),{192+8-3,32+8+32},{600-3,32+8+32+96},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
             for(int i = 0; i < 16; i++) {
@@ -254,14 +253,44 @@ void classicmenu::render() {
                 //n = some binary number, i = slot to check
                 //n>>i&1
                 if(newModifiers>>i&1) {
-                    graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{48,48},0,{0,0},{48,48});
+                    graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("new"),{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{16,16},0,{0,0},{16,16});
                 }
 
 
             }
 
             graphics::fonts->at(2)->render(192+12-3, 32+8+32+96-8,"0/6",false);
-
+            graphics::line->render(graphics::shaders.at(1), {30,480-(8*8)-16-32}, {605,480-(8*8)-16-32}, 4, {0,0,0,1});
+            graphics::fonts->at(2)->render(38,480-(8*8)-16-24,gameplay::modifiers[0].metadata.desc,false,255,255,255,559,false,0,0,0);
+            //38 to 597 = 559/8 = 69
+            graphics::line->render(graphics::shaders.at(1), {192+206,32+4+70+20+(4*12)+20}, {192+206,480-(8*8)-16-32}, 4, {0,0,0,1});
+            graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28,"SCORE MULT",false);
+            graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+16,"Overall Score Mult: 1x",false);
+            graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+24,"Line Score Mult: 1x",false);
+            graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+32,"Combo Score Mult: 1x",false);
+            graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+40,"Gravity Score Mult: 1x",false);
+            graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+48,"Drop Score Mult: 1x",false);
+            graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64,"MODIFIERS",false);
+            
+            offset = 0; //we on the left side, so we dont need offset's value anymore
+            for(int i = 0; i < gameplay::modifiers.size();i++) {
+                if(activeMods>>i&1) {
+                    for(modifierTag meta : gameplay::modifiers.at(i).metadata.tags) {
+                        switch(meta.quality) {
+                            case GOOD: { //its green. amazing.
+                                graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64+(offset*8),meta.tag,false,0,0,255,-1,false,0,0,0);
+                            }break;
+                            case BAD: { //get this: this one is... RED?! how unpredictable.
+                                graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64+(offset*8),meta.tag,false,255,0,0,-1,false,0,0,0);
+                            }break;
+                            case UGLY: { //this one is white because hotel sheets legally cannot be any color other than white to detect shit stains.
+                                graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64+(offset*8),meta.tag,false,255,255,255,-1,false,0,0,0);
+                            }break;
+                        }
+                        offset++;
+                    }
+                }
+            }
             graphics::rect->render(
                 graphics::shaders.at(1),
                  {0,0}, {640,480},
@@ -269,6 +298,7 @@ void classicmenu::render() {
                  {0,0,0,
                  SDL_GetTicks64()-currentscreenAge<250?1-(SDL_GetTicks64()-currentscreenAge)/250.0:0},
                   false, 0, {0,0,0,1});
+                
 
         }break;
     }

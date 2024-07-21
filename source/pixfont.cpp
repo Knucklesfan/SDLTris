@@ -145,6 +145,9 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             i++;
             continue;
         }
+        if(i == 0 and c == ' ') {
+            continue;
+        }
         #ifdef __LEGACY_RENDER
         if(red == 255 && green == 255 && blue == 255) {
             SDL_SetTextureColorMod(texture, colors[drawcolor].r, colors[drawcolor].g, colors[drawcolor].b);

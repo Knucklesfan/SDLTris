@@ -272,7 +272,7 @@ namespace utils {
 
 };
 enum TagQuality {
-    GOOD,BAD
+    GOOD,BAD,UGLY
 };
 struct modifierTag {
     std::string tag;

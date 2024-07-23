@@ -89,6 +89,10 @@ void classicmenu::logic(double deltatime) {
                     }
                 }
             }
+            if(SDL_GetTicks64()-transitionTime > TRANSITION_LENGTH-350 && transitionTime > 0 && explosionTime <= 0 && currentscreen == 0) {
+                explosionTime = SDL_GetTicks64();
+                audio::playSound(11);
+            }
             if(transitionTime > 0 && SDL_GetTicks64()-transitionTime > TRANSITION_LENGTH) {
                 screenmode++;
                 currentscreenAge = SDL_GetTicks64();
@@ -318,6 +322,20 @@ void classicmenu::render() {
     else {
         graphics::sprite->render(graphics::shaders.at(4),
     &buff->renderTexture, {0,0},{640,480},{0,0,0},{0,0},{640,480});
+    }
+    if(explosionTime > 0) {
+        int frame = (((SDL_GetTicks64()-explosionTime)/100));
+        if(frame >= 15) { //15, instead of 16 because first frame is 0 duh
+            explosionTime = 0;
+        }
+        else {
+            std::cout << frame << "\n";
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("stupidexplosion"),
+            {320-256,240-256},{512,512},0,{
+                (frame%4)*64,
+                (frame/4)*64
+                },{64,64});
+        }
     }
 
 };

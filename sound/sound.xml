@@ -32,4 +32,8 @@
 	<sound>
 			<path>./sound/thanksforplaying.mp3</path>
 	</sound>
+	<sound> <!--11-->
+			<path>./sound/explosion.mp3</path>
+	</sound>
+
 </sounds>

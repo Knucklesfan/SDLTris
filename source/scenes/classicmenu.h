@@ -35,6 +35,7 @@ class classicmenu : public Gamemode { //the main menu of the game
     bool godown = false;
     bool goup = false;
     int screenmode = 0;
+    int explosionTime = 0;
     Uint32 startTime = 0;
     Uint32 transitionTime = 0;
     Uint32 currentscreenAge = 0;

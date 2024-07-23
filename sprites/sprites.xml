@@ -196,5 +196,9 @@
 		<name>new</name>
 		<path>./sprites/new.png</path>
 	</sprite>
+	<sprite>
+		<name>stupidexplosion</name>
+		<path>./sprites/stupidexplosion.png</path>
+	</sprite>
 
 </sprites>

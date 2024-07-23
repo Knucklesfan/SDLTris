@@ -26,6 +26,7 @@ class classicmenu : public Gamemode { //the main menu of the game
     plane* cd;
     bg* redbackground;
     bg* bluebackground;
+    buffermanager* buff;
     wireframecube* cube;
     int buttonx = 0;
     int selection = 0;

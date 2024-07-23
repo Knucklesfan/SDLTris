@@ -6,6 +6,7 @@ classicmenu::classicmenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
     redbackground = new bg("classicmenu",false);
     bluebackground = new bg("newgamemenu",false);
+    buff = new buffermanager(640,480,false);
 
     startTime = SDL_GetTicks();
     cube = new wireframecube(320,240,640,480);
@@ -108,6 +109,8 @@ void classicmenu::logic(double deltatime) {
 }
 
 void classicmenu::render() {
+    buff->enable();
+
     switch(screenmode) {
         case 0: {
             redbackground->render();
@@ -270,7 +273,7 @@ void classicmenu::render() {
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+32,"Combo Score Mult: 1x",false);
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+40,"Gravity Score Mult: 1x",false);
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+48,"Drop Score Mult: 1x",false);
-            graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64,"MODIFIERS",false);
+            graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+56,"MODIFIERS",false);
             
             offset = 0; //we on the left side, so we dont need offset's value anymore
             for(int i = 0; i < gameplay::modifiers.size();i++) {
@@ -303,11 +306,27 @@ void classicmenu::render() {
         }break;
     }
 
+    buff->disable(640,480,true);
+
+    if(SDL_GetTicks64()-startTime < 1000 && screenmode == 0) {
+        float percent = (SDL_GetTicks64()-startTime)/1000.0;
+        graphics::sprite->render(graphics::shaders.at(4),
+    &buff->renderTexture, {320-320*percent,240-240*percent},
+    {640*percent,480*percent},
+    {0,0,1440*percent},{0,0},{640,480});
+    }
+    else {
+        graphics::sprite->render(graphics::shaders.at(4),
+    &buff->renderTexture, {0,0},{640,480},{0,0,0},{0,0},{640,480});
+    }
 
 };
 void classicmenu::reset() {
+    Mix_PlayMusic(audio::music->at(3),-1);
+
     networking::globalRPC->update("Getting ready to start a classic game...", "Top high score: " + std::to_string(settings::maxscore), "icon1", std::time(nullptr));
     startTime = SDL_GetTicks64();
+    screenmode = 0;
     t = Transition();
     settings::clearSaveData();
     settings::loadSaveData();

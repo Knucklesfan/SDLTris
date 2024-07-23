@@ -84,8 +84,7 @@ void gameplaymenu::input(SDL_Keycode keysym) {
                             case 1: {
                                 t.gamemode = 3;
                                 t.transition = true;
-                                Mix_HaltMusic();
-                                Mix_PlayMusic(audio::music->at(3),-1);
+                                Mix_FadeOutMusic(1000);
                             }break;
                             case 2: {
 

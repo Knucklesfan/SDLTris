@@ -14,7 +14,7 @@ classicmenu::classicmenu() {
 
 }
 void classicmenu::input(SDL_Keycode keysym) {
-    switch(currentscreen) {
+    switch(screenmode) {
         case 0: {
             switch(keysym) {
                 case SDLK_x: {
@@ -61,6 +61,29 @@ void classicmenu::input(SDL_Keycode keysym) {
 
             }
         }break;
+        case 1: { //handle the complex cursor movement here
+            switch(keysym) {
+                case SDLK_x: {
+                    //return to the last screen
+                }break;
+                case SDLK_z: {
+                    //THIS is gonna be fun
+                }break;
+                case SDLK_DOWN: {
+                    if(selection < NUMGAMEMODES+visiblesettings+3) {
+                        transition -= 1.0f;
+                        selection++;
+                    }
+                }break;
+                case SDLK_UP: {
+                    if(selection > 0) {
+                        transition += 1.0f;
+                        selection--;
+                    }
+                }break;
+
+            }
+        }
     }
 }
 Transition classicmenu::endLogic() {
@@ -71,22 +94,13 @@ void classicmenu::logic(double deltatime) {
         case 0: {
             redbackground->logic(deltatime);
             cube->logic(deltatime);
-            if(transition > 0) {
-                if(transition-deltatime*0.01 < 0) {
+            if (transition != 0) {
+                double lerpval = utils::lerp(transition,0,deltatime*0.005);
+                if(std::abs(lerpval) < 0.01) {
                     transition = 0;
                 }
                 else {
-                    transition-=deltatime*0.01;
-                }
-            }
-            else {
-                if (transition < 0) {
-                    if(transition+(deltatime*0.01) > 0) {
-                        transition = 0;
-                    }
-                    else {
-                        transition +=deltatime*0.01;
-                    }
+                    transition = lerpval;
                 }
             }
             if(SDL_GetTicks64()-transitionTime > TRANSITION_LENGTH-350 && transitionTime > 0 && explosionTime <= 0 && currentscreen == 0) {
@@ -105,6 +119,16 @@ void classicmenu::logic(double deltatime) {
             }
         }break;
         case 1: {
+            if (transition != 0) {
+                double lerpval = utils::lerp(transition,0,deltatime*0.05);
+                if(std::abs(lerpval) < 0.01) {
+                    transition = 0;
+                }
+                else {
+                    transition = lerpval;
+                }
+            }
+
             bluebackground->logic(deltatime);
         }break;
 
@@ -255,7 +279,9 @@ void classicmenu::render() {
             
             graphics::rect->render(graphics::shaders.at(1),{192+8-3,32+8+32},{600-3,32+8+32+96},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
             for(int i = 0; i < 16; i++) {
-                graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{48,48},0,{0,0},{48,48});
+                graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{48,48},0,
+                {48*(activeMods>>i&1),0},
+                {48,48});
                 //THE EQUATION TO SOLVE THE NEW LOCATION:
                 //n = some binary number, i = slot to check
                 //n>>i&1
@@ -266,7 +292,7 @@ void classicmenu::render() {
 
             }
 
-            graphics::fonts->at(2)->render(192+12-3, 32+8+32+96-8,"0/6",false);
+            graphics::fonts->at(2)->render(192+12-3, 32+8+32+96-8,std::to_string(math::numActive(activeMods))+"/6",false);
             graphics::line->render(graphics::shaders.at(1), {30,480-(8*8)-16-32}, {605,480-(8*8)-16-32}, 4, {0,0,0,1});
             graphics::fonts->at(2)->render(38,480-(8*8)-16-24,gameplay::modifiers[0].metadata.desc,false,255,255,255,559,false,0,0,0);
             //38 to 597 = 559/8 = 69
@@ -285,19 +311,22 @@ void classicmenu::render() {
                     for(modifierTag meta : gameplay::modifiers.at(i).metadata.tags) {
                         switch(meta.quality) {
                             case GOOD: { //its green. amazing.
-                                graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64+(offset*8),meta.tag,false,0,0,255,-1,false,0,0,0);
+                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,0,0,255,-1,false,0,0,0);
                             }break;
                             case BAD: { //get this: this one is... RED?! how unpredictable.
-                                graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64+(offset*8),meta.tag,false,255,0,0,-1,false,0,0,0);
+                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,0,0,-1,false,0,0,0);
                             }break;
                             case UGLY: { //this one is white because hotel sheets legally cannot be any color other than white to detect shit stains.
-                                graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+64+(offset*8),meta.tag,false,255,255,255,-1,false,0,0,0);
+                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,255,255,-1,false,0,0,0);
                             }break;
                         }
                         offset++;
                     }
                 }
             }
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("cursor"),
+            {38,32+4+70+24+selection*12+12*(transition)},
+            {8,8},0,{((SDL_GetTicks64()/100)%4)*8,0},{8,8});
             graphics::rect->render(
                 graphics::shaders.at(1),
                  {0,0}, {640,480},

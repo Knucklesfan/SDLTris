@@ -6,8 +6,8 @@
 #include "../gamemode.h"
 #include "../opengl/plane.h"
 #include "../wireframecube.h"
-#define NUMBUTTONS 5
-#define ROWWIDTH 2
+#define NUMGAMEMODES 4
+#define NUMSETTINGS 7
 #define NEWGAMELENGTH 250.0
 #define FALLTIME_OTHERS 100.0
 #define FALLTIME_OTHERS_INTERVAL 50.0
@@ -59,28 +59,28 @@ class classicmenu : public Gamemode { //the main menu of the game
     Transition endLogic();
     void reset();
     private:
-        const std::string gamemodes[4] = {
-            "CLASSIC",
-            "TRAINING",
-            "MULTIPLAYER",
-            "CHALLENGE"
+        const std::string gamemodes[NUMGAMEMODES] = {
+            " CLASSIC",
+            " TRAINING",
+            " MULTIPLAYER",
+            " CHALLENGE"
         };
-        const int gamemodesVisibility[4] = {
+        const int gamemodesVisibility[NUMGAMEMODES] = {
             CLASSIC,
             TRAINING,
             MULTIPLAYER,
             CHALLENGE
         };
-        const std::string defaultsettings[7] = {
-            "DIFFICULTY",
-            "START AT LEVEL",
-            "PLAY ANIMATIONS",
-            "NO SPEEDUP",
-            "NO GRAVITY",
-            "BLOCK SEED",
-            "STAGE"
+        const std::string defaultsettings[NUMSETTINGS] = {
+            " DIFFICULTY",
+            " START AT LEVEL",
+            " PLAY ANIMATIONS",
+            " NO SPEEDUP",
+            " NO GRAVITY",
+            " BLOCK SEED",
+            " STAGE"
         };
-        const int defaultsettingVisiblity[7] = {
+        const int defaultsettingVisiblity[NUMSETTINGS] = {
             ALL,
             CLASSIC|TRAINING|MULTIPLAYER,
             ALL,

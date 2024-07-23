@@ -200,5 +200,8 @@
 		<name>stupidexplosion</name>
 		<path>./sprites/stupidexplosion.png</path>
 	</sprite>
-
+	<sprite>
+		<name>cursor</name>
+		<path>./sprites/cursor.png</path>
+	</sprite>
 </sprites>

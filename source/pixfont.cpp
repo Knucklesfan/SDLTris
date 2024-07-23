@@ -139,13 +139,14 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
     double tmpy = y;
     for(std::string word : wordVector) {
     int i = 0;
+    int lines = 0;
     int tmpx = center?(x-(word.length() * wordsize)/2):x;
     for(char& c : word) {
         if (i >= 1 && word.at(i-1) == '@') {
             i++;
             continue;
         }
-        if(i == 0 and c == ' ') {
+        if(i == 0 && lines > 0 && c == ' ') {
             continue;
         }
         #ifdef __LEGACY_RENDER
@@ -198,7 +199,8 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
         else {
             //std::cout << "LOADED BAD CHAR!!\n";
             if (a == '\n') {
-                tmpy += height;       
+                tmpy += height;     
+                lines++;  
             }
             else if (a == '@') {
                 if (i + 1 < word.length()) {

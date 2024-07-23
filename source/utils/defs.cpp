@@ -1197,7 +1197,9 @@ void gameplay::loadGamemodes() {
 
     }
 }
+
 void gameplay::loadModifiers() {
+    std::cout << "loading modifiers\n"; 
     rapidxml::file<> bgFile((filepath"modifiers/modifiers.xml"));
     rapidxml::xml_document<> bgDoc;
     bgDoc.parse<0>(bgFile.data());
@@ -1215,10 +1217,25 @@ void gameplay::loadModifiers() {
         bool modSale = std::string(modParent->first_node("meta")->first_node("forsale")->value()) == "true";
         std::vector<modifierTag> modTags;
         modifierTag tag;
+        for (rapidxml::xml_node<char>* tagChild = modParent->first_node("meta")->first_node("tags")->first_node(); tagChild != NULL; tagChild = tagChild->next_sibling()) {
+            std::string name = tagChild->name();
+            if(name == "good") {
+                std::cout << "good\n";
+                modTags.push_back({tagChild->value(),TagQuality::GOOD});
+            }
+            else if(name == "bad") {
+                std::cout << "bad\n";
+                modTags.push_back({tagChild->value(),TagQuality::BAD});
+            }
+            else {
+                std::cout << "ugly\n";
+                modTags.push_back({tagChild->value(),TagQuality::UGLY});
+            }
 
+        }
         modifierMeta meta = {modName,modDesc,modPrice,modSale,modTex,modTags};
         //TODO: add actual parsing of effects and make mods do stuff
-    
+
         //add to modifier array
         modifiers.push_back({meta});
     }
@@ -1238,4 +1255,13 @@ double math::easeOutBounce(double x) {
         return n1 * (x -= 2.625 / d1) * x + 0.984375;
     }
 
+}
+int math::numActive(Uint64 a) { //counts the number of zeroes in a 64bit int
+    int count = 0;
+    for(Uint64 i = 0; i < 64; i++) {
+        if(a>>i&1) {
+            count++;
+        }
+    }
+    return count;
 }

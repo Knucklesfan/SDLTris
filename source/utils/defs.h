@@ -312,5 +312,6 @@ namespace memory {
 }
 class math {
     public:
-    static double easeOutBounce(double x);
+        static int numActive(Uint64 x);
+        static double easeOutBounce(double x);
 };

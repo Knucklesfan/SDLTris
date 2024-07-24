@@ -200,7 +200,6 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
             //std::cout << "LOADED BAD CHAR!!\n";
             if (a == '\n') {
                 tmpy += height;     
-                lines++;  
             }
             else if (a == '@') {
                 if (i + 1 < word.length()) {
@@ -218,6 +217,8 @@ void pixfont::render(std::string words, int x, int y, bool center, int red, int 
     
 
     tmpy += wordsize;
+    lines++;  
+
     #ifdef __LEGACY_RENDER
     SDL_SetTextureColorMod(txt, 255,255,255);
     #endif

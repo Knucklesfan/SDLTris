@@ -10,7 +10,6 @@ classicmenu::classicmenu() {
 
     startTime = SDL_GetTicks();
     cube = new wireframecube(320,240,640,480);
-    std::fill_n(savedatatest, 480, 0);
 
 }
 void classicmenu::input(SDL_Keycode keysym) {
@@ -26,7 +25,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                     t.gamemode = gameplay::gamemode-1;
                     t.transition = 1;
                     t.fade = BARS;
-                    Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+                    Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
 
                 }break;
                 case SDLK_z: {
@@ -36,7 +35,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                         t.transition = 1;
                         t.fade = BARS;
                         std::cout << "Loading Save: "<<settings::saveload << "\n";
-                        Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+                        Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
                     }
                     else { //otherwise lets do some other wacky stuff
                         //trigger animation to bring up the actual gamemaking menu here
@@ -50,37 +49,110 @@ void classicmenu::input(SDL_Keycode keysym) {
                     if(selection < settings::saveCache.size()) {
                         transition += 1.0f;
                         selection++;
+                        Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
                     }
                 }break;
                 case SDLK_UP: {
                     if(selection > 0) {
                         transition -= 1.0f;
                         selection--;
+                        Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
                     }
                 }break;
 
             }
         }break;
         case 1: { //handle the complex cursor movement here
-            switch(keysym) {
-                case SDLK_x: {
-                    //return to the last screen
-                }break;
-                case SDLK_z: {
-                    //THIS is gonna be fun
-                }break;
-                case SDLK_DOWN: {
-                    if(selection < NUMGAMEMODES+visiblesettings+3) {
-                        transition -= 1.0f;
-                        selection++;
+            switch(subscreen) {
+                case 0: {
+                    switch(keysym) {
+                        case SDLK_x: {
+                            //return to the last screen
+                        }break;
+                        case SDLK_z: {
+                            if(rightSide) {
+                                switch(selection) {
+                                    case 0: {
+                                        modifierTab = true;
+                                    }break;
+                                    // case 1: {
+
+                                    // }break;
+                                }
+                            }
+                            else {
+                                if(selection < NUMGAMEMODES) {
+                                    gamemodeSelection = selection;
+                                }
+                                else {
+
+                                    std::cout << "scanning\n";
+                                    int currentOption = 0;
+                                    int index = 0;
+                                    for(int i = 0; i < NUMSETTINGS; i++) {
+                                        std::cout << selection-4 << " "<< currentOption << " " << gamemodesVisibility[gamemodeSelection] << " " << defaultsettingVisiblity[i] << "\n";
+                                        if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[i]) {
+                                            if(currentOption == selection-4) {
+                                                std::cout << "option found!\n" << currentOption << "\n";
+                                                break;
+                                            }
+                                            currentOption++;
+                                        }
+                                    }
+                                    switch(currentOption) {
+                                        case 0: { //open difficulty screen
+                                            subscreen = 1;
+                                        }break;
+                                    }
+                                    subscreenAge = SDL_GetTicks64();
+                                }
+                            }
+                            //THIS is gonna be fun
+                        }break;
+                        case SDLK_DOWN: {
+                            if(
+                                (selection < NUMGAMEMODES+visiblesettings-1 && !rightSide) ||
+                                (selection < RIGHTBUTTONS-1 && rightSide)
+                            ) {
+                                transition -= 1.0f;
+                                selection++;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+
+                            }
+                        }break;
+                        case SDLK_UP: {
+                            if(selection > 0) {
+                                transition += 1.0f;
+                                selection--;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+
+                            }
+                        }break;
+                        case SDLK_RIGHT: {
+                            if(!rightSide) {
+                                rightSide = true;
+                                selection = 0;
+                            }
+                        }break;
+                        case SDLK_LEFT: {
+                            if(rightSide) {
+                                rightSide = false;
+                                selection = 0;
+                            }
+                        }break;
+
                     }
                 }break;
-                case SDLK_UP: {
-                    if(selection > 0) {
-                        transition += 1.0f;
-                        selection--;
+                case 1: { //difficulty picker
+                    switch(keysym) {
+                        case SDLK_x: {
+                            subscreen = 0;
+                            //return to the last screen
+                        }break;
+                        case SDLK_z: {
+                        }
                     }
-                }break;
+                }
 
             }
         }
@@ -103,7 +175,7 @@ void classicmenu::logic(double deltatime) {
                     transition = lerpval;
                 }
             }
-            if(SDL_GetTicks64()-transitionTime > TRANSITION_LENGTH-350 && transitionTime > 0 && explosionTime <= 0 && currentscreen == 0) {
+            if(SDL_GetTicks64()-transitionTime > TRANSITION_LENGTH-350 && transitionTime > 0 && explosionTime <= 0) {
                 explosionTime = SDL_GetTicks64();
                 audio::playSound(11);
             }
@@ -255,7 +327,7 @@ void classicmenu::render() {
             graphics::fonts->at(0)->render(38,32+4+70,"GAMEMODE",false,255,255,255,-1,true,SDL_GetTicks64()/500.0,4,4);
             int offset = 0;
             for(int i = 0; i < 4; i++) {
-                graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),gamemodes[i],false);
+                graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),gamemodes[i],false,255,255,gamemodeSelection == i?0:255,-1,false,0,0,0);
                 offset++;
             }
             graphics::line->render(graphics::shaders.at(1), {30,32+4+70+20+(offset*12)+20}, {605,32+4+70+20+(offset*12)+20}, 4, {0,0,0,1});
@@ -266,7 +338,7 @@ void classicmenu::render() {
             offset++;
 
             visiblesettings = 0;
-            for(int i = 0; i < 7; i++) {
+            for(int i = 0; i < NUMSETTINGS; i++) {
                 if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[i]) {
                     graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),defaultsettings[i],false);
                     offset++;
@@ -277,7 +349,13 @@ void classicmenu::render() {
 
             graphics::fonts->at(0)->render(196,32+8,"MODIFIERS",false,255,255,255,-1,true,SDL_GetTicks64()/500.0,4,4);
             
-            graphics::rect->render(graphics::shaders.at(1),{192+8-3,32+8+32},{600-3,32+8+32+96},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
+            graphics::rect->render(graphics::shaders.at(1),{192+8-3,32+8+32},{600-3,32+8+32+96},0,{0,0.1,0.50,0.70},true,2,{
+                (selection==0&&rightSide)?255:0,
+                (selection==0&&rightSide)?255:0,
+                0,
+                1
+                
+                });
             for(int i = 0; i < 16; i++) {
                 graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{48,48},0,
                 {48*(activeMods>>i&1),0},
@@ -304,7 +382,9 @@ void classicmenu::render() {
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+40,"Gravity Score Mult: 1x",false);
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+48,"Drop Score Mult: 1x",false);
             graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+56,"MODIFIERS",false);
-            
+
+            graphics::fonts->at(0)->render(192+206+101,32+4+70+20+(4*12)+28,"TEXTURE PACKS",true);
+
             offset = 0; //we on the left side, so we dont need offset's value anymore
             for(int i = 0; i < gameplay::modifiers.size();i++) {
                 if(activeMods>>i&1) {
@@ -324,9 +404,11 @@ void classicmenu::render() {
                     }
                 }
             }
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("cursor"),
-            {38,32+4+70+24+selection*12+12*(transition)},
-            {8,8},0,{((SDL_GetTicks64()/100)%4)*8,0},{8,8});
+            if(!rightSide) {
+                graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("cursor"),
+                {38,32+4+70+24+selection*12+12*(transition)+(selection>=NUMGAMEMODES?60:0)},
+                {8,8},0,{((SDL_GetTicks64()/100)%4)*8,0},{8,8});
+            }
             graphics::rect->render(
                 graphics::shaders.at(1),
                  {0,0}, {640,480},
@@ -337,6 +419,25 @@ void classicmenu::render() {
                 
 
         }break;
+    }
+
+    switch(subscreen) {
+        case 1: {
+            double transitionIn = (SDL_GetTicks64()-subscreenAge)/250.0;
+            if(transitionIn < 1) {
+                graphics::rect->render(graphics::shaders.at(1), {0,0}, {640,480}, 0, {0,0,0,transitionIn*0.8}, false, 0, {0,0,0,1});
+            }
+            else {
+                transitionIn = 1;
+                graphics::rect->render(graphics::shaders.at(1), {0,0}, {640,480}, 0, {0,0,0,0.8}, false, 0, {0,0,0,1});
+            }
+            int offset = 640*(1-transitionIn);
+
+            graphics::rect->render(graphics::shaders.at(1),{64+offset,48},{576+offset,288},0,{0,0,0,0.8},true,2,{1,1,1,1});
+            graphics::fonts->at(0)->render(64+256+offset,64,"CHOOSE A DIFFICULTY",true);
+
+
+        }
     }
 
     buff->disable(640,480,true);

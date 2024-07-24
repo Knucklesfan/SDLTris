@@ -15,7 +15,6 @@
 #else
     #define filepath  "./"
 #endif
-#define NUMGAMEMODES 8
 #define JOY_A     0
 #define JOY_B     1
 #define JOY_X     2

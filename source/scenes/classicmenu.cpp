@@ -103,8 +103,13 @@ void classicmenu::input(SDL_Keycode keysym) {
                                         case 0: { //open difficulty screen
                                             subscreen = 1;
                                         }break;
+                                        default: {
+                                            activeToggles=activeToggles^(1<<currentOption);
+                                        }break;
                                     }
                                     subscreenAge = SDL_GetTicks64();
+                                    Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
+
                                 }
                             }
                             //THIS is gonna be fun
@@ -130,12 +135,14 @@ void classicmenu::input(SDL_Keycode keysym) {
                         }break;
                         case SDLK_RIGHT: {
                             if(!rightSide) {
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
                                 rightSide = true;
                                 selection = 0;
                             }
                         }break;
                         case SDLK_LEFT: {
                             if(rightSide) {
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
                                 rightSide = false;
                                 selection = 0;
                             }
@@ -145,14 +152,31 @@ void classicmenu::input(SDL_Keycode keysym) {
                 }break;
                 case 1: { //difficulty picker
                     switch(keysym) {
+                        case SDLK_z:
                         case SDLK_x: {
                             subscreen = 0;
+                            Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
                             //return to the last screen
                         }break;
-                        case SDLK_z: {
-                        }
+                        case SDLK_UP: {
+                            if(difficultySelection > 0) {
+                                subTransition += 1.0f;
+                                difficultySelection--;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+                            }
+                        }break;
+                        case SDLK_DOWN: {
+                            if(
+                                (difficultySelection < NUMDIFFICULTIES-1)
+                            ) {
+                                subTransition -= 1.0f;
+                                difficultySelection++;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+
+                            }
+                        }break;
                     }
-                }
+                }break;
 
             }
         }
@@ -198,6 +222,15 @@ void classicmenu::logic(double deltatime) {
                 }
                 else {
                     transition = lerpval;
+                }
+            }
+            if (subTransition != 0) {
+                double lerpval = utils::lerp(subTransition,0,deltatime*0.05);
+                if(std::abs(lerpval) < 0.01) {
+                    subTransition = 0;
+                }
+                else {
+                    subTransition = lerpval;
                 }
             }
 
@@ -340,6 +373,23 @@ void classicmenu::render() {
             visiblesettings = 0;
             for(int i = 0; i < NUMSETTINGS; i++) {
                 if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[i]) {
+                    int sideIcon = 0;
+                    switch(i) {
+                        case 0: { //difficulty
+                            sideIcon=2+difficultySelection+1;
+                        }break;
+                        default: {
+                            if(activeToggles>>i&1) {
+                                sideIcon = 1;
+                            }
+                            else {
+                                sideIcon = 2;
+                            }
+                        }break;
+                    }
+                    if(sideIcon > 0) {
+                        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("optionsicons"),{30+8+(defaultsettings[i].length()*8)+4,32+4+70+24+(offset*12)},{8,8},0,{(sideIcon-1)*8,0},{8,8});
+                    }
                     graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),defaultsettings[i],false);
                     offset++;
                     visiblesettings++;
@@ -433,8 +483,15 @@ void classicmenu::render() {
             }
             int offset = 640*(1-transitionIn);
 
-            graphics::rect->render(graphics::shaders.at(1),{64+offset,48},{576+offset,288},0,{0,0,0,0.8},true,2,{1,1,1,1});
+            graphics::rect->render(graphics::shaders.at(1),{64+offset,48},{576+offset,256},0,{0,0,0,0.8},true,2,{1,1,1,1});
             graphics::fonts->at(0)->render(64+256+offset,64,"CHOOSE A DIFFICULTY",true);
+            for(int i = 0; i < 4; i++) {
+                graphics::fonts->at(0)->render(64+32+offset,64+32*(i+1),difficulties[i],false,255,difficultySelection==i?0:255,255,-1,false,0,0,0);
+            }
+            graphics::fonts->at(2)->render(64+offset+192,192,difficultyDesc[difficultySelection],false,255,255,255,256,false,0,0,0);
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("cursor"),
+            {64+16+offset,64+32*(difficultySelection+1)+(subTransition)},
+            {16,16},0,{((SDL_GetTicks64()/100)%4)*8,0},{8,8});
 
 
         }

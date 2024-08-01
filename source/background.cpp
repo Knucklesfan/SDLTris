@@ -837,10 +837,11 @@ void bg::render() {
 }
 void bg::logic(double deltatime)
 {
-    for(int i = 0; i < layers.size(); i++) {
-        layers[i]->logic(deltatime);
+    if(settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG]) {
+        for(int i = 0; i < layers.size(); i++) {
+            layers[i]->logic(deltatime);
+        }
     }
-    
 }
 void bg::renderLyrics() {
     int currentTick = SDL_GetTicks() - backgroundAge;

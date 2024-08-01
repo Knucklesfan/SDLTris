@@ -961,11 +961,12 @@ int utils::mouseCheck(int keycode) {
     return (buttons & keycode) != 0;
 }
 void settings::loadSettings() {
-	std::ifstream f("./save.xml"); //load in the save file first, get our high scores and whatnot
+    std::string file = configDir+"/save.xml";
+    std::ifstream f(file); //load in the save file first, get our high scores and whatnot
 
 	if (f.good()) { //if save file does exist
         
-		rapidxml::file<> xmlFile("./save.xml"); //load it
+		rapidxml::file<> xmlFile(file.c_str()); //load it
 		rapidxml::xml_document<> doc;
 		doc.parse<0>(xmlFile.data());
 		maxscore = atoi(doc.first_node("scoring")->first_node("highscore")->value());
@@ -973,7 +974,7 @@ void settings::loadSettings() {
 
 	}
 	else { //otherwise, we gotta make it ourselves
-		std::ofstream outfile("./save.xml"); //making this bad boy
+		std::ofstream outfile(file); //making this bad boy
 		outfile << "<scoring><lastscore>0</lastscore>\n" 
 			<< "<highscore>0</highscore></scoring>"; //HARDCODED BECAUSE IM A SIMP
 		outfile.close();
@@ -983,10 +984,10 @@ void settings::loadSettings() {
 	}
 
 	f.close(); //always close your shit
-
-    std::ifstream s("./settings.xml"); //load in the save file first, get our high scores and whatnot
+    file = configDir+"/settings.xml";
+    std::ifstream s(file); //load in the save file first, get our high scores and whatnot
     if (s.good()) { //if file exists, time to load
-        rapidxml::file<> xmlFile("./settings.xml"); //load it
+        rapidxml::file<> xmlFile(file.c_str()); //load it
         rapidxml::xml_document<> doc;
 		doc.parse<0>(xmlFile.data());
         for (rapidxml::xml_node<char>* child = doc.first_node("settings")->first_node(); child != NULL; child = child->next_sibling()) {

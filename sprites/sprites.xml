@@ -204,4 +204,9 @@
 		<name>cursor</name>
 		<path>./sprites/cursor.png</path>
 	</sprite>
+	<sprite>
+		<name>optionsicons</name>
+		<path>./sprites/optionsicons.png</path>
+	</sprite>
+
 </sprites>

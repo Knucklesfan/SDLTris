@@ -485,6 +485,7 @@ void classicmenu::render() {
 
             graphics::rect->render(graphics::shaders.at(1),{64+offset,48},{576+offset,256},0,{0,0,0,0.8},true,2,{1,1,1,1});
             graphics::fonts->at(0)->render(64+256+offset,64,"CHOOSE A DIFFICULTY",true);
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("difficultytextures"),{248+offset,80},{224,105},0,{0+difficultySelection*224,0},{224,105});
             for(int i = 0; i < 4; i++) {
                 graphics::fonts->at(0)->render(64+32+offset,64+32*(i+1),difficulties[i],false,255,difficultySelection==i?0:255,255,-1,false,0,0,0);
             }

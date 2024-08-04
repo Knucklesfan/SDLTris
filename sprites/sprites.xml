@@ -208,5 +208,9 @@
 		<name>optionsicons</name>
 		<path>./sprites/optionsicons.png</path>
 	</sprite>
+	<sprite>
+		<name>difficultytextures</name>
+		<path>./sprites/difficultytextures.png</path>
+	</sprite>
 
 </sprites>

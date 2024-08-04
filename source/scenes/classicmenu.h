@@ -72,7 +72,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         };
         const std::string difficulties[NUMDIFFICULTIES] = {
             "EASY",
-            "NORMAL",
+            "MEDIUM",
             "HARD",
             "INSANE"
         };

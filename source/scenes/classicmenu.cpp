@@ -89,9 +89,9 @@ void classicmenu::input(SDL_Keycode keysym) {
                                     std::cout << "scanning\n";
                                     int currentOption = 0;
                                     int index = 0;
-                                    for(int i = 0; i < NUMSETTINGS; i++) {
-                                        std::cout << selection-4 << " "<< currentOption << " " << gamemodesVisibility[gamemodeSelection] << " " << defaultsettingVisiblity[i] << "\n";
-                                        if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[i]) {
+                                    for(index = 0; index < NUMSETTINGS; index++) {
+                                        std::cout << selection-4 << " "<< currentOption << " " << gamemodesVisibility[gamemodeSelection] << " " << defaultsettingVisiblity[index] << " " << index << "\n";
+                                        if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[index]) {
                                             if(currentOption == selection-4) {
                                                 std::cout << "option found!\n" << currentOption << "\n";
                                                 break;
@@ -99,12 +99,13 @@ void classicmenu::input(SDL_Keycode keysym) {
                                             currentOption++;
                                         }
                                     }
-                                    switch(currentOption) {
+                                    std::cout << index << "\n";
+                                    switch(index) {
                                         case 0: { //open difficulty screen
                                             subscreen = 1;
                                         }break;
                                         default: {
-                                            activeToggles=activeToggles^(1<<currentOption);
+                                            activeToggles=activeToggles^(1<<index);
                                         }break;
                                     }
                                     subscreenAge = SDL_GetTicks64();

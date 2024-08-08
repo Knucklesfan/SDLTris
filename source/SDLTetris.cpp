@@ -303,8 +303,8 @@ int main(int argc, char **argv) {
 
     SDL_Event event;
     bool quit = false;
-    float NOW = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
-    float LAST = ((1000.0f * (float)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+    float NOW = SDL_GetTicks64();
+    float LAST = SDL_GetTicks64();
     double totalMS = 0;
     int lastTime = SDL_GetTicks64();
 
@@ -376,7 +376,7 @@ int main(int argc, char **argv) {
                 totalMS -= 1000.0/60.0;
                 graphics::deltaTime = 1000.0/60.0;
                 doGameLogic();
-                NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+                NOW = SDL_GetTicks64();
                 double frameTime = (NOW - LAST) /1000.0;
                 tFPS = (1.0 / frameTime);
                 LAST = NOW;
@@ -387,7 +387,7 @@ int main(int argc, char **argv) {
             lastTime = SDL_GetTicks64();
         }
         else { //otherwise, if it aint broke dont fix it
-            NOW = ((1000.0f * (double)SDL_GetPerformanceCounter()) / SDL_GetPerformanceFrequency());
+            NOW = SDL_GetTicks64();
             graphics::deltaTime = (NOW - LAST); //frameTime is the time this frame has taken, in seconds
             double frameTime = graphics::deltaTime /1000.0;
             tFPS = (1.0 / frameTime);

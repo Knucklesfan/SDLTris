@@ -104,6 +104,10 @@ void classicmenu::input(SDL_Keycode keysym) {
                                         case 0: { //open difficulty screen
                                             subscreen = 1;
                                         }break;
+                                        case 2: {
+                                            settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] = activeToggles^(1<<index);
+                                            activeToggles=activeToggles^(1<<index);
+                                        }break;
                                         default: {
                                             activeToggles=activeToggles^(1<<index);
                                         }break;

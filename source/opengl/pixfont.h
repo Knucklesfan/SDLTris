@@ -12,7 +12,7 @@
 #include <map>
 #include <unordered_map>
 #include <utility>      // std::pair, std::make_pair
-#include "utils/defs.h"
+#include "../utils/defs.h"
 #include "font.h"
 #define MAXSTRING 256 //this is the max size that a string can be, increase if needed more!
 //so, why am I doing this?

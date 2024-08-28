@@ -2,12 +2,12 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <vector>
-#include "../gamemode.h"
+#include "../engine/gamemode.h"
 #include <array>
-#include "../sine.h"
+#include "../opengl/sine.h"
 #include <math.h>
-#include "../background.h"
-#include "../wireframecube.h"
+#include "../opengl/background.h"
+#include "../opengl/wireframecube.h"
 #include "../opengl/skybox.h"
 #include "../opengl/plane.h"
 

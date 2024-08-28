@@ -3,13 +3,13 @@
 #include <SDL2/SDL_mixer_ext.h>
 #include <string>
 #include <cstring>
-#include "../tetriminos.h"
-#include "../ghostblock.h"
-#include "../gamemode.h"
+#include "../gameplay/tetriminos.h"
+#include "../gameplay/ghostblock.h"
+#include "../engine/gamemode.h"
 #include "../opengl/cube.h"
 #include "../opengl/model.h"
-#include "../ingamemessagebox.h"
-#include "../font.h"
+#include "../gameplay/ingamemessagebox.h"
+#include "../opengl/font.h"
 #define SAVE_VERSION 2
 #define FILENAME_LENGTH 8
 //specifies the specific version of the saving algorithm this uses. Good for futureproofing in case that certain versions do get implemented.

@@ -212,5 +212,8 @@
 		<name>difficultytextures</name>
 		<path>./sprites/difficultytextures.png</path>
 	</sprite>
-
+	<sprite>
+		<name>modifierselected</name>
+		<path>./sprites/modifierselected.png</path>
+	</sprite>
 </sprites>

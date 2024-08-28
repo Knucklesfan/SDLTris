@@ -1,5 +1,5 @@
 #pragma once
-#include "../gamemode.h"
+#include "../engine/gamemode.h"
 #include "../utils/defs.h"
 #define MENUSIZE 7
 class debugscene : public Gamemode { //literally just renders a white screen to test transitions

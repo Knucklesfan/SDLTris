@@ -1,6 +1,6 @@
 #include "ghostblock.h"
 #include <stdio.h>
-#include "utils/defs.h"
+#include "../utils/defs.h"
 ghostblock::ghostblock() {
     x = 0;
     y = 0;

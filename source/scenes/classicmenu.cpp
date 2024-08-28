@@ -1,4 +1,5 @@
 #include "classicmenu.h"
+#include "SDL2/SDL_keycode.h"
 #include "SDL2/SDL_mixer_ext.h"
 #include "SDL2/SDL_timer.h"
 #include "../utils/defs.h"
@@ -73,12 +74,10 @@ void classicmenu::input(SDL_Keycode keysym) {
                             if(rightSide) {
                                 switch(selection) {
                                     case 0: {
-                                        modifierTab = true;
+                                        subscreen = 2;
                                     }break;
-                                    // case 1: {
-
-                                    // }break;
                                 }
+                                
                             }
                             else {
                                 if(selection < NUMGAMEMODES) {
@@ -179,6 +178,33 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
 
                             }
+                        }break;
+                    }
+                }break;
+                case 2: { //modifier picker
+                    switch(keysym) {
+                        case SDLK_z: {
+                            activeMods=activeMods^(1<<subselection);
+                        }break;
+                        case SDLK_x: {
+                            subscreen = 0;
+                            Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
+                        }break;
+                        case SDLK_UP: {
+                            if(subselection > 7) {
+                                subselection -= 8; //move up 8, if our selection number if greater than 8
+                            }
+                        }break;
+                        case SDLK_DOWN: {
+                            if(subselection+8 < gameplay::modifiers.size()) {
+                                subselection += 8; //move down if our selection number can have 8 added and not exceed expectations
+                            }
+                        }break;
+                        case SDLK_LEFT: {
+                            if(subselection > 0) subselection--;
+                        }break;
+                        case SDLK_RIGHT: { //booooooring normal movement code
+                            if(subselection < gameplay::modifiers.size()-1) subselection++;
                         }break;
                     }
                 }break;
@@ -412,17 +438,24 @@ void classicmenu::render() {
                 
                 });
             for(int i = 0; i < 16; i++) {
-                graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{48,48},0,
-                {48*(activeMods>>i&1),0},
+                int heightOffset = 0;
+                if(subselection == i && subscreen == 2) {
+                    heightOffset = -8;
+                    
+                }
+
+                graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{48,48},0,
+                {0,0},
                 {48,48});
+                if(activeMods>>i&1) {
+                    graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("modifierselected"),{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{48,48},0,{0,0},{48,48});
+                }
                 //THE EQUATION TO SOLVE THE NEW LOCATION:
                 //n = some binary number, i = slot to check
                 //n>>i&1
                 if(newModifiers>>i&1) {
-                    graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("new"),{192+8-3+4+(i%8)*48,64+8+(i/8)*48},{16,16},0,{0,0},{16,16});
+                    graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("new"),{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{16,16},0,{0,0},{16,16});
                 }
-
-
             }
 
             graphics::fonts->at(2)->render(192+12-3, 32+8+32+96-8,std::to_string(math::numActive(activeMods))+"/6",false);

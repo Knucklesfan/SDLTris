@@ -7,7 +7,7 @@
 #include <algorithm>    // std::sort
 #include <cstring>
 #include <math.h>
-#include "opengl/buffermanager.h"
+#include "../opengl/buffermanager.h"
 
 class sine
 {

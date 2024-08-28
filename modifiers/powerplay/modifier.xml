@@ -1,0 +1,39 @@
+<!--Welcome one and all to the modifier stuff-->
+<!--Modifiers are basically just lua scripts (or hardcoded functions) that run every frame (or other situation) that gets triggered when needed-->
+<!--There's a few triggers, but you can also just add value modifiers and those work too!-->
+<!--This is a basic modifier that modifies values, but more complex ones will be in the game later on so...-->
+<modifier>
+    <meta>
+        <name>Power Play</name>
+        <price>50</price> <!--This is the price it would cost in the modifier shop.-->
+        <description>A boost to your power, and a drop to your stamina, this move gives you the effective balance of a one-two punch and a swift kick to the kneecaps.</description>
+        <forsale>true</forsale> <!--Should this item show up in the shop?-->
+        <sprite>modifier.png</sprite> <!--Sale sprite to use-->
+        <tags> <!--Tags are what are shown under the bonuses section in the options-->
+            <good>+50% Drop score</good>
+            <good>+200% Four Line score</good>
+            <bad>-75% Combo time</bad>
+            <bad>-25% Gravity Score</bad>
+        </tags>
+    </meta>
+    <effects>
+        <trigger type="value" func="subperc"> <!--Subperc funcs subtract from the specified score on a certain percentage-->
+            <key>gravity_score</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>25</value>
+        </trigger>
+        <trigger type="value" func="subperc"> <!--Subperc funcs subtract from the specified score on a certain percentage-->
+            <key>combo_time</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>75</value>
+        </trigger>
+        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>drop_score</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>75</value>
+        </trigger>
+        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_score_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>200</value>
+        </trigger>
+
+    </effects>
+
+</modifier>

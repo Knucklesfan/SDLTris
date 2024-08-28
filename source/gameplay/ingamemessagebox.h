@@ -1,12 +1,5 @@
 #pragma once
-#include <SDL2/SDL.h>
 #include <string>
-#include <iostream>
-#include <vector>
-#include <array>
-#include <algorithm>    // std::sort
-#include <cstring>
-#include "font.h"
 
 class ingamemessagebox
 {

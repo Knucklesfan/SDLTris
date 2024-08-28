@@ -1,6 +1,6 @@
 #include "wireframecube.h"
 #include "math.h"
-#include "utils/defs.h"
+#include "../utils/defs.h"
 wireframecube::wireframecube(int x0, int y0, int w, int h) {
     buff = new buffermanager(w,h,true);
     rotateZ3D(rad(30));

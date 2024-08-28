@@ -1,0 +1,56 @@
+<!--Welcome one and all to the modifier stuff-->
+<!--Modifiers are basically just lua scripts (or hardcoded functions) that run every frame (or other situation) that gets triggered when needed-->
+<!--There's a few triggers, but you can also just add value modifiers and those work too!-->
+<!--This is a basic modifier that modifies values, but more complex ones will be in the game later on so...-->
+<modifier>
+    <meta>
+        <name>Risky Business</name>
+        <price>500</price> <!--This is the price it would cost in the modifier shop.-->
+        <description>4 line drops are worth more... But, your chances of getting a line piece is lowered. Do you take the risk?</description><!--Should this item show up in the shop?-->
+        <forsale>true</forsale> <!--Should this item show up in the shop?-->
+
+        <sprite>modifier.png</sprite> <!--Sale sprite to use-->
+        <tags> <!--Tags are what are shown under the bonuses section in the options-->
+            <good>+1000% 4 line score</good>
+            <good>-5% Gravity speed</good>
+            <bad>-75% chance for Line pieces</bad>
+            <bad>-10% combo on all non-4line moves</bad>
+            <bad>Line pieces cannot be stored in hold</bad>
+            <ugly>Cannot be combined with garbage modifiers.</ugly>
+            <ugly>4 line drops give regular combo.</ugly>
+        </tags>
+    </meta>
+    <effects>
+        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_score_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>1000</value>
+        </trigger>
+        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>gravity_speed</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>5</value>
+        </trigger>
+        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_chance</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>75</value>
+        </trigger>
+
+        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_combo_1</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>10</value>
+        </trigger>
+        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_combo_2</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>10</value>
+        </trigger>
+        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_combo_3</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>10</value>
+        </trigger>
+        <trigger type="value" func="set"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>allow_hold_line</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>0</value>
+        </trigger>
+
+    </effects>
+
+</modifier>

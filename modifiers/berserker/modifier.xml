@@ -1,0 +1,30 @@
+<!--Welcome one and all to the modifier stuff-->
+<!--Modifiers are basically just lua scripts (or hardcoded functions) that run every frame (or other situation) that gets triggered when needed-->
+<!--There's a few triggers, but you can also just add value modifiers and those work too!-->
+<!--This is a basic modifier that modifies values, but more complex ones will be in the game later on so...-->
+<modifier>
+    <meta>
+        <name>Berserker</name>
+        <price>200</price> <!--This is the price it would cost in the modifier shop.-->
+        <description>Your drop... drops hard! Dropping breaks the first layer of blocks located directly under a piece.</description><!--Should this item show up in the shop?-->
+        <forsale>true</forsale> <!--Should this item show up in the shop?-->
+
+        <sprite>modifier.png</sprite> <!--Sale sprite to use-->
+        <tags> <!--Tags are what are shown under the bonuses section in the options-->
+            <bad>+25% Gravity Speed</bad>
+            <ugly>Dropping breaks the first layer of blocks located directly under the piece.</ugly>
+        </tags>
+    </meta>
+    <effects>
+        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_score_1</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>600</value>
+        </trigger>
+
+        <trigger type="value" func="set">
+            <key>drop_layer_break</key>
+            <value>1</value>
+        </trigger>
+    </effects>
+
+</modifier>

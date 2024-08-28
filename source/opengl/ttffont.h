@@ -1,10 +1,8 @@
 #pragma once
 
 #include "font.h"
-#include "utils/defs.h"
-#include "SDL_FontCache/SDL_FontCache.h"
+#include "../utils/defs.h"
 #include <SDL2/SDL_ttf.h>
-#include <iostream>
 #include <map>
 
 //basic wrapper for the font class to support sdl_ttf, mainly to make it easier i guess?

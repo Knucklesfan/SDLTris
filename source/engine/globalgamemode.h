@@ -1,7 +1,7 @@
 #pragma once
 #include "gamemode.h"
-#include "opengl/cube.h"
-#include "opengl/buffermanager.h"
+#include "../opengl/cube.h"
+#include "../opengl/buffermanager.h"
 //Global Acces Gamemode
 //This is a somewhat pseudo gamemode. Unlike the scripted gamemodes or the hardcoded gamemodes, this mode runs in the foreground at all times, directly above all other gamemodes.
 //Handles certain global rendering functions, debug mode, fading between.

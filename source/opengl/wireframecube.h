@@ -1,11 +1,6 @@
 #pragma once
 #include <string>
-#include <iostream>
-#include <vector>
-#include <array>
-#include <algorithm>    // std::sort
-#include <cstring>
-#include "opengl/buffermanager.h"
+#include "../opengl/buffermanager.h"
 
 class wireframecube
 {

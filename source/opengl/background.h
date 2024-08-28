@@ -60,9 +60,9 @@ class bg
 #include <cstring>
 #include <map>
 #ifdef CLIENT
-#include "opengl/texture.h"
-#include "opengl/shader.h"
-#include "opengl/buffermanager.h"
+#include "../opengl/texture.h"
+#include "../opengl/shader.h"
+#include "../opengl/buffermanager.h"
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <SDL2/SDL_mixer_ext.h>
@@ -81,7 +81,7 @@ class bg
 
 
 #include <glm/gtc/type_ptr.hpp>
-#include "utils/animation.h"
+#include "../utils/animation.h"
 class layer { 
     public:
     //this is the way the system should've always been done, but of course that's not how it was done.

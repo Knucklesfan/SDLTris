@@ -2,10 +2,10 @@
 #include <string>
 #include <SDL2/SDL.h>
 #include <math.h>
-#include "../background.h"
-#include "../gamemode.h"
+#include "../opengl/background.h"
+#include "../engine/gamemode.h"
 #include "../opengl/plane.h"
-#include "../wireframecube.h"
+#include "../opengl/wireframecube.h"
 #define NUMGAMEMODES 4
 #define NUMSETTINGS 8
 #define NUMDIFFICULTIES 4

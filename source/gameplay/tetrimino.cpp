@@ -1,8 +1,6 @@
 #include "tetriminos.h"
-#include <stdio.h>
-#include <iostream>
 #include <cstring>
-#include "utils/defs.h"
+#include "../utils/defs.h"
 tetrimino::tetrimino() {
     x = 0;
     y = 0;

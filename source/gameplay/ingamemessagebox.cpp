@@ -1,5 +1,5 @@
 #include "ingamemessagebox.h"
-#include "utils/defs.h"
+#include "../utils/defs.h"
 void ingamemessagebox::logic(double deltatime)
 {
 	if (active) {

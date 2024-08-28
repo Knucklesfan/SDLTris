@@ -36,8 +36,8 @@
 #include <string>
 #include <rapidxml.hpp>
 #include <rapidxml_utils.hpp>
-#include "../background.h"
-#include "../gamemode.h"
+#include "../opengl/background.h"
+#include "../engine/gamemode.h"
 #ifndef __LEGACY_RENDER
     #include "../opengl/shader.h"
     #include "../opengl/texture.h"
@@ -47,8 +47,8 @@
 
 #endif
 //#include "Object.h"
-#include "../font.h"
-#include "../rpcimplement.h"
+#include "../opengl/font.h"
+#include "../engine/rpcimplement.h"
 
 #include <map>
 struct letter {

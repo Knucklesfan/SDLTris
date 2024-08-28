@@ -1,6 +1,6 @@
 #include "globalgamemode.h"
 #include <SDL2/SDL.h>
-#include "utils/defs.h"
+#include "../utils/defs.h"
 #include <cmath>
 
 GlobalGamemode::GlobalGamemode() {

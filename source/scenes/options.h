@@ -7,11 +7,11 @@
 #include <array>
 #include <cstring>
 #include "game.h"
-#include "../font.h"
-#include "../cube.h"
-#include "../background.h"
+#include "../opengl/font.h"
+#include "../opengl/cube.h"
+#include "../opengl/background.h"
 #include "../utils/defs.h"
-#include "../gamemode.h"
+#include "../engine/gamemode.h"
 #define FONT_WIDTH 16
 #define FONT_GAP (640/FONT_WIDTH)
 class options: public Gamemode {

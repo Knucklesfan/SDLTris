@@ -7,7 +7,7 @@
 #include <array>
 #include <cstring>
 #include "game.h"
-#include "../font.h"
+#include "../opengl/font.h"
 #include "../opengl/buffermanager.h"
 
 class results : public Gamemode {

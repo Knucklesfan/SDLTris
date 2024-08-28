@@ -19,11 +19,11 @@ nodiscord: $(OBJS)
 SDLTetris.o: source/SDLTetris.cpp
 	$(CC) $(FLAGS) source/SDLTetris.cpp -std=c++17
 
-tetrimino.o: source/tetrimino.cpp
-	$(CC) $(FLAGS) source/tetrimino.cpp -std=c++17
+tetrimino.o: source/gameplay/tetrimino.cpp
+	$(CC) $(FLAGS) source/gameplay/tetrimino.cpp -std=c++17
 
-ghostblock.o: source/ghostblock.cpp
-	$(CC) $(FLAGS) source/ghostblock.cpp -std=c++17
+ghostblock.o: source/gameplay/ghostblock.cpp
+	$(CC) $(FLAGS) source/gameplay/ghostblock.cpp -std=c++17
 
 titlescreen.o: source/scenes/titlescreen.cpp
 	$(CC) $(FLAGS) source/scenes/titlescreen.cpp -std=c++17
@@ -32,11 +32,11 @@ titlescreen.o: source/scenes/titlescreen.cpp
 game.o: source/scenes/game.cpp
 	$(CC) $(FLAGS) source/scenes/game.cpp -std=c++17
 
-background.o: source/background.cpp
-	$(CC) $(FLAGS) source/background.cpp -std=c++17
+background.o: source/opengl/background.cpp
+	$(CC) $(FLAGS) source/opengl/background.cpp -std=c++17
 
-ingamemessagebox.o: source/ingamemessagebox.cpp
-	$(CC) $(FLAGS) source/ingamemessagebox.cpp -std=c++17
+ingamemessagebox.o: source/gameplay/ingamemessagebox.cpp
+	$(CC) $(FLAGS) source/gameplay/ingamemessagebox.cpp -std=c++17
 
 knuxfanscreen.o: source/scenes/knuxfanscreen.cpp
 	$(CC) $(FLAGS) source/scenes/knuxfanscreen.cpp -std=c++17
@@ -52,13 +52,13 @@ classicmenu.o: source/scenes/classicmenu.cpp
 results.o: source/scenes/results.cpp
 	$(CC) $(FLAGS) source/scenes/results.cpp -std=c++17
 
-pixfont.o: source/pixfont.cpp
-	$(CC) $(FLAGS) source/pixfont.cpp 
-ttffont.o: source/ttffont.cpp
-	$(CC) $(FLAGS) source/ttffont.cpp 
+pixfont.o: source/opengl/pixfont.cpp
+	$(CC) $(FLAGS) source/opengl/pixfont.cpp 
+ttffont.o: source/opengl/ttffont.cpp
+	$(CC) $(FLAGS) source/opengl/ttffont.cpp 
 
-wireframecube.o: source/wireframecube.cpp
-	$(CC) $(FLAGS) source/wireframecube.cpp -std=c++17
+wireframecube.o: source/opengl/wireframecube.cpp
+	$(CC) $(FLAGS) source/opengl/wireframecube.cpp -std=c++17
 
 # options.o: source/scenes/options.cpp
 # 	$(CC) $(FLAGS) source/scenes/options.cpp -std=c++17
@@ -72,10 +72,10 @@ credits.o: source/scenes/credits.cpp
 debugscene.o: source/scenes/debugscene.cpp
 	$(CC) $(FLAGS) source/scenes/debugscene.cpp -std=c++17
 
-sine.o: source/sine.cpp
-	$(CC) $(FLAGS) source/sine.cpp -std=c++17
-globalgamemode.o: source/globalgamemode.cpp
-	$(CC) $(FLAGS) source/globalgamemode.cpp
+sine.o: source/opengl/sine.cpp
+	$(CC) $(FLAGS) source/opengl/sine.cpp -std=c++17
+globalgamemode.o: source/engine/globalgamemode.cpp
+	$(CC) $(FLAGS) source/engine/globalgamemode.cpp
 shader.o: source/opengl/shader.cpp
 	$(CC) $(FLAGS) source/opengl/shader.cpp
 texture.o: source/opengl/texture.cpp
@@ -101,8 +101,8 @@ skybox.o: source/opengl/skybox.cpp
 model.o: source/opengl/model.cpp
 	$(CC) $(FLAGS) source/opengl/model.cpp -std=c++17
 
-rpcimplement.o: source/rpcimplement.o
-	$(CC) $(FLAGS) source/rpcimplement.cpp -std=c++17
+rpcimplement.o: source/engine/rpcimplement.cpp
+	$(CC) $(FLAGS) source/engine/rpcimplement.cpp -std=c++17
 
 achievement_manager.o: source/discord/achievement_manager.cpp
 	$(CC) $(FLAGS) source/discord/achievement_manager.cpp

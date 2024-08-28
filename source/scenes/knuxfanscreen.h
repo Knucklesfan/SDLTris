@@ -6,9 +6,9 @@
 #include <vector>
 #include <array>
 #include <cstring>
-#include "../background.h"
-#include "../font.h"
-#include "../gamemode.h"
+#include "../opengl/background.h"
+#include "../opengl/font.h"
+#include "../engine/gamemode.h"
 
 
 class knuxfanscreen : public Gamemode {

@@ -1,5 +1,5 @@
 #include "ttffont.h"
-#include "utils/defs.h"
+#include "../utils/defs.h"
 #include <freetype2/freetype/freetype.h>
 
 ttffont::ttffont(std::string path) { 

@@ -1,5 +1,5 @@
 #pragma once
-#include "../gamemode.h"
+#include "../engine/gamemode.h"
 #include "../utils/defs.h"
 class white : public Gamemode { //literally just renders a white screen to test transitions
     int r = 128 + rand() % (256 - 128);

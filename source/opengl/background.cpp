@@ -301,7 +301,7 @@ void bg::drawLayer(SDL_Renderer* renderer, SDL_Texture* texture, int tempx, int 
 #else
 #define pth  "./"
 #endif
-#include "utils/defs.h"
+#include "../utils/defs.h"
 
 staticlayer::staticlayer(std::string path) {
     std::cout << "loading texture for " << path << "\n";

@@ -6,12 +6,12 @@
 #include <vector>
 #include <array>
 #include <cstring>
-#include "../background.h"
+#include "../opengl/background.h"
 #include "../opengl/buffermanager.h"
-#include "../font.h"
-#include "../gamemode.h"
+#include "../opengl/font.h"
+#include "../engine/gamemode.h"
 #include "../opengl/plane.h"
-#include "../globalgamemode.h"
+#include "../engine/globalgamemode.h"
 #include "game.h"
 
 class titlescreen : public Gamemode

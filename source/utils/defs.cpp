@@ -8,8 +8,8 @@
 #else
     #define filepath  "./"
 #endif
-#include "../pixfont.h"
-#include "../ttffont.h"
+#include "../opengl/pixfont.h"
+#include "../opengl/ttffont.h"
 #include "../opengl/stb_image.h"
 #include "../scenes/knuxfanscreen.h"
 #include "../scenes/titlescreen.h"

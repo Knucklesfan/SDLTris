@@ -9,10 +9,10 @@
 #include <chrono>
 #include <thread>
 #include "utils/defs.h"
-#include "globalgamemode.h"
-#include "gamemode.h"
+#include "engine/globalgamemode.h"
+#include "engine/gamemode.h"
 #include "scenes/debugscene.h"
-#include "rpcimplement.h"
+#include "engine/rpcimplement.h"
 #include "opengl/sota.h"
 // #include "scenes/options.h"
 #ifndef __LEGACY_RENDER

@@ -1,5 +1,5 @@
 #include "sine.h"
-#include "utils/defs.h"
+#include "../utils/defs.h"
 
 sine::sine(int vx, int vy, int wid, int high) {
     buff = new buffermanager(wid,high,true);

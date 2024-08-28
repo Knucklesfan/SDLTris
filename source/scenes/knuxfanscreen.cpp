@@ -6,9 +6,9 @@
 #include <vector>
 #include <array>
 #include <cstring>
-#include "../background.h"
+#include "../opengl/background.h"
 #include "knuxfanscreen.h"
-#include "../pixfont.h"
+#include "../opengl/pixfont.h"
 #include "../utils/defs.h"
 /*
 okay, i know this is a lot to ask of you, not midnight version of me, but listen and hear me out

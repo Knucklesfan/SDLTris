@@ -1,6 +1,6 @@
 #include "credits.h"
 #include "../utils/defs.h"
-#include "../pixfont.h"
+#include "../opengl/pixfont.h"
 credits::credits() {
     // headerfont = fonts[0];
     // textfont = fonts[1];

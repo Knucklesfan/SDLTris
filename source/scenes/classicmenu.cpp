@@ -13,6 +13,23 @@ classicmenu::classicmenu() {
     cube = new wireframecube(320,240,640,480);
 
 }
+int classicmenu::getCurrentOption() {
+        int index = 0;
+        int currentOption = 0;
+        if(selection-4 < 0) {
+            return selection-4;
+        }
+        for(index = 0; index < NUMSETTINGS; index++) {
+            if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[index]) {
+                if(currentOption == selection-4) {
+                    break;
+                }
+                currentOption++;
+            }
+        }
+        return index;
+
+}
 void classicmenu::input(SDL_Keycode keysym) {
     switch(screenmode) {
         case 0: {
@@ -85,20 +102,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 }
                                 else {
 
-                                    std::cout << "scanning\n";
-                                    int currentOption = 0;
-                                    int index = 0;
-                                    for(index = 0; index < NUMSETTINGS; index++) {
-                                        std::cout << selection-4 << " "<< currentOption << " " << gamemodesVisibility[gamemodeSelection] << " " << defaultsettingVisiblity[index] << " " << index << "\n";
-                                        if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[index]) {
-                                            if(currentOption == selection-4) {
-                                                std::cout << "option found!\n" << currentOption << "\n";
-                                                break;
-                                            }
-                                            currentOption++;
-                                        }
-                                    }
-                                    std::cout << index << "\n";
+                                    int index = getCurrentOption();
                                     switch(index) {
                                         case 0: { //open difficulty screen
                                             subscreen = 1;
@@ -383,8 +387,6 @@ void classicmenu::render() {
             
             graphics::rect->render(graphics::shaders.at(1),{30,0},{605,480},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
             graphics::line->render(graphics::shaders.at(1), {192,0}, {192,480-(8*8)-16-32}, 4, {0,0,0,1});
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("newgamebanner"),
-            {0,0},{640,480},0,{(SDL_GetTicks64()/10.0),0},{640,480});
             graphics::fonts->at(1)->render(30+8+8,32+4,"NEW GAME",false);
             graphics::line->render(graphics::shaders.at(1), {30,36+48}, {192,36+48}, 4, {0,0,0,1});
 
@@ -437,14 +439,14 @@ void classicmenu::render() {
                 1
                 
                 });
-            for(int i = 0; i < 16; i++) {
+            for(int i = 0; i < gameplay::modifiers.size(); i++) {
                 int heightOffset = 0;
                 if(subselection == i && subscreen == 2) {
                     heightOffset = -8;
                     
                 }
 
-                graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(0).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{48,48},0,
+                graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(i).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{48,48},0,
                 {0,0},
                 {48,48});
                 if(activeMods>>i&1) {
@@ -460,9 +462,8 @@ void classicmenu::render() {
 
             graphics::fonts->at(2)->render(192+12-3, 32+8+32+96-8,std::to_string(math::numActive(activeMods))+"/6",false);
             graphics::line->render(graphics::shaders.at(1), {30,480-(8*8)-16-32}, {605,480-(8*8)-16-32}, 4, {0,0,0,1});
-            graphics::fonts->at(2)->render(38,480-(8*8)-16-24,gameplay::modifiers[0].metadata.desc,false,255,255,255,559,false,0,0,0);
             //38 to 597 = 559/8 = 69
-            graphics::line->render(graphics::shaders.at(1), {192+206,32+4+70+20+(4*12)+20}, {192+206,480-(8*8)-16-32}, 4, {0,0,0,1});
+            graphics::line->render(graphics::shaders.at(1), {192+206,32+4+70+20+(4*12)+20}, {192+206,372}, 4, {0,0,0,1}); //very bottom line that splits the desc from the messages
             graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28,"SCORE MULT",false);
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+16,"Overall Score Mult: 1x",false);
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+24,"Line Score Mult: 1x",false);
@@ -471,7 +472,9 @@ void classicmenu::render() {
             graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+48,"Drop Score Mult: 1x",false);
             graphics::fonts->at(0)->render(196,32+4+70+20+(4*12)+28+56,"MODIFIERS",false);
 
-            graphics::fonts->at(0)->render(192+206+101,32+4+70+20+(4*12)+28,"TEXTURE PACKS",true);
+            graphics::fonts->at(2)->render(197,4+70+20+(4*12)+28,"TEXTURE PACKS",false,255,selection==1&&rightSide?0:255,255,-1,false,0,0,0);
+            graphics::fonts->at(0)->render(192+206+101,320,gamemodeSelection!=MULTIPLAYER?"START GAME":"QUEUE UP",true,255,selection==2&&rightSide?0:255,255,-1,false,0,0,0);
+            graphics::line->render(graphics::shaders.at(1), {192+206,198+83}, {605,198+83}, 4, {0,0,0,1}); //very bottom line that splits the desc from the messages
 
             offset = 0; //we on the left side, so we dont need offset's value anymore
             for(int i = 0; i < gameplay::modifiers.size();i++) {
@@ -479,18 +482,33 @@ void classicmenu::render() {
                     for(modifierTag meta : gameplay::modifiers.at(i).metadata.tags) {
                         switch(meta.quality) {
                             case GOOD: { //its green. amazing.
-                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,0,0,255,-1,false,0,0,0);
+                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,0,0,255,196,false,0,0,0);
                             }break;
                             case BAD: { //get this: this one is... RED?! how unpredictable.
-                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,0,0,-1,false,0,0,0);
+                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,0,0,196,false,0,0,0);
                             }break;
                             case UGLY: { //this one is white because hotel sheets legally cannot be any color other than white to detect shit stains.
-                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,255,255,-1,false,0,0,0);
+                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,255,255,196,false,0,0,0);
                             }break;
                         }
                         offset++;
                     }
                 }
+            }
+            // std::cout <<"SELECTION: " << getCurrentOption() << "\n";
+            
+            switch(subscreen) {
+                case 0: {
+                    if(rightSide) {
+                        graphics::fonts->at(2)->render(38,480-(8*8)-16-24,classicmenu::selectionDescRight[selection],false,255,255,255,559,false,0,0,0);
+                    }
+                    else {
+                        graphics::fonts->at(2)->render(38,480-(8*8)-16-24,classicmenu::selectionDesc[getCurrentOption()+4],false,255,255,255,559,false,0,0,0);
+                    }
+                }break;
+                case 2: {
+                    graphics::fonts->at(2)->render(38,480-(8*8)-16-24,gameplay::modifiers[subselection].metadata.desc,false,255,255,255,559,false,0,0,0);
+                }break;
             }
             if(!rightSide) {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("cursor"),
@@ -505,6 +523,8 @@ void classicmenu::render() {
                  SDL_GetTicks64()-currentscreenAge<250?1-(SDL_GetTicks64()-currentscreenAge)/250.0:0},
                   false, 0, {0,0,0,1});
                 
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("newgamebanner"),
+            {0,0},{640,480},0,{(SDL_GetTicks64()/10.0),0},{640,480});
 
         }break;
     }

@@ -7,7 +7,7 @@
 #include "../opengl/plane.h"
 #include "../opengl/wireframecube.h"
 #define NUMGAMEMODES 4
-#define NUMSETTINGS 8
+#define NUMSETTINGS 11
 #define NUMDIFFICULTIES 4
 #define RIGHTBUTTONS 3
 #define NEWGAMELENGTH 250.0
@@ -58,7 +58,6 @@ class classicmenu : public Gamemode { //the main menu of the game
             " NO GRAVITY",
             " BLOCK SEED",
             " STAGE",
-            " GAME TYPE"
         };
         const int defaultsettingVisiblity[NUMSETTINGS] = {
             ALL,
@@ -68,7 +67,6 @@ class classicmenu : public Gamemode { //the main menu of the game
             TRAINING,
             TRAINING,
             CHALLENGE,
-            MULTIPLAYER
         };
         const std::string difficulties[NUMDIFFICULTIES] = {
             "EASY",
@@ -81,6 +79,24 @@ class classicmenu : public Gamemode { //the main menu of the game
             "Blocks fall somewhat quickly, levels transition after 40 lines, and all story mode objectives are set to 1.5x.",
             "Blocks fall fast, levels transition after 50 lines, and all story mode objectives are set to 2.0x.",
             "Blocks fall VERY fast, levels transition after 100 lines, and all story mode objectives are set to 5.0x."
+        };
+        const std::string selectionDesc[NUMSETTINGS] = {
+            "The classic Tetrmino gameplay! Blocks are falling, so make sure you don't reach the top, and get that high score!",
+            "Practice for the big game, with save-states, infinite lives, and an undo feature!",
+            "Play online with two or more people! Choose between many different gamemodes. This mode will take you to it's own screen, so any settings and modules configured here are used during the queueing process.\n@4WARNING! @0You will only be able to change @4ONE@0 module once you find a match!",
+            "Cut through some preset block shapes and try to clear the boards!",
+            "Set your difficulty, between EASY, MEDIUM, HARD, and INSANE!",
+            "Start your game at a set level number.",
+            "Play background animations, or disable background animations",
+            "Disable blocks from speeding up as levels increase.",
+            "Disable gravity on blocks that are falling",
+            "Set the random seed that's used for the blocks, to ensure RNG stays the same between trials.",
+            "Sets which stage to play out of the challenge stages!"
+        };
+        const std::string selectionDescRight[3] = {
+            "Select your modifiers here!",
+            "Set up any texture packs you may have installed or may be interested in!",
+            "Start your game!"
         };
         int selection = 0;
         float transition = 0.0f;
@@ -105,5 +121,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         int selectedMod = 0;
         int gamemodeSelection = 1;
         int subbuttons = 0;
+        private:
+            int getCurrentOption();
 
 };

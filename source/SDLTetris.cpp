@@ -317,7 +317,9 @@ int main(int argc, char **argv) {
         gameplay::gamemode = gameplay::gamemodes.size()-1;
         settings::globalDebug = true;
     }
-
+    if(argument == "--scene") {
+        gameplay::gamemode = atoi(argv[2]);
+    }
     std::cout << "Finished initializing!\n";
 
     int titlebg = std::rand() % graphics::backgrounds->size();

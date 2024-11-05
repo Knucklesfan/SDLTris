@@ -6,6 +6,8 @@
 #include "../engine/gamemode.h"
 #include "../opengl/plane.h"
 #include "../opengl/wireframecube.h"
+#include "../gameplay/keyboard.h"
+
 #define NUMGAMEMODES 4
 #define NUMSETTINGS 11
 #define NUMDIFFICULTIES 4
@@ -37,7 +39,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         bg* bluebackground;
         buffermanager* buff;
         wireframecube* cube;
-
+        keyboard* keyb;
         const std::string gamemodes[NUMGAMEMODES] = {
             " CLASSIC",
             " TRAINING",
@@ -116,7 +118,9 @@ class classicmenu : public Gamemode { //the main menu of the game
 
         int visiblesettings = 0;
         int subselection = 0;
+
         int difficultySelection = 0;
+        int levelStart = 0;
         int newMods = 0;
         int selectedMod = 0;
         int gamemodeSelection = 1;

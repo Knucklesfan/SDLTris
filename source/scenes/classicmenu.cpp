@@ -3,12 +3,13 @@
 #include "SDL2/SDL_mixer_ext.h"
 #include "SDL2/SDL_timer.h"
 #include "../utils/defs.h"
+#include <climits>
 classicmenu::classicmenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
     redbackground = new bg("classicmenu",false);
     bluebackground = new bg("newgamemenu",false);
     buff = new buffermanager(640,480,false);
-
+    keyb = new keyboard();
     startTime = SDL_GetTicks();
     cube = new wireframecube(320,240,640,480);
 
@@ -93,6 +94,8 @@ void classicmenu::input(SDL_Keycode keysym) {
                                     case 0: {
                                         subscreen = 2;
                                     }break;
+                                    case 1: {
+                                    }
                                 }
                                 
                             }
@@ -107,6 +110,9 @@ void classicmenu::input(SDL_Keycode keysym) {
                                         case 0: { //open difficulty screen
                                             subscreen = 1;
                                         }break;
+                                        case 1: {
+                                            subscreen = 3;
+                                        }
                                         case 2: {
                                             settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] = activeToggles^(1<<index);
                                             activeToggles=activeToggles^(1<<index);
@@ -212,7 +218,28 @@ void classicmenu::input(SDL_Keycode keysym) {
                         }break;
                     }
                 }break;
-
+                case 3: { //level picker
+                    switch(keysym) {
+                        case SDLK_LEFT: {
+                            if(levelStart > 0) {
+                                levelStart--;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+                            }
+                        }break;
+                        case SDLK_RIGHT: {
+                            if(levelStart < INT_MAX) { // you could really have fun with this
+                                levelStart++;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+                            }
+                        }break;
+                        case SDLK_x:
+                        case SDLK_z: {
+                            subscreen = 0;
+                            Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
+                        }break;
+                    }
+                }break;
+                
             }
         }
     }
@@ -407,9 +434,14 @@ void classicmenu::render() {
             for(int i = 0; i < NUMSETTINGS; i++) {
                 if(gamemodesVisibility[gamemodeSelection]&defaultsettingVisiblity[i]) {
                     int sideIcon = 0;
+                    std::string valueString = "";
+
                     switch(i) {
                         case 0: { //difficulty
                             sideIcon=2+difficultySelection+1;
+                        }break;
+                        case 1: { //slider thing
+                            valueString = (char)((SDL_GetTicks64()/250%2&&subscreen==3)*'<') + std::to_string(levelStart) +  (char)((SDL_GetTicks64()/250%2&&subscreen==3)*'>');
                         }break;
                         default: {
                             if(activeToggles>>i&1) {
@@ -423,7 +455,7 @@ void classicmenu::render() {
                     if(sideIcon > 0) {
                         graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("optionsicons"),{30+8+(defaultsettings[i].length()*8)+4,32+4+70+24+(offset*12)},{8,8},0,{(sideIcon-1)*8,0},{8,8});
                     }
-                    graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),defaultsettings[i],false);
+                    graphics::fonts->at(2)->render(30+8,32+4+70+24+(offset*12),defaultsettings[i]+valueString,false);
                     offset++;
                     visiblesettings++;
                 }

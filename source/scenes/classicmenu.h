@@ -38,6 +38,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         bg* redbackground;
         bg* bluebackground;
         buffermanager* buff;
+        buffermanager* modtext;
         wireframecube* cube;
         keyboard* keyb;
         const std::string gamemodes[NUMGAMEMODES] = {
@@ -103,6 +104,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         int selection = 0;
         float transition = 0.0f;
         float subTransition = 0.0f;
+        int lastOffset = 0; //stupid variable, that is set to the last modifier list length of last time. a REAAAAALLLY slow size algorithm that waits a whole frame until it updates, but should be fine?
         bool rightSide = false; //true if on right side, false if on left
         bool modifierTab = false; //true if modifying data in modifierTab
         int screenmode = 0;

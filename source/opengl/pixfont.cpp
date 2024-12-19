@@ -100,13 +100,21 @@ pixfont::pixfont(std::string path) {
 
 
 int pixfont::render(int x, int y, std::string words, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout) {
-return render(words, x, y, center, red, blue, green, wordwrap, sine, pos, multiplyin, multiplyout, 1);
+return render(words, x, y, center, red, blue, green, wordwrap, sine, pos, multiplyin, multiplyout, 1,COORDINATE_WIDTH,COORDINATE_HEIGHT);
 }
 int pixfont::render(int x, int y, std::string strg, bool center) {
-return render(strg, x, y, center, 255, 255, 255, 0, false, 0, 0, 0, 1);
+return render(strg, x, y, center, 255, 255, 255, 0, false, 0, 0, 0, 1,COORDINATE_WIDTH,COORDINATE_HEIGHT);
 }
-int pixfont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
+int pixfont::render(std::string words,
+ int x, int y,
+  bool center,
+   int red, int blue, int green,
+    int wordwrap,
+     bool sine, double pos, double multiplyin, double multiplyout,
+      double scale,int scrwidth, int scrheight) {
 	txt->activate(0);
+    projection = glm::ortho(0.0f, static_cast<float>(scrwidth), 
+    static_cast<float>(scrheight), 0.0f, -100.0f, 100.0f);
 
     shad->activate();
 	shad->setVector("projection",glm::value_ptr(projection));

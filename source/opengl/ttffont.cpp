@@ -117,7 +117,7 @@ int ttffont::render(int x, int y, std::string strg, bool center) {
     return render(strg, x, y, center, 0, 0, 0);
 }
 int ttffont::render(int x, int y, std::string strg, bool center, bool sine, double pos, double multiplyin, double multiplyout) {
-    return render(strg, x, y, center, 0, 0, 0, 0, sine, pos, multiplyin, multiplyout, 1.0);
+    return render(strg, x, y, center, 0, 0, 0, 0, sine, pos, multiplyin, multiplyout, 1.0,640,480);
 }
 
 int ttffont::render(int x, int y, std::string strg, bool center, int wordwrap) {
@@ -130,9 +130,9 @@ int ttffont::render(std::string strg, int x, int y, bool center) {
     return render(strg, x, y, center, 0, 0, 0);
 }
 int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap) {
-    return render(words, x, y, center, red, blue, green, wordwrap, false, 0, 0, 0, 1.0);
+    return render(words, x, y, center, red, blue, green, wordwrap, false, 0, 0, 0, 1.0,640,480);
 }
-int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
+int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale, int scrwidth, int scrheight) {
 
     shad->activate();
     glm::vec3 color = (glm::vec3(red/255.0f,blue/255.0f,green/255.0f));

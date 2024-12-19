@@ -9,6 +9,8 @@ classicmenu::classicmenu() {
     redbackground = new bg("classicmenu",false);
     bluebackground = new bg("newgamemenu",false);
     buff = new buffermanager(640,480,false);
+    modtext = new buffermanager(198,1024,true);
+
     keyb = new keyboard();
     startTime = SDL_GetTicks();
     cube = new wireframecube(320,240,640,480);
@@ -555,23 +557,35 @@ void classicmenu::render() {
             graphics::line->render(graphics::shaders.at(1), {192+206,198+83}, {605,198+83}, 4, {0,0,0,1}); //very bottom line that splits the desc from the messages
 
             offset = 0; //we on the left side, so we dont need offset's value anymore
+            modtext->enable();
             for(int i = 0; i < gameplay::modifiers.size();i++) {
                 if(activeMods>>i&1) {
                     for(modifierTag meta : gameplay::modifiers.at(i).metadata.tags) {
                         switch(meta.quality) {
                             case GOOD: { //its green. amazing.
-                               offset += graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,0,0,255,196,false,0,0,0);
+                               offset += graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,0,0,255,196,false,0,0,0,1.0,198,1024);
                             }break;
                             case BAD: { //get this: this one is... RED?! how unpredictable.
-                               offset +=  graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,0,0,196,false,0,0,0);
+                               offset +=  graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,255,0,0,196,false,0,0,0,1.0,198,1024);
                             }break;
                             case UGLY: { //this one is white because hotel sheets legally cannot be any color other than white to detect shit stains.
-                                offset += graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,255,255,196,false,0,0,0);
+                                offset += graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,255,255,255,196,false,0,0,0,1.0,198,1024);
                             }break;
                         }
                     }
+                    offset++;
                 }
+
             }
+            offset++;
+            offset += graphics::fonts->at(2)->render("=========",0,(offset*8),false,0,255,0,196,false,0,0,0,1.0,198,1024);
+            offset++;
+            lastOffset = offset;
+            modtext->disable(640,480,true);
+            graphics::shaders.at(12)->activate();
+            graphics::shaders.at(12)->setFloat("loopHeight",(lastOffset*8.0)/1024.0);
+            std::cout << (lastOffset*8.0)/1024.0<< "\n";
+            graphics::sprite->render(graphics::shaders.at(12),&modtext->renderTexture,{196,32+4+70+20+(4*12)+28+72},{198,94},0,{0,SDL_GetTicks64()/100.0},{198,94});
             // std::cout <<"SELECTION: " << getCurrentOption() << "\n";
             
             switch(subscreen) {

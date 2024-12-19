@@ -65,7 +65,7 @@ class pixfont : public Font
         std::string path;
         std::unordered_map<char, letter> mapping;
         int render(std::string words, int x, int y, bool center, 
-        int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
+        int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale,int scrwidth, int scrheight);
         int render(int x, int y,std::string words, bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout);
         

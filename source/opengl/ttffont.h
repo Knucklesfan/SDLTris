@@ -21,13 +21,13 @@ class ttffont : public Font
         glm::mat4 projection;
         std::map<char, ttfchar> characters;
 
-        void render(std::string words, int x, int y, bool center);
-        void render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
-        void render(int x, int y, std::string strg, bool center);
-        void render(int x, int y, std::string strg, bool center, bool sine, double pos, double multiplyin, double multiplyout);
-        void render(int x, int y, std::string strg, bool center, int wordwrap);
-        void render(std::string words, int x, int y, bool center, int red, int blue, int green);
-        void render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap);
+        int render(std::string words, int x, int y, bool center);
+        int render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
+        int render(int x, int y, std::string strg, bool center);
+        int render(int x, int y, std::string strg, bool center, bool sine, double pos, double multiplyin, double multiplyout);
+        int render(int x, int y, std::string strg, bool center, int wordwrap);
+        int render(std::string words, int x, int y, bool center, int red, int blue, int green);
+        int render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap);
         void logic(double deltatime) {};
         ttffont(std::string name);
 

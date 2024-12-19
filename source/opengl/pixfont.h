@@ -64,12 +64,12 @@ class pixfont : public Font
         std::string name;
         std::string path;
         std::unordered_map<char, letter> mapping;
-        void render(std::string words, int x, int y, bool center, 
+        int render(std::string words, int x, int y, bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale);
-        void render(int x, int y,std::string words, bool center, 
+        int render(int x, int y,std::string words, bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout);
         
-        void render(int x, int y, std::string strg, bool center);
+        int render(int x, int y, std::string strg, bool center);
         #ifdef __LEGACY_RENDER
         SDL_Texture* txt;
         #else

@@ -113,26 +113,26 @@ ttffont::ttffont(std::string path) {
 // }
 }
 
-void ttffont::render(int x, int y, std::string strg, bool center) {
-    render(strg, x, y, center, 0, 0, 0);
+int ttffont::render(int x, int y, std::string strg, bool center) {
+    return render(strg, x, y, center, 0, 0, 0);
 }
-void ttffont::render(int x, int y, std::string strg, bool center, bool sine, double pos, double multiplyin, double multiplyout) {
-    render(strg, x, y, center, 0, 0, 0, 0, sine, pos, multiplyin, multiplyout, 1.0);
+int ttffont::render(int x, int y, std::string strg, bool center, bool sine, double pos, double multiplyin, double multiplyout) {
+    return render(strg, x, y, center, 0, 0, 0, 0, sine, pos, multiplyin, multiplyout, 1.0);
 }
 
-void ttffont::render(int x, int y, std::string strg, bool center, int wordwrap) {
-    render(strg, x, y, center, 0, 0, 0, wordwrap);
+int ttffont::render(int x, int y, std::string strg, bool center, int wordwrap) {
+    return render(strg, x, y, center, 0, 0, 0, wordwrap);
 }
-void ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green) {
-    render(words, x, y, center, red, blue, green, 0);
+int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green) {
+    return render(words, x, y, center, red, blue, green, 0);
 }
-void ttffont::render(std::string strg, int x, int y, bool center) {
-    render(strg, x, y, center, 0, 0, 0);
+int ttffont::render(std::string strg, int x, int y, bool center) {
+    return render(strg, x, y, center, 0, 0, 0);
 }
-void ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap) {
-    render(words, x, y, center, red, blue, green, wordwrap, false, 0, 0, 0, 1.0);
+int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap) {
+    return render(words, x, y, center, red, blue, green, wordwrap, false, 0, 0, 0, 1.0);
 }
-void ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
+int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale) {
 
     shad->activate();
     glm::vec3 color = (glm::vec3(red/255.0f,blue/255.0f,green/255.0f));
@@ -174,4 +174,5 @@ void ttffont::render(std::string words, int x, int y, bool center, int red, int 
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+    return 0;
 }

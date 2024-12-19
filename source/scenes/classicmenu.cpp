@@ -119,7 +119,8 @@ void classicmenu::input(SDL_Keycode keysym) {
                                         }break;
                                         case 5: {
                                             subscreen = 5; //keyboard subscreen
-                                            keyb->reset(16);
+                                            keyb->reset(16,"Please type your seed");
+                                            keyb->value = gameseed;
                                             
                                         }break;
                                         case 6: {
@@ -451,7 +452,7 @@ void classicmenu::render() {
             //time to start adapating concept to creation!
             bluebackground->render();
             
-            graphics::rect->render(graphics::shaders.at(1),{30,0},{605,480},0,{0,0.1,0.50,0.70},true,4,{0,0,0,1});
+            graphics::rect->render(graphics::shaders.at(1),{30,0},{605,480},0,{0.20,0.2,0.20,0.50},true,4,{0,0,0,1});
             graphics::line->render(graphics::shaders.at(1), {192,0}, {192,480-(8*8)-16-32}, 4, {0,0,0,1});
             graphics::fonts->at(1)->render(30+8+8,32+4,"NEW GAME",false);
             graphics::line->render(graphics::shaders.at(1), {30,36+48}, {192,36+48}, 4, {0,0,0,1});
@@ -559,16 +560,15 @@ void classicmenu::render() {
                     for(modifierTag meta : gameplay::modifiers.at(i).metadata.tags) {
                         switch(meta.quality) {
                             case GOOD: { //its green. amazing.
-                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,0,0,255,196,false,0,0,0);
+                               offset += graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,0,0,255,196,false,0,0,0);
                             }break;
                             case BAD: { //get this: this one is... RED?! how unpredictable.
-                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,0,0,196,false,0,0,0);
+                               offset +=  graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,0,0,196,false,0,0,0);
                             }break;
                             case UGLY: { //this one is white because hotel sheets legally cannot be any color other than white to detect shit stains.
-                                graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,255,255,196,false,0,0,0);
+                                offset += graphics::fonts->at(2)->render(196,32+4+70+20+(4*12)+28+72+(offset*8),meta.tag,false,255,255,255,196,false,0,0,0);
                             }break;
                         }
-                        offset++;
                     }
                 }
             }
@@ -600,8 +600,8 @@ void classicmenu::render() {
                  SDL_GetTicks64()-currentscreenAge<250?1-(SDL_GetTicks64()-currentscreenAge)/250.0:0},
                   false, 0, {0,0,0,1});
                 
-            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("newgamebanner"),
-            {0,0},{640,480},0,{(SDL_GetTicks64()/10.0),0},{640,480});
+            // graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("newgamebanner"),
+            // {0,0},{640,480},0,{(SDL_GetTicks64()/10.0),0},{640,480});
 
         }break;
     }

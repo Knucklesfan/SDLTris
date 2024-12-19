@@ -10,103 +10,87 @@
 		</music>
 	</head>
 	<layers>
+
 		<!--depths are handled a 0-inf scale, with 0 being the furthest back, and preceeding numbers going up.-->
+	<layer type="legacy" depth="1">
+		<filename>backdrop.png</filename>
+		<movement>
+			<x>100</x>
+			<y>0</y>
+		</movement>
+	</layer>
 	<layer type="bg2d" depth="2">
-			<textures>
-				<texture> <!--The texture to use-->
-					<path>classicmenubg.png</path>
-				</texture>
-			</textures>
-			<shader> <!--Shader that the BG uses-->
-				<vertex>vertex_unlit.glsl</vertex>
-				<fragment>fragment_unlit.glsl</fragment>
-			</shader>
-			<transform> <!--The initial transform of the object-->
-			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
-				<position>
-					<x>0</x>
-					<y>0</y>
-					<z>-20</z>
-				</position>
-				<rotation>
-					<x>90.5</x>
-					<y>0</y>
-					<z>0</z>
-				</rotation>
-				<scale>
-					<x>100</x>
-					<y>100</y>
-					<z>1</z>
-				</scale>
-				<selfpos> <!--The self position is the position relative to the plane itself, applied after scaling/rotation. This is completely optional, but I find it makes scaling water and stuff a lot easier!-->
+		<textures>
+			<texture> <!--The texture to use-->
+				<path>SKYTEXT.png</path>
+			</texture>
+		</textures>
+		<shader> <!--Shader that the BG uses-->
+			<vertex>vertex_unlit.glsl</vertex>
+			<fragment>fragment_unlit.glsl</fragment>
+		</shader>
+		<transform> <!--The initial transform of the object-->
+		<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
+			<position>
+				<x>-1.25</x>
+				<y>2</y>
+				<z>0</z>
+			</position>
+			<rotation>
+				<x>74</x>
+				<y>25</y>
+				<z>0</z>
+			</rotation>
+			<scale>
+				<x>3</x>
+				<y>3</y>
+				<z>1</z>
+			</scale>
+			<selfpos> <!--The self position is the position relative to the plane itself, applied after scaling/rotation. This is completely optional, but I find it makes scaling water and stuff a lot easier!-->
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</selfpos>
+
+		</transform>
+
+		<animation> <!--First, start by declaring the layer's animation-->
+			<action frame="20000" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
+				<transform>
+				<selfpos>
 					<x>0</x>
 					<y>0</y>
 					<z>0</z>
 				</selfpos>
 
-			</transform>
-			
-			<animation> <!--First, start by declaring the layer's animation-->
-				<action frame="200" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
-					<transform>
-					<selfpos>
-						<x>-0.5</x>
-						<y>0.5</y>
-						<z>0</z>
-					</selfpos>
+				</transform>
+			</action>
+		</animation>
+	</layer>
 
-					</transform>
-				</action>
-			</animation>
-		</layer>
-	<layer type="bg2d" depth="2">
-			<textures>
-				<texture> <!--The texture to use-->
-					<path>classicmenubg.png</path>
-				</texture>
-			</textures>
-			<shader> <!--Shader that the BG uses-->
-				<vertex>vertex_unlit.glsl</vertex>
-				<fragment>fragment_unlit.glsl</fragment>
-			</shader>
-			<transform> <!--The initial transform of the object-->
-			<!--This transform object HAS to be present in the bg2d type or the game will crash!-->
-				<position>
-					<x>0</x>
-					<y>0</y>
-					<z>-20</z>
-				</position>
-				<rotation>
-					<x>-90.5</x>
-					<y>0</y>
-					<z>0</z>
-				</rotation>
-				<scale>
-					<x>100</x>
-					<y>100</y>
-					<z>1</z>
-				</scale>
-				<selfpos> <!--The self position is the position relative to the plane itself, applied after scaling/rotation. This is completely optional, but I find it makes scaling water and stuff a lot easier!-->
-					<x>0</x>
-					<y>0</y>
-					<z>0</z>
-				</selfpos>
+	<layer type="legacy" depth="1">
+		<filename>mountains.png</filename>
+		<movement>
+			<x>75</x>
+			<y>0</y>
+		</movement>
+	</layer>
 
-			</transform>
-			
-			<animation> <!--First, start by declaring the layer's animation-->
-				<action frame="1000" interpolation="LINEAR"> <!--This frame should take 2 seconds to reach. (20/10=2)-->
-					<transform>
-					<selfpos>
-						<x>-0.5</x>
-						<y>-0.5</y>
-						<z>0</z>
-					</selfpos>
+	<layer type="legacy" depth="2">
+		<filename>skyline.png</filename>
+		<movement>
+			<x>50</x>
+			<y>0</y>
+		</movement>
+	</layer>
+	<layer type="legacy" depth="3">
+		<filename>road.png</filename>
+		<movement>
+			<x>1</x>
+			<y>0</y>
+		</movement>
+	</layer>
 
-					</transform>
-				</action>
-			</animation>
-		</layer>
 
 	</layers>
 	<!--Backgrounds also now support post processing! Although optional, these effects are shaders that can be overlayed on top of the background, allowing you to do some neat stuff. These work similarly to shader layers.-->

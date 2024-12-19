@@ -14,7 +14,7 @@ class keyboard {
         std::string value;
         keyboard();
         bool open = false;
-        void reset(int max_chars);
+        void reset(int max_chars, std::string prompt);
         int endlogic(); //yeah, i know adding an endlogic kinda turns this into a scene but whatever
     private:
         char displayKeys[KEYBOARD_KEYS] = { //the keys to render to the screen
@@ -43,5 +43,6 @@ class keyboard {
         bool  active = false;
         float transition = 1;
         bool transitionDirection = 0; //0 up, 1 down
+        std::string prompt;
 
 };

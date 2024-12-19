@@ -16,11 +16,11 @@ void keyboard::logic(double deltatime) {
     }
 
 }
-void keyboard::reset(int max_char) {
+void keyboard::reset(int max_char, std::string prompt) {
     active = true;
     max_chars = max_char;
     value = "test";
-    selectedKey = 0;
+    selectedKey = 39;
     currentChar = 0;
     open = true;
     keyboard_age = SDL_GetTicks64();
@@ -49,14 +49,14 @@ void keyboard::input(SDL_Keycode key) {
             std::cout << currentChar << " " << value.length() << "\n";
             switch(key) {
                 case(SDLK_UP): {
-                    if (selectedKey >= 10) {
+                    if (selectedKey > 10) {
                         selectedKey-=10;
                     }
                     Mix_PlayChannel(-1, audio::sfx->at(1), 0);
                     break;
                 }
                 case(SDLK_DOWN): {
-                    if (selectedKey <= KEYBOARD_KEYS-10) {
+                    if (selectedKey < KEYBOARD_KEYS-10) {
                         selectedKey+=10;
                     }
                     Mix_PlayChannel(-1, audio::sfx->at(1), 0);
@@ -79,14 +79,16 @@ void keyboard::input(SDL_Keycode key) {
                 case(SDLK_RETURN): {
                     if(selectedKey < 37) { //if we arent the two move keys, then we're fine to keep going
                         if(currentChar < max_chars) {
-                            if(currentChar > value.length()) {
-                                value.append(&keyboardKeys[selectedKey]);
+                            if(currentChar > value.length()-1 || value.empty()) {
+                                value.push_back(keyboardKeys[selectedKey]);
                             }
                             else {
-                                value.at(selectedKey) = keyboardKeys[selectedKey];
+                                value.at(currentChar) = keyboardKeys[selectedKey];
                             }
+
                             currentChar++;
                         }
+
                     }
                     else { //otherwise, we gotta actually handle those...
                         if(selectedKey == 37) { //go back one key

@@ -43,7 +43,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                     });
                     t.gamemode = gameplay::gamemode-1;
                     t.transition = 1;
-                    t.fade = BARS;
+                    t.fade = BLOCKS;
                     Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
 
                 }break;
@@ -116,6 +116,14 @@ void classicmenu::input(SDL_Keycode keysym) {
                                         case 2: {
                                             settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] = activeToggles^(1<<index);
                                             activeToggles=activeToggles^(1<<index);
+                                        }break;
+                                        case 5: {
+                                            subscreen = 5; //keyboard subscreen
+                                            keyb->reset(16);
+                                            
+                                        }break;
+                                        case 6: {
+                                            subscreen = 4;
                                         }break;
                                         default: {
                                             activeToggles=activeToggles^(1<<index);
@@ -239,7 +247,31 @@ void classicmenu::input(SDL_Keycode keysym) {
                         }break;
                     }
                 }break;
-                
+                case 4: { //stage picker
+                    switch(keysym) {
+                        case SDLK_LEFT: {
+                            if(challengeStage > 0) {
+                                challengeStage--;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+                            }
+                        }break;
+                        case SDLK_RIGHT: {
+                            if(challengeStage < INT_MAX) { // you could really have fun with this
+                                challengeStage++;
+                                Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
+                            }
+                        }break;
+                        case SDLK_x:
+                        case SDLK_z: {
+                            subscreen = 0;
+                            Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
+                        }break;
+                    }
+                }break;
+                case 5: {
+                    keyb->input(keysym); //pass input on to the keyboard if in -1
+                }break;
+
             }
         }
     }
@@ -295,7 +327,14 @@ void classicmenu::logic(double deltatime) {
                     subTransition = lerpval;
                 }
             }
+            if(subscreen == 5) {
+                keyb->logic(deltatime);
+                if(!keyb->endlogic()) {
+                    subscreen = 0;
+                    gameseed = keyb->value;
+                }
 
+            }
             bluebackground->logic(deltatime);
         }break;
 
@@ -443,6 +482,12 @@ void classicmenu::render() {
                         case 1: { //slider thing
                             valueString = (char)((SDL_GetTicks64()/250%2&&subscreen==3)*'<') + std::to_string(levelStart) +  (char)((SDL_GetTicks64()/250%2&&subscreen==3)*'>');
                         }break;
+                        case 5: { //seed picker thing
+                            sideIcon = 0;
+                        }break;
+                        case 6: { //challenge stage slider
+                            valueString = (char)((SDL_GetTicks64()/250%2&&subscreen==4)*'<') + std::to_string(challengeStage) +  (char)((SDL_GetTicks64()/250%2&&subscreen==4)*'>');
+                        }break;
                         default: {
                             if(activeToggles>>i&1) {
                                 sideIcon = 1;
@@ -583,9 +628,12 @@ void classicmenu::render() {
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("cursor"),
             {64+16+offset,64+32*(difficultySelection+1)+(subTransition)},
             {16,16},0,{((SDL_GetTicks64()/100)%4)*8,0},{8,8});
+        
 
-
-        }
+        }break;
+        case 5: {
+                keyb->render();
+        }break;
     }
 
     buff->disable(640,480,true);

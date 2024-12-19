@@ -19,7 +19,7 @@ void keyboard::logic(double deltatime) {
 void keyboard::reset(int max_char) {
     active = true;
     max_chars = max_char;
-    value = "";
+    value = "test";
     selectedKey = 0;
     currentChar = 0;
     open = true;
@@ -27,7 +27,7 @@ void keyboard::reset(int max_char) {
 }
 void keyboard::render() {
     if(active) {
-        float transLerp = (transition*480)*(transitionDirection)-((1-transition)*480)*(!transitionDirection);
+        float transLerp = (transition*480)*(transitionDirection);
         graphics::rect->render(graphics::shaders.at(1),{0,0+transLerp},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
         graphics::fonts->at(0)->render(320,48+transLerp, "Please enter text.",true);
         for(int i = 0; i < value.length(); i++) {
@@ -46,6 +46,7 @@ void keyboard::render() {
 }
 void keyboard::input(SDL_Keycode key) {
     if(active) {
+            std::cout << currentChar << " " << value.length() << "\n";
             switch(key) {
                 case(SDLK_UP): {
                     if (selectedKey >= 10) {
@@ -112,20 +113,23 @@ void keyboard::input(SDL_Keycode key) {
                             break;
                         }
                     }
-                    if(keypressed < 37) { //if we arent the two move keys, then we're fine to keep going
+                    if(keypressed < 37 && keypressed >= 0) { //if we arent the two move keys, then we're fine to keep going
                         if(currentChar < max_chars) {
-                            if(currentChar > value.length()) {
-                                value.append(&keyboardKeys[keypressed]);
+                            if(currentChar > value.length()-1 || value.empty()) {
+                                value.push_back(keyboardKeys[keypressed]);
                             }
                             else {
-                                value.at(keypressed) = keyboardKeys[keypressed];
+                                value.at(currentChar) = keyboardKeys[keypressed];
                             }
+                            std::cout << keyboardKeys[keypressed] << "\n";
+
                             currentChar++;
                         }
                     }
                     else { //otherwise, we gotta actually handle those...
                         if(keypressed == 37) { //go back one key
-                            if(currentChar > 0) {
+                            if(currentChar > 0 && !value.empty()) {
+                                value.pop_back();
                                 currentChar--;
                             }
                         }

@@ -115,12 +115,13 @@ class classicmenu : public Gamemode { //the main menu of the game
         Uint64 newModifiers = 0b10000010; //TODO: Make more than 64 modifiers so we actually have to recode this :)
         Uint64 activeMods = 0b000001;
         Uint8 activeToggles = 0b00000100; //number of active settings that can be toggled (play animations, no speedup etc)
-
+        std::string gameseed = "";
         int visiblesettings = 0;
         int subselection = 0;
 
         int difficultySelection = 0;
         int levelStart = 0;
+        int challengeStage = 0;
         int newMods = 0;
         int selectedMod = 0;
         int gamemodeSelection = 1;

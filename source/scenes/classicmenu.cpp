@@ -3,6 +3,7 @@
 #include "SDL2/SDL_mixer_ext.h"
 #include "SDL2/SDL_timer.h"
 #include "../utils/defs.h"
+#include "../scenes/game.h"
 #include <climits>
 classicmenu::classicmenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
@@ -97,9 +98,14 @@ void classicmenu::input(SDL_Keycode keysym) {
                                         subscreen = 2;
                                     }break;
                                     case 1: {
-                                    }
+                                    }break;
+                                    case 2: {
+                                        //begin game bootup process here
+                                        startGame();
+                                    }break;
                                 }
-                                
+                                Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
+
                             }
                             else {
                                 if(selection < NUMGAMEMODES) {
@@ -149,6 +155,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
 
                             }
+                            std::cout << selection << "\n";
                         }break;
                         case SDLK_UP: {
                             if(selection > 0) {
@@ -157,6 +164,8 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
 
                             }
+                            std::cout << selection << "\n";
+
                         }break;
                         case SDLK_RIGHT: {
                             if(!rightSide) {
@@ -164,6 +173,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 rightSide = true;
                                 selection = 0;
                             }
+                            std::cout << selection << "\n";
                         }break;
                         case SDLK_LEFT: {
                             if(rightSide) {
@@ -171,6 +181,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 rightSide = false;
                                 selection = 0;
                             }
+                            std::cout << selection << "\n";
                         }break;
 
                     }
@@ -584,7 +595,6 @@ void classicmenu::render() {
             modtext->disable(640,480,true);
             graphics::shaders.at(12)->activate();
             graphics::shaders.at(12)->setFloat("loopHeight",(lastOffset*8.0)/1024.0);
-            std::cout << (lastOffset*8.0)/1024.0<< "\n";
             graphics::sprite->render(graphics::shaders.at(12),&modtext->renderTexture,{196,32+4+70+20+(4*12)+28+72},{198,94},0,{0,SDL_GetTicks64()/100.0},{198,94});
             // std::cout <<"SELECTION: " << getCurrentOption() << "\n";
             
@@ -669,7 +679,6 @@ void classicmenu::render() {
             explosionTime = 0;
         }
         else {
-            std::cout << frame << "\n";
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("stupidexplosion"),
             {320-256,240-256},{512,512},0,{
                 (frame%4)*64,
@@ -688,4 +697,22 @@ void classicmenu::reset() {
     t = Transition();
     settings::clearSaveData();
     settings::loadSaveData();
+}
+void classicmenu::startGame() {
+    Mix_PauseMusic();
+    Mix_PlayChannel( -1, audio::sfx->at(12), 0 );
+
+    game* g = static_cast<game*>(gameplay::gamemodes.at(4));
+    g->level = levelStart;
+    g->difficulty = difficultySelection;
+    g->activeMods = activeMods;
+    g->demoPlayback = false;
+    t = {
+        0.001,
+        4,
+        320,240,
+        FADETYPE::BLOCKS,
+        true
+    };
+
 }

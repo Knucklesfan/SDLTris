@@ -114,8 +114,8 @@ class classicmenu : public Gamemode { //the main menu of the game
         Uint64 transitionTime = 0;
         Uint64 currentscreenAge = 0;
         Uint64 subscreenAge = 0;
-        Uint64 newModifiers = 0b10000010; //TODO: Make more than 64 modifiers so we actually have to recode this :)
-        Uint64 activeMods = 0b000001;
+        Uint64 newModifiers = 0b10000000; //TODO: Make more than 64 modifiers so we actually have to recode this :)
+        Uint64 activeMods = 0b000000;
         Uint8 activeToggles = 0b00000100; //number of active settings that can be toggled (play animations, no speedup etc)
         std::string gameseed = "";
         int visiblesettings = 0;
@@ -129,6 +129,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         int gamemodeSelection = 1;
         int subbuttons = 0;
         private:
+            void startGame();
             int getCurrentOption();
 
 };

@@ -33,28 +33,8 @@ void results::reset()
 {
     loadgame = false;
     time = std::time(nullptr);
-    Mix_HaltMusic();
-    if( Mix_PlayingMusic() == 0 )
-    {
         //Play the music
-        Mix_PlayMusic( background.music, -1 );
-    }
-    //If music is being played
-    else
-    {
-        //If the music is paused
-        if( Mix_PausedMusic() == 1 )
-        {
-            //Resume the music
-        Mix_ResumeMusic();
-        }
-        //If the music is playing
-        else
-        {
-        //Pause the music
-            Mix_PauseMusic();
-        }
-    }
+    Mix_PlayMusic( background.music, -1 );
     networking::globalRPC->update("Viewing the results.", "Last game's score: " + std::to_string(settings::previousscore), "icon4", std::time(nullptr));
 
 }

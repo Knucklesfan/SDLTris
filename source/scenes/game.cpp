@@ -72,6 +72,7 @@ game::game() {
     // backgrounds = backg;
     lines = LINES;
     level = LEVEL;
+    difficulty = 0;
     paused = false;
     bodyfont = graphics::fonts->at(2);
     header = graphics::fonts->at(1);
@@ -750,27 +751,7 @@ void game::clearRow(int(blocks)[480], int y) {
 void game::changemusic() {
     if((bglevel)%(graphics::backgrounds->size()) != currentsong && !demoPlayback) {
         Mix_HaltMusic();
-        if( Mix_PlayingMusic() == 0 )
-        {
-            //Play the music
-            Mix_PlayMusic(graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).music, -1 );
-        }
-        //If music is being played
-        else
-        {
-            //If the music is paused
-            if( Mix_PausedMusic() == 1 )
-            {
-                //Resume the music
-            Mix_ResumeMusic();
-            }
-            //If the music is playing
-            else
-            {
-            //Pause the music
-                Mix_PauseMusic();
-            }
-        }
+        Mix_PlayMusic(graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).music, -1 );
         currentsong = (bglevel)%(graphics::backgrounds->size());
         msg->activate("YOU ARE CURRENTLY LISTENING TO:", graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).songname + " by: " + graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).artist);
         graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).backgroundAge = SDL_GetTicks();
@@ -805,7 +786,6 @@ void game::reset() {
     demotick = 0;
     demokey = 0;
     lines = LINES;
-    level = LEVEL;
     paused = false;
     srand((unsigned)time); 
     nextblocks = std::rand() % 7;

@@ -35,5 +35,8 @@
 	<sound> <!--11-->
 			<path>./sound/explosion.mp3</path>
 	</sound>
+	<sound> <!--12-->
+			<path>./sound/smash.wav</path>
+	</sound>
 
 </sounds>

@@ -16,7 +16,7 @@
         <name>Classic Menu</name>
         <type>classicmenu</type>
     </scene>
-    <scene> <!--4-->
+    <scene> <!--4 DO NOT CHANGE!-->
         <name>Game</name>
         <type>game</type>
     </scene>

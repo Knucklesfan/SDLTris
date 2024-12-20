@@ -54,6 +54,8 @@ class game: public Gamemode
 		int startTime = 0;
 		int bglevel = 1;
 		int currentsong = 0;
+		int difficulty = 0;
+		Uint64 activeMods = 0b000000;
 		int pauseselection = 0;
 		double warningalpha = 0.0;
 		double alphalifetime = 0;

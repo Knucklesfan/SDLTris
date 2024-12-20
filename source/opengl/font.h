@@ -11,14 +11,14 @@ class Font {
         virtual int render(std::string words, int x, int y,bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos,
         double multiplyin, double multiplyout, double scale){
-                        render(words,x,y,center,red,blue,green,wordwrap,sine,pos,multiplyin,multiplyout,scale,640,480);
+            return render(words,x,y,center,red,blue,green,wordwrap,sine,pos,multiplyin,multiplyout,scale,640,480);
         };
         
         virtual int render(int x, int y,std::string words,
         bool center, int red, int blue, int green,
         int wordwrap, bool sine, double pos,
         double multiplyin, double multiplyout){
-            render(words,x,y,center,red,blue,green,wordwrap,sine,pos,multiplyin,multiplyout,1);
+            return render(words,x,y,center,red,blue,green,wordwrap,sine,pos,multiplyin,multiplyout,1);
             };
 
         virtual int render(int x, int y, std::string strg, bool center){};

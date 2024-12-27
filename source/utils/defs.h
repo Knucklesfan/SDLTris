@@ -51,6 +51,7 @@
 #include "../engine/rpcimplement.h"
 
 #include <map>
+#include "enums.h"
 struct letter {
     char character = ' ';
     int width;
@@ -84,75 +85,6 @@ struct vect {
 };
 
 
-enum layertype {
-    BACKGROUND,
-    LEGACY,
-    BG3D,
-    BG2D,
-    SHADER
-};
-enum headerdata {
-    TITLE,
-    VERSION,
-    CREATOR,
-    BGMUSIC,
-    FILENAME
-};
-
-enum OPTIONTYPE
-{
-	GAMEPLAY = 0,
-	DISPLAY = 1,
-	SYSTEM = 2,
-	EXTRA = 3,
-	DEBUG = 4
-};
-
-enum GAMEPLAYOPTIONS
-{
-	GHOSTPIECE = 0,
-	HOLDPIECE = 1,
-	BLOCKSPEED = 2,
-	FASTDROP = 3,
-	SCORING = 4,
-    REPEATHOLD = 5,
-    HOLDSCORING = 6,
-    LEVELLENGTH = 7
-};
-
-enum DISPLAYOPTIONS
-{
-	BGMODE = 0,
-	FIRSTBG = 1,
-	LINECLEAR = 2,
-	MOVINGBG = 3,
-	NEARTOPFLASH = 4,
-    LOWPERF = 5
-};
-enum SYSTEMOPTIONS
-{
-	FULLSCREEN = 0,
-	MUSIC = 1,
-	SOUNDS = 2,
-	RESET = 3,
-};
-
-enum EXTRAOPTIONS
-{
-	ROTATEBOARD = 0,
-	BIGGERBOARD = 1,
-	BLINDMODE = 2,
-    ANTIGRAVITY = 3,
-    BOMB,
-    MYSTERYBLOCK,
-    MIRROR,
-    ACIDBATH
-
-};
-
-enum DEBUGOPTIONS {
-	DEBUGENABLED = 0
-};
 class bgconverters { //i *sighs the worlds deepest sigh of human history* love background.h
     public:
         static std::map<std::string, layertype> layermap;
@@ -241,8 +173,7 @@ class settings {
 
     static std::vector<save> saveCache;
 	static std::array<std::array<int, 12>, 5> defaults;
-
-	static std::array<std::array<int, 12>, 5> activations;
+	static std::array<std::array<int, 12>, 5> activations; 
 
 };
 namespace utils {
@@ -270,8 +201,18 @@ namespace utils {
     double rad(double i);
 
 };
-enum TagQuality {
-    GOOD,BAD,UGLY
+struct gameplayActivations {
+    Uint64 startingLevel;
+    Uint64 stage; //theres no way im making INT64_MAX of these but whatever covering bases
+    Uint8 difficulty;
+    std::array<Uint64,16> activeMods; 
+    //this is quite literally a ridiculous amount of modifiers anyways,
+    //nobody needs 1024 modifiers, but just covering bases since memory is CHEAP
+    Uint64 texturepackIndex;
+    bool playAnimations;
+    bool noSpeedup;
+    bool noGravity;
+    std::string seed;
 };
 struct modifierTag {
     std::string tag;
@@ -290,13 +231,15 @@ struct modifier {
 };
 class gameplay { //class that contains stuff that globally is used for managing gamemodes
     public:
+        static bool transitioning;
         static int gamemode;
         static std::vector<Gamemode*> gamemodes;
         static void loadGamemodes();
         static void loadModifiers();
         static std::vector<modifier> modifiers;
         static int Pieces[7][4][16];
-
+	    static gameplayActivations activations; //kinda like activations, but different
+        static void resetActivations();
 };
 class networking { //class that contains global network objects, such as server and rpc connections
     public:

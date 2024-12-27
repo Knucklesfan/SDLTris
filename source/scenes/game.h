@@ -50,6 +50,7 @@ class game: public Gamemode
 		Uint32 score = 000000000;
 		Uint32 invisScore = 0; //score that is hidden and reset on holdblock, and is only added once falling is done.
 		int lines = 0;
+		int linecounter = 0;
 		int level = 1;
 		int startTime = 0;
 		int bglevel = 1;

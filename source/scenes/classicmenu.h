@@ -33,6 +33,7 @@ class classicmenu : public Gamemode { //the main menu of the game
     Transition endLogic();
     void reset();
     private:
+
         Transition t;
         plane* cd;
         bg* redbackground;
@@ -107,6 +108,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         int lastOffset = 0; //stupid variable, that is set to the last modifier list length of last time. a REAAAAALLLY slow size algorithm that waits a whole frame until it updates, but should be fine?
         bool rightSide = false; //true if on right side, false if on left
         bool modifierTab = false; //true if modifying data in modifierTab
+        bool gamestarting = false;
         int screenmode = 0;
         int explosionTime = 0;
         int subscreen = 0;
@@ -122,7 +124,7 @@ class classicmenu : public Gamemode { //the main menu of the game
         int subselection = 0;
 
         int difficultySelection = 0;
-        int levelStart = 0;
+        int levelStart = 1;
         int challengeStage = 0;
         int newMods = 0;
         int selectedMod = 0;

@@ -81,7 +81,7 @@ void debugscene::input(SDL_Keycode keysym)
 
                 }break;
                 case 1: {
-                    if(transition < 3) {
+                    if(transition < 4) {
                         transition++;
                     }
                 }break;

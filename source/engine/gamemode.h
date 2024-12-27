@@ -6,7 +6,8 @@ enum FADETYPE {
     FADE,
     BARS, //unimplemented
     BLOCKS,
-    CIRCLE //unimplemented
+    CIRCLE, //unimplemented
+    GLASS
 };
 struct Transition {
     double speed = 0.001;

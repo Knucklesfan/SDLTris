@@ -1,0 +1,73 @@
+enum layertype {
+    BACKGROUND,
+    LEGACY,
+    BG3D,
+    BG2D,
+    SHADER
+};
+enum headerdata {
+    TITLE,
+    VERSION,
+    CREATOR,
+    BGMUSIC,
+    FILENAME
+};
+
+enum OPTIONTYPE
+{
+	GAMEPLAY = 0,
+	DISPLAY = 1,
+	SYSTEM = 2,
+	EXTRA = 3,
+	DEBUG = 4
+};
+
+enum GAMEPLAYOPTIONS
+{
+	GHOSTPIECE = 0,
+	HOLDPIECE = 1,
+	BLOCKSPEED = 2,
+	FASTDROP = 3,
+	SCORING = 4,
+    REPEATHOLD = 5,
+    HOLDSCORING = 6,
+    LEVELLENGTH = 7
+};
+
+enum DISPLAYOPTIONS
+{
+	BGMODE = 0,
+	FIRSTBG = 1,
+	LINECLEAR = 2,
+	MOVINGBG = 3,
+	NEARTOPFLASH = 4,
+    LOWPERF = 5
+};
+enum SYSTEMOPTIONS
+{
+	FULLSCREEN = 0,
+	MUSIC = 1,
+	SOUNDS = 2,
+	RESET = 3,
+};
+
+enum EXTRAOPTIONS
+{
+	ROTATEBOARD = 0,
+	BIGGERBOARD = 1,
+	BLINDMODE = 2,
+    ANTIGRAVITY = 3,
+    BOMB,
+    MYSTERYBLOCK,
+    MIRROR,
+    ACIDBATH
+
+};
+
+enum DEBUGOPTIONS {
+	DEBUGENABLED = 0
+};
+
+enum TagQuality {
+    GOOD,BAD,UGLY
+};

@@ -46,10 +46,15 @@ GlobalGamemode::GlobalGamemode() {
             innerverts, //model
             30 //size (not sure if needed)
             );
+    glass = new
+            model("models/glass.kmf",
+            glm::vec3(0.0f,0.0f,-2.25-(1.0/6.0)), //prepose
+            glm::vec3((4.0000/3.0000),1.0f,1), //scale
+            glm::vec3((90.0f),0.0f,0.0f)); //rotation
 
 }
 int GlobalGamemode::logic(double deltatime) {
-    if(active) {
+    if(gameplay::transitioning) {
         switch(currentTransition.fade) {
             case BARS: {
                 if(alpha >= 1 && fade) {
@@ -58,7 +63,7 @@ int GlobalGamemode::logic(double deltatime) {
                 }
                 if(alpha >= 2) {
                     alpha = 0;
-                    active = false;
+                    gameplay::transitioning = false;
                 }
                 if(alpha <= 2) {
                     alpha += deltatime*currentTransition.speed; //why is dividing deltatime a bad practice??
@@ -71,7 +76,7 @@ int GlobalGamemode::logic(double deltatime) {
                 }
                 if(alpha < 0) {
                     alpha = 0;
-                    active = false;
+                    gameplay::transitioning = false;
                 }
                 if(fade && alpha <= 1) {
                     alpha += deltatime*currentTransition.speed; //why is dividing deltatime a bad practice??
@@ -90,9 +95,15 @@ void GlobalGamemode::setFade(Transition resp) {
     if(!fade) {
         alpha = 0;
         fade = true;
-        active = true;
+        gameplay::transitioning = true;
         currentTransition = resp;
-
+        switch(resp.fade) {
+            case GLASS: {
+                for(int i = 0; i < 64; i++) {
+                    random[i] = rand();
+                }
+            }break;
+        }
     }
     
 }
@@ -104,7 +115,7 @@ void GlobalGamemode::startRender() {
 }
 void GlobalGamemode::render() {
     buffer.disable(640,480,true);
-    if(active) {
+    if(gameplay::transitioning) {
         
         switch(currentTransition.fade) {
             case FADE: {
@@ -174,6 +185,47 @@ void GlobalGamemode::render() {
                 inner->render(graphics::shaders[0],graphics::sprites["homophobicdog"],projection,view);
                 outer->render(graphics::shaders[0],&buffer.renderTexture,projection,view);
                 glDisable(GL_DEPTH_TEST);  
+            }break;
+            case GLASS: {
+                // buffer.render(graphics::shaders[3],0,0,false);
+                std::cout << "rendering glass\n";
+                glEnable(GL_DEPTH_TEST);  
+                glm::mat4 projection;
+                projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
+                glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+                view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
+                graphics::shaders.at(0)->activate();
+                buffer.renderTexture.activate(0);
+                graphics::shaders.at(0)->setVector("projection", glm::value_ptr(projection));
+                graphics::shaders.at(0)->setVector("view", glm::value_ptr(view));
+
+                int randindex = 0;
+                for(int i = 0; i < glass->meshes.size(); i++) {
+                    glm::mat4 transform = glm::mat4(1.0f); //the actual transform of the model itself
+                    transform = glm::translate(transform,glm::vec3(
+                        glass->meshes.at(i).origin.x*4*alpha,
+                        -glass->meshes.at(i).origin.z*8*alpha-12*alpha*alpha,
+                    -2.25-(1.0/6.0)));
+                    transform = glm::rotate(transform, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                    transform = glm::rotate(transform, glm::radians((float)alpha*90), glm::vec3(0.0f, 1.0f, 0.0f));
+                    transform = glm::rotate(transform, glm::radians(-(float)alpha), glm::vec3(0.0f, 0.0f, 1.0f));
+
+                    transform = glm::scale(transform, glm::vec3((4.0000/3.0000),1.0f,1.0));
+
+                    glm::mat3 normal = glm::mat3(1.0f);
+                    normal = glm::transpose(glm::inverse(transform)); //calculate normals
+
+                    graphics::shaders.at(0)->setVector("model", glm::value_ptr(transform));
+                    graphics::shaders.at(0)->setMat3("worldspace", glm::value_ptr(normal));
+
+                    glass->meshes[i].render(graphics::shaders.at(0));
+
+                    randindex+=2;
+                }
+
+
+                glDisable(GL_DEPTH_TEST);  
+
             }break;
         }
     }

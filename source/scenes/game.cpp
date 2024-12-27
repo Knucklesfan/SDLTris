@@ -10,7 +10,7 @@
 #include <ctime>
 #include "../utils/defs.h"
 #include "SDL2/SDL_stdinc.h"
-
+#include "../engine/globalgamemode.h"
 #define LINES 0
 #define LEVEL 1
 #define BLOCKY 2
@@ -82,7 +82,6 @@ game::game() {
 
 }
 void game::logic(double deltatime) {
-
     if(demoPlayback) {
         if(demotick != 0 && demotick != UINT32_MAX && demokey != SDLK_ESCAPE) {
             if(SDL_GetTicks()-gameStart >= demotick) {
@@ -110,7 +109,7 @@ void game::logic(double deltatime) {
 
     }
     // graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).renderLyrics();
-    if (gameactive && !paused) {
+    if (gameactive && !paused && !gameplay::transitioning) {
         if (fmod(realtick, getspeed()) == 0) {
             invisScore++; //increment the drop score, but dont add it yet
 
@@ -283,6 +282,8 @@ void game::render() {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("bbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             }
             else {
+                std::cout << "rendering\n";
+
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("sbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             }
 
@@ -707,8 +708,10 @@ void game::checkLines(int(blocks)[480]) {
         score += 800 * level;
     }
     lines += times;
-    if (times > 0) {
-        level = (lines / settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::LEVELLENGTH]) + 1;
+    linecounter += times;
+    if (linecounter > settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::LEVELLENGTH]) {
+        level++;
+        linecounter = 0;
     }
     score+= invisScore;
     invisScore = 0;

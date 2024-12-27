@@ -243,7 +243,7 @@ void classicmenu::input(SDL_Keycode keysym) {
                 case 3: { //level picker
                     switch(keysym) {
                         case SDLK_LEFT: {
-                            if(levelStart > 0) {
+                            if(levelStart > 1) {
                                 levelStart--;
                                 Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
                             }
@@ -353,7 +353,17 @@ void classicmenu::logic(double deltatime) {
         }break;
 
     }
+    if(gamestarting && SDL_GetTicks64()-subscreenAge > 500) {
+        std::cout << SDL_GetTicks64()-subscreenAge << "\n";
+            t = {
+        0.0005,
+        4,
+        320,240,
+        FADETYPE::GLASS,
+        true
+    };
 
+    }
 }
 
 void classicmenu::render() {
@@ -697,6 +707,7 @@ void classicmenu::reset() {
     t = Transition();
     settings::clearSaveData();
     settings::loadSaveData();
+    gamestarting = false;
 }
 void classicmenu::startGame() {
     Mix_PauseMusic();
@@ -707,12 +718,7 @@ void classicmenu::startGame() {
     g->difficulty = difficultySelection;
     g->activeMods = activeMods;
     g->demoPlayback = false;
-    t = {
-        0.001,
-        4,
-        320,240,
-        FADETYPE::BLOCKS,
-        true
-    };
+    gamestarting = true;
+    subscreenAge = SDL_GetTicks64();
 
 }

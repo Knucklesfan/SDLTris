@@ -31,6 +31,7 @@ SDL_Window* graphics::window = nullptr;
 std::vector<modifier> gameplay::modifiers = std::vector<modifier>();
 std::vector<Gamemode*> gameplay::gamemodes = std::vector<Gamemode*>();
 int gameplay::gamemode = 0;
+bool gameplay::transitioning = false;
 int gameplay::Pieces[7][4][16] = {
             //S PIECE 
             {

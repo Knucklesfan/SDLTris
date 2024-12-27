@@ -21,6 +21,8 @@ class mesh {
         std::vector<vertex> vertices;
         std::vector<int> indices;
         std::vector<texture*> textures;
+        glm::vec3 origin;
+
         Material mat;
         mesh(std::vector<vertex> vertices, std::vector<int> indices, std::vector<texture*> textures, Material mat);
         void render(shader* shad);
@@ -36,7 +38,6 @@ class model  {
         glm::vec3 rotation;
         model(std::string path,glm::vec3 prepos, glm::vec3 scale, glm::vec3 rotation);
         void render(shader* shad, glm::mat4 projection, glm::mat4 view);
-    private:
         // model data
-        std::vector<mesh> meshes;
+        std::vector<mesh> meshes; //this is public so that you can access it and do fun stuff with it safely (NEVER WRITE)
 };

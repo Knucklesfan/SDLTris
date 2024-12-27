@@ -50,6 +50,15 @@ mesh::mesh(std::vector<vertex> vertices, std::vector<int> indices, std::vector<t
 
     glBindVertexArray(0);
     std::cout <<"SIZE MATTERS: " << vertices.size() <<"\n";
+    glm::vec3 verticeValue = {0,0,0};
+    for(int i = 0; i < vertices.size(); i++) {
+        verticeValue = {
+            verticeValue.x + vertices.at(i).pos.x,
+            verticeValue.y + vertices.at(i).pos.y,
+            verticeValue.z + vertices.at(i).pos.z
+        };
+    }
+    origin = {verticeValue.x/vertices.size(),verticeValue.y/vertices.size(),verticeValue.z/vertices.size()};
 
 }
 void mesh::render(shader* shad) {
@@ -110,6 +119,7 @@ void mesh::render(shader* shad) {
     //glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 model::model(std::string path,glm::vec3 prepos, glm::vec3 scale, glm::vec3 rotation) {
+    std::cout << "loading model " << path << " NOW!\n";
     this->position = prepos;
     this->scale = scale;
     this->rotation = rotation;

@@ -120,10 +120,10 @@ void classicmenu::input(SDL_Keycode keysym) {
                                         }break;
                                         case 1: {
                                             subscreen = 3;
-                                        }
+                                        }break;
                                         case 2: {
-                                            settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] = activeToggles^(1<<index);
                                             activeToggles=activeToggles^(1<<index);
+                                            settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] = activeToggles>>index&1;
                                         }break;
                                         case 5: {
                                             subscreen = 5; //keyboard subscreen

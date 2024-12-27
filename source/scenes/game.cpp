@@ -803,6 +803,8 @@ void game::reset() {
         loadState(settings::saveload); //go ahead and load our save
         settings::saveload = ""; //clear out saveload so we dont accidentally load again
     }
+    checkLines(testblocks);
+
 
 
 }

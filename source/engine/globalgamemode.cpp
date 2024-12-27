@@ -187,7 +187,8 @@ void GlobalGamemode::render() {
                 glDisable(GL_DEPTH_TEST);  
             }break;
             case GLASS: {
-                // buffer.render(graphics::shaders[3],0,0,false);
+                if(fade) {
+                    // buffer.render(graphics::shaders[3],0,0,false);
                 std::cout << "rendering glass\n";
                 glEnable(GL_DEPTH_TEST);  
                 glm::mat4 projection;
@@ -225,6 +226,12 @@ void GlobalGamemode::render() {
 
 
                 glDisable(GL_DEPTH_TEST);  
+                }
+                else {
+                    buffer.render(graphics::shaders[3],0,0,false);
+                    graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,alpha},false,-1,{0,0,0,0});
+                }
+                
 
             }break;
         }

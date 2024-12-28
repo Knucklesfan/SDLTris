@@ -13,7 +13,7 @@ class keyboard {
         void input(SDL_Keycode);
         std::string value;
         keyboard();
-        bool open = false;
+        bool  active = false;
         void reset(int max_chars, std::string prompt);
         int endlogic(); //yeah, i know adding an endlogic kinda turns this into a scene but whatever
     private:
@@ -40,7 +40,6 @@ class keyboard {
         int   keyboard_age = 0;
         int   selectedKey = 0;
         int   currentChar = 0;
-        bool  active = false;
         float transition = 1;
         bool transitionDirection = 0; //0 up, 1 down
         std::string prompt;

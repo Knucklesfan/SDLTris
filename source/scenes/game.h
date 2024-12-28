@@ -10,6 +10,7 @@
 #include "../opengl/model.h"
 #include "../gameplay/ingamemessagebox.h"
 #include "../opengl/font.h"
+#include "../gameplay/keyboard.h"
 #define SAVE_VERSION 2
 #define FILENAME_LENGTH 8
 //specifies the specific version of the saving algorithm this uses. Good for futureproofing in case that certain versions do get implemented.
@@ -18,18 +19,6 @@ class game: public Gamemode
 {
 	public:
 
-		char displayKeys[40] = { //the keys to render to the screen
-			'1','2','3','4','5','6','7','8','9','0',
-			'Q','W','E','R','T','Y','U','I','O','P',
-			'A','S','D','F','G','H','J','K','L','-',
-			'Z','X','C','V','B','N','M','<','>','$'
-		};
-		char keyboardKeys[40] = { //the actual keys that are added to the string
-			'1','2','3','4','5','6','7','8','9','0',
-			'Q','W','E','R','T','Y','U','I','O','P',
-			'A','S','D','F','G','H','J','K','L',32,
-			'Z','X','C','V','B','N','M',0,0,0
-		};
 
 
 		int boardwidth = 10;
@@ -74,7 +63,6 @@ class game: public Gamemode
 		int optionsize = 3;
 		bool gameactive = true;
 		bool paused = false;
-		bool keyboard = false;
 		// std::vector<SDL_Texture*> textures;
     	#ifdef __LEGACY_RENDER
 			SDL_Texture* texture;
@@ -91,13 +79,11 @@ class game: public Gamemode
 		bool demoReturn = false;
 		std::ofstream demofile;
 		char * demo;
-		int selectedkey = 0; //keyboard's current key
-		char keyboardname[8]; //the keyboard's current message
-		int currentChar = 0;
 		size_t demoOffset = 0;
 		Uint32 demotick = 0;
 		SDL_Keycode demokey = 0;
-
+		keyboard* keyb;
+		bool keyboardState = false; //true if that ol keyboard is up
 		void render();
 		void logic(double deltatime);
 		int demoEndLogic();

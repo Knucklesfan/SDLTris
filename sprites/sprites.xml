@@ -216,4 +216,13 @@
 		<name>modifierselected</name>
 		<path>./sprites/modifierselected.png</path>
 	</sprite>
+	<sprite>
+		<name>segacd_planet</name>
+		<path>./sprites/segacd_planet.png</path>
+	</sprite>
+	<sprite>
+		<name>segacd_bg</name>
+		<path>./sprites/segacd_bg.png</path>
+	</sprite>
+
 </sprites>

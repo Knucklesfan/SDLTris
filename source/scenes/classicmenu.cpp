@@ -53,9 +53,11 @@ void classicmenu::input(SDL_Keycode keysym) {
                 case SDLK_z: {
                     if(selection > 0) { //if we loadin, then we loading
                         settings::saveload = settings::saveDir + "/" + settings::saveCache.at(selection-1).name;
-                        t.gamemode = 4;
-                        t.transition = 1;
-                        t.fade = BARS;
+                        gamestarting = true;
+                        subscreenAge = SDL_GetTicks64();
+                        Mix_PauseMusic();
+                        Mix_PlayChannel( -1, audio::sfx->at(12), 0 );
+
                         std::cout << "Loading Save: "<<settings::saveload << "\n";
                         Mix_PlayChannel( -1, audio::sfx->at(0), 0 );
                     }
@@ -392,83 +394,85 @@ void classicmenu::render() {
                 graphics::shaders.at(5)->activate();
                 glm::vec4 othershade = {1,1,0,1};
                 glm::vec4 baseshade = {0,0.5,1,1};
-
-                if(i == selection) {
-                    graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(othershade));
-                }
-                else {
-                    graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(baseshade));
-
-                }
-                if(i == 0) { //use the cool newgame sprite
-                    graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("newgame"),
-                    {transitionTime<=0?34:34+(640*(SDL_GetTicks64()-transitionTime)/500.0),
-                    200+i*116-(selection*116)+(116*transition)
-                    },
-                    {250,100},0,{0,0},{250,100});
-                }
-                else { //use the normal, boring sprite
-                    graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("savefile"),
-                    {34,
-
-                    SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
+                int boxy = SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
                                 (200+i*116-(selection*116)+(116*transition))
                         +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
-                    :(200+i*116-(selection*116)+(116*transition)),
+                    :(200+i*116-(selection*116)+(116*transition));
+                if(boxy > -640 && boxy < 640) {
+                    if(i == selection) {
+                        graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(othershade));
+                    }
+                    else {
+                        graphics::shaders.at(5)->setVec4("spriteColor",glm::value_ptr(baseshade));
 
-                    },
-                    {250,100},0,{0,0},{250,100});
-                }
-                if(i > 0) { //if we're rendering a normal, game save, then lets go ahead and do that
-                    graphics::fonts->at(0)->render(34+4,
+                    }
+                    if(i == 0) { //use the cool newgame sprite
+                        graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("newgame"),
+                        {transitionTime<=0?34:34+(640*(SDL_GetTicks64()-transitionTime)/500.0),
+                        boxy
+                        },
+                        {250,100},0,{0,0},{250,100});
+                    }
+                    else { //use the normal, boring sprite
+                        graphics::sprite->render(graphics::shaders.at(5),graphics::sprites.at("savefile"),
+                        {34,
 
-                    SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
-                                (200+i*116-(selection*116)+(116*transition)+4)
-                        +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
-                    :(200+i*116-(selection*116)+(116*transition)+4),
+                        boxy,
 
-                    settings::saveCache.at(i-1).name, false);
-                    graphics::fonts->at(2)->render(34+4,
+                        },
+                        {250,100},0,{0,0},{250,100});
+                    }
+                    if(i > 0) { //if we're rendering a normal, game save, then lets go ahead and do that
+                        graphics::fonts->at(0)->render(34+4,
 
-                    SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
-                                (200+i*116-(selection*116)+(116*transition)+4+16)
-                        +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
-                    :(200+i*116-(selection*116)+(116*transition)+4+16),
+                        SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
+                                    (200+i*116-(selection*116)+(116*transition)+4)
+                            +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
+                        :(200+i*116-(selection*116)+(116*transition)+4),
 
-                    "Lines: " + std::to_string(settings::saveCache.at(i-1).lines), false);
-                    graphics::fonts->at(2)->render(34+4,
+                        settings::saveCache.at(i-1).name, false);
+                        graphics::fonts->at(2)->render(34+4,
 
-                    SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
-                                (200+i*116-(selection*116)+(116*transition)+4+24)
-                        +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
-                    :(200+i*116-(selection*116)+(116*transition)+4+24),
+                        SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
+                                    (200+i*116-(selection*116)+(116*transition)+4+16)
+                            +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
+                        :(200+i*116-(selection*116)+(116*transition)+4+16),
 
-                    "Level: " + std::to_string(settings::saveCache.at(i-1).level), false);
-                    graphics::fonts->at(2)->render(34+4,
+                        "Lines: " + std::to_string(settings::saveCache.at(i-1).lines), false);
+                        graphics::fonts->at(2)->render(34+4,
 
-                    SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
-                                (200+i*116-(selection*116)+(116*transition)+4+32)
-                        +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
-                    :(200+i*116-(selection*116)+(116*transition)+4+32),
+                        SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
+                                    (200+i*116-(selection*116)+(116*transition)+4+24)
+                            +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
+                        :(200+i*116-(selection*116)+(116*transition)+4+24),
 
-                    "Score: " + std::to_string(settings::saveCache.at(i-1).score), false);
+                        "Level: " + std::to_string(settings::saveCache.at(i-1).level), false);
+                        graphics::fonts->at(2)->render(34+4,
 
-                    graphics::sprite->render(graphics::shaders.at(4),settings::saveCache.at(i-1).t,{230,
-                    
-                    SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
-                                (200+i*116-(selection*116)+(116*transition)+4)
-                        +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
-                    :(200+i*116-(selection*116)+(116*transition)+4),
-                    
-                    },{40,96},0,{0,0},{40,96});        
+                        SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
+                                    (200+i*116-(selection*116)+(116*transition)+4+32)
+                            +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
+                        :(200+i*116-(selection*116)+(116*transition)+4+32),
 
-                }
-                else { //otherwise just show our newgame text
-                    graphics::fonts->at(0)->render(transitionTime<=0?34+125:34+(640*(SDL_GetTicks64()-transitionTime)/500.0)+125,200+i*116-(selection*116)+(116*transition)+(50-8),"NEW GAME", true); //the (50-8) means 50 (half the height of the save file) minus 8 (half the height of a letter)
-                }
+                        "Score: " + std::to_string(settings::saveCache.at(i-1).score), false);
 
-                if((SDL_GetTicks()/500)%2 ==0 && transitionTime <= 0) graphics::fonts->at(4)->render(320,64,"LOAD SAVE",true);
+                        graphics::sprite->render(graphics::shaders.at(4),settings::saveCache.at(i-1).t,{230,
+                        
+                        SDL_GetTicks64()-transitionTime>(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL)&&transitionTime>0?
+                                    (200+i*116-(selection*116)+(116*transition)+4)
+                            +math::easeOutBounce((SDL_GetTicks64()-transitionTime-(NEWGAMELENGTH+i*FALLTIME_OTHERS_INTERVAL))/FALLTIME_OTHERS)
+                        :(200+i*116-(selection*116)+(116*transition)+4),
+                        
+                        },{40,96},0,{0,0},{40,96});        
 
+                    }
+                    else { //otherwise just show our newgame text
+                        graphics::fonts->at(0)->render(transitionTime<=0?34+125:34+(640*(SDL_GetTicks64()-transitionTime)/500.0)+125,200+i*116-(selection*116)+(116*transition)+(50-8),"NEW GAME", true); //the (50-8) means 50 (half the height of the save file) minus 8 (half the height of a letter)
+                    }
+
+                    if((SDL_GetTicks()/500)%2 ==0 && transitionTime <= 0) graphics::fonts->at(4)->render(320,64,"LOAD SAVE",true);
+
+            }
             }
         }break;
         case 1: {

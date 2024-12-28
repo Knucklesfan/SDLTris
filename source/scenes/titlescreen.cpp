@@ -337,7 +337,7 @@ void titlescreen::render()
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnbanner"],{0,0},{640,480},0,{time/10.0,0},{640,480});
         }
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites["knfnlogo"],
-    {0,0},{640,480},{0,0,0},{0,0},{640,480});   
+    {85,169},{470,142},{0,0,0},{0,0},{470,142});   
 
         if(fmod(time,1000)<500) {
             graphics::fonts->at(0)->render(320,320,"PRESS START:ENTER",true);

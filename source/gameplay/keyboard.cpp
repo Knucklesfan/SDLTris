@@ -22,7 +22,6 @@ void keyboard::reset(int max_char, std::string prompt) {
     value = "test";
     selectedKey = 39;
     currentChar = 0;
-    open = true;
     keyboard_age = SDL_GetTicks64();
 }
 void keyboard::render() {
@@ -155,6 +154,7 @@ void keyboard::input(SDL_Keycode key) {
 
 }
 int keyboard::endlogic() {
+    std::cout << "activity\n" << active << "\n";
     return active;
 }
 keyboard::keyboard() {

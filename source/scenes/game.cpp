@@ -28,6 +28,7 @@
 //TODO: also, fix ingamemessagebox.h
 //TODO: take a shower
 game::game() {
+    keyb = new keyboard();
 
     #ifdef __LEGACY_RENDER
     texture = SDL_CreateTexture(graphics::render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
@@ -46,9 +47,6 @@ game::game() {
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
-    std::fill_n(keyboardname, 8, 0);
-    currentChar = 0;
-    selectedkey = 0;
 
     // renderer = renderman;
     // textures = textureb;
@@ -195,6 +193,17 @@ void game::logic(double deltatime) {
         }
     }
 
+    if(keyboardState) { //yeah, checking if the keyb is active is a waste of time, but checking if paused is fine
+        keyb->logic(deltatime);
+        if(!keyb->endlogic()) {
+            keyboardState = false;
+            saveState();
+            paused = false;
+            gameactive = false;
+        }
+
+    }
+
 
 }
 void game::render() {
@@ -282,7 +291,6 @@ void game::render() {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("bbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             }
             else {
-                std::cout << "rendering\n";
 
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("sbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
             }
@@ -336,22 +344,7 @@ void game::render() {
                     }
 
                 header->render(320, 240, "GAME PAUSED", true);
-                if(keyboard) {
-                    graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
-                    header->render(320,48, "Please name your save.",true);
-                    for(int i = 0; i < FILENAME_LENGTH; i++) {
-                        std::string str(1,keyboardname[i]);
-
-                        // header->render(320-(16*4)+i*16,80, str,true);
-                        header->render(320-(16*(FILENAME_LENGTH/2))+i*16,80,str,true,255,currentChar==i?0:255,255,-1,false,0,0,0);
-
-                    }
-                    for(int i = 0; i < 40; i++) {
-                        std::string str(1,displayKeys[i]);
-                        graphics::fonts->at(0)->render(200+(i%10)*24,160+(i/10)*32,str,true,255,selectedkey==i?96-64*sin(SDL_GetTicks()/500.0f):255,255,-1,false,0,0,0);
-                    }
-                }
-
+                keyb->render();
             }
             if(demoRecord) {
                 bodyfont->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
@@ -360,10 +353,6 @@ void game::render() {
                 }
             }
         #endif
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);
-        glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
-        view = glm::translate(view, glm::vec3(0.0, 0, -14.0)); 
         //SDL_RenderPresent(renderer);
     //}
 }
@@ -524,7 +513,7 @@ void game::inputKey(SDL_Keycode key) {
         }
     }
     else {
-        if(paused && !keyboard) {
+        if(paused && !keyb->active) {
             switch (key) {
                 case(SDLK_UP): {
                     if (pauseselection > 0) {
@@ -555,7 +544,11 @@ void game::inputKey(SDL_Keycode key) {
                             gameactive = false;
                         }break;
                         case 2: {
-                            keyboard = true;
+                            //KEYBOARD ACTIVATE
+                            keyb->reset(16,"Please type a filename");
+                            keyb->value = "";
+                            keyboardState = true;
+
                         }break;
                         case 3: {
                         }break;
@@ -566,77 +559,15 @@ void game::inputKey(SDL_Keycode key) {
                     }
                 }
             }
-        } else
-        if(keyboard) {
-            switch(key) {
-                case(SDLK_UP): {
-                    if (selectedkey >= 10) {
-                        selectedkey-=10;
-                    }
-                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
-                    break;
-                }
-                case(SDLK_DOWN): {
-                    if (selectedkey <= 30) {
-                        selectedkey+=10;
-                    }
-                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
-                    break;
-                }
-                case(SDLK_LEFT): {
-                    if (selectedkey > 0) {
-                        selectedkey--;
-                    }
-                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
-                    break;
-                }
-                case(SDLK_RIGHT): {
-                    if (selectedkey < 40) {
-                        selectedkey++;
-                    }
-                    Mix_PlayChannel(-1, audio::sfx->at(1), 0);
-                    break;
-                }
-                case(SDLK_z): {
-                    if(selectedkey < 37) { //if we arent the two move keys, then we're fine to keep going
-                        if(currentChar < 8) {
-                            keyboardname[currentChar] = keyboardKeys[selectedkey];
-                            currentChar++;
-                        }
-                    }
-                    else { //otherwise, we gotta actually handle those...
-                        if(selectedkey == 37) { //go back one key
-                            if(currentChar > 0) {
-                                currentChar--;
-                            }
-                        }
-                        else if(selectedkey == 38) { //go forward
-                            if(currentChar < 8) {
-                                currentChar++;
-                            }
-                        }
-                        else if(selectedkey == 39) {
-                            saveState();
-                            std::fill_n(keyboardname, 8, 0);
-                            keyboard = false;
-                            paused = false;
-                            gameactive = false;
-                            //INSERT SUBMISSION CODE HERE
-                        }
-                    }
-                }
-
-            }
+        }
+        else if(keyb->active) {
+            keyb->input(key); //pass input on to the keyboard if in -1
         }
 
     }
     if(key == SDLK_ESCAPE) {
         if(demoRecord) {
             stopRecord();
-        }
-        if(keyboard) {
-            keyboard = !keyboard;
-            return;
         }
         if (Mix_PausedMusic() == 1)
         {
@@ -775,9 +706,6 @@ void game::reset() {
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
-    std::fill_n(keyboardname, 8, ' ');
-    currentChar = 0;
-    selectedkey = 0;
     score = 0;
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
@@ -1057,17 +985,9 @@ void game::loadDemo(std::string filename) {
 void game::saveState() { //saves the game's state. this is a debug function im coding quickly to test replays. Might stick around, though...
     t.removeolddraw();
     g.removeolddraw();
-    std::string name(keyboardname);
-    int last = 8 - 1;
-    while (last >= 0 && name[last] == 32)
-        --last;
-    name =  name.substr(0, last + 1);
-    for(int i = 0; i < name.length(); i++) {
-        std::cout << (int)name[i] << " ";
-    }
 
     std::cout << "END\n";
-    std::string filename = settings::saveDir+"/"+name+".knfs";
+    std::string filename = settings::saveDir+"/"+keyb->value+".knfs";
     std::cout << "Saving to file " << filename <<"\n";
     std::ofstream fs(filename, std::ios::out | std::ios::binary);
     Uint32 version = SAVE_VERSION; //the version of the current save type, in case i update this

@@ -1,7 +1,7 @@
-#version 330 core
-out vec4 FragColor;
+#version 300 es
+out highp vec4 FragColor;
 
-in vec3 TexCoords;
+in highp vec3 TexCoords;
 
 uniform samplerCube skybox;
 

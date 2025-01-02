@@ -1,12 +1,12 @@
-#version 330 core
-layout (location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
+#version 300 es
+layout (location = 0) in highp vec4 vertex; // <vec2 position, vec2 texCoords>
 
-out vec2 TexCoords;
+out highp vec2 TexCoords;
 
 uniform mat4 model;
 uniform mat4 projection;
-uniform vec2 texOffset;
-uniform vec2 scale;
+uniform highp vec2 texOffset;
+uniform highp vec2 scale;
 
 void main()
 {

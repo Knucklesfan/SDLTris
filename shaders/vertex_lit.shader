@@ -1,11 +1,11 @@
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aNormal;
-layout (location = 2) in vec2 aTexCoord;
+#version 300 es
+layout (location = 0) in highp vec3 aPos;
+layout (location = 1) in highp vec3 aNormal;
+layout (location = 2) in highp vec2 aTexCoord;
 
-out vec3 FragPos;
-out vec3 Normal;
-out vec2 TexCoord;
+out highp vec3 FragPos;
+out highp vec3 Normal;
+out highp vec2 TexCoord;
 //this is really basic, baby stuff really
 uniform mat4 model;
 uniform mat4 view;

@@ -1,7 +1,7 @@
 
-#version 330 core
-layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
-out vec2 TexCoords;
+#version 300 es
+layout (location = 0) in highp vec4 vertex; // <vec2 pos, vec2 tex>
+out highp vec2 TexCoords;
 
 uniform mat4 projection;
 

@@ -17,7 +17,8 @@ class highscore : public Gamemode {
     plane* logo;
     plane* pres;
     int animationindex = 0;
-    int animationtime = 0;
+    float animationtime = 0;
+	int animationstart = 0;
 	float alpha = 0.0;
 	highscore();
 	void input(SDL_Keycode key);

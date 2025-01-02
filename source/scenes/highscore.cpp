@@ -7,6 +7,9 @@ highscore::highscore() {
     refreshBackdrop = true;
     logo = new plane({0,0,-2},{1,71.0/235.0,1},{0,0,0});
     pres = new plane({0,0,-2},{1,67.0/219.0,1},{0,0,0});
+    animationindex = 0;
+    animationtime = 1000;
+    animationstart = SDL_GetTicks64();
 
 };
 void highscore::input(SDL_Keycode key) {
@@ -40,20 +43,35 @@ void highscore::render() {
 };
 
 void highscore::logic(double deltatime) {
-    if(animationindex == 0) {
-        float sinVal = (1+sin(SDL_GetTicks64()/1000.0f))/2;
-        float cosVal = (1+sin(SDL_GetTicks64()/1000.0f + M_PI))/2;
+    std::cout << SDL_GetTicks64()-animationstart << "\n";
+    float animationframe = (SDL_GetTicks64()-animationstart)/animationtime;
+    switch(animationindex) {
+        case 0: {
+            if(SDL_GetTicks64()-animationstart >= animationtime) {
+                animationindex++;
+                animationtime = 2000;
+                animationstart = SDL_GetTicks64();
+            }
+        }break;
+        case 1: {
+            float sinVal = 1-(SDL_GetTicks64()-animationstart)/animationtime;
+            float cosVal = (SDL_GetTicks64()-animationstart)/animationtime;
 
-        logo->position.z = -2-16*(sinVal);
-        logo->position.y = 2*math::easeInOutCubic(abs(sinVal));
-        logo->position.x = 2*math::easeInOutCubic(abs(sinVal));
-        std::cout << sinVal << "\n";
-        // logo->position.x = -2*std::pow((2*(1+sin(SDL_GetTicks64()/1000.0)/2))-1, 2)+1;
-        pres->position.z = -2-16*(cosVal);
-        pres->position.y = -2*math::easeInOutCubic(abs(cosVal));
-        pres->position.x = -2*math::easeInOutCubic(abs(cosVal));
+            logo->position.z = -2-16*(sinVal);
+            logo->position.y = 2*math::easeInOutCubic(abs(sinVal));
+            logo->position.x = 2*math::easeInOutCubic(abs(sinVal));
+            // logo->position.x = -2*std::pow((2*(1+sin(SDL_GetTicks64()/1000.0)/2))-1, 2)+1;
+            pres->position.z = -2-16*(cosVal);
+            pres->position.y = -2*math::easeInOutCubic(abs(cosVal));
+            pres->position.x = -2*math::easeInOutCubic(abs(cosVal));
+            if(SDL_GetTicks64()-animationstart >= animationtime) {
+                animationindex++;
+                animationtime = 1000;
+                animationstart = SDL_GetTicks64();
+            }
+
+        }break;
     }
-
 
 };
 Transition highscore::endLogic() {
@@ -69,5 +87,7 @@ void highscore::handleAnimation() {
 }
 
 void highscore::reset() {
-
+    animationindex = 0;
+    animationtime = 2000;
+    animationstart = SDL_GetTicks64();
 }

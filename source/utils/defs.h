@@ -256,4 +256,5 @@ class math {
     public:
         static int numActive(Uint64 x);
         static double easeOutBounce(double x);
+        static float easeInOutCubic(float x);
 };

@@ -20,6 +20,7 @@
 #include "../scenes/game.h"
 #include "../scenes/results.h"
 #include "../scenes/classicmenu.h"
+#include "../scenes/highscore.h"
 
 #include <cmath>
 #include <sstream> //std::stringstream
@@ -1189,6 +1190,13 @@ void gameplay::loadGamemodes() {
             gamemodes.push_back(tmp);
 
         }
+        else if(type == "highscore") {
+            highscore* tmp = new highscore();
+            tmp->name = name;
+            gamemodes.push_back(tmp);
+
+        }
+
         else if(type == "scene") {
                         // gamemodes.push_back(new titlescreen());
         }
@@ -1258,6 +1266,10 @@ double math::easeOutBounce(double x) {
     }
 
 }
+float math::easeInOutCubic(float x) {
+    return -std::pow((2*x)-1, 2)+1;
+}
+
 int math::numActive(Uint64 a) { //counts the number of zeroes in a 64bit int
     int count = 0;
     for(Uint64 i = 0; i < 64; i++) {

@@ -1,4 +1,4 @@
-OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o gameplaymenu.o skybox.o model.o classicmenu.o rpcimplement.o sota.o tpp_assert.o tpp_impl.o keyboard.o
+OBJS	= SDLTetris.o tetrimino.o ghostblock.o titlescreen.o background.o ingamemessagebox.o knuxfanscreen.o cube.o sine.o globalgamemode.o defs.o pixfont.o ttffont.o texture.o shader.o plane.o rect.o buffermanager.o sprite.o stbi_image.o animation.o line.o game.o results.o credits.o wireframecube.o debugscene.o gameplaymenu.o skybox.o model.o classicmenu.o rpcimplement.o sota.o tpp_assert.o tpp_impl.o keyboard.o highscore.o
 DISCORDOBJS = achievement_manager.o activity_manager.o application_manager.o core.o image_manager.o lobby_manager.o network_manager.o overlay_manager.o relationship_manager.o storage_manager.o store_manager.o types.o user_manager.o voice_manager.o $(OBJS)
 HEADER	= 
 OUT	= SDLTetris
@@ -45,6 +45,8 @@ gameplaymenu.o: source/scenes/gameplaymenu.cpp
 	$(CC) $(FLAGS) source/scenes/gameplaymenu.cpp -std=c++17
 classicmenu.o: source/scenes/classicmenu.cpp
 	$(CC) $(FLAGS) source/scenes/classicmenu.cpp -std=c++17
+highscore.o: source/scenes/highscore.cpp
+	$(CC) $(FLAGS) source/scenes/highscore.cpp -std=c++17
 
 # server.o: source/server.cpp
 # 	$(CC) $(FLAGS) source/server.cpp -std=c++17

@@ -28,6 +28,10 @@
         <name>Credits</name>
         <type>credits</type>
     </scene>
+    <scene> <!--7-->
+        <name>Highscore</name>
+        <type>highscore</type>
+    </scene>
 
 
 </scenes>

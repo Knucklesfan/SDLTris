@@ -240,5 +240,13 @@
 		<name>star</name>
 		<path>./sprites/star.png</path>
 	</sprite>
+	<sprite>
+		<name>scorebar</name>
+		<path>./sprites/scorebar.png</path>
+	</sprite>
+		<sprite>
+		<name>ingamenumeral</name>
+		<path>./sprites/ingamenumeral.png</path>
+	</sprite>
 
 </sprites>

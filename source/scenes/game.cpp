@@ -56,10 +56,9 @@ game::game() {
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
-    
+    p = new plane({0,0,-6},{1,0.25,1},{-75,0,0});
     ticktimer = SDL_GetTicks64();
     //int nextblocks[16];
-    toad = new model("models/toad.kmf",{0,-6,-6},{1,1,1},{0,0,0});
     std::srand(time+randomIters);
     nextblocks = std::rand() % 7;
 
@@ -74,7 +73,7 @@ game::game() {
     paused = false;
     bodyfont = graphics::fonts->at(2);
     header = graphics::fonts->at(1);
-    msg = new ingamemessagebox("null","null", 0);
+    msg = new ingamemessagebox("null","null", 640-252);
     gameactive = true;
     invisScore = 0;
 
@@ -183,8 +182,11 @@ void game::logic(double deltatime) {
 
     for (int i = 0; i < boardheight; i++) {
         if (lineclears[i] > 0.0) {
-            lineclears[i] -= 0.05;
+            lineclears[i] -= deltatime/1000.0;
 
+        }
+        else {
+            lineclears[i] = 0.0;
         }
     }
 
@@ -204,73 +206,94 @@ void game::logic(double deltatime) {
 void game::render() {
 
     //if (gameactive) {
-            playfield->enable();
-            if(boardwidth > 10) {
-                graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("bbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
-            }
-            else {
+        playfield->enable();
+        // if(boardwidth > 10) {
+        //     graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("bbackdrop"), {0,0}, {640,480},0,{0,0},{640,480});
+        // }
+        // else {
+        graphics::sprite->render(
+            graphics::shaders.at(4),
+            graphics::sprites.at("sbackdrop"),
+             {64+32,80}, {160,320},0,{0,0},{160,320}); //its offically too late to be coding and yet... my code's working i think??
+        // }
 
-                graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("sbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
-            }
-
-            if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
-                drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
-            }
-            drawCubes(testblocks, 1.0, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
+        if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
+            drawCubes(ghostblocks, 0.5, 64+32, 16, boardheight*boardwidth, boardwidth);
+        }
+        drawCubes(testblocks, 1.0, 64+32, 16, boardheight*boardwidth, boardwidth);
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
             for (int i = 0; i < boardheight; i++) {
                 if (lineclears[i] > 0) {
-                    graphics::rect->render(graphics::shaders.at(1),{240,16+i*16},{240+160,(16+i*16)+16},0,{1,1,1,lineclears[i]},false,-1,{0,0,0,0});
+                    graphics::rect->render(graphics::shaders.at(1),{32+64,16+i*16},{32+64+160,(16+i*16)+16},0,{1,1,1,lineclears[i]},false,-1,{0,0,0,0});
                 }
                 //std::cout << lineclears[i] << "\n";
             }
         }
-        if(boardwidth > 10) {
-            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("bigstage"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
+        // if(boardwidth > 10) {
+        //     graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("bigstage"), {0,0}, {640,480},0,{0,0},{640,480});
+        // }
+        // else {
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("stage"), {32,0}, {288,480},0,{0,0},{288,480});
+        // }
+        playfield->disable(640,480,true);
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render();
+        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
+            graphics::rect->render(
+                graphics::shaders.at(1),
+                {0,0},
+                {640,480},0,{255,0,0,0.5*warningalpha},false,-1,glm::vec4(1,1,1,1));                
         }
-        else {
-            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("stage"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
+
+        playfield->render(graphics::shaders.at(3),0,0,false);
+        graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("next"), {288+32+16,16}, {96,104},0,{0,0},{96,104}); //its offically too late to be coding and yet... my code's working i think??
+        
+        if(nextblocks > -1 && nextblocks < 7) {
+            drawCubes(gameplay::Pieces[nextblocks][0], 1.0, 3.33, 8.55, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
         }
-            playfield->disable(640,480,true);
-            graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render();
-            if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
-                graphics::rect->render(
-                    graphics::shaders.at(1),
-                    {0,0},
-                    {640,480},0,{255,0,0,0.5*warningalpha},false,-1,glm::vec4(1,1,1,1));                
-            }
+        if (holdblock > -1) {
+            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("hold"), {288+32+16,16+104+16}, {96,104},0,{0,0},{96,104}); //its offically too late to be coding and yet... my code's working i think??
+            drawCubes(gameplay::Pieces[holdblock][0], 1.0, 3.33, 3.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
+        }
+        bodyfont->render(144+32, 32, "LINES: " + std::to_string(lines), true);
 
-            playfield->render(graphics::shaders.at(3),0,0,false);
-            graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("hold"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
-            
-            if(nextblocks > -1 && nextblocks < 7) {
-                drawCubes(gameplay::Pieces[nextblocks][0], 1.0, 10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
-            }
-            if (holdblock > -1) {
-                drawCubes(gameplay::Pieces[holdblock][0], 1.0, -10.45, 8.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
-            }
 
-            bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true);
-            bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true);
-            
-            msg->render();
-            if(paused) {
-                    graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
-                    for (int i = 0; i < optionsize; i++) {
-                        bodyfont->render(320, 300 + (i * 12),choices[i],
-                        true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
-                    }
-
-                header->render(320, 240, "GAME PAUSED", true);
-                keyb->render();
-            }
-            if(demoRecord) {
-                bodyfont->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
-                if(demoReturn) {
-                    bodyfont->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
+        bodyfont->render(144+32, 32, "LINES: " + std::to_string(lines), true);
+        bodyfont->render(144+32, 48, "LEVEL: " + std::to_string(level),true);
+        
+        msg->render();
+        if(paused) {
+                graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
+                for (int i = 0; i < optionsize; i++) {
+                    bodyfont->render(320, 300 + (i * 12),choices[i],
+                    true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
                 }
+
+            header->render(320, 240, "GAME PAUSED", true);
+            keyb->render();
+        }
+        if(demoRecord) {
+            bodyfont->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
+            if(demoReturn) {
+                bodyfont->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
             }
+        }
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(45.0f), (float)614 / (float)406, 0.001f, 10000.0f);
+        projection[2][0] = -0.675;
+        projection[2][1] = -0.5255;
+
+        glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
+        view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
+        graphics::shaders.at(0)->activate();
+        p->render(graphics::shaders.at(0),graphics::sprites.at("scorebar"),projection,view);
         //SDL_RenderPresent(renderer);
+        int scorelen = std::to_string(score).length();
+        for(int i = 0; i < scorelen;i++) {
+            std::cout << score << "\n";
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ingamenumeral"),
+            {448+(170/2)-((scorelen*20)/2)+i*20,82},{20,32},{0,0,0},{0,((score/((int)std::pow(10,scorelen-1-i)))%10)*32},{20,32});
+        }
+        std::cout << "end digit\n";
     //}
 }
 Transition game::endLogic() {
@@ -623,9 +646,10 @@ void game::reset() {
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
-    score = 0;
-    t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
-    g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
+    score = 12345678;
+    int temp  = std::rand() % 7;
+    t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, temp);
+    g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, temp, ghostblocks);
     g.changePos(0, 0, 0);
     
     ticktimer = SDL_GetTicks64();

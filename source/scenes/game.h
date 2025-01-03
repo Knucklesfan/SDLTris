@@ -3,11 +3,13 @@
 #include <SDL2/SDL_mixer_ext.h>
 #include <string>
 #include <cstring>
+
 #include "../gameplay/tetriminos.h"
 #include "../gameplay/ghostblock.h"
 #include "../engine/gamemode.h"
 #include "../opengl/cube.h"
 #include "../opengl/model.h"
+#include "../opengl/plane.h"
 #include "../gameplay/ingamemessagebox.h"
 #include "../opengl/font.h"
 #include "../gameplay/keyboard.h"
@@ -52,7 +54,6 @@ class game: public Gamemode
 		bool goup = false;
 		bool godown = false;
 		bool warningflag = false;
-		model* toad;
 		std::string choices[3] = {
 			"RESUME",
 			"EXIT WITHOUT SAVING",
@@ -68,6 +69,7 @@ class game: public Gamemode
 		#else
 			cube* cubeRenderer;
 			buffermanager* playfield; //the buffer that is used for the playfield
+			plane* p;
 		#endif
 		// std::vector<bg>  backgrounds;
 		game();

@@ -18,7 +18,11 @@
 	    <name>hold</name>
 	    <path>./sprites/hold.png</path>
 	</sprite>
-	
+	<sprite>
+	    <name>next</name>
+	    <path>./sprites/next.png</path>
+	</sprite>
+
 	<sprite>
 	    <name>knfnlogo</name>
 	    <path>./sprites/knfnlogo.png</path>

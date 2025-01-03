@@ -28,6 +28,8 @@ public:
 	void setVec2(const std::string& name, float* value) const;
     void setVec3(const std::string& name, float* value) const;
 	void setVec4(const std::string& name, float* value) const;
+	void setVec4(const std::string& name, float* value, int index) const;
+
     void setMat3(const std::string& name, float* value) const;
 
 };

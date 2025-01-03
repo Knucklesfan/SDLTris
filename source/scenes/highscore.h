@@ -29,5 +29,20 @@ class highscore : public Gamemode {
 	private:
         void handleAnimation();
         bool refreshBackdrop = true;
-    
+		int fakeDelta = 0; //to ensure we get semi-30fps!
+		float palette[32] = {
+			1,0,0,1,
+			1,0.25,0,1,
+			1,0.5,0,1,
+			1,1,0,1,
+			0,1,0,1,
+			0,1,1,1,
+			0,0,1,1,
+			1,0,1,1
+		};
+		
+		float starX[255];
+        float starY[255];
+        float starZ[255];
+
 };

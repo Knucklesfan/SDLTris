@@ -120,6 +120,11 @@ void shader::setVec4(const std::string& name, float* value) const {
     __glewUniform4fv(location,1, value);
 
 }
+void shader::setVec4(const std::string& name, float* value, int index) const {
+    glUniform4fv(glGetUniformLocation(id, name.c_str()), 10, value);
+
+}
+
 void shader::setMat3(const std::string& name, float* value) const {
     int location = __glewGetUniformLocation(id, name.c_str());
     __glewUniformMatrix3fv(location,1,GL_FALSE, value);

@@ -224,5 +224,17 @@
 		<name>segacd_bg</name>
 		<path>./sprites/segacd_bg.png</path>
 	</sprite>
+	<sprite>
+		<name>knfnlogo_cd</name>
+		<path>./sprites/knfnlogo_cd.png</path>
+	</sprite>
+	<sprite>
+		<name>knfnrainbow</name>
+		<path>./sprites/knfnrainbow.png</path>
+	</sprite>
+	<sprite>
+		<name>star</name>
+		<path>./sprites/star.png</path>
+	</sprite>
 
 </sprites>

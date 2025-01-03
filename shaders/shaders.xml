@@ -58,6 +58,10 @@
 		<vertex>./shaders/vertex_sprite.shader</vertex>
 		<fragment>./shaders/fragment_classicfont.shader</fragment>
 	</shader>
+	<shader> <!--A paletted shader used for paletting textures on 3d objects 13-->
+		<vertex>./shaders/vertex_unlit.shader</vertex>
+		<fragment>./shaders/fragment_palette.shader</fragment>
+	</shader>
 
 	<!-- ANYTHING BELOW THIS POINT IS OKAY TO MODIFY OR USE IN SCRIPTS! -->
 	<!-- Anything than is beyond this point is not hardcoded by the game and can be modified, or used by backgrounds, sprites or fonts. -->

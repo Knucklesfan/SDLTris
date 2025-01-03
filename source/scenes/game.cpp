@@ -56,8 +56,8 @@ game::game() {
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
-    ticks = 0;
-    realtick = 0;
+    
+    ticktimer = SDL_GetTicks64();
     //int nextblocks[16];
     toad = new model("models/toad.kmf",{0,-6,-6},{1,1,1},{0,0,0});
     std::srand(time+randomIters);
@@ -108,16 +108,11 @@ void game::logic(double deltatime) {
     }
     // graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).renderLyrics();
     if (gameactive && !paused && !gameplay::transitioning) {
-        if (fmod(realtick, getspeed()) == 0) {
+        if (SDL_GetTicks64()-ticktimer > getspeed()*10) {
             invisScore++; //increment the drop score, but dont add it yet
-
+            ticktimer = SDL_GetTicks64();
             t.movedown();
             
-        }
-        ticks += deltatime;
-        if (ticks >= 1) {
-            ticks = 0;
-            realtick++;
         }
         msg->logic(deltatime);
         visiblelifetime += deltatime;
@@ -361,8 +356,8 @@ Transition game::endLogic() {
     if (!t.alive && gameactive && !paused) {
         //std::cout << "block not alive!!!";
         Mix_PlayChannel(-1, audio::sfx->at(5), 0);
-        ticks = 0;
-        realtick = 0;
+        
+        ticktimer = SDL_GetTicks64();
         //Mix_VolumeMusic(volume);
         warningflag = false;
         checkLines(testblocks);
@@ -485,8 +480,8 @@ void game::inputKey(SDL_Keycode key) {
                 }
                 g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
                 std::fill_n(ghostblocks, 480, 0);
-                ticks = 0;
-                realtick = 0;
+                
+                ticktimer = SDL_GetTicks64();
                 invisScore = 0;
             }
             break;
@@ -710,8 +705,8 @@ void game::reset() {
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
-    ticks = 0;
-    realtick = 0;
+    
+    ticktimer = SDL_GetTicks64();
     holdblock = -1;
     demoOffset = 0;
     demotick = 0;

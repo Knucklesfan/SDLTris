@@ -31,8 +31,7 @@ class game: public Gamemode
 		ghostblock g;
 		double visibility = 1.0;
 		double visiblelifetime = 0;
-		double ticks = 0.0;
-		Uint32 realtick = 0;
+		Uint64 ticktimer = 0; //the tick of the current time
 		int nextblocks = 0;
 		int holdblock = 0;
 		uint randomIters = 0; // number of times the rand() call has been made

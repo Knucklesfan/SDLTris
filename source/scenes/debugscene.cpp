@@ -44,6 +44,13 @@ void debugscene::render()
                 graphics::sprite->render(graphics::shaders.at(4),graphics::blocks->at(starBlock[i]),{x,y},{16*(perspective / 2),16*(perspective / 2)},{0,0,starZ[i]*4},{0,0},{16,16},{640,480},(perspective / 2));            
             }
             glDisable(GL_DEPTH_TEST);
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("kekcrochurryup"),{16,432},{16,32},0,{(SDL_GetTicks()/1000)%2==1?0:16,0},{16,32});
+            graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("mariospin"),{16,400},{16,32},0,{((SDL_GetTicks()/250)%4)*16,0},{16,32});
+
+            if(SDL_GetTicks()-messagelife > 1000 && currentmessage < 42) {
+                graphics::fonts->at(6)->render(32,432-(messageSenders[currentmessage]*32),kekcrocMessages[currentmessage],false);
+            }
+
         }
 
         graphics::fonts->at(1)->render(320,60,"WELCOME TO",true);
@@ -57,12 +64,6 @@ void debugscene::render()
                 text.append((gameplay::gamemodes.at(gamemode)->name));
             }
             graphics::fonts->at(0)->render(320,200+(i*24),text,true,255,selection==i?0:255,255,-1,false,0,0,0);
-        }
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("kekcrochurryup"),{16,432},{16,32},0,{(SDL_GetTicks()/1000)%2==1?0:16,0},{16,32});
-        graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("mariospin"),{16,400},{16,32},0,{((SDL_GetTicks()/250)%4)*16,0},{16,32});
-
-        if(SDL_GetTicks()-messagelife > 1000 && currentmessage < 42) {
-            graphics::fonts->at(6)->render(32,432-(messageSenders[currentmessage]*32),kekcrocMessages[currentmessage],false);
         }
 
         #endif

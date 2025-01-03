@@ -204,83 +204,6 @@ void game::logic(double deltatime) {
 void game::render() {
 
     //if (gameactive) {
-        #ifdef __LEGACY_RENDER
-        SDL_RenderClear(graphics::render);
-        #endif
-        // graphics::backgrounds[(bglevel)%(backgrounds.size())].render(renderer,false);
-        #ifdef __LEGACY_RENDER
-        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] == 1) {
-            SDL_SetRenderDrawColor(graphics::render, 255, 0, 0, 128 * warningalpha);
-            SDL_Rect splashbox = { 0, 0, 640, 480 };
-            SDL_RenderFillRect(graphics::render, &splashbox);
-            
-        }
-        SDL_Texture* temp = SDL_GetRenderTarget(graphics::render);
-        SDL_SetRenderTarget(graphics::render, texture);
-        SDL_RenderClear(graphics::render);
-        if(boardwidth > 10) {
-            SDL_RenderCopy(graphics::render, graphics::sprites.at("bbackdrop"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
-        }
-        else {
-            SDL_RenderCopy(graphics::render, graphics::sprites.at("sbackdrop"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
-        }
-        g.changePos(t.x, t.y, t.rot);
-        t.draw();
-        g.draw();
-        if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
-            drawCubes(ghostblocks, 0.5, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
-        }
-        drawCubes(testblocks, 1.0, 320-boardwidth*8, 16, boardheight*boardwidth, boardwidth);
-        //std::cout << "LINECLEARS\n";
-        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
-            for (int i = 0; i < boardheight; i++) {
-                if (lineclears[i] > 0) {
-                    SDL_SetRenderDrawColor(graphics::render, 255, 255, 255, 255 * lineclears[i]);
-                    SDL_Rect splashbox = { 240, 16 + i * 16, 160, 16 };
-                    SDL_RenderFillRect(graphics::render, &splashbox);
-                }
-                //std::cout << lineclears[i] << "\n";
-
-            }
-        }
-        if(boardwidth > 10) {
-            SDL_RenderCopy(graphics::render, graphics::sprites.at("bigstage"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
-        }
-        else {
-            SDL_RenderCopy(graphics::render, graphics::sprites.at("stage"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
-        }
-        SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 255);
-        SDL_SetRenderTarget(graphics::render, temp);
-        graphics::drawTexture(texture, 0, 0, rotval, visibility, false);
-
-        
-        
-        SDL_RenderCopy(graphics::render, graphics::sprites.at("hold"), NULL, NULL); //its offically too late to be coding and yet... my code's working i think??
-        if(nextblocks > -1 && nextblocks < 7) {
-            drawCubes(t.Pieces[nextblocks][0], 1.0, 512, 48, 16, 4);
-        }
-        if (holdblock > -1) {
-            drawCubes(t.Pieces[holdblock][0], 1.0, 64, 48, 16, 4);
-        }
-
-        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).render(graphics::render,true);
-        bodyfont->render(320, 32, "LN: " + std::to_string(lines) + " LV: " + std::to_string(level), true);
-        bodyfont->render(320, 48, "SCORE: " + std::to_string(score),true);
-        
-        msg->render();
-
-        if(paused) {
-                SDL_SetRenderDrawColor(graphics::render, 0, 0, 0, 128);
-                SDL_Rect splashbox = { 0, 0, 640, 480 };
-                SDL_RenderFillRect(graphics::render, &splashbox);
-                for (int i = 0; i < optionsize; i++) {
-                    bodyfont->render(320, 300 + (i * 12),choices[i],
-                    true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
-                }
-
-            header->render(320, 240, "GAME PAUSED", true);
-        }
-        #else
             playfield->enable();
             if(boardwidth > 10) {
                 graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("bbackdrop"), {0,0}, {640,480},0,{0,0},{640,480}); //its offically too late to be coding and yet... my code's working i think??
@@ -347,7 +270,6 @@ void game::render() {
                     bodyfont->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
                 }
             }
-        #endif
         //SDL_RenderPresent(renderer);
     //}
 }

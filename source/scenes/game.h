@@ -134,5 +134,32 @@ class game: public Gamemode
 		bool checkRow(int(blocks)[10]);
 		void clearRow(int(blocks)[480], int y);
 		void drawCubes(int position[],float scale, float x, float y, int size, int width,bool threed=false, glm::vec3 rotation={0,0,0});
+		float scoreFlip[11] = { //look, i know only 10 of the digits will flip, but honestly who's getting a score better than 10 digits?
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f //this 11th value is used for the bumper thingy
+		};
+		float scoreFlipStrength[11] = {
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f //this 11th value is used for the bumper thingy
+
+		};
 };
 

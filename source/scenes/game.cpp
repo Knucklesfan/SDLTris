@@ -200,7 +200,14 @@ void game::logic(double deltatime) {
         }
 
     }
-
+    for(int i = 0; i < 11; i++) {
+        if(scoreFlip[i] > 0) {
+            scoreFlip[i]-=deltatime/(200.0f*scoreFlipStrength[i]/4.0);
+        }else {
+            scoreFlip[i] = 0.0f;
+            scoreFlipStrength[i] = 0.0f;
+        }
+    }
 
 }
 void game::render() {
@@ -284,16 +291,24 @@ void game::render() {
 
         glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
         view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
+        p->rotation = {-75+scoreFlip[10]*360,0,sin(SDL_GetTicks64()/1000.0f)*5};
         graphics::shaders.at(0)->activate();
         p->render(graphics::shaders.at(0),graphics::sprites.at("scorebar"),projection,view);
         //SDL_RenderPresent(renderer);
         int scorelen = std::to_string(score).length();
         for(int i = 0; i < scorelen;i++) {
-            std::cout << score << "\n";
+            float offset = 0; //offset to BOING
+            float strength = 0;
+            if(i < 10) {
+                offset = scoreFlip[10-scorelen+i];
+                strength = scoreFlipStrength[10-scorelen+i];
+            }
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ingamenumeral"),
-            {448+(170/2)-((scorelen*20)/2)+i*20,82},{20,32},{0,0,0},{0,((score/((int)std::pow(10,scorelen-1-i)))%10)*32},{20,32});
+            {448+(170/2)-((scorelen*20)/2)+i*20,82-sin(offset*M_PI)*strength*4},
+            {20,32},
+            {offset*360,0,0},
+            {0,((score/((int)std::pow(10,scorelen-1-i)))%10)*32},{20,32});
         }
-        std::cout << "end digit\n";
     //}
 }
 Transition game::endLogic() {
@@ -561,22 +576,43 @@ void game::checkLines(int(blocks)[480]) {
             times++;
         }
     }
-
+    int scoretoAdd = 0;
     if(times == 1) {
         Mix_PlayChannel(-1, audio::sfx->at(6), 0);
-        score += 100 * level;
+        scoretoAdd = 100 * level;
+        score += scoretoAdd;
     } else if(times == 2) {
         Mix_PlayChannel(-1, audio::sfx->at(7), 0);
-        score += 300 * level;
+        scoretoAdd = 300 * level;
+        score += scoretoAdd;
 
     }
     else if (times == 3) {
         Mix_PlayChannel(-1, audio::sfx->at(7), 0);
-        score += 500 * level;
+        scoretoAdd = 500 * level;
+        score += scoretoAdd;
     }
     else if(times >= 4) {
         Mix_PlayChannel(-1, audio::sfx->at(8), 0);
-        score += 800 * level;
+        scoretoAdd = 800 * level;
+        score += scoretoAdd;
+    }
+    int maxscorelen = (int) std::ceil(std::log10(scoretoAdd)) + 1;
+    float avgstrength = 0.0f;
+    std::cout << scoretoAdd << "\n";
+    for(int i = 0; i < maxscorelen; i++) {
+        if(i < 10) {
+            std::cout << (10-maxscorelen)+i << "\n";
+            scoreFlip[(10-maxscorelen)+i] = 1.0;
+            scoreFlipStrength[(10-maxscorelen)+i] += std::min(((float)(maxscorelen-i)/(float)maxscorelen+1)*scoretoAdd/100,(float)(maxscorelen-i)*10);
+            avgstrength += scoreFlipStrength[(10-maxscorelen)+i];
+        }
+
+    }
+    if(avgstrength > 0) {
+        avgstrength /= (float)maxscorelen;
+        scoreFlip[10] = 1.0;
+        scoreFlipStrength[10] = std::max(avgstrength*2.0f,16.0f);
     }
     lines += times;
     linecounter += times;
@@ -646,7 +682,7 @@ void game::reset() {
     std::fill_n(testblocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
-    score = 12345678;
+    score = 0;
     int temp  = std::rand() % 7;
     t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, temp);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, temp, ghostblocks);

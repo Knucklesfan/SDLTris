@@ -287,7 +287,7 @@ void game::render() {
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)614 / (float)406, 0.001f, 10000.0f);
         projection[2][0] = -0.675;
-        projection[2][1] = -0.5255;
+        projection[2][1] = -0.6255;
 
         glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
         view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
@@ -304,11 +304,25 @@ void game::render() {
                 strength = scoreFlipStrength[10-scorelen+i];
             }
             graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("ingamenumeral"),
-            {448+(170/2)-((scorelen*20)/2)+i*20,82-sin(offset*M_PI)*strength*4},
+            {448+(170/2)-((scorelen*20)/2)+i*20,62-sin(offset*M_PI)*strength*4},
             {20,32},
             {offset*360,0,0},
             {0,((score/((int)std::pow(10,scorelen-1-i)))%10)*32},{20,32});
         }
+        int drawnmods = 0;
+        for(int i = 0; i < 8; i++) {
+            if(activeMods[i] > 0) { //if there is actually even a mod active here
+                for(int j = 0; j < 64; j++) {
+                    if(activeMods[i]>>j&1) { //if we good, we good
+                        int modifiernumber = i*64+j;
+                        graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(modifiernumber).metadata.tex,
+                        {452+36*drawnmods,24},{32,32},0,{0,0},{48,48});
+                        drawnmods++;
+                    }
+                }
+            }
+        }
+        graphics::fonts->at(2)->render(448,62,"SCORE",false);
     //}
 }
 Transition game::endLogic() {
@@ -1091,4 +1105,9 @@ void game::loadState(std::string path) {
         delete memblock;
     }
 
+}
+void game::setMods(Uint64 mods[8]) {
+    for(int i = 0; i < 8; i++) {
+        activeMods[i] = mods[i];
+    }
 }

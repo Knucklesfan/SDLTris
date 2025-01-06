@@ -1270,12 +1270,15 @@ float math::easeInOutCubic(float x) {
     return -std::pow((2*x)-1, 2)+1;
 }
 
-int math::numActive(Uint64 a) { //counts the number of zeroes in a 64bit int
+int math::numActive(Uint64* a) { //counts the number of zeroes in a 64bit int ARRAY!
     int count = 0;
-    for(Uint64 i = 0; i < 64; i++) {
-        if(a>>i&1) {
-            count++;
+    for(int j = 0; j < 8; j++) {
+        for(Uint64 i = 0; i < 64; i++) {
+            if(a[j]>>i&1) {
+                count++;
+            }
         }
+
     }
     return count;
 }

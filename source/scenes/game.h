@@ -46,7 +46,7 @@ class game: public Gamemode
 		int bglevel = 1;
 		int currentsong = 0;
 		int difficulty = 0;
-		Uint64 activeMods = 0b000000;
+		Uint64 activeMods[8] = {0,0,0,0,0,0,0,0}; //unfortunately hard limit of 512 mods can be activated, although an infinite* number can be loaded.
 		int pauseselection = 0;
 		double warningalpha = 0.0;
 		double alphalifetime = 0;
@@ -75,6 +75,7 @@ class game: public Gamemode
 		game();
 		void input(SDL_Keycode key);
 		void inputKey(SDL_Keycode key);
+		void setMods(Uint64 mods[8]);
 		bool demoPlayback = false; //playing back a demo?
 		bool demoRecord = false; //recording a demo?
 		bool demoReturn = false;

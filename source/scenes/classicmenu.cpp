@@ -218,7 +218,8 @@ void classicmenu::input(SDL_Keycode keysym) {
                 case 2: { //modifier picker
                     switch(keysym) {
                         case SDLK_z: {
-                            activeMods=activeMods^(1<<subselection);
+
+                            activeMods[subselection/64]=activeMods[subselection/64]^(1<<subselection%64);
                         }break;
                         case SDLK_x: {
                             subscreen = 0;
@@ -554,13 +555,13 @@ void classicmenu::render() {
                 graphics::sprite->render(graphics::shaders.at(4),gameplay::modifiers.at(i).metadata.tex,{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{48,48},0,
                 {0,0},
                 {48,48});
-                if(activeMods>>i&1) {
+                if(activeMods[i/64]>>(i%64)&1) {
                     graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("modifierselected"),{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{48,48},0,{0,0},{48,48});
                 }
                 //THE EQUATION TO SOLVE THE NEW LOCATION:
                 //n = some binary number, i = slot to check
                 //n>>i&1
-                if(newModifiers>>i&1) {
+                if(newModifiers[i/64]>>(i%64)&1) {
                     graphics::sprite->render(graphics::shaders.at(4),graphics::sprites.at("new"),{192+8-3+4+(i%8)*48,64+8+(i/8)*48+heightOffset},{16,16},0,{0,0},{16,16});
                 }
             }
@@ -584,7 +585,7 @@ void classicmenu::render() {
             offset = 0; //we on the left side, so we dont need offset's value anymore
             modtext->enable();
             for(int i = 0; i < gameplay::modifiers.size();i++) {
-                if(activeMods>>i&1) {
+                if(activeMods[i/64]>>(i%64)&1) {
                     for(modifierTag meta : gameplay::modifiers.at(i).metadata.tags) {
                         switch(meta.quality) {
                             case GOOD: { //its green. amazing.
@@ -712,6 +713,9 @@ void classicmenu::reset() {
     settings::clearSaveData();
     settings::loadSaveData();
     gamestarting = false;
+    for(int i = 0; i < 8; i++) {
+        activeMods[i] = 0;
+    }
 }
 void classicmenu::startGame() {
     Mix_PauseMusic();
@@ -720,7 +724,7 @@ void classicmenu::startGame() {
     game* g = static_cast<game*>(gameplay::gamemodes.at(4));
     g->level = levelStart;
     g->difficulty = difficultySelection;
-    g->activeMods = activeMods;
+    g->setMods(activeMods);
     g->demoPlayback = false;
     gamestarting = true;
     subscreenAge = SDL_GetTicks64();

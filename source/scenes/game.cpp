@@ -44,16 +44,16 @@ game::game() {
     time = std::time(nullptr);
     srand((unsigned)time); 
 
-    std::fill_n(testblocks, 480, 0);
+    std::fill_n(gameBlocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
 
     // renderer = renderman;
     // textures = textureb;
-    if(settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD]) {
-        boardwidth = 20;
-    }
-    t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, 0);
+    // if(settings::activations[OPTIONTYPE::EXTRA][EXTRAOPTIONS::BIGGERBOARD]) {
+    //     boardwidth = 20;
+    // }
+    t = tetrimino(BLOCKX, BLOCKY, gameBlocks, boardwidth, boardheight, 0);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, 0, ghostblocks);
     g.changePos(0, 0, 0);
     p = new plane({0,0,-6},{1,0.25,1},{-75,0,0});
@@ -71,8 +71,6 @@ game::game() {
     level = LEVEL;
     difficulty = 0;
     paused = false;
-    bodyfont = graphics::fonts->at(2);
-    header = graphics::fonts->at(1);
     msg = new ingamemessagebox("null","null", 640-252);
     gameactive = true;
     invisScore = 0;
@@ -81,25 +79,26 @@ game::game() {
 void game::logic(double deltatime) {
     if(demoPlayback) {
         if(demotick != 0 && demotick != UINT32_MAX && demokey != SDLK_ESCAPE) {
-            if(SDL_GetTicks()-gameStart >= demotick) {
+            if(SDL_GetTicks64()-gameStart >= demotick) {
                 if(demokey == SDLK_DELETE) { //if it set to delete, then we can start fading
                     demoReturn = true;
                 }
                 inputKey(demokey);
-                memcpy(&demotick, demo+demoOffset, sizeof(Uint32)); 
+                memcpy(&demotick, demoRaw+demoOffset, sizeof(Uint32)); 
                 demoOffset += sizeof(Uint32);
-                memcpy(&demokey, demo+demoOffset, sizeof(SDL_Keycode)); 
+                memcpy(&demokey, demoRaw+demoOffset, sizeof(SDL_Keycode)); 
                 demoOffset += sizeof(SDL_Keycode);
             }
         }
         else {
+            
             if(demotick == UINT32_MAX || demokey == SDLK_ESCAPE) {
                 demoPlayback = false;
             }
             else {
-                memcpy(&demotick, demo+demoOffset, sizeof(Uint32)); 
+                memcpy(&demotick, demoRaw+demoOffset, sizeof(Uint32)); 
                 demoOffset += sizeof(Uint32);
-                memcpy(&demokey, demo+demoOffset, sizeof(SDL_Keycode)); 
+                memcpy(&demokey, demoRaw+demoOffset, sizeof(SDL_Keycode)); 
                 demoOffset += sizeof(SDL_Keycode);
             }
         }
@@ -120,7 +119,7 @@ void game::logic(double deltatime) {
             rotval = visiblelifetime/25;
         }
         if(!demoPlayback) {
-            networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
+            networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", time);
         }
         g.changePos(t.x, t.y, t.rot);
         g.draw();
@@ -133,31 +132,31 @@ void game::logic(double deltatime) {
     if (warningflag) {
         //Mix_VolumeMusic(volume/5);
         alphalifetime += deltatime / 5;
-        if (warningalpha < 1.0 && godown) {
+        if (warningalpha < 1.0 && warningGoDown) {
             warningalpha += deltatime / 750;
         }
-        else if (warningalpha >= 1.0 && godown) {
-            godown = false;
+        else if (warningalpha >= 1.0 && warningGoDown) {
+            warningGoDown = false;
             warningalpha = 1.0;
             alphalifetime = 0;
             
             Mix_PlayChannel(-1, audio::sfx->at(9), 0);
 
         }
-        if (warningalpha > 0 && goup) {
+        if (warningalpha > 0 && warningGoRed) {
             warningalpha -= deltatime / 750;
             
         }
-        else if (warningalpha <= 0 && goup) {
+        else if (warningalpha <= 0 && warningGoRed) {
             warningalpha = 0;
             alphalifetime = 0;
-            godown = true;
-            goup = false;
+            warningGoDown = true;
+            warningGoRed = false;
 
         }
 
-        if ((!godown && !goup) && alphalifetime > 250) {
-            goup = true;
+        if ((!warningGoDown && !warningGoRed) && alphalifetime > 250) {
+            warningGoRed = true;
         }
 
     }
@@ -227,7 +226,7 @@ void game::render() {
         if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::GHOSTPIECE] == 1) {
             drawCubes(ghostblocks, 0.5, 64+32, 16, boardheight*boardwidth, boardwidth);
         }
-        drawCubes(testblocks, 1.0, 64+32, 16, boardheight*boardwidth, boardwidth);
+        drawCubes(gameBlocks, 1.0, 64+32, 16, boardheight*boardwidth, boardwidth);
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
             for (int i = 0; i < boardheight; i++) {
                 if (lineclears[i] > 0) {
@@ -255,33 +254,31 @@ void game::render() {
         graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("next"), {288+32+16,16}, {96,104},0,{0,0},{96,104}); //its offically too late to be coding and yet... my code's working i think??
         
         if(nextblocks > -1 && nextblocks < 7) {
-            drawCubes(gameplay::Pieces[nextblocks][0], 1.0, 3.33, 8.55, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
+            drawCubes(gameplay::Pieces[nextblocks][0], 1.0, 3.33, 8.55, 16, 4,true,{0,sin(SDL_GetTicks64()/1000.0f)*10,0});
         }
         if (holdblock > -1) {
             graphics::sprite->render(graphics::shaders.at(4), graphics::sprites.at("hold"), {288+32+16,16+104+16}, {96,104},0,{0,0},{96,104}); //its offically too late to be coding and yet... my code's working i think??
-            drawCubes(gameplay::Pieces[holdblock][0], 1.0, 3.33, 3.25, 16, 4,true,{0,sin(SDL_GetTicks()/1000.0f)*10,0});
+            drawCubes(gameplay::Pieces[holdblock][0], 1.0, 3.33, 3.25, 16, 4,true,{0,sin(SDL_GetTicks64()/1000.0f)*10,0});
         }
-        bodyfont->render(144+32, 32, "LINES: " + std::to_string(lines), true);
+        graphics::fonts->at(2)->render(144+32, 32, "LINES: " + std::to_string(lines), true);
 
-
-        bodyfont->render(144+32, 32, "LINES: " + std::to_string(lines), true);
-        bodyfont->render(144+32, 48, "LEVEL: " + std::to_string(level),true);
+        graphics::fonts->at(2)->render(144+32, 48, "LEVEL: " + std::to_string(level),true);
         
         msg->render();
         if(paused) {
                 graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
-                for (int i = 0; i < optionsize; i++) {
-                    bodyfont->render(320, 300 + (i * 12),choices[i],
+                for (int i = 0; i < PAUSE_OPTIONS; i++) {
+                    graphics::fonts->at(2)->render(320, 300 + (i * 12),pauseMenu[i],
                     true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
                 }
 
-            header->render(320, 240, "GAME PAUSED", true);
+            graphics::fonts->at(0)->render(320, 240, "GAME PAUSED", true);
             keyb->render();
         }
         if(demoRecord) {
-            bodyfont->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
+            graphics::fonts->at(2)->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
             if(demoReturn) {
-                bodyfont->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
+                graphics::fonts->at(2)->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
             }
         }
         glm::mat4 projection;
@@ -334,8 +331,8 @@ Transition game::endLogic() {
         ticktimer = SDL_GetTicks64();
         //Mix_VolumeMusic(volume);
         warningflag = false;
-        checkLines(testblocks);
-        memcpy(previousblocks, testblocks, sizeof previousblocks);
+        checkLines(gameBlocks);
+        memcpy(previousblocks, gameBlocks, sizeof previousblocks);
         
         if (!t.rebirth(BLOCKX, BLOCKY, nextblocks)) {
             settings::lastlevel = level;
@@ -390,11 +387,11 @@ void game::input(SDL_Keycode key)
     if(!demoPlayback) {
         inputKey(key);
         if(demoRecord) {
-            Uint32 tick = SDL_GetTicks()-gameStart;
+            Uint32 tick = SDL_GetTicks64()-gameStart;
             demofile.write((char *) &tick, sizeof(Uint32));
             demofile.write((char *) &key, sizeof(SDL_Keycode));
             if(key == SDLK_DELETE) {
-                demoReturn = true; //sets this just to display on screen that the demo is transitioning
+                demoReturn = true; //sets this just to display on screen that the demoRaw is transitioning
             }
         }
     }
@@ -439,7 +436,7 @@ void game::inputKey(SDL_Keycode key) {
                 t.draw();
                 t.removeolddraw();
 
-                memcpy(previousblocks, testblocks, sizeof previousblocks);
+                memcpy(previousblocks, gameBlocks, sizeof previousblocks);
                 int temp = holdblock;
                 holdblock = t.piece;
                 if (temp > -1) {
@@ -492,7 +489,7 @@ void game::inputKey(SDL_Keycode key) {
                     break;
                 }
                 case(SDLK_DOWN): {
-                    if (pauseselection < optionsize - 1) {
+                    if (pauseselection < PAUSE_OPTIONS - 1) {
                         pauseselection = (pauseselection + 1);
                     }
                     Mix_PlayChannel(-1, audio::sfx->at(1), 0);
@@ -641,7 +638,7 @@ void game::checkLines(int(blocks)[480]) {
     }
     changemusic();
     if(!demoPlayback) {
-        networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
+        networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", time);
     }
 
 }
@@ -678,7 +675,7 @@ void game::changemusic() {
         Mix_PlayMusic(graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).music, -1 );
         currentsong = (bglevel)%(graphics::backgrounds->size());
         msg->activate("YOU ARE CURRENTLY LISTENING TO:", graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).songname + " by: " + graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).artist);
-        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).backgroundAge = SDL_GetTicks();
+        graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).backgroundAge = SDL_GetTicks64();
 
     }
 
@@ -689,16 +686,15 @@ void game::reset() {
     bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     if(!demoPlayback) {
         changemusic();
-        startTime = std::time(nullptr);
-        networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", startTime);
+        networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", time);
     }
     
-    std::fill_n(testblocks, 480, 0);
+    std::fill_n(gameBlocks, 480, 0);
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
     score = 0;
     int temp  = std::rand() % 7;
-    t = tetrimino(BLOCKX, BLOCKY, testblocks, boardwidth, boardheight, temp);
+    t = tetrimino(BLOCKX, BLOCKY, gameBlocks, boardwidth, boardheight, temp);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, temp, ghostblocks);
     g.changePos(0, 0, 0);
     
@@ -713,16 +709,15 @@ void game::reset() {
     nextblocks = std::rand() % 7;
     randomIters++;
     time = std::time(nullptr);
-    startTime = time;
     gameactive = true;
     warningflag = false;
-    gameStart = SDL_GetTicks();
+    gameStart = SDL_GetTicks64();
     invisScore = 0;
     if(settings::saveload != "") { //if we got a save to load
         loadState(settings::saveload); //go ahead and load our save
         settings::saveload = ""; //clear out saveload so we dont accidentally load again
     }
-    checkLines(testblocks);
+    checkLines(gameBlocks);
 
 
 
@@ -888,8 +883,8 @@ double game::getspeed() {
 void game::startRecord() {
     t.removeolddraw();
     g.removeolddraw();
-    gameStart = SDL_GetTicks();
-    demofile = std::ofstream("demo.bin", std::ios::out | std::ios::binary);
+    gameStart = SDL_GetTicks64();
+    demofile = std::ofstream("demoRaw.bin", std::ios::out | std::ios::binary);
     demofile.write((char *) &time, sizeof(uint));
     demofile.write((char *) &randomIters, sizeof(uint));
     demofile.write((char *) &t.piece, sizeof(int));
@@ -902,7 +897,7 @@ void game::startRecord() {
     demofile.write((char *) &level, sizeof(int));
     demofile.write((char *) &lines, sizeof(int));
 
-    demofile.write((char *) &testblocks, sizeof(int[480]));
+    demofile.write((char *) &gameBlocks, sizeof(int[480]));
     demoRecord = true;
     
 }
@@ -923,49 +918,49 @@ void game::loadDemo(std::string filename) {
     demotick = 0;
     demokey = 0;
     std::streampos size;
-    std::cout << "loading demo" << filename <<"\n";
+    std::cout << "loading demoRaw" << filename <<"\n";
     std::ifstream file (filename, std::ios::in|std::ios::binary|std::ios::ate);
     if (file.is_open())
     {
         size = file.tellg();
-        demo = new char [size];
+        demoRaw = new char [size];
         file.seekg (0, std::ios::beg);
-        file.read (demo, size);
+        file.read (demoRaw, size);
         file.close();
-        std::cout << "file opened demo\n";
+        std::cout << "file opened demoRaw\n";
 
-        memcpy(&time, demo+demoOffset, sizeof(uint)); 
+        memcpy(&time, demoRaw+demoOffset, sizeof(uint)); 
         demoOffset += sizeof(uint);
-        memcpy(&randomIters, demo+demoOffset, sizeof(uint)); 
+        memcpy(&randomIters, demoRaw+demoOffset, sizeof(uint)); 
         demoOffset += sizeof(uint);
-        memcpy(&t.piece, demo+demoOffset, sizeof(int)); 
-        memcpy(&g.piece, demo+demoOffset, sizeof(int)); 
+        memcpy(&t.piece, demoRaw+demoOffset, sizeof(int)); 
+        memcpy(&g.piece, demoRaw+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&t.x, demo+demoOffset, sizeof(int)); 
+        memcpy(&t.x, demoRaw+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&t.y, demo+demoOffset, sizeof(int)); 
+        memcpy(&t.y, demoRaw+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&t.rot, demo+demoOffset, sizeof(int)); 
-        demoOffset += sizeof(int);
-
-        memcpy(&nextblocks, demo+demoOffset, sizeof(int)); 
-        demoOffset += sizeof(int);
-        memcpy(&holdblock, demo+demoOffset, sizeof(int)); 
+        memcpy(&t.rot, demoRaw+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
 
-        memcpy(&level, demo+demoOffset, sizeof(int)); 
+        memcpy(&nextblocks, demoRaw+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
-        memcpy(&lines, demo+demoOffset, sizeof(int)); 
+        memcpy(&holdblock, demoRaw+demoOffset, sizeof(int)); 
         demoOffset += sizeof(int);
 
-        memcpy(&testblocks, demo+demoOffset, sizeof(int[480])); 
-        memcpy(&previousblocks, demo+demoOffset, sizeof(int[480])); 
+        memcpy(&level, demoRaw+demoOffset, sizeof(int)); 
+        demoOffset += sizeof(int);
+        memcpy(&lines, demoRaw+demoOffset, sizeof(int)); 
+        demoOffset += sizeof(int);
+
+        memcpy(&gameBlocks, demoRaw+demoOffset, sizeof(int[480])); 
+        memcpy(&previousblocks, demoRaw+demoOffset, sizeof(int[480])); 
 
         demoOffset += sizeof(int[480]);
         if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] == 1) {
             bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] + level-1;
         }
-        gameStart = SDL_GetTicks();
+        gameStart = SDL_GetTicks64();
         // changemusic();
         demoPlayback = true;
     }
@@ -998,7 +993,7 @@ void game::saveState() { //saves the game's state. this is a debug function im c
 
     fs.write((char *) &gameStart, sizeof(Uint32));
 
-    fs.write((char *) &testblocks, sizeof(int[480]));
+    fs.write((char *) &gameBlocks, sizeof(int[480]));
     
 
     fs.close();
@@ -1056,7 +1051,7 @@ void game::loadState(std::string path) {
                 memcpy(&gameStart, memblock+offset, sizeof(Uint32)); 
                 offset += sizeof(Uint32); 
 
-                memcpy(&testblocks, memblock+offset, sizeof(int[480])); 
+                memcpy(&gameBlocks, memblock+offset, sizeof(int[480])); 
                 memcpy(&previousblocks, memblock+offset, sizeof(int[480])); 
 
 
@@ -1092,7 +1087,7 @@ void game::loadState(std::string path) {
                 memcpy(&gameStart, memblock+offset, sizeof(Uint32)); 
                 offset += sizeof(Uint32); 
 
-                memcpy(&testblocks, memblock+offset, sizeof(int[480])); 
+                memcpy(&gameBlocks, memblock+offset, sizeof(int[480])); 
                 memcpy(&previousblocks, memblock+offset, sizeof(int[480])); 
 
             }

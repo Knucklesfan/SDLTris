@@ -1,0 +1,29 @@
+<story>
+    <meta>
+        <name>The Context</name>
+        <author>Knucklesfan</author>
+        <version>1</version>
+        <desc>A story about love, hate, disgust, and blocks.</desc>
+        <image>placeholder.bmp</image>
+
+        <startingcoins>0</startingcoins> <!-- how much money to start with -->
+        <modifiers>none</modifiers> <!-- if the player starts with any mods -->
+    </meta>
+    <scenes> <!--Stories are made up of scenes. Scenes can either be defined in their own xml and lua files, or be defined inline for simple scenes. The game comes built-in with baseline scenes and input mechanics for easy access of scenes. CD-I demos these scenes, but for futher context, please see The Context for a good example of every scene used to its max potential!-->
+        <savescreen> <!--This is the default save screen. It takes effectively one file, the override file, which overrides localized text and sprites for the menu. You can also specify a lua script to run in the background.-->
+            <!--By default, the game will autosave your last scene index number, and the 256 ints and 32 strings.-->
+            <!--You can change this by specifying a story save area-->
+            <override>./assets/savescreen.xml</override>
+        </savescreen>
+        <scene> <!-- this is a basic external scene. Nothing inline is handled here. Everything is loaded externally.-->
+            <source>./scenes/introtext.xml</source>
+        </scene>
+        <gameplay>
+            <requiredscore>1000</requiredscore> <!-- the score required to beat this session-->
+            <background>./assets/emptiness</background> <!-- what background to use during this session-->
+            <reward>0</reward> <!-- how many coins to reward at the end of a session-->
+            <override>./assets/startgame.xml</override> <!-- list of asset calls to override if we need to -->
+        </gameplay>
+    </scenes>
+
+    </story>

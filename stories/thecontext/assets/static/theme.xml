@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<background>
+   <head>
+      <title>Statically Typed</title>
+      <version>Statically Typed</version>
+      <creator>Knuxfan</creator>
+      <music visualize="false">
+         <title>Jump (FunkyRemix)</title>
+         <creator>Marco Schindler</creator>
+         <filename>oldersong.mod</filename>
+      </music>
+   </head>
+   <layers>
+      <layer type="static">
+         <filename>00.png</filename>
+      </layer>
+      <layer type="legacy">
+         <filename>01.png</filename>
+         <movement>
+            <x>5</x>
+            <y>5</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>02.png</filename>
+         <movement>
+            <x>2</x>
+            <y>2</y>
+         </movement>
+      </layer>
+      <layer type="legacy">
+         <filename>03.png</filename>
+         <movement>
+            <x>1</x>
+            <y>1</y>
+         </movement>
+      </layer>
+   </layers>
+</background>

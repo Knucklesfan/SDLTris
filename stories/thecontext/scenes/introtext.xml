@@ -1,0 +1,66 @@
+<scene type="text"> <!-- A basic, and simple text cutscene -->
+    <events>
+        <music visible="fadein" time="1.0"> <!-- music are sounds that loop and can only be played once.-->
+            <source>./assets/windblow.mp3</source>
+        </music>
+        <text font="0">Sometimes, I feel that I am broken.</text> <!-- this is a basic text box. It takes up half the screen, with a gradiented fade, and reads out text in a bitmap font. It supports nothing, so use fancytext if you need that-->
+        <background visible="fadein" time="4.0"> <!-- visible, valid options: off,on,fadein,fadeout. fade takes another option time, that is the time in seconds it takes to fade in/out.-->
+            <!-- only one background is allowed at a time.-->
+            <source>./assets/static.xml</source>
+        </background>
+        <image visible="on" depth="0">
+            <source>./assets/backfacing.png</source>
+        </image>
+        <text font="0">I've never really understood the world, nor have I really had much the chance to get an opportunity to see this world that I am in. I go through the motions, and yet I feel so alone.</text>
+        <background visible="fadeout" time="4.0"> <!-- visible, valid options: off,on,fadein,fadeout. fade takes another option time, that is the time in seconds it takes to fade in/out.-->
+            <!-- only one background is allowed at a time.-->
+            <source>./assets/static.xml</source>
+        </background>
+        <music visible="fadeout" time="4.0"> <!-- if we're fading out, we don't need to specify a file.-->
+        </music>
+        <text font="2">Maybe I'm not even worth the time that others invest into me.</text>
+        <background visible="fadeout" time="1.0"> <!-- visible, valid options: off,on,fadein,fadeout. fade takes another option time, that is the time in seconds it takes to fade in/out.-->
+            <!-- only one background is allowed at a time.-->
+            <source>./assets/city.xml</source>
+        </background>
+        <text font="0">But. That doesn't matter. I've been living in this city for long enough to know that it doesn't matter who you are, it's what you are to the city.</text>
+        <sound> <!-- sounds play once, cant fade in or out, and only just like... play-->
+            <source>./assets/drop.wav</source>
+        </sound>
+        <image visible="on" depth="1">
+            <source>./assets/crime1.png</source>
+        </image>
+        <text>I've seen people, and I've been people...</text>
+        <sound> <!-- sounds play once, cant fade in or out, and only just like... play-->
+            <source>./assets/drop.wav</source>
+        </sound>
+        <image visible="on" depth="2">
+            <source>./assets/crime2.png</source>
+        </image>
+        <text>I've done drugs and I've busted drugs...</text>
+        <sound> <!-- sounds play once, cant fade in or out, and only just like... play-->
+            <source>./assets/drop.wav</source>
+        </sound>
+        <image visible="on" depth="3">
+            <source>./assets/crime2.png</source>
+        </image>
+        <text>I've been around the block once or twice before...</text>
+        <text>I've been all over this city, fighting crime or doing it, I don't honestly care. The world was my oyster, and despite everything I've tried to live it to the absolute fullest. Nobody could bring me down and I was fearless in whatever I tried to do! And yet I still every morning wake up to do it all over again.</text>
+        <music visible="off">
+        </music>
+        <background visible="fadeout" time="4.0"> <!-- visible, valid options: off,on,fadein,fadeout. fade takes another option time, that is the time in seconds it takes to fade in/out.-->
+            <!-- only one background is allowed at a time.-->
+            <source>./assets/city.xml</source>
+        </background>
+        <image visible="off" depth="3">
+            <source>./assets/crime2.png</source>
+        </image>
+        <image visible="off" depth="3">
+            <source>./assets/crime1.png</source>
+        </image>
+        <image visible="off" depth="3">
+            <source>./assets/crime3.png</source>
+        </image>
+        <text font="2">...and thats why im scared.</text>
+    </events>
+</scene>

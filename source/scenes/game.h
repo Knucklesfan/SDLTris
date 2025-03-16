@@ -34,6 +34,8 @@ class game: public Gamemode
 		void setupDemo(std::string demofile);
 		Transition endLogic();
 		void reset();
+		int level = 1; //actual level of the game
+		int difficulty = 0; //difficulty int!
 
 	private:
 		void loadDemo(std::string demo);
@@ -65,7 +67,6 @@ class game: public Gamemode
 		Uint32 invisScore = 0; //score that is hidden and reset on holdblock, and is only added once falling is done.
 		int lines = 0;
 		int linecounter = 0; //tally of the lines before progressing to next level
-		int level = 1; //actual level of the game
 
 		int bglevel = 1; //the current background level
 
@@ -74,7 +75,6 @@ class game: public Gamemode
 		Uint64 activeMods[8] = {0,0,0,0,0,0,0,0}; //unfortunately hard limit of 512 mods can be activated, although an infinite* number can be loaded.
 
 		int currentsong = 0; //current background for which music is playing for
-		int difficulty = 0; //difficulty int!
 		double rotval = 0.0;
 
 		int pauseselection = 0;

@@ -725,7 +725,6 @@ void classicmenu::startGame() {
     g->level = levelStart;
     g->difficulty = difficultySelection;
     g->setMods(activeMods);
-    g->demoPlayback = false;
     gamestarting = true;
     subscreenAge = SDL_GetTicks64();
 

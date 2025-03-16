@@ -62,8 +62,8 @@ ingamemessagebox::ingamemessagebox(std::string title, std::string desc, int loc)
 	active = false;
 }
 void ingamemessagebox::activate(std::string title, std::string desc) {
-	name = title;
-	content = desc;
+	name = "YOU ARE CURRENTLY LISTENING TO:";
+	content = "desc";
 	y = 480;
 	uptime = 0;
 	godown = false;

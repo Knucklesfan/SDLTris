@@ -674,7 +674,7 @@ void game::changemusic() {
         Mix_HaltMusic();
         Mix_PlayMusic(graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).music, -1 );
         currentsong = (bglevel)%(graphics::backgrounds->size());
-        msg->activate("YOU ARE CURRENTLY LISTENING TO:", graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).songname + " by: " + graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).artist);
+        // msg->activate("YOU ARE CURRENTLY LISTENING TO:", graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).songname + " by: " + graphics::backgrounds->at((bglevel)%(graphics::backgrounds->size())).artist);
         graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).backgroundAge = SDL_GetTicks64();
 
     }
@@ -878,7 +878,22 @@ double game::getspeed() {
     else {
         returndb = 12;
     }
-    return returndb * 6;
+    double difficultymult;
+    switch(difficulty) {
+        default: { //easy
+            difficultymult = 4;
+        }break;
+        case 1: { //medium
+            difficultymult = 1;
+        }break;
+        case 2: { //hard
+            difficultymult = 0.5;
+        }break;
+        case 3: {
+            difficultymult = 0.1;
+        }break;
+    }
+    return returndb * 6 * difficultymult;
 }
 void game::startRecord() {
     t.removeolddraw();

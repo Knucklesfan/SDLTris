@@ -21,7 +21,7 @@
 			</textures>
 			<shader>
 				<vertex>vertex.glsl</vertex>
-				<fragment>ocean.glsl</fragment>
+				<fragment>fractal.glsl</fragment>
 			</shader>
 		</layer>
 

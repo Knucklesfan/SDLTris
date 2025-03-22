@@ -627,7 +627,7 @@ void game::checkLines(int(blocks)[480]) {
     }
     lines += times;
     linecounter += times;
-    if (linecounter > settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::LEVELLENGTH]) {
+    if (linecounter > 10*(1+2*(4-difficulty))) {
         level++;
         linecounter = 0;
     }

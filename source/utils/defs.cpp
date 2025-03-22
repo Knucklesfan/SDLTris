@@ -1,5 +1,6 @@
 #include "defs.h"
 #include "SDL2/SDL_stdinc.h"
+#include <stdexcept>
 #include <string>
 #ifdef __SWITCH__
     #define filepath  "/"
@@ -16,7 +17,7 @@
 #include "../scenes/gameplaymenu.h"
 #include "../scenes/credits.h"
 
-// #include "scenes/credits.h"
+#include "../scenes/nullscene.h"
 #include "../scenes/game.h"
 #include "../scenes/results.h"
 #include "../scenes/classicmenu.h"
@@ -661,24 +662,30 @@ void graphics::generatecubemaps() {
 
 }
 int graphics::generatebgs() {
-   rapidxml::file<> bgFile((filepath"backgrounds/backgrounds.xml"));
-   rapidxml::xml_document<> bgDoc;
-   bgDoc.parse<0>(bgFile.data());
-   rapidxml::xml_node<char>* parent = bgDoc.first_node("backgrounds");
-   for (rapidxml::xml_node<char>* child = parent->first_node(); child != NULL; child = child->next_sibling()) {
+   try {
+        rapidxml::file<> bgFile((filepath"backgrounds/backgrounds.xml"));
+        rapidxml::xml_document<> bgDoc;
+        bgDoc.parse<0>(bgFile.data());
+        rapidxml::xml_node<char>* parent = bgDoc.first_node("backgrounds");
+        for (rapidxml::xml_node<char>* child = parent->first_node(); child != NULL; child = child->next_sibling()) {
 
-       std::cout << "loading background " << child->value() << "\n";
-       //std::cout << "HELP ME:" << p.path().filename() << "\n";
-       if(std::string(child->value()) != "") {
-        #ifdef __LEGACY_RENDER
-           bg backg(child->value(), false, render);
-        #else
-           bg backg(child->value(), false);
-        #endif
-           backgrounds->push_back(backg);
-       }
+            std::cout << "loading background " << child->value() << "\n";
+            //std::cout << "HELP ME:" << p.path().filename() << "\n";
+            if(std::string(child->value()) != "") {
+                #ifdef __LEGACY_RENDER
+                bg backg(child->value(), false, render);
+                #else
+                bg backg(child->value(), false);
+                #endif
+                backgrounds->push_back(backg);
+            }
 
-   }
+        }
+    }
+    catch(std::runtime_error& e) { //if that fails, at least try loading in ANY background
+        bg backg("null", false);
+        backgrounds->push_back(backg); //but if this fails, then we just throw in the towel and finally crash.
+    }
    return 0;
 
 }
@@ -1139,6 +1146,9 @@ void memory::freeSprites() {
 
 }
 void gameplay::loadGamemodes() {
+    nullscene* nul = new nullscene(); //from now on, first scene will always be a nullscene
+    gamemodes.push_back(nul); //reason? this makes it way softer to crash. if the code references a non-existent scene for whatever reason, we send em to scene 0 instead.
+
     rapidxml::file<> bgFile((filepath"scenes/scenes.xml"));
     rapidxml::xml_document<> bgDoc;
     bgDoc.parse<0>(bgFile.data());
@@ -1201,8 +1211,9 @@ void gameplay::loadGamemodes() {
                         // gamemodes.push_back(new titlescreen());
         }
         else {
-            std::cout << "Scene type not found \""<<type<<"\", crashing...\n";
-            exit(1);
+            std::cout << "Scene type not found \""<<type<<"\", adding null scene in its place...\n";
+            nullscene* nul = new nullscene();
+            gamemodes.push_back(nul);
         }
 
     }

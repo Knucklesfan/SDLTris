@@ -39,3 +39,4 @@ vgcore.**
 *.bmp
 *.knfs
 /.cache
+/scripts/moviefilm/frames

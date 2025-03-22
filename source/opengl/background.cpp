@@ -810,7 +810,7 @@ bg::bg(std::string path, bool folder) {
             float scale = atof(chlds->first_node("scale")->value());
             int start = atoi(chlds->first_node("duration")->first_node("start")->value());
             int end = atoi(chlds->first_node("duration")->first_node("end")->value());
-            lyrics[start] = {x,y,scale,text,true,end};
+            lyrics[start] = {static_cast<int>(x),static_cast<int>(y),scale,text,true,end};
 
         }
 

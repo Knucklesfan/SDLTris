@@ -19,6 +19,7 @@ shader::shader(std::string vertPath, std::string fragPath) //TODO: fix weird spe
     //compile shaders
     std::string vertStr = utils::loadFile(vertPath);
     const char* vertex = vertStr.c_str();
+
     //std::cout << vertStr << "\n";
     id = __glewCreateProgram();
 

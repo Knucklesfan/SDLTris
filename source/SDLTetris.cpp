@@ -89,15 +89,22 @@ Uint32 time_left(void)
         return next_time - now;
 }
 void doGameLogic() {
-    gameplay::gamemodes[gameplay::gamemode]->logic(graphics::deltaTime);
-    Transition endlogic = gameplay::gamemodes[gameplay::gamemode]->endLogic();
+    gameplay::gamemodes[gameplay::gamemode+1]->logic(graphics::deltaTime);
+    Transition endlogic = gameplay::gamemodes[gameplay::gamemode+1]->endLogic();
     if(endlogic.transition) {
         global->setFade(endlogic);
     };
     
     if(global->logic(graphics::deltaTime)) {
-        gameplay::gamemode=global->currentTransition.gamemode;
-        gameplay::gamemodes[gameplay::gamemode]->reset();
+        if(global->currentTransition.gamemode < gameplay::gamemodes.size()) {
+            gameplay::gamemode=global->currentTransition.gamemode;
+            gameplay::gamemodes[gameplay::gamemode+1]->reset();    
+        }
+        else {
+            gameplay::gamemode=-1;
+            gameplay::gamemodes[gameplay::gamemode+1]->reset();    
+
+        }
     }
     networking::globalRPC->logic();
 
@@ -105,7 +112,7 @@ void doGameLogic() {
 void doGameRender() {
     graphics::globalbuffer->enable();
     global->startRender();
-    gameplay::gamemodes[gameplay::gamemode]->render();
+    gameplay::gamemodes[gameplay::gamemode+1]->render();
     global->render();
     #ifdef __LEGACY_RENDER
 
@@ -318,8 +325,16 @@ int main(int argc, char **argv) {
         settings::globalDebug = true;
     }
     if(argument == "--scene") {
-        gameplay::gamemode = atoi(argv[2]);
+        if(atoi(argv[2]) < gameplay::gamemodes.size()) {
+            gameplay::gamemode=atoi(argv[2]);
+        }
+        else {
+            gameplay::gamemode=-1;
+    
+        }
+        gameplay::gamemodes[gameplay::gamemode+1]->reset();    
     }
+
     std::cout << "Finished initializing!\n";
 
     int titlebg = std::rand() % graphics::backgrounds->size();
@@ -334,7 +349,7 @@ int main(int argc, char **argv) {
     //rpcimplement rpc();
     networking::globalRPC = new rpcimplement();
 
-    gameplay::gamemodes[gameplay::gamemode]->reset();
+    gameplay::gamemodes[gameplay::gamemode+1]->reset();
     while (!quit) {
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT) {
@@ -350,10 +365,10 @@ int main(int argc, char **argv) {
                 }
                 if(event.key.keysym.sym == SDLK_F1 && settings::globalDebug) {
                     gameplay::gamemode = gameplay::gamemodes.size()-1;
-                    gameplay::gamemodes.at(gameplay::gamemode)->reset();
+                    gameplay::gamemodes.at(gameplay::gamemode+1)->reset();
                     break;
                 }
-                gameplay::gamemodes[gameplay::gamemode]->input(event.key.keysym.sym);
+                gameplay::gamemodes[gameplay::gamemode+1]->input(event.key.keysym.sym);
             }
             if(event.type == SDL_WINDOWEVENT) {
 				if (event.window.event == SDL_WINDOWEVENT_RESIZED) {

@@ -38,6 +38,7 @@
 #include <rapidxml_utils.hpp>
 #include "../opengl/background.h"
 #include "../engine/gamemode.h"
+#include "../gameplay/modifiers.h"
 #ifndef __LEGACY_RENDER
     #include "../opengl/shader.h"
     #include "../opengl/texture.h"
@@ -213,21 +214,6 @@ struct gameplayActivations {
     bool noSpeedup;
     bool noGravity;
     std::string seed;
-};
-struct modifierTag {
-    std::string tag;
-    TagQuality quality;
-};
-struct modifierMeta {
-    std::string name;
-    std::string desc;
-    Uint32 price;
-    bool forSale;
-    texture* tex;
-    std::vector<modifierTag> tags;
-};
-struct modifier {
-    modifierMeta metadata;
 };
 class gameplay { //class that contains stuff that globally is used for managing gamemodes
     public:

@@ -74,6 +74,7 @@ game::game() {
     msg = new ingamemessagebox("null","null", 640-252);
     gameactive = true;
     invisScore = 0;
+    scoreOperations = std::vector<ScoreOperation>();
 
 }
 void game::logic(double deltatime) {
@@ -227,7 +228,7 @@ void game::render() {
             drawCubes(ghostblocks, 0.5, 64+32, 16, boardheight*boardwidth, boardwidth);
         }
         drawCubes(gameBlocks, 1.0, 64+32, 16, boardheight*boardwidth, boardwidth);
-        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] == 1) {
+        if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEARANIMATION] == 1) {
             for (int i = 0; i < boardheight; i++) {
                 if (lineclears[i] > 0) {
                     graphics::rect->render(graphics::shaders.at(1),{32+64,16+i*16},{32+64+160,(16+i*16)+16},0,{1,1,1,lineclears[i]},false,-1,{0,0,0,0});
@@ -495,6 +496,7 @@ void game::inputKey(SDL_Keycode key) {
                     Mix_PlayChannel(-1, audio::sfx->at(1), 0);
                     break;
                 }
+                
                 case(SDLK_z): {
                     switch(pauseselection) {
                         case 0: {
@@ -587,27 +589,7 @@ void game::checkLines(int(blocks)[480]) {
             times++;
         }
     }
-    int scoretoAdd = 0;
-    if(times == 1) {
-        Mix_PlayChannel(-1, audio::sfx->at(6), 0);
-        scoretoAdd = 100 * level;
-        score += scoretoAdd;
-    } else if(times == 2) {
-        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
-        scoretoAdd = 300 * level;
-        score += scoretoAdd;
-
-    }
-    else if (times == 3) {
-        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
-        scoretoAdd = 500 * level;
-        score += scoretoAdd;
-    }
-    else if(times >= 4) {
-        Mix_PlayChannel(-1, audio::sfx->at(8), 0);
-        scoretoAdd = 800 * level;
-        score += scoretoAdd;
-    }
+    int scoretoAdd = addScore(SCORETYPE::LINECLEAR,times,false);
     int maxscorelen = (int) std::ceil(std::log10(scoretoAdd)) + 1;
     float avgstrength = 0.0f;
     std::cout << scoretoAdd << "\n";
@@ -718,6 +700,25 @@ void game::reset() {
         settings::saveload = ""; //clear out saveload so we dont accidentally load again
     }
     checkLines(gameBlocks);
+    scoreOperations = std::vector<ScoreOperation>();
+    for(int i = 0; i < 8; i++) {
+    if(activeMods[i] > 0) { //if there is actually even a mod active here
+        for(int j = 0; j < 64; j++) {
+            if(activeMods[i]>>j&1) { //if we good, we good
+                int modifiernumber = i*64+j;
+                if(gameplay::modifiers.at(modifiernumber).scoreOperations.size() > 0) {
+                    scoreOperations.insert(scoreOperations.end(), gameplay::modifiers.at(modifiernumber).scoreOperations.begin(), gameplay::modifiers.at(modifiernumber).scoreOperations.end());
+                }
+                if(gameplay::modifiers.at(modifiernumber).comboOperations.size() > 0) {
+                    comboOperations.insert(comboOperations.end(), gameplay::modifiers.at(modifiernumber).comboOperations.begin(), gameplay::modifiers.at(modifiernumber).comboOperations.end());
+                }
+
+                gravityOperations.push_back(gameplay::modifiers.at(modifiernumber).gravitySpeed);
+                chances += gameplay::modifiers.at(modifiernumber).chances;
+            }   
+        }
+    }
+}
 
 
 
@@ -1121,3 +1122,47 @@ void game::setMods(Uint64 mods[8]) {
         activeMods[i] = mods[i];
     }
 }
+
+int game::addScore(SCORETYPE type, int times, bool invisible) {
+    int addedScore = 0;
+    switch(type) {
+        case SCORETYPE::GRAVITY: {
+            
+
+        }break;
+        case SCORETYPE::GARBAGE: {
+
+        }break;
+        case SCORETYPE::FORCEDROP: {
+
+        }break;
+        case SCORETYPE::LINECLEAR: {
+            if(times > 0) {
+                switch(times) {
+                    case 1: {
+
+                    }break;
+                    case 2: {
+
+                    }break;
+                    case 3: {
+
+                    }break;
+                    default: { //what's cool is, this will always be 4 or more!
+
+                    }break;
+                }
+            }
+        }break;
+        case SCORETYPE::PASSIVE: {
+
+        }break;
+    }
+    if(invisible) {
+        invisScore += addedScore;
+    }
+    else {
+        score += addedScore;
+    }
+    return addedScore;
+};

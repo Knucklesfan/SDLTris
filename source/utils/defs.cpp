@@ -1016,7 +1016,7 @@ void settings::loadSettings() {
             else if(name == "display") {
                 activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::BGMODE] = atoi(child->first_node("bgcycle")->value());
                 activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG] = atoi(child->first_node("firstbg")->value());
-                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEAR] = atoi(child->first_node("lineclear")->value());
+                activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LINECLEARANIMATION] = atoi(child->first_node("lineclear")->value());
                 activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] = atoi(child->first_node("motion")->value());
                 activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::NEARTOPFLASH] = atoi(child->first_node("neartop")->value());
                 activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::LOWPERF] = atoi(child->first_node("lowperf")->value());
@@ -1227,38 +1227,10 @@ void gameplay::loadModifiers() {
     rapidxml::xml_node<char>* parent = bgDoc.first_node("modifiers");
     for (rapidxml::xml_node<char>* child = parent->first_node(); child != NULL; child = child->next_sibling()) {
         std::string path = child->value();
-        rapidxml::file<> modFile((filepath"modifiers/"+path+"/modifier.xml").c_str());
-        rapidxml::xml_document<> modDoc;
-        modDoc.parse<0>(modFile.data());
-        rapidxml::xml_node<char>* modParent = modDoc.first_node("modifier");
-        std::string modName = modParent->first_node("meta")->first_node("name")->value();
-        std::string modDesc = modParent->first_node("meta")->first_node("description")->value();
-        Uint32 modPrice = atoi(modParent->first_node("meta")->first_node("price")->value());
-        texture* modTex = new texture(filepath"modifiers/"+path+"/"+modParent->first_node("meta")->first_node("sprite")->value());
-        bool modSale = std::string(modParent->first_node("meta")->first_node("forsale")->value()) == "true";
-        std::vector<modifierTag> modTags;
-        modifierTag tag;
-        for (rapidxml::xml_node<char>* tagChild = modParent->first_node("meta")->first_node("tags")->first_node(); tagChild != NULL; tagChild = tagChild->next_sibling()) {
-            std::string name = tagChild->name();
-            if(name == "good") {
-                std::cout << "good\n";
-                modTags.push_back({tagChild->value(),TagQuality::GOOD});
-            }
-            else if(name == "bad") {
-                std::cout << "bad\n";
-                modTags.push_back({tagChild->value(),TagQuality::BAD});
-            }
-            else {
-                std::cout << "ugly\n";
-                modTags.push_back({tagChild->value(),TagQuality::UGLY});
-            }
-
-        }
-        modifierMeta meta = {modName,modDesc,modPrice,modSale,modTex,modTags};
-        //TODO: add actual parsing of effects and make mods do stuff
+        modifier mod = modifier(filepath"modifiers/"+path+"/modifier.xml");
 
         //add to modifier array
-        modifiers.push_back({meta});
+        modifiers.push_back(mod);
     }
 
 }

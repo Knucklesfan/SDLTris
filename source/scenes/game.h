@@ -34,14 +34,16 @@ class game: public Gamemode
 		void setupDemo(std::string demofile);
 		Transition endLogic();
 		void reset();
+		void loadState(std::string); //loads the current level's state.
+
 		int level = 1; //actual level of the game
 		int difficulty = 0; //difficulty int!
+		bool demoPlayback = false; //playing back a demo?
 
 	private:
 		void loadDemo(std::string demo);
 
 		void saveState(); //temporary, debug method to save a level's state
-		void loadState(std::string); //loads the current level's state.
 
 		void startRecord();
 		void stopRecord();
@@ -53,6 +55,8 @@ class game: public Gamemode
 		void clearRow(int(blocks)[480], int y);
 		void drawCubes(int position[],float scale, float x, float y, int size, int width,bool threed=false, glm::vec3 rotation={0,0,0});
 		double getspeed();
+
+		int addScore(SCORETYPE type, int times, bool invisible); //add a certain value to score, under certain conditions.
 
 		ingamemessagebox* msg;
 
@@ -105,7 +109,6 @@ class game: public Gamemode
 		double visiblelifetime = 0;
 
 		char * demoRaw;
-		bool demoPlayback = false; //playing back a demo?
 		bool demoRecord = false; //recording a demo?
 		bool demoReturn = false;
 		std::ofstream demofile; //used mainly only when recording a demo
@@ -175,5 +178,9 @@ class game: public Gamemode
 		0.0,
 		};
 
+		std::vector<ScoreOperation> scoreOperations;
+		std::vector<ScoreOperation> gravityOperations;
+		std::vector<ComboOperation> comboOperations;
+		blockChances chances;
 };
 

@@ -69,7 +69,6 @@ game::game() {
     // backgrounds = backg;
     lines = LINES;
     level = LEVEL;
-    difficulty = 0;
     paused = false;
     msg = new ingamemessagebox("null","null", 640-252);
     gameactive = true;
@@ -285,14 +284,16 @@ void game::render() {
         }
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)614 / (float)406, 0.001f, 10000.0f);
-        projection[2][0] = -0.675;
-        projection[2][1] = -0.6255;
+        projection[2][0] = -0.675; //crazy insane math that puzzles even the most scholarly of researchers
+        projection[2][1] = -0.6255; //wtf does it mean???
 
         glm::mat4 view = glm::mat4(1.0f); //view is the **Camera**'s perspective
         view = glm::translate(view, glm::vec3(0.0, 0, 0.0)); 
         p->rotation = {-75+scoreFlip[10]*360,0,sin(SDL_GetTicks64()/1000.0f)*5};
-        graphics::shaders.at(0)->activate();
-        p->render(graphics::shaders.at(0),graphics::sprites.at("scorebar"),projection,view);
+        graphics::shaders.at(14)->activate();
+        graphics::shaders.at(14)->setFloat("time",(float)SDL_GetTicks()/(float)1000);
+
+        p->render(graphics::shaders.at(14),graphics::sprites.at("scorebar"),projection,view);
         //SDL_RenderPresent(renderer);
         int scorelen = std::to_string(score).length();
         for(int i = 0; i < scorelen;i++) {
@@ -665,7 +666,7 @@ void game::changemusic() {
 
 }
 void game::reset() {
-
+    std::cout << "we resetting around here\n";
     currentsong = -1;
     bglevel = settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::FIRSTBG];
     if(!demoPlayback) {
@@ -703,7 +704,8 @@ void game::reset() {
     }
     checkLines(gameBlocks);
     scoreOperations = std::vector<ScoreOperation>();
-    for(int i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
+    std::cout << activeMods[i] << "MODLOAD\n";
     if(activeMods[i] > 0) { //if there is actually even a mod active here
         for(int j = 0; j < 64; j++) {
             if(activeMods[i]>>j&1) { //if we good, we good
@@ -1122,6 +1124,7 @@ void game::loadState(std::string path) {
 void game::setMods(Uint64 mods[8]) {
     for(int i = 0; i < 8; i++) {
         activeMods[i] = mods[i];
+        std::cout << "MODULE" << mods[i] << "\n";
     }
 }
 

@@ -189,7 +189,6 @@ void GlobalGamemode::render() {
             case GLASS: {
                 if(fade) {
                     // buffer.render(graphics::shaders[3],0,0,false);
-                std::cout << "rendering glass\n";
                 glEnable(GL_DEPTH_TEST);  
                 glm::mat4 projection;
                 projection = glm::perspective(glm::radians(45.0f), (float)INTERNAL_WIDTH / (float)INTERNAL_HEIGHT, 0.001f, 10000.0f);

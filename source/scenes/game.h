@@ -57,6 +57,7 @@ class game: public Gamemode
 		double getspeed();
 
 		int addScore(SCORETYPE type, int times, bool invisible); //add a certain value to score, under certain conditions.
+		int parsePassive(); //parses passive scores unrelated to the actual ticks of gameplay (ie combo).
 
 		ingamemessagebox* msg;
 

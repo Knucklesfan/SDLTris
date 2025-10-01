@@ -5,6 +5,7 @@
 #include "../utils/defs.h"
 #include "../scenes/game.h"
 #include <climits>
+#include <iostream>
 classicmenu::classicmenu() {
     cd = new plane({0.75,-0.5,-1.5},{1,1,1},{0,0,0});
     redbackground = new bg("classicmenu",false);
@@ -157,7 +158,6 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
 
                             }
-                            std::cout << selection << "\n";
                         }break;
                         case SDLK_UP: {
                             if(selection > 0) {
@@ -166,7 +166,6 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 Mix_PlayChannel( -1, audio::sfx->at(1), 0 );
 
                             }
-                            std::cout << selection << "\n";
 
                         }break;
                         case SDLK_RIGHT: {
@@ -175,7 +174,6 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 rightSide = true;
                                 selection = 0;
                             }
-                            std::cout << selection << "\n";
                         }break;
                         case SDLK_LEFT: {
                             if(rightSide) {
@@ -183,7 +181,6 @@ void classicmenu::input(SDL_Keycode keysym) {
                                 rightSide = false;
                                 selection = 0;
                             }
-                            std::cout << selection << "\n";
                         }break;
 
                     }
@@ -357,7 +354,6 @@ void classicmenu::logic(double deltatime) {
 
     }
     if(gamestarting && SDL_GetTicks64()-subscreenAge > 500) {
-        std::cout << SDL_GetTicks64()-subscreenAge << "\n";
             t = {
         0.0005,
         4,
@@ -720,8 +716,7 @@ void classicmenu::reset() {
 void classicmenu::startGame() {
     Mix_PauseMusic();
     Mix_PlayChannel( -1, audio::sfx->at(12), 0 );
-
-    game* g = static_cast<game*>(gameplay::gamemodes.at(4));
+    game* g = (game*)(gameplay::gamemodes.at(5));
     g->level = levelStart;
     g->difficulty = difficultySelection;
     g->setMods(activeMods);

@@ -154,7 +154,6 @@ void keyboard::input(SDL_Keycode key) {
 
 }
 int keyboard::endlogic() {
-    std::cout << "activity\n" << active << "\n";
     return active;
 }
 keyboard::keyboard() {

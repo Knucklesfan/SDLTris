@@ -62,6 +62,10 @@
 		<vertex>./shaders/vertex_unlit.shader</vertex>
 		<fragment>./shaders/fragment_palette.shader</fragment>
 	</shader>
+	<shader> <!-- Flat, unlit shader for having the score bar have CRAZZZY effects as it gets stronger 14-->
+	<vertex>./shaders/vertex_unlit.shader</vertex>
+<fragment>./shaders/fragment_fire.shader</fragment>
+</shader>
 
 	<!-- ANYTHING BELOW THIS POINT IS OKAY TO MODIFY OR USE IN SCRIPTS! -->
 	<!-- Anything than is beyond this point is not hardcoded by the game and can be modified, or used by backgrounds, sprites or fonts. -->

@@ -1,0 +1,30 @@
+<!--Welcome one and all to the modifier stuff-->
+<!--Modifiers are basically just lua scripts (or hardcoded functions) that run every frame (or other situation) that gets triggered when needed-->
+<!--There's a few triggers, but you can also just add value modifiers and those work too!-->
+<!--This is a basic modifier that modifies values, but more complex ones will be in the game later on so...-->
+<modifier>
+    <meta>
+        <name>Time Waster</name>
+        <price>500</price> <!--This is the price it would cost in the modifier shop.-->
+        <description>Gives you a slower combo drain, but with the cost of half of your combo increase!</description><!--Should this item show up in the shop?-->
+        <forsale>true</forsale> <!--Should this item show up in the shop?-->
+
+        <sprite>modifier.png</sprite> <!--Sale sprite to use-->
+        <tags> <!--Tags are what are shown under the bonuses section in the options-->
+            <good>50% Combo Drain Speed</good>
+            <bad>50% Combo Fill Up Speed</bad>
+        </tags>
+    </meta>
+    <effects>
+        <trigger type="value" func="MUL"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>drain_speed</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>2.0</value> <!-- Since the drain speed is halved, we can double it to give the effect of it being half the speed. (it's normally 1750ms, so doubling means that the speed is slower)-->
+        </trigger>
+        <trigger type="value" func="MUL"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>fillup_speed</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>2.0</value> <!-- same as above, but fillup speed is # of points required to fill up, so we double it!-->
+        </trigger>
+
+    </effects>
+
+</modifier>

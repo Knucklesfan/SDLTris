@@ -189,7 +189,7 @@ void game::logic(double deltatime) {
             lineclears[i] = 0.0;
         }
     }
-
+    parsePassive();
     if(keyboardState) { //yeah, checking if the keyb is active is a waste of time, but checking if paused is fine
         keyb->logic(deltatime);
         if(!keyb->endlogic()) {
@@ -292,6 +292,7 @@ void game::render() {
         p->rotation = {-75+scoreFlip[10]*360,0,sin(SDL_GetTicks64()/1000.0f)*5};
         graphics::shaders.at(14)->activate();
         graphics::shaders.at(14)->setFloat("time",(float)SDL_GetTicks()/(float)1000);
+        graphics::shaders.at(14)->setFloat("combo",comboTime);
 
         p->render(graphics::shaders.at(14),graphics::sprites.at("scorebar"),projection,view);
         //SDL_RenderPresent(renderer);
@@ -336,7 +337,7 @@ Transition game::endLogic() {
         warningflag = false;
         checkLines(gameBlocks);
         memcpy(previousblocks, gameBlocks, sizeof previousblocks);
-        
+        comboTime = 1.0;
         if (!t.rebirth(BLOCKX, BLOCKY, nextblocks)) {
             settings::lastlevel = level;
             settings::lastlines = lines;
@@ -725,13 +726,17 @@ void game::reset() {
 }
 }
 int game::parsePassive() {
-    // first, let's do the combo shuffle
+  // first, let's do the combo shuffle
+    float timemod = 1750;
     if (comboOperations.size() > 0) { //if we have any combo operations, we can handle them here
         for (int i = 0; i < comboOperations.size(); i++) {
             if (comboOperations.at(i).slot == DRAIN_SPEED) {
+                timemod = performModOperation(timemod,comboOperations.at(i).operation,comboOperations.at(i).value);
             }
         }
     }
+        comboTime -= graphics::deltaTime/timemod;
+
     return 0;
 }
 int game::demoEndLogic() {

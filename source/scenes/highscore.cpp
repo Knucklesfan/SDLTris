@@ -79,7 +79,6 @@ void highscore::render() {
 };
 
 void highscore::logic(double deltatime) {
-    std::cout << SDL_GetTicks64()-animationstart << "\n";
     float animationframe = (SDL_GetTicks64()-animationstart)/animationtime;
     switch(animationindex) {
         case 0: {

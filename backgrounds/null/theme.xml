@@ -64,17 +64,6 @@
 				<y>0</y>
 		</movement>
 	</layer>-->
-	<layer type="shader" depth="3">
-		<textures>
-			<texture>
-				<path>test.png</path>
-			</texture>
-		</textures>
-		<shader>
-			<vertex>vertex.glsl</vertex>
-			<fragment>filmstrip.glsl</fragment>
-		</shader>
-	</layer>
 
 	</layers>
 </background>

@@ -348,7 +348,7 @@ int main(int argc, char **argv) {
     }
     //rpcimplement rpc();
     networking::globalRPC = new rpcimplement();
-
+    bool doLogic = true;
     gameplay::gamemodes[gameplay::gamemode+1]->reset();
     while (!quit) {
         while (SDL_PollEvent(&event)) {
@@ -357,7 +357,7 @@ int main(int argc, char **argv) {
             }
             if (event.type == SDL_KEYDOWN) {
                 if(event.key.keysym.sym == SDLK_0) {
-                    sota.indexnum++;
+                    doLogic = !doLogic;
                 }
                 if(event.key.keysym.sym == SDLK_F12) {
                     graphics::screenshot();
@@ -409,8 +409,9 @@ int main(int argc, char **argv) {
             double frameTime = graphics::deltaTime /1000.0;
             tFPS = (1.0 / frameTime);
             LAST = NOW;
-
-            doGameLogic();
+            if (doLogic) {
+                doGameLogic();
+            }
             doGameRender();
 
         }

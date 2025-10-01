@@ -2,7 +2,7 @@
 #include "../utils/defs.h"
 
 #include <rapidxml.hpp>
-#include <rapidxml_utils.h>
+#include <rapidxml_utils.hpp>
 
 modifier::modifier(std::string path) {
     rapidxml::file<> modFile((filepath"modifiers/"+path+"/modifier.xml").c_str());
@@ -38,22 +38,22 @@ modifier::modifier(std::string path) {
     }
     modifierMeta meta = {modName,modDesc,modPrice,modSale,modTex,modTags};
 
-    for (rapidxml::xml_node<char>* tagChild = modParent->first_node("meta")->first_node("tags")->first_node(); tagChild != NULL; tagChild = tagChild->next_sibling()) {
-        std::string name = tagChild->name();
-        if(name == "good") {
-            std::cout << "good\n";
-            modTags.push_back({tagChild->value(),TagQuality::GOOD});
-        }
-        else if(name == "bad") {
-            std::cout << "bad\n";
-            modTags.push_back({tagChild->value(),TagQuality::BAD});
-        }
-        else {
-            std::cout << "ugly\n";
-            modTags.push_back({tagChild->value(),TagQuality::UGLY});
-        }
+    // for (rapidxml::xml_node<char>* tagChild = modParent->first_node("meta")->first_node("tags")->first_node(); tagChild != NULL; tagChild = tagChild->next_sibling()) {
+    //     std::string name = tagChild->name();
+    //     if(name == "good") {
+    //         std::cout << "good\n";
+    //         modTags.push_back({tagChild->value(),TagQuality::GOOD});
+    //     }
+    //     else if(name == "bad") {
+    //         std::cout << "bad\n";
+    //         modTags.push_back({tagChild->value(),TagQuality::BAD});
+    //     }
+    //     else {
+    //         std::cout << "ugly\n";
+    //         modTags.push_back({tagChild->value(),TagQuality::UGLY});
+    //     }
 
-    }
-
+    // }
+    metadata = meta;
 
 }

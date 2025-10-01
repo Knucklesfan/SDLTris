@@ -1227,7 +1227,7 @@ void gameplay::loadModifiers() {
     rapidxml::xml_node<char>* parent = bgDoc.first_node("modifiers");
     for (rapidxml::xml_node<char>* child = parent->first_node(); child != NULL; child = child->next_sibling()) {
         std::string path = child->value();
-        modifier mod = modifier(filepath"modifiers/"+path+"/modifier.xml");
+        modifier mod = modifier(path);
 
         //add to modifier array
         modifiers.push_back(mod);

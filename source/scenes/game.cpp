@@ -609,7 +609,7 @@ void game::checkLines(int(blocks)[480]) {
     }
     lines += times;
     linecounter += times;
-    if (linecounter > 10*(1+2*(4-difficulty))) {
+    if (linecounter > 10*(1+(4-difficulty)/2)) {
         level++;
         linecounter = 0;
     }

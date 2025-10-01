@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <string>
 #include "../opengl/texture.h"

@@ -108,7 +108,8 @@ void game::logic(double deltatime) {
     // graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).renderLyrics();
     if (gameactive && !paused && !gameplay::transitioning) {
         if (SDL_GetTicks64()-ticktimer > getspeed()*10) {
-            invisScore++; //increment the drop score, but dont add it yet
+            addScore(SCORETYPE::GRAVITY,1,true);
+; //increment the drop score, but dont add it yet
             ticktimer = SDL_GetTicks64();
             t.movedown();
             
@@ -404,14 +405,15 @@ void game::inputKey(SDL_Keycode key) {
         case SDLK_UP: {
             Mix_PlayChannel(-1, audio::sfx->at(3), 0);
             if (settings::activations[OPTIONTYPE::GAMEPLAY][GAMEPLAYOPTIONS::FASTDROP] == 1) {
-                invisScore += t.forcedrop();
+                addScore(SCORETYPE::FORCEDROP,t.forcedrop(),true);
             }
             break;
         }
         case SDLK_DOWN: {
             Mix_PlayChannel(-1, audio::sfx->at(2), 0);
             t.movedown();
-            invisScore++;
+            addScore(SCORETYPE::GRAVITY,1,true);
+
 
             break;
         }
@@ -1127,29 +1129,36 @@ int game::addScore(SCORETYPE type, int times, bool invisible) {
     int addedScore = 0;
     switch(type) {
         case SCORETYPE::GRAVITY: {
-            
+            addedScore+=1;
 
         }break;
         case SCORETYPE::GARBAGE: {
 
         }break;
         case SCORETYPE::FORCEDROP: {
+            addedScore+=times;
 
         }break;
         case SCORETYPE::LINECLEAR: {
             if(times > 0) {
                 switch(times) {
                     case 1: {
-
+                        Mix_PlayChannel(-1, audio::sfx->at(6), 0);
+                        addedScore = 100 * level;
                     }break;
                     case 2: {
+                        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
+                        addedScore = 300 * level;
 
                     }break;
                     case 3: {
+                        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
+                        addedScore = 500 * level;
 
                     }break;
                     default: { //what's cool is, this will always be 4 or more!
-
+                        Mix_PlayChannel(-1, audio::sfx->at(8), 0);
+                        addedScore = 800 * level;
                     }break;
                 }
             }

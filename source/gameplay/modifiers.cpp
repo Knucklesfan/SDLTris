@@ -55,5 +55,36 @@ modifier::modifier(std::string path) {
 
     // }
     metadata = meta;
+}
+float performModOperation(float original, SCOREOP operation, float value, float max) {
+    float newvalue = original;
+    switch (operation) {
+        case MUL: {
+            newvalue *= value;
+        } break;
+        case DIV: {
+            newvalue /= value;
+        }break;
+        case ADD: {
+            newvalue += value;
+        } break;
+        case SUB: {
+            newvalue -= value;
+        }break;
+        case MULPERC: {
+            newvalue *= value/100.0f;
+        } break;
+        case ADDPERC: {
+            newvalue += value/100.0f;
 
+        }break;
+        case SUBPERC: {
+            newvalue -= value/100.0f;
+
+        } break;
+        case SET: {
+            newvalue = value;
+        }break;
+        }
+        return newvalue;
 }

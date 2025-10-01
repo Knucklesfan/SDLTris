@@ -723,9 +723,16 @@ void game::reset() {
         }
     }
 }
-
-
-
+}
+int game::parsePassive() {
+    // first, let's do the combo shuffle
+    if (comboOperations.size() > 0) { //if we have any combo operations, we can handle them here
+        for (int i = 0; i < comboOperations.size(); i++) {
+            if (comboOperations.at(i).slot == DRAIN_SPEED) {
+            }
+        }
+    }
+    return 0;
 }
 int game::demoEndLogic() {
 

@@ -77,3 +77,4 @@ class modifier {
         blockChances chances;
         modifier(std::string filename); //loads a mod into memory
 };
+float performModOperation(float original, SCOREOP operation, float value, float max=0.0  );

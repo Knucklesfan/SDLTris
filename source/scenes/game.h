@@ -70,6 +70,10 @@ class game: public Gamemode
 		uint randomIters = 0; // number of times the rand() call has been made
 		Uint32 score = 0;
 		Uint32 invisScore = 0; //score that is hidden and reset on holdblock, and is only added once falling is done.
+
+		float combo = 0; //Generally agreed upon combo, that affects score.
+		float comboTime = 0; //the ticking time-bomb that represents your combo timing
+		
 		int lines = 0;
 		int linecounter = 0; //tally of the lines before progressing to next level
 

@@ -6,12 +6,12 @@ class Font {
     public:
         virtual int render(std::string words, int x, int y,bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos,
-        double multiplyin, double multiplyout, double scale,int scrwidth, int scrheight){};
+        double multiplyin, double multiplyout, double scale,int scrwidth, int scrheight, float alpha){};
 
         virtual int render(std::string words, int x, int y,bool center, 
         int red, int blue, int green, int wordwrap, bool sine, double pos,
         double multiplyin, double multiplyout, double scale){
-            return render(words,x,y,center,red,blue,green,wordwrap,sine,pos,multiplyin,multiplyout,scale,640,480);
+            return render(words,x,y,center,red,blue,green,wordwrap,sine,pos,multiplyin,multiplyout,scale,640,480, 1);
         };
         
         virtual int render(int x, int y,std::string words,

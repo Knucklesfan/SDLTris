@@ -81,7 +81,7 @@ ttffont::ttffont(std::string path) {
             texture, 
             glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
             glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            face->glyph->advance.x
+            static_cast<unsigned int>(face->glyph->advance.x)
         };
         characters.insert(std::pair<char, ttfchar>(c, character));
     }
@@ -113,26 +113,7 @@ ttffont::ttffont(std::string path) {
 // }
 }
 
-int ttffont::render(int x, int y, std::string strg, bool center) {
-    return render(strg, x, y, center, 0, 0, 0);
-}
-int ttffont::render(int x, int y, std::string strg, bool center, bool sine, double pos, double multiplyin, double multiplyout) {
-    return render(strg, x, y, center, 0, 0, 0, 0, sine, pos, multiplyin, multiplyout, 1.0,640,480);
-}
-
-int ttffont::render(int x, int y, std::string strg, bool center, int wordwrap) {
-    return render(strg, x, y, center, 0, 0, 0, wordwrap);
-}
-int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green) {
-    return render(words, x, y, center, red, blue, green, 0);
-}
-int ttffont::render(std::string strg, int x, int y, bool center) {
-    return render(strg, x, y, center, 0, 0, 0);
-}
-int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap) {
-    return render(words, x, y, center, red, blue, green, wordwrap, false, 0, 0, 0, 1.0,640,480);
-}
-int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale, int scrwidth, int scrheight) {
+int ttffont::render(std::string words, int x, int y, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout, double scale, int scrwidth, int scrheight, float alpha) {
 
     shad->activate();
     glm::vec3 color = (glm::vec3(red/255.0f,blue/255.0f,green/255.0f));

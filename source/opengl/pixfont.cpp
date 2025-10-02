@@ -100,10 +100,10 @@ pixfont::pixfont(std::string path) {
 
 
 int pixfont::render(int x, int y, std::string words, bool center, int red, int blue, int green, int wordwrap, bool sine, double pos, double multiplyin, double multiplyout) {
-return render(words, x, y, center, red, blue, green, wordwrap, sine, pos, multiplyin, multiplyout, 1,COORDINATE_WIDTH,COORDINATE_HEIGHT);
+return render(words, x, y, center, red, blue, green, wordwrap, sine, pos, multiplyin, multiplyout, 1,COORDINATE_WIDTH,COORDINATE_HEIGHT,1);
 }
 int pixfont::render(int x, int y, std::string strg, bool center) {
-return render(strg, x, y, center, 255, 255, 255, 0, false, 0, 0, 0, 1,COORDINATE_WIDTH,COORDINATE_HEIGHT);
+return render(strg, x, y, center, 255, 255, 255, 0, false, 0, 0, 0, 1,COORDINATE_WIDTH,COORDINATE_HEIGHT,1);
 }
 int pixfont::render(std::string words,
  int x, int y,
@@ -111,7 +111,7 @@ int pixfont::render(std::string words,
    int red, int blue, int green,
     int wordwrap,
      bool sine, double pos, double multiplyin, double multiplyout,
-      double scale,int scrwidth, int scrheight) {
+      double scale,int scrwidth, int scrheight, float alpha) {
 	txt->activate(0);
     projection = glm::ortho(0.0f, static_cast<float>(scrwidth), 
     static_cast<float>(scrheight), 0.0f, -100.0f, 100.0f);
@@ -136,7 +136,7 @@ int pixfont::render(std::string words,
         color.r = red/255.0;
         color.g = green/255.0;
         color.b = blue/255.0;
-        color.w = 1;
+        color.w = alpha;
     }
     // std::cout << words << "\n";
     if(wordwrap > 0  && words.length()*wordsize > wordwrap) {
@@ -192,7 +192,7 @@ int pixfont::render(std::string words,
 
             glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, glm::vec3(tmpx,drawy, 0.0f));  // first translate (transformations are: scale happens first, then rotation, and then final translation happens; reversed order)
-            model = glm::scale(model, glm::vec3(mapping.at(a).width,height, 1.0f)); // last scale
+            model = glm::scale(model, glm::vec3(mapping.at(a).width*scale,height*scale, 1.0f)); // last scale
             shad->setVector("model", glm::value_ptr(model));
             shad->setVec2("texOffset",glm::value_ptr(texOffset));
             shad->setVec2("scale",glm::value_ptr(texScale));
@@ -202,7 +202,7 @@ int pixfont::render(std::string words,
 
 
         #endif
-            tmpx += (mapping.at(a).width);
+            tmpx += (mapping.at(a).width*scale);
         }
         else {
             //std::cout << "LOADED BAD CHAR!!\n";

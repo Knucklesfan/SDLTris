@@ -40,13 +40,13 @@ public:
 	int splash = 0;
 
 	const std::string splashes[35] = {
-	"STILL BETTER THAN LEAF BLOWERS!",
+	"Requires slightly more than a 486!",
 	"GO AHEAD, CRY ABOUT IT",
-	"FALLOUT 76, EAT YOUR HEART OUT",
-	"TETRIS 99 MORE LIKE",
-	"PLAY KEKCROC WORLD 3 MORON",
+	"Wonder what the stars must look like comin' out tonight",
+	"Who is the Gaucho, amigo?",
+	"Between life and death!",
 	"LISTEN TO LEMON DEMON",
-	"PLAY KEKCROC WORLD 4 WHENEVER THE HECK IT COMES OUT",
+	"PLAY KEKCROC WORLD 4",
 	"FEELS LIKE A T-FLIP ON A THURSDAY",
 	"WHO EVEN ARE YOU",
 	"STD::STRING SPLASHES BE LIKE:",

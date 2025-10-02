@@ -4,11 +4,11 @@
 
  <height>16</height>
  <!--literally the only thing required outside of this..-->
- <width>16</width>
+ <width>15</width>
  <!--this width is the sprite of the drawn image.-->
  <shader>5</shader>
  <!--Shader this font uses-->
- <spwidth>16</spwidth>
+ <spwidth>15</spwidth>
  <!--this is a VERY rough estimate of per character size for wordwrap calculation. Just, try to get a good estimate? Might make this auto generated.-->
 
 
@@ -19,66 +19,72 @@
          <posx>0</posx>
          <posy>0</posy>
          <char>0</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
 
      <letter>
          <posx>0</posx>
          <posy>1</posy>
          <char>1</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
 
      <letter>
          <posx>0</posx>
          <posy>2</posy>
          <char>2</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
 
      <letter>
          <posx>0</posx>
          <posy>3</posy>
          <char>3</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
 
      <letter>
          <posx>0</posx>
          <posy>4</posy>
          <char>4</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
 
      <letter>
          <posx>0</posx>
          <posy>5</posy>
          <char>5</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
      <letter>
          <posx>0</posx>
          <posy>6</posy>
          <char>6</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
      <letter>
          <posx>0</posx>
          <posy>7</posy>
          <char>7</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
      <letter>
          <posx>0</posx>
          <posy>8</posy>
          <char>8</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
      </letter>
      <letter>
          <posx>0</posx>
          <posy>9</posy>
          <char>9</char>
-         <charwid>16</charwid>
+         <charwid>15</charwid>
+     </letter>
+     <letter>
+         <posx>0</posx>
+         <posy>10</posy>
+         <char>.</char>
+         <charwid>4</charwid>
      </letter>
 
 

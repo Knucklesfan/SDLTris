@@ -12,6 +12,7 @@
 #include "../opengl/plane.h"
 #include "../gameplay/ingamemessagebox.h"
 #include "../opengl/font.h"
+#include "../gameplay/combonumber.h"
 #include "../gameplay/keyboard.h"
 #define SAVE_VERSION 2
 #define FILENAME_LENGTH 8
@@ -39,6 +40,20 @@ class game: public Gamemode
 		int level = 1; //actual level of the game
 		int difficulty = 0; //difficulty int!
 		bool demoPlayback = false; //playing back a demo?
+		tetrimino t;
+		int holdblock = 0;
+		uint randomIters = 0; // number of times the rand() call has been made
+		Uint32 score = 0;
+		Uint32 invisScore = 0; //score that is hidden and reset on holdblock, and is only added once falling is done.
+
+		float combo = 0; // hidden secret fun value that holds the combo's rising POWER AND INFLUENCE!
+		int comboLevel = 0; //Generally agreed upon combo multiplier, that affects score
+		float comboTime = 0; //the ticking time-bomb that represents your combo timing
+		
+		int lines = 0;
+		int linecounter = 0; //tally of the lines before progressing to next level
+		
+		int gameBlocks[480], ghostblocks[480],  previousblocks[480];
 
 	private:
 		void loadDemo(std::string demo);
@@ -62,20 +77,11 @@ class game: public Gamemode
 		ingamemessagebox* msg;
 
 		uint time = 0; //the time that the game started
-		
+		ghostblock g;
+
 		Uint64 ticktimer = 0; //the tick of the current time
 
 		int nextblocks = 0;
-		int holdblock = 0;
-		uint randomIters = 0; // number of times the rand() call has been made
-		Uint32 score = 0;
-		Uint32 invisScore = 0; //score that is hidden and reset on holdblock, and is only added once falling is done.
-
-		float combo = 0; //Generally agreed upon combo, that affects score.
-		float comboTime = 0; //the ticking time-bomb that represents your combo timing
-		
-		int lines = 0;
-		int linecounter = 0; //tally of the lines before progressing to next level
 
 		int bglevel = 1; //the current background level
 
@@ -100,10 +106,7 @@ class game: public Gamemode
 
 		Uint32 gameStart = 0;
 
-		int gameBlocks[480], ghostblocks[480],  previousblocks[480];
 
-		tetrimino t;
-		ghostblock g;
 
 		cube* cubeRenderer;
 		buffermanager* playfield; //the buffer that is used for the playfield
@@ -182,10 +185,13 @@ class game: public Gamemode
 		0.0,
 		0.0,
 		};
-
+		int line_combos[4] = {10,25,50,100};
 		std::vector<ScoreOperation> scoreOperations;
 		std::vector<ScoreOperation> gravityOperations;
 		std::vector<ComboOperation> comboOperations;
+		std::vector<Quirk*> quirks;
+
 		blockChances chances;
+		combonumber comboindicator;
 };
 

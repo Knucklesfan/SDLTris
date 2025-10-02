@@ -14,39 +14,38 @@
             <good>+1000% 4 line score</good>
             <good>-5% Gravity speed</good>
             <bad>-75% chance for Line pieces</bad>
-            <bad>-10% combo on all non-4line moves</bad>
+            <bad>-10 combo on all non-4line moves</bad>
             <bad>Line pieces cannot be stored in hold</bad>
             <ugly>Cannot be combined with garbage modifiers.</ugly>
             <ugly>4 line drops give regular combo.</ugly>
         </tags>
     </meta>
     <effects>
-        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="add" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_score_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
             <value>1000</value>
         </trigger>
-        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
-            <key>gravity_speed</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>5</value>
+        <trigger type="value" func="mul" mods="gravity"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <value>1.05</value>
         </trigger>
-        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="mul" mods="chance"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_chance</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>75</value>
+            <value>0.25</value>
         </trigger>
 
-        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="sub" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_combo_1</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
             <value>10</value>
         </trigger>
-        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="sub" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_combo_2</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
             <value>10</value>
         </trigger>
-        <trigger type="value" func="subperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="sub" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_combo_3</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
             <value>10</value>
         </trigger>
-        <trigger type="value" func="set"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="set" mods="settings"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>allow_hold_line</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
             <value>0</value>
         </trigger>

@@ -585,13 +585,13 @@ void classicmenu::render() {
                     for(modifierTag meta : gameplay::modifiers.at(i).metadata.tags) {
                         switch(meta.quality) {
                             case GOOD: { //its green. amazing.
-                               offset += graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,0,0,255,196,false,0,0,0,1.0,198,1024);
+                               offset += graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,0,0,255,196,false,0,0,0,1.0,198,1024,1);
                             }break;
                             case BAD: { //get this: this one is... RED?! how unpredictable.
-                               offset +=  graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,255,0,0,196,false,0,0,0,1.0,198,1024);
+                               offset +=  graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,255,0,0,196,false,0,0,0,1.0,198,1024,1);
                             }break;
                             case UGLY: { //this one is white because hotel sheets legally cannot be any color other than white to detect shit stains.
-                                offset += graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,255,255,255,196,false,0,0,0,1.0,198,1024);
+                                offset += graphics::fonts->at(2)->render(meta.tag,0,(offset*8),false,255,255,255,196,false,0,0,0,1.0,198,1024,1);
                             }break;
                         }
                     }
@@ -600,7 +600,7 @@ void classicmenu::render() {
 
             }
             offset++;
-            offset += graphics::fonts->at(2)->render("=========",0,(offset*8),false,0,255,0,196,false,0,0,0,1.0,198,1024);
+            offset += graphics::fonts->at(2)->render("=========",0,(offset*8),false,0,255,0,196,false,0,0,0,1.0,198,1024,1);
             offset++;
             lastOffset = offset;
             modtext->disable(640,480,true);

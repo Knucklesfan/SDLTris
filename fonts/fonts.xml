@@ -1,29 +1,29 @@
 <fonts>
-	<font>
+	<font> <!-- 0 -->
 		<type>pixfont</type>
 		<path>8x8font</path>
 	</font>
-	<font>
+	<font> <!-- 1 -->
 		<type>pixfont</type>
 		<path>8x16font</path>
 	</font>
-	<font>
+	<font> <!-- 2 -->
 		<type>pixfont</type>
 		<path>small8x8font</path>
 	</font>
-	<font>
+	<font> <!-- 3 -->
 		<type>ttffont</type>
 		<path>freesans</path>
 	</font>
-	<font>
+	<font> <!-- 4 -->
 		<type>pixfont</type>
 		<path>knfnfont32</path>
 	</font>
-	<font>
+	<font> <!-- 5 -->
 		<type>pixfont</type>
 		<path>scorefont</path>
 	</font>
-	<font>
+	<font> <!-- 6 -->
 		<type>pixfont</type>
 		<path>dialoguefont</path>
 	</font>

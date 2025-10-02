@@ -122,9 +122,13 @@ void game::logic(double deltatime) {
         if(!demoPlayback) {
             networking::globalRPC->update("Playing a game", "Current score: " + std::to_string(score), "icon2", time);
         }
+        parsePassive();
+        comboindicator.logic();
+
         g.changePos(t.x, t.y, t.rot);
         g.draw();
         t.draw();
+        
     }
     if (settings::activations[OPTIONTYPE::DISPLAY][DISPLAYOPTIONS::MOVINGBG] == 1) {
         graphics::backgrounds->at((bglevel) % (graphics::backgrounds->size())).logic(deltatime);
@@ -189,7 +193,6 @@ void game::logic(double deltatime) {
             lineclears[i] = 0.0;
         }
     }
-    parsePassive();
     if(keyboardState) { //yeah, checking if the keyb is active is a waste of time, but checking if paused is fine
         keyb->logic(deltatime);
         if(!keyb->endlogic()) {
@@ -264,24 +267,6 @@ void game::render() {
         graphics::fonts->at(2)->render(144+32, 32, "LINES: " + std::to_string(lines), true);
 
         graphics::fonts->at(2)->render(144+32, 48, "LEVEL: " + std::to_string(level),true);
-        
-        msg->render();
-        if(paused) {
-                graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
-                for (int i = 0; i < PAUSE_OPTIONS; i++) {
-                    graphics::fonts->at(2)->render(320, 300 + (i * 12),pauseMenu[i],
-                    true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
-                }
-
-            graphics::fonts->at(0)->render(320, 240, "GAME PAUSED", true);
-            keyb->render();
-        }
-        if(demoRecord) {
-            graphics::fonts->at(2)->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
-            if(demoReturn) {
-                graphics::fonts->at(2)->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
-            }
-        }
         glm::mat4 projection;
         projection = glm::perspective(glm::radians(45.0f), (float)614 / (float)406, 0.001f, 10000.0f);
         projection[2][0] = -0.675; //crazy insane math that puzzles even the most scholarly of researchers
@@ -310,6 +295,8 @@ void game::render() {
             {offset*360,0,0},
             {0,((score/((int)std::pow(10,scorelen-1-i)))%10)*32},{20,32});
         }
+        std::string combostring = std::to_string(comboLevel);
+        graphics::fonts->at(0)->render(448+(170-combostring.length()*32),62+32,"*"+combostring,false);
         int drawnmods = 0;
         for(int i = 0; i < 8; i++) {
             if(activeMods[i] > 0) { //if there is actually even a mod active here
@@ -321,6 +308,26 @@ void game::render() {
                         drawnmods++;
                     }
                 }
+            }
+        }
+
+        msg->render();
+        comboindicator.render();
+
+        if(paused) {
+                graphics::rect->render(graphics::shaders.at(1),{0,0},{640,480},0,{0,0,0,0.5},false,-1,{0,0,0,0});
+                for (int i = 0; i < PAUSE_OPTIONS; i++) {
+                    graphics::fonts->at(2)->render(320, 300 + (i * 12),pauseMenu[i],
+                    true, 255, (i == pauseselection?0:255), 255,0,false,0,0,0);
+                }
+
+            graphics::fonts->at(0)->render(320, 240, "GAME PAUSED", true);
+            keyb->render();
+        }
+        if(demoRecord) {
+            graphics::fonts->at(2)->render(32, 32, "RECORDING DEMO", false,255,0,0,-1,false,0,0,0);
+            if(demoReturn) {
+                graphics::fonts->at(2)->render(32, 64, "DEMO IS FADING", false,255,255,0,-1,false,0,0,0);
             }
         }
         graphics::fonts->at(2)->render(448,62,"SCORE",false);
@@ -403,6 +410,15 @@ void game::input(SDL_Keycode key)
 void game::inputKey(SDL_Keycode key) {
     if (gameactive && !paused) {
         t.draw();
+        for (int i = 0; i < quirks.size(); i++) {
+            std::cout << "quirks size: " << i << " " << quirks.at(i)->getType() << "\n";
+
+            if (quirks.at(i)->getPermission() & QUIRKPERMS::QUIRKINPUT) {
+                if (quirks.at(i)->input(this, key)) {
+                    return;
+                };
+            }
+        }
         switch (key) {
         case SDLK_UP: {
             Mix_PlayChannel(-1, audio::sfx->at(3), 0);
@@ -679,6 +695,7 @@ void game::reset() {
     std::fill_n(ghostblocks, 480, 0);
     std::fill_n(previousblocks, 480, 0);
     score = 0;
+    invisScore = 0;
     int temp  = std::rand() % 7;
     t = tetrimino(BLOCKX, BLOCKY, gameBlocks, boardwidth, boardheight, temp);
     g = ghostblock(BLOCKX, BLOCKY, previousblocks, boardwidth, boardheight, temp, ghostblocks);
@@ -714,10 +731,50 @@ void game::reset() {
                 if(gameplay::modifiers.at(modifiernumber).scoreOperations.size() > 0) {
                     scoreOperations.insert(scoreOperations.end(), gameplay::modifiers.at(modifiernumber).scoreOperations.begin(), gameplay::modifiers.at(modifiernumber).scoreOperations.end());
                 }
-                if(gameplay::modifiers.at(modifiernumber).comboOperations.size() > 0) {
-                    comboOperations.insert(comboOperations.end(), gameplay::modifiers.at(modifiernumber).comboOperations.begin(), gameplay::modifiers.at(modifiernumber).comboOperations.end());
-                }
+                if (gameplay::modifiers.at(modifiernumber)
+                        .comboOperations.size() > 0) {
+                    for (int i = 0; i < gameplay::modifiers.at(modifiernumber)
+                                        .comboOperations.size();
+                        i++) {
+                    switch (gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i)
+                                .slot) {
+                    case COMBOOP::LINE_COMBO_1: {
+                        line_combos[0] = modifierUtils::performModOperation(line_combos[0], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
+                    } break;
+                    case COMBOOP::LINE_COMBO_2: {
+                        line_combos[1] = modifierUtils::performModOperation(line_combos[1], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
+                    } break;
+                    case COMBOOP::LINE_COMBO_3: {
+                        line_combos[2] = modifierUtils::performModOperation(line_combos[2], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
 
+                    } break;
+                    case COMBOOP::LINE_COMBO_4: {
+                        line_combos[3] = modifierUtils::performModOperation(line_combos[3], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
+
+                    } break;
+                    default: {
+                        comboOperations.push_back(gameplay::modifiers.at(modifiernumber).comboOperations.at(i)
+                                );
+                    }break;
+                            }
+                            
+                        }
+                }
+                if (gameplay::modifiers.at(modifiernumber).quirks.size() > 0) {
+                    for(int i = 0; i < gameplay::modifiers.at(modifiernumber).quirks.size(); i++) {
+                        quirks.push_back(gameplay::modifiers.at(modifiernumber).quirks.at(i));
+                    }
+                    // quirks.insert(quirks.end(), gameplay::modifiers.at(modifiernumber).quirks.begin(), gameplay::modifiers.at(modifiernumber).quirks.end());
+                }
                 gravityOperations.push_back(gameplay::modifiers.at(modifiernumber).gravitySpeed);
                 chances += gameplay::modifiers.at(modifiernumber).chances;
             }   
@@ -727,15 +784,20 @@ void game::reset() {
 }
 int game::parsePassive() {
   // first, let's do the combo shuffle
-    float timemod = 1750;
+    float timemod = 2000;
     if (comboOperations.size() > 0) { //if we have any combo operations, we can handle them here
         for (int i = 0; i < comboOperations.size(); i++) {
             if (comboOperations.at(i).slot == DRAIN_SPEED) {
-                timemod = performModOperation(timemod,comboOperations.at(i).operation,comboOperations.at(i).value);
+                timemod = modifierUtils::performModOperation(timemod,comboOperations.at(i).operation,comboOperations.at(i).value);
             }
         }
     }
-        comboTime -= graphics::deltaTime/timemod;
+    comboTime -= graphics::deltaTime / timemod;
+    if (comboTime <= 0) {
+        comboTime = 0;
+        combo = 0;
+        comboLevel = 1;
+    }
 
     return 0;
 }
@@ -909,8 +971,16 @@ double game::getspeed() {
         case 3: {
             difficultymult = 0.1;
         }break;
+        }
+        double nearfinaldrop = returndb * 6 * difficultymult;
+        std::cout << nearfinaldrop << "nearfinal\n";
+        for (int i = 0; i < gravityOperations.size(); i++) {
+          std::cout << gravityOperations.at(i).operation << " opcode " << gravityOperations.at(i).value << " value\n";
+        nearfinaldrop = modifierUtils::performModOperation(nearfinaldrop, gravityOperations.at(i).operation, gravityOperations.at(i).value);
     }
-    return returndb * 6 * difficultymult;
+    std::cout << nearfinaldrop << "nearfinal\n";
+
+    return nearfinaldrop;
 }
 void game::startRecord() {
     t.removeolddraw();
@@ -1134,6 +1204,10 @@ void game::loadState(std::string path) {
 
 }
 void game::setMods(Uint64 mods[8]) {
+    quirks.clear();
+    gravityOperations.clear();
+    comboOperations.clear();
+    scoreOperations.clear();
     for(int i = 0; i < 8; i++) {
         activeMods[i] = mods[i];
         std::cout << "MODULE" << mods[i] << "\n";
@@ -1158,22 +1232,28 @@ int game::addScore(SCORETYPE type, int times, bool invisible) {
             if(times > 0) {
                 switch(times) {
                     case 1: {
-                        Mix_PlayChannel(-1, audio::sfx->at(6), 0);
                         addedScore = 100 * level;
+                        combo += line_combos[0];
+                        type = SCORETYPE::LINE_SCORE_1;
                     }break;
                     case 2: {
-                        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
                         addedScore = 300 * level;
+                        combo += line_combos[1];
+                        type = SCORETYPE::LINE_SCORE_2;
+
 
                     }break;
                     case 3: {
-                        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
                         addedScore = 500 * level;
+                        combo += line_combos[2];
+                        type = SCORETYPE::LINE_SCORE_3;
 
                     }break;
                     default: { //what's cool is, this will always be 4 or more!
-                        Mix_PlayChannel(-1, audio::sfx->at(8), 0);
                         addedScore = 800 * level;
+                        combo += line_combos[3];
+                        type = SCORETYPE::LINE_SCORE_4;
+
                     }break;
                 }
             }
@@ -1181,6 +1261,33 @@ int game::addScore(SCORETYPE type, int times, bool invisible) {
         case SCORETYPE::PASSIVE: {
 
         }break;
+        }
+        if (combo > (comboLevel-1) * 100) {
+            comboLevel++;
+            comboindicator.splash(comboLevel);
+            combo = 0;
+        }
+        addedScore *= comboLevel;
+        for (int i = 0; i < scoreOperations.size(); i++) {
+        if (scoreOperations.at(i).times == type) {
+                addedScore = modifierUtils::performModOperation(addedScore, scoreOperations.at(i).operation, scoreOperations.at(i).value);
+        }
+    }
+
+    if (addedScore > 800 * level) {
+        Mix_PlayChannel(-1, audio::sfx->at(8), 0);
+    }
+
+    else if (addedScore > 500 * level) {
+        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
+    }
+
+    else if (addedScore > 300 * level) {
+        Mix_PlayChannel(-1, audio::sfx->at(7), 0);
+    }
+    else if (addedScore > 100 * level) {
+        Mix_PlayChannel(-1, audio::sfx->at(6), 0);
+
     }
     if(invisible) {
         invisScore += addedScore;

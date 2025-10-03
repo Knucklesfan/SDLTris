@@ -29,6 +29,7 @@
 //TODO: take a shower
 game::game() {
     keyb = new keyboard();
+    chances = {1/7.0f,1/7.0f,1/7.0f,1/7.0f,1/7.0f,1/7.0f,1/7.0f};
 
     #ifdef __LEGACY_RENDER
     texture = SDL_CreateTexture(graphics::render,SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET,640,480);
@@ -757,78 +758,87 @@ void game::reset() {
         for(int j = 0; j < 64; j++) {
             if(activeMods[i]>>j&1) { //if we good, we good
                 int modifiernumber = i*64+j;
-                if(gameplay::modifiers.at(modifiernumber).scoreOperations.size() > 0) {
-                    scoreOperations.insert(scoreOperations.end(), gameplay::modifiers.at(modifiernumber).scoreOperations.begin(), gameplay::modifiers.at(modifiernumber).scoreOperations.end());
+                modifier gameplaymod = gameplay::modifiers.at(modifiernumber);
+                if(gameplaymod.scoreOperations.size() > 0) {
+                    scoreOperations.insert(scoreOperations.end(), gameplaymod.scoreOperations.begin(), gameplaymod.scoreOperations.end());
                 }
-                if (gameplay::modifiers.at(modifiernumber)
+                if (gameplaymod
                         .comboOperations.size() > 0) {
-                    for (int i = 0; i < gameplay::modifiers.at(modifiernumber)
+                    for (int i = 0; i < gameplaymod
                                         .comboOperations.size();
                         i++) {
-                    switch (gameplay::modifiers.at(modifiernumber)
+                    switch (gameplaymod
                                 .comboOperations.at(i)
                                 .slot) {
                     case COMBOOP::FILLUP_SPEED: {
-                        line_combos[0] = modifierUtils::performModOperation(line_combos[0], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[0] = modifierUtils::performModOperation(line_combos[0], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
-                        line_combos[1] = modifierUtils::performModOperation(line_combos[1], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[1] = modifierUtils::performModOperation(line_combos[1], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
-                        line_combos[2] = modifierUtils::performModOperation(line_combos[2], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[2] = modifierUtils::performModOperation(line_combos[2], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
-                        line_combos[3] = modifierUtils::performModOperation(line_combos[3], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[3] = modifierUtils::performModOperation(line_combos[3], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
 
                     }break;
                     case COMBOOP::LINE_COMBO_1: {
-                        line_combos[0] = modifierUtils::performModOperation(line_combos[0], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[0] = modifierUtils::performModOperation(line_combos[0], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
                     } break;
                     case COMBOOP::LINE_COMBO_2: {
-                        line_combos[1] = modifierUtils::performModOperation(line_combos[1], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[1] = modifierUtils::performModOperation(line_combos[1], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
                     } break;
                     case COMBOOP::LINE_COMBO_3: {
-                        line_combos[2] = modifierUtils::performModOperation(line_combos[2], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[2] = modifierUtils::performModOperation(line_combos[2], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
 
                     } break;
                     case COMBOOP::LINE_COMBO_4: {
-                        line_combos[3] = modifierUtils::performModOperation(line_combos[3], gameplay::modifiers.at(modifiernumber)
-                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                        line_combos[3] = modifierUtils::performModOperation(line_combos[3], gameplaymod
+                                .comboOperations.at(i).operation, gameplaymod
                                 .comboOperations.at(i).value);
 
                     } break;
                     default: {
-                        comboOperations.push_back(gameplay::modifiers.at(modifiernumber).comboOperations.at(i)
+                        comboOperations.push_back(gameplaymod.comboOperations.at(i)
                                 );
                     }break;
                             }
                             
                         }
                 }
-                if (gameplay::modifiers.at(modifiernumber).quirks.size() > 0) {
-                    for(int i = 0; i < gameplay::modifiers.at(modifiernumber).quirks.size(); i++) {
-                        quirks.push_back(gameplay::modifiers.at(modifiernumber).quirks.at(i));
+                if (gameplaymod.quirks.size() > 0) {
+                    for(int i = 0; i < gameplaymod.quirks.size(); i++) {
+                        quirks.push_back(gameplaymod.quirks.at(i));
                     }
-                    // quirks.insert(quirks.end(), gameplay::modifiers.at(modifiernumber).quirks.begin(), gameplay::modifiers.at(modifiernumber).quirks.end());
+                    // quirks.insert(quirks.end(), gameplaymod.quirks.begin(), gameplaymod.quirks.end());
                 }
-                gravityOperations.push_back(gameplay::modifiers.at(modifiernumber).gravitySpeed);
-                if(gameplay::modifiers.at(modifiernumber).chances.set) {
-                    chances = gameplay::modifiers.at(modifiernumber).chances;
+                gravityOperations.push_back(gameplaymod.gravitySpeed);
+                if(gameplaymod.chancesChanged) {
+                    std::cout << chances.line << " " << chances.spiece << " "
+     << chances.square << " "  << chances.lpiece << " "  <<
+      chances.ipiece << " "  << chances.tpiece << " "  << chances.zpiece << "\n";
+                    std::cout << "apparently, we need to write some chances\n";
+                    chances = gameplaymod.chances;
+                    std::cout << chances.line << " " << chances.spiece << " "
+     << chances.square << " "  << chances.lpiece << " "  <<
+      chances.ipiece << " "  << chances.tpiece << " "  << chances.zpiece << " " << "\n";
+                    std::cout << gameplaymod.metadata.name << "\n";
                 }
             }   
         }
     }
-    for(int i = 0; i < 10000; i++) {
-        std::cout << getNextBlock() << ",";
-    }
+    // for(int i = 0; i < 10000; i++) {
+    //     std::cout << getNextBlock() << ",";
+    // }
     std::cout << chances.line << " " << chances.spiece << " "
      << chances.square << " "  << chances.lpiece << " "  <<
       chances.ipiece << " "  << chances.tpiece << " "  << chances.zpiece << "\n";

@@ -2,7 +2,7 @@
     <song><path>./music/title.mod</path></song> <!--0-->
 <song><path>./music/menumusic.xm</path></song> <!--1-->
 <song><path>./music/boingballs.it</path></song> <!--2-->
-<song><path>./music/classicmenu.it</path></song> <!--3-->
+<song><path>./music/classicmenu.xm</path></song> <!--3-->
 <song><path>./music/credits.s3m</path></song> <!--4-->
 <song><path>./music/girl.xm</path></song> <!--5-->
 <song><path>./music/funky_endpart.mod</path></song> <!--6-->

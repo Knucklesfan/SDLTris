@@ -62,7 +62,6 @@ struct blockChances {
     float lpiece;
     float ipiece;
     float tpiece;
-    bool set=false;
     blockChances operator+= (blockChances value) const //THIS IS INSANE THAT C++ CAN DO THIS
         {
             return {square+value.square,line+value.line,zpiece+value.zpiece,
@@ -159,5 +158,6 @@ class modifier {
         std::vector<ComboOperation> comboOperations;
         std::vector<Quirk*> quirks;
         blockChances chances;
+        bool chancesChanged = false;
         modifier(std::string filename); //loads a mod into memory
 };

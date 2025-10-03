@@ -40,6 +40,8 @@ modifier::modifier(std::string path) {
 
     }
     modifierMeta meta = {modName,modDesc,modPrice,modSale,modTex,modTags};
+    chancesChanged = false;
+    chances = {0,0,0,0,0,0,0};
 
     for (rapidxml::xml_node<char>* tagChild = modParent->first_node("effects")->first_node(); tagChild != NULL; tagChild = tagChild->next_sibling()) {
         std::string name = tagChild->name();
@@ -75,7 +77,7 @@ modifier::modifier(std::string path) {
                     } else if(operation == SCOREOP::ADD) {
                         chances = {square,line,zpiece,spiece,lpiece,ipiece,tpiece};
                     }
-
+                    chancesChanged = true;
 
                 }break;
                 case OPTYPES::GRAVITOPTYPE: {

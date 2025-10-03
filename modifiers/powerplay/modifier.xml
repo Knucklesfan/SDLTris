@@ -28,7 +28,7 @@
         </trigger>
         <trigger type="value" func="mul" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>drain_speed</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>0.90</value> <!-- Since the drain speed is halved, we can double it to give the effect of it being half the speed. (it's normally 1750ms, so doubling means that the speed is slower)-->
+            <value>0.55</value> <!-- Since the drain speed is halved, we can double it to give the effect of it being half the speed. (it's normally 1750ms, so doubling means that the speed is slower)-->
         </trigger>
         <trigger type="value" func="mul" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_score_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->

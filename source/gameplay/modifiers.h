@@ -62,12 +62,20 @@ struct blockChances {
     float lpiece;
     float ipiece;
     float tpiece;
+    bool set=false;
     blockChances operator+= (blockChances value) const //THIS IS INSANE THAT C++ CAN DO THIS
         {
             return {square+value.square,line+value.line,zpiece+value.zpiece,
             spiece+value.spiece,lpiece+value.lpiece,ipiece+value.ipiece,
             tpiece+value.tpiece};
         }
+    blockChances operator*= (blockChances value) const //THIS IS INSANE THAT C++ CAN DO THIS
+        {
+            return {square*value.square,line*value.line,zpiece*value.zpiece,
+            spiece*value.spiece,lpiece*value.lpiece,ipiece*value.ipiece,
+            tpiece*value.tpiece};
+        }
+
 };
 struct modifierTag {
     std::string tag;

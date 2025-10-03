@@ -10,29 +10,47 @@
         <forsale>true</forsale> <!--Should this item show up in the shop?-->
         <sprite>modifier.png</sprite> <!--Sale sprite to use-->
         <tags> <!--Tags are what are shown under the bonuses section in the options-->
-            <good>Single lines give 6 lines worth of score and combo</good>
+            <good>Single lines give 6 times score and combo</good>
             <bad>Getting more than one line gives only one point and no combo.</bad>
         </tags>
     </meta>
     <effects>
-
-        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="mul" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_score_1</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>600</value>
+            <value>6</value>
         </trigger>
-        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+
+        <trigger type="value" func="addperc" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_combo_1</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
             <value>600</value>
         </trigger>
-
-        <trigger type="value" func="set"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        
+        <trigger type="value" func="mul" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_score_2</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>0</value>
+        </trigger>
+        <trigger type="value" func="mul" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_score_3</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>0</value>
+        </trigger>
+        <trigger type="value" func="mul" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_score_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>1</value>
+            <value>0</value>
         </trigger>
-        <trigger type="value" func="set">
+
+        <trigger type="value" func="mul" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_combo_2</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>0</value>
+        </trigger>
+        <trigger type="value" func="mul" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>line_combo_3</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>0</value>
+        </trigger>
+        <trigger type="value" func="mul" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_combo_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>-1</value> <!--Yes, getting these actually HURT your combo, but only by a bit.-->
+            <value>0</value>
         </trigger>
+
 
     </effects>
 

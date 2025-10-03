@@ -63,6 +63,19 @@ modifier::modifier(std::string path) {
                     comboOperations.push_back({value,operation,key});
                 } break;
                 case OPTYPES::CHANCESOPTYPE: {
+                    float square = atof((tagChild->first_node("square")->value()));
+                    float line = atof((tagChild->first_node("line")->value()));
+                    float zpiece = atof((tagChild->first_node("zpiece")->value()));
+                    float spiece = atof((tagChild->first_node("spiece")->value()));
+                    float lpiece = atof((tagChild->first_node("lpiece")->value()));
+                    float ipiece = atof((tagChild->first_node("ipiece")->value()));
+                    float tpiece = atof((tagChild->first_node("tpiece")->value()));
+                    if(operation == SCOREOP::MUL) {
+                        chances = {square,line,zpiece,spiece,lpiece,ipiece,tpiece};
+                    } else if(operation == SCOREOP::ADD) {
+                        chances = {square,line,zpiece,spiece,lpiece,ipiece,tpiece};
+                    }
+
 
                 }break;
                 case OPTYPES::GRAVITOPTYPE: {
@@ -123,14 +136,14 @@ float modifierUtils::performModOperation(float original, SCOREOP operation, floa
             newvalue -= value;
         }break;
         case MULPERC: {
-            newvalue *= value/100.0f;
+            newvalue *= original*(original*(value/100.0f));
         } break;
         case ADDPERC: {
-            newvalue += value/100.0f;
+            newvalue += original+(original*(value/100.0f));
 
         }break;
         case SUBPERC: {
-            newvalue -= value/100.0f;
+            newvalue -= original-(original*(value/100.0f));
 
         } break;
         case SET: {
@@ -192,13 +205,14 @@ std::map<std::string, QUIRKTYPES> modifierUtils::quirksmap = {
 
 };
 bool shotgunQuirk::input(game *game, SDL_Keycode key) {
-  std::cout<< "hijacked input " << odds << " "<< maxiters<< " " << iterations << "\n";
     if (key == SDLK_z) {
         iterations++;
         
         if ((rand() % odds) == 0) {
             game->t.forcedrop();
             iterations = 0;
+            Mix_PlayChannel(-1, audio::sfx->at(13), 0);
+
             return true;
             }
         }

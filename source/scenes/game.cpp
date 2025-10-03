@@ -364,7 +364,7 @@ Transition game::endLogic() {
         g.rebirth(BLOCKX, BLOCKY, t.piece, previousblocks);
         std::fill_n(ghostblocks, 480, 0);
         std::srand(time+randomIters);
-        nextblocks = rand() % 7;
+        nextblocks = getNextBlock();
         randomIters++;
     }
     if(!gameactive) {
@@ -466,7 +466,7 @@ void game::inputKey(SDL_Keycode key) {
                 else {
                     t.rebirth(BLOCKX, BLOCKY, nextblocks);
                     std::srand(time+randomIters);
-                    nextblocks = rand() % 7;
+                    nextblocks = getNextBlock();
                     randomIters++;
 
                 }
@@ -682,6 +682,34 @@ void game::changemusic() {
     }
 
 }
+int game::getNextBlock() {
+    float weights[7] = {
+        chances.spiece,
+        chances.tpiece,
+        chances.zpiece,
+        chances.square,
+        chances.lpiece,
+        chances.ipiece,
+        chances.line,
+
+    };
+
+    float total = 0.0f;
+    for (int i = 0; i < 7; ++i) {
+        total += weights[i];
+    }
+
+    float rnd = static_cast<float>(rand()) / RAND_MAX * total;
+
+    float cumulative = 0.0f;
+    for (int i = 0; i < 7; ++i) {
+        cumulative += weights[i];
+        if (rnd < cumulative) {
+            return i;
+        }
+    }
+    return 6;
+}
 void game::reset() {
     std::cout << "we resetting around here\n";
     currentsong = -1;
@@ -709,7 +737,8 @@ void game::reset() {
     lines = LINES;
     paused = false;
     srand((unsigned)time); 
-    nextblocks = std::rand() % 7;
+    chances = {1/7.0f,1/7.0f,1/7.0f,1/7.0f,1/7.0f,1/7.0f,1/7.0f};
+    nextblocks = getNextBlock();
     randomIters++;
     time = std::time(nullptr);
     gameactive = true;
@@ -739,6 +768,21 @@ void game::reset() {
                     switch (gameplay::modifiers.at(modifiernumber)
                                 .comboOperations.at(i)
                                 .slot) {
+                    case COMBOOP::FILLUP_SPEED: {
+                        line_combos[0] = modifierUtils::performModOperation(line_combos[0], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
+                        line_combos[1] = modifierUtils::performModOperation(line_combos[1], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
+                        line_combos[2] = modifierUtils::performModOperation(line_combos[2], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
+                        line_combos[3] = modifierUtils::performModOperation(line_combos[3], gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
+                                .comboOperations.at(i).value);
+
+                    }break;
                     case COMBOOP::LINE_COMBO_1: {
                         line_combos[0] = modifierUtils::performModOperation(line_combos[0], gameplay::modifiers.at(modifiernumber)
                                 .comboOperations.at(i).operation, gameplay::modifiers.at(modifiernumber)
@@ -776,10 +820,19 @@ void game::reset() {
                     // quirks.insert(quirks.end(), gameplay::modifiers.at(modifiernumber).quirks.begin(), gameplay::modifiers.at(modifiernumber).quirks.end());
                 }
                 gravityOperations.push_back(gameplay::modifiers.at(modifiernumber).gravitySpeed);
-                chances += gameplay::modifiers.at(modifiernumber).chances;
+                if(gameplay::modifiers.at(modifiernumber).chances.set) {
+                    chances = gameplay::modifiers.at(modifiernumber).chances;
+                }
             }   
         }
     }
+    for(int i = 0; i < 10000; i++) {
+        std::cout << getNextBlock() << ",";
+    }
+    std::cout << chances.line << " " << chances.spiece << " "
+     << chances.square << " "  << chances.lpiece << " "  <<
+      chances.ipiece << " "  << chances.tpiece << " "  << chances.zpiece << "\n";
+
 }
 }
 int game::parsePassive() {
@@ -973,12 +1026,9 @@ double game::getspeed() {
         }break;
         }
         double nearfinaldrop = returndb * 6 * difficultymult;
-        std::cout << nearfinaldrop << "nearfinal\n";
         for (int i = 0; i < gravityOperations.size(); i++) {
-          std::cout << gravityOperations.at(i).operation << " opcode " << gravityOperations.at(i).value << " value\n";
         nearfinaldrop = modifierUtils::performModOperation(nearfinaldrop, gravityOperations.at(i).operation, gravityOperations.at(i).value);
     }
-    std::cout << nearfinaldrop << "nearfinal\n";
 
     return nearfinaldrop;
 }

@@ -23,14 +23,20 @@
     <effects>
         <trigger type="value" func="add" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_score_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>1000</value>
+            <value>10000</value>
         </trigger>
         <trigger type="value" func="mul" mods="gravity"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <value>1.05</value>
         </trigger>
-        <trigger type="value" func="mul" mods="chance"> <!--Addperc funcs add to the specified score on a certain percentage-->
-            <key>line_chance</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>0.25</value>
+        <trigger type="value" func="mul" mods="chance"> <!--chances only supports adding or multiplying!-->
+            <square>0.1428571428571429</square>
+            <line>0.03571428571428571</line>
+            <zpiece>0.1428571428571429</zpiece>
+            <spiece>0.1428571428571429</spiece>
+            <lpiece>0.1428571428571429</lpiece>
+            <ipiece>0.1428571428571429</ipiece>
+            <tpiece>0.1428571428571429</tpiece>
+
         </trigger>
 
         <trigger type="value" func="sub" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->

@@ -29,7 +29,7 @@
 	<sound>
 		<path>./sound/09.wav</path>
 	</sound>
-	<sound>
+	<sound> <!--10-->
 			<path>./sound/thanksforplaying.mp3</path>
 	</sound>
 	<sound> <!--11-->
@@ -37,6 +37,9 @@
 	</sound>
 	<sound> <!--12-->
 			<path>./sound/smash.wav</path>
+	</sound>
+	<sound> <!--13-->
+			<path>./sound/shotgun.wav</path>
 	</sound>
 
 </sounds>

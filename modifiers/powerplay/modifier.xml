@@ -12,26 +12,27 @@
         <tags> <!--Tags are what are shown under the bonuses section in the options-->
             <good>+50% Drop score</good>
             <good>+200% Four Line score</good>
-            <bad>-75% Combo time</bad>
+            <bad>-10% Combo time</bad>
             <bad>-25% Gravity Score</bad>
         </tags>
     </meta>
     <effects>
-        <trigger type="value" func="subperc"> <!--Subperc funcs subtract from the specified score on a certain percentage-->
-            <key>gravity_score</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+        <trigger type="value" func="subperc" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>gravity</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
             <value>25</value>
         </trigger>
-        <trigger type="value" func="subperc"> <!--Subperc funcs subtract from the specified score on a certain percentage-->
-            <key>combo_time</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>75</value>
+
+        <trigger type="value" func="addperc" mods="score"> <!--Subperc funcs subtract from the specified score on a certain percentage-->
+            <key>forcedrop</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>50</value>
         </trigger>
-        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
-            <key>drop_score</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>75</value>
+        <trigger type="value" func="mul" mods="combo"> <!--Addperc funcs add to the specified score on a certain percentage-->
+            <key>drain_speed</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
+            <value>0.90</value> <!-- Since the drain speed is halved, we can double it to give the effect of it being half the speed. (it's normally 1750ms, so doubling means that the speed is slower)-->
         </trigger>
-        <trigger type="value" func="addperc"> <!--Addperc funcs add to the specified score on a certain percentage-->
+        <trigger type="value" func="mul" mods="score"> <!--Addperc funcs add to the specified score on a certain percentage-->
             <key>line_score_4</key> <!--Key defines which to apply to, there is a list somewhere for this probably later on-->
-            <value>200</value>
+            <value>2</value>
         </trigger>
 
     </effects>

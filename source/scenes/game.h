@@ -70,7 +70,7 @@ class game: public Gamemode
 		void clearRow(int(blocks)[480], int y);
 		void drawCubes(int position[],float scale, float x, float y, int size, int width,bool threed=false, glm::vec3 rotation={0,0,0});
 		double getspeed();
-
+		int getNextBlock();
 		int addScore(SCORETYPE type, int times, bool invisible); //add a certain value to score, under certain conditions.
 		int parsePassive(); //parses passive scores unrelated to the actual ticks of gameplay (ie combo).
 

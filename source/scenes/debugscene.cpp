@@ -142,7 +142,7 @@ Transition debugscene::endLogic()
 {
     return {
         0.001,
-        gamemode,
+        gamemode-1,
         320,240,
         (FADETYPE)transition,
         advance

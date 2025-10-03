@@ -321,7 +321,7 @@ int main(int argc, char **argv) {
     }
     if(argument == "--debug") {
         gameplay::gamemodes.push_back(new debugscene());
-        gameplay::gamemode = gameplay::gamemodes.size()-1;
+        gameplay::gamemode = gameplay::gamemodes.size()-2;
         settings::globalDebug = true;
     }
     if(argument == "--scene") {
